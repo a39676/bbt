@@ -1,5 +1,6 @@
 package demo.selenium.service.impl;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -74,6 +75,27 @@ public class SeleniumAuxiliaryToolServiceImpl extends CommonService implements S
 		return null;
 	}
 	
+	@Override
+	public void tabSwitch(WebDriver driver, Integer tabIndex) {
+		if(tabIndex == null || tabIndex < 0) {
+			tabIndex = 0;
+		}
+		
+		ArrayList<String> tabs = new ArrayList<String> (driver.getWindowHandles());
+		
+		if(tabIndex > tabs.size() - 1) {
+			tabIndex = tabs.size() - 1;
+		}
+		
+		driver.switchTo().window(tabs.get(tabIndex));
+	}
 	
+	public void closeTab(WebDriver driver, Integer closeTabIndex) {
+//		TODO
+		/*
+		 * 待完善指定标签关闭
+		 */
+		driver.close();
+	}
 	
 }

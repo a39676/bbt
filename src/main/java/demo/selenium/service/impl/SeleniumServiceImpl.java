@@ -1,7 +1,6 @@
 package demo.selenium.service.impl;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
@@ -19,6 +18,7 @@ import demo.baseCommon.service.CommonService;
 import demo.selenium.mapper.TestEventMapper;
 import demo.selenium.pojo.dto.ScreenshotSaveDTO;
 import demo.selenium.pojo.po.TestEvent;
+import demo.selenium.pojo.result.ScreenshotSaveResult;
 import demo.selenium.service.ScreenshotService;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.SeleniumService;
@@ -65,7 +65,7 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 			WebElement imageButton = driver.findElement(By.partialLinkText("图片"));
 			By b = By.partialLinkText("图片");
 			
-//		imageButton.click();
+//			imageButton.click();
 //			WebElement link = driver.findElement(By.linkText("百度翻译"));
 //			link.click();
 			
@@ -79,19 +79,10 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 			
 			jsUtil.openNewTab(driver);
 			
-			ArrayList<String> tabs = new ArrayList<String> (driver.getWindowHandles());
-			System.out.println(tabs);
-			driver.switchTo().window(tabs.get(1));
-			driver.close();
-			driver.switchTo().window(tabs.get(0));
+			auxiliaryToolService.tabSwitch(driver, 0);
 			
-			File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-			ScreenshotSaveDTO screenshotSaveDto = new ScreenshotSaveDTO();
-			screenshotSaveDto.setScreenShotFile(scrFile);
-			screenshotSaveDto.setEventId(testEven.getId());
-			screenshotSaveDto.setEventName(testEven.getEventName());
-			screenshotSaveDto.setFileName("testFile");
-			screenshotService.screenshotSave(screenshotSaveDto);
+			takeScreenshot(driver, testEven);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -102,6 +93,15 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 		
 	}
 	
-	
+	private ScreenshotSaveResult takeScreenshot(WebDriver driver, TestEvent testEven) {
+		File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+		ScreenshotSaveDTO screenshotSaveDto = new ScreenshotSaveDTO();
+		screenshotSaveDto.setScreenShotFile(scrFile);
+		screenshotSaveDto.setEventId(testEven.getId());
+		screenshotSaveDto.setEventName(testEven.getEventName());
+		screenshotSaveDto.setFileName("testFile");
+		ScreenshotSaveResult r = screenshotService.screenshotSave(screenshotSaveDto);
+		return r;
+	}
 	
 }

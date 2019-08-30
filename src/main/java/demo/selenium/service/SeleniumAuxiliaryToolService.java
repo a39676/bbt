@@ -18,4 +18,6 @@ public interface SeleniumAuxiliaryToolService {
 
 	String findFileNameSuffixFromUrl(String str);
 
+	void tabSwitch(WebDriver driver, Integer tabIndex);
+
 }
