@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.TransactionManagementConfigure
 
 @Configuration
 @PropertySources({ 
-	@PropertySource(value = "classpath:properties/database/mySqlFinancer.properties"),
+	@PropertySource(value = "classpath:properties/database/bbt.properties"),
 //	@PropertySource(value = "classpath:properties/database/vpsFinancer.properties"),
 	@PropertySource(value = "classpath:none.properties", ignoreResourceNotFound = true) 
 })

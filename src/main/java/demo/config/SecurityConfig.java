@@ -88,8 +88,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(ToolUrlConstant.root + "/**")
             	.access(hasRole(RolesType.ROLE_SUPER_ADMIN))
 //            	TODO dev mark
-            .antMatchers("/test/**")
-            	.access(hasRole(RolesType.ROLE_SUPER_ADMIN))
+//            .antMatchers("/test/**")
+//            	.access(hasRole(RolesType.ROLE_SUPER_ADMIN))
             .antMatchers(UploadUrlConstant.uploadPriRoot + "/**")
             	.access(hasAnyRole(RolesType.ROLE_SUPER_ADMIN, RolesType.ROLE_DEV))
             .and()

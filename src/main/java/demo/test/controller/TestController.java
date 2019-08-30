@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.baseCommon.controller.CommonController;
+import demo.selenium.service.SeleniumService;
 import demo.test.pojo.constant.TestUrl;
 import demo.test.pojo.constant.TestViewConstants;
 import demo.test.service.TestService;
@@ -30,6 +31,8 @@ public class TestController extends CommonController {
 	private TestService testService;
 	@Autowired
 	private WekaCluster weka;
+	@Autowired
+	private SeleniumService seleniumService;
 	
 	@ApiOperation(value="测试", notes="测试notes")
 	@GetMapping(value = { "/test" })
@@ -73,4 +76,8 @@ public class TestController extends CommonController {
 		testService.roleGetTest();
 	}
 	
+	@GetMapping(value = "/seleniumTest")
+	public void seleniumTest() { 
+		seleniumService.testDemo();
+	}
 }
