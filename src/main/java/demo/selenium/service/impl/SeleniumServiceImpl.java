@@ -66,16 +66,16 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 			By b = By.partialLinkText("图片");
 			
 //		imageButton.click();
-			WebElement link = driver.findElement(By.linkText("百度翻译"));
-			link.click();
+//			WebElement link = driver.findElement(By.linkText("百度翻译"));
+//			link.click();
 			
 			driver.manage().timeouts().implicitlyWait(8, TimeUnit.SECONDS);
 			
-//			auxiliaryToolService.fluentWait(driver, b);
-//			Actions action = new Actions(driver);
-//			action
-//			.keyDown(Keys.CONTROL).click(imageButton).keyUp(Keys.CONTROL).build()
-//			.perform();
+			auxiliaryToolService.fluentWait(driver, b);
+			Actions action = new Actions(driver);
+			action
+			.keyDown(Keys.CONTROL).click(imageButton).keyUp(Keys.CONTROL).build()
+			.perform();
 			
 			jsUtil.openNewTab(driver);
 			

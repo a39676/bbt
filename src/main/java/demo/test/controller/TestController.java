@@ -80,4 +80,10 @@ public class TestController extends CommonController {
 	public void seleniumTest() { 
 		seleniumService.testDemo();
 	}
+	
+	@GetMapping(value = "/logTest")
+	public void logTest() {
+		String str = "strrrrrr";
+		log.info("something {}", str);
+	}
 }

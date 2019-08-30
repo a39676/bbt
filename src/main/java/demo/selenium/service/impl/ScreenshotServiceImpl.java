@@ -59,7 +59,7 @@ public class ScreenshotServiceImpl extends CommonService implements ScreenshotSe
 			result.setIsSuccess();
 			result.setSavingPath(targetFilePath);
 			result.setScreenShotId(newScreenShotId);
-			log.info("scr save at %s", targetFilePath);
+			log.info("scr save at {}", targetFilePath);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.failWithMessage(e.toString());
