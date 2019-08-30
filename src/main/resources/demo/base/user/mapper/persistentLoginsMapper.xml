@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.base.user.mapper.persistentLoginsMapper">
+
+  <resultMap id="BaseResultMap" type="demo.base.user.pojo.po.persistentLogins">
+    <result column="series" jdbcType="VARCHAR" property="series" />
+    <result column="user_name" jdbcType="CHAR" property="userName" />
+    <result column="token" jdbcType="VARCHAR" property="token" />
+    <result column="last_use" jdbcType="TIMESTAMP" property="lastUse" />
+  </resultMap>
+  
+  <insert id="insert" parameterType="demo.base.user.pojo.po.persistentLogins">
+    insert into persistent_logins (series, user_name, token, 
+      last_use)
+    values (#{series,jdbcType=VARCHAR}, #{userName,jdbcType=CHAR}, #{token,jdbcType=VARCHAR}, 
+      #{lastUse,jdbcType=TIMESTAMP})
+  </insert>
+  
+  <insert id="insertSelective" parameterType="demo.base.user.pojo.po.persistentLogins">
+    insert into persistent_logins
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="series != null">
+        series,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="token != null">
+        token,
+      </if>
+      <if test="lastUse != null">
+        last_use,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="series != null">
+        #{series,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=CHAR},
+      </if>
+      <if test="token != null">
+        #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUse != null">
+        #{lastUse,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+</mapper>

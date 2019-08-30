@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.task.mapper.TaskManageMapper">
+
+  <resultMap id="BaseResultMap" type="demo.task.pojo.po.TaskManage">
+    <result column="id" jdbcType="BIGINT" property="id" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="last_run_time" jdbcType="TIMESTAMP" property="lastRunTime" />
+    <result column="last_end_time" jdbcType="TIMESTAMP" property="lastEndTime" />
+    <result column="last_error_time" jdbcType="TIMESTAMP" property="lastErrorTime" />
+    <result column="run_count" jdbcType="INTEGER" property="runCount" />
+    <result column="error_count" jdbcType="INTEGER" property="errorCount" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+    <result column="is_on" jdbcType="BIT" property="isOn" />
+  </resultMap>
+
+  <insert id="insert" parameterType="demo.task.pojo.po.TaskManage">
+    insert into task_manage (id, remark, create_time, 
+      last_run_time, last_end_time, last_error_time, 
+      run_count, error_count, is_delete, 
+      is_on)
+    values (#{id,jdbcType=BIGINT}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{lastRunTime,jdbcType=TIMESTAMP}, #{lastEndTime,jdbcType=TIMESTAMP}, #{lastErrorTime,jdbcType=TIMESTAMP}, 
+      #{runCount,jdbcType=INTEGER}, #{errorCount,jdbcType=INTEGER}, #{isDelete,jdbcType=BIT}, 
+      #{isOn,jdbcType=BIT})
+  </insert>
+
+  <insert id="insertSelective" parameterType="demo.task.pojo.po.TaskManage">
+    insert into task_manage
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="lastRunTime != null">
+        last_run_time,
+      </if>
+      <if test="lastEndTime != null">
+        last_end_time,
+      </if>
+      <if test="lastErrorTime != null">
+        last_error_time,
+      </if>
+      <if test="runCount != null">
+        run_count,
+      </if>
+      <if test="errorCount != null">
+        error_count,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="isOn != null">
+        is_on,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastRunTime != null">
+        #{lastRunTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastEndTime != null">
+        #{lastEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastErrorTime != null">
+        #{lastErrorTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="runCount != null">
+        #{runCount,jdbcType=INTEGER},
+      </if>
+      <if test="errorCount != null">
+        #{errorCount,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="isOn != null">
+        #{isOn,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="findTask" resultMap="BaseResultMap">
+    select * from task_manage where id = #{id}
+  </select>
+
+  <update id="updateRunResult">
+    update 
+      task_manage 
+    set
+      run_count = run_count + 1,
+      <if test="runSuccess != null and runSuccess == true">
+        last_end_time = now()
+      </if>
+      <if test="runSuccess == null or runSuccess == false">
+        last_error_time = now(),
+        error_count = error_count + 1
+      </if>
+    where
+      id = #{id}
+  </update>
+
+  <update id="updateIsOn">
+    update
+      task_manage
+    set
+      is_on = #{isOn}
+    where
+      id in
+      <foreach item="id" index="index" collection="idList"
+        open="(" separator="," close=")">
+        #{id}
+      </foreach>
+  </update>
+</mapper>

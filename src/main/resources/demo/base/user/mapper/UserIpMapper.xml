@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.base.user.mapper.UserIpMapper">
+
+  <resultMap id="BaseResultMap" type="demo.base.user.pojo.po.UserIp">
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="ip" jdbcType="BIGINT" property="ip" />
+    <result column="forward_ip" jdbcType="BIGINT" property="forwardIp" />
+    <result column="server_name" jdbcType="CHAR" property="serverName" />
+    <result column="uri" jdbcType="VARCHAR" property="uri" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+
+  <insert id="insert" parameterType="demo.base.user.pojo.po.UserIp">
+    insert into user_ip (user_id, ip, forward_ip, server_name, uri, 
+      create_time)
+    values (#{userId,jdbcType=BIGINT}, #{ip,jdbcType=BIGINT}, #{forwardIp,jdbcType=BIGINT}, #{serverName,jdbcType=CHAR}, #{uri,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <insert id="insertSelective" parameterType="demo.base.user.pojo.po.UserIp">
+    insert into user_ip
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="ip != null">
+        ip,
+      </if>
+      <if test="forwardIp != null">
+        forward_ip,
+      </if>
+      <if test="serverName != null">
+        server_name,
+      </if>
+      <if test="uri != null">
+        uri,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="ip != null">
+        #{ip,jdbcType=BIGINT},
+      </if>
+      <if test="forwardIp != null">
+        #{forwardIp,jdbcType=BIGINT},
+      </if>
+      <if test="serverName != null">
+        #{serverName,jdbcType=VARCHAR},
+      </if>
+      <if test="uri != null">
+        #{uri,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <delete id="deleteRecord">
+    delete from 
+      user_ip
+    <where>
+      <if test="startDate != null">
+        and create_time &gt; #{startDate}
+      </if>
+      <if test="endDate != null">
+        and create_time &lt; #{endDate}
+      </if>
+      <if test="uri != null">
+        and uri = #{uri}
+      </if>
+      <if test="uriList != null">
+        and uri in
+        <foreach item="uriItem" index="index" collection="list"
+          open="(" separator="," close=")">
+          #{uriItem}
+        </foreach>
+      </if>
+    </where>
+  </delete>
+</mapper>

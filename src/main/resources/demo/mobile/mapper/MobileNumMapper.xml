@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.mobile.mapper.MobileNumMapper">
+  <resultMap id="BaseResultMap" type="demo.mobile.pojo.po.MobileNum">
+    <result column="prefix" jdbcType="INTEGER" property="prefix" />
+    <result column="mid_num" jdbcType="INTEGER" property="midNum" />
+    <result column="geographical_id" jdbcType="BIGINT" property="geographicalId" />
+    <result column="mobile_operator_id" jdbcType="BIGINT" property="mobileOperatorId" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    prefix, mid_num, geographical_id, mobile_operator_id
+  </sql>
+  <select id="selectByExample" parameterType="demo.mobile.pojo.po.MobileNumExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from mobile_num
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="demo.mobile.pojo.po.MobileNumExample">
+    delete from mobile_num
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="demo.mobile.pojo.po.MobileNum">
+    insert into mobile_num (prefix, mid_num, geographical_id, 
+      mobile_operator_id)
+    values (#{prefix,jdbcType=INTEGER}, #{midNum,jdbcType=INTEGER}, #{geographicalId,jdbcType=BIGINT}, 
+      #{mobileOperatorId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="demo.mobile.pojo.po.MobileNum">
+    insert into mobile_num
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="prefix != null">
+        prefix,
+      </if>
+      <if test="midNum != null">
+        mid_num,
+      </if>
+      <if test="geographicalId != null">
+        geographical_id,
+      </if>
+      <if test="mobileOperatorId != null">
+        mobile_operator_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="prefix != null">
+        #{prefix,jdbcType=INTEGER},
+      </if>
+      <if test="midNum != null">
+        #{midNum,jdbcType=INTEGER},
+      </if>
+      <if test="geographicalId != null">
+        #{geographicalId,jdbcType=BIGINT},
+      </if>
+      <if test="mobileOperatorId != null">
+        #{mobileOperatorId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <insert id="insertIgnoreSelectiveMultiple">
+    insert ignore mobile_num (
+      prefix,
+      mid_num,
+      geographical_id,
+      mobile_operator_id
+    )
+    values
+    <foreach collection="mobileNumList" item="mobileNum" open="" separator="," close="">
+      (
+        #{mobileNum.prefix},
+        #{mobileNum.midNum},
+        #{mobileNum.geographicalId},
+        #{mobileNum.mobileOperatorId}
+      )
+    </foreach>
+  </insert>
+  <select id="countByExample" parameterType="demo.mobile.pojo.po.MobileNumExample" resultType="java.lang.Long">
+    select count(*) from mobile_num
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update mobile_num
+    <set>
+      <if test="record.prefix != null">
+        prefix = #{record.prefix,jdbcType=INTEGER},
+      </if>
+      <if test="record.midNum != null">
+        mid_num = #{record.midNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.geographicalId != null">
+        geographical_id = #{record.geographicalId,jdbcType=BIGINT},
+      </if>
+      <if test="record.mobileOperatorId != null">
+        mobile_operator_id = #{record.mobileOperatorId,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update mobile_num
+    set prefix = #{record.prefix,jdbcType=INTEGER},
+      mid_num = #{record.midNum,jdbcType=INTEGER},
+      geographical_id = #{record.geographicalId,jdbcType=BIGINT},
+      mobile_operator_id = #{record.mobileOperatorId,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+</mapper>

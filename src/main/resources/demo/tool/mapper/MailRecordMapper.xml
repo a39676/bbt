@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.tool.mapper.MailRecordMapper">
+
+  <resultMap id="BaseResultMap" type="demo.tool.pojo.MailRecord">
+    <result column="mail_id" jdbcType="INTEGER" property="mailId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="valid_time" jdbcType="TIMESTAMP" property="validTime" />
+    <result column="mail_key" jdbcType="CHAR" property="mailKey" />
+    <result column="mail_type" jdbcType="INTEGER" property="mailType" />
+    <result column="was_used" jdbcType="BIT" property="wasUsed" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="used_time" jdbcType="TIMESTAMP" property="usedTime" />
+    <result column="send_count" jdbcType="INTEGER" property="sendCount" />
+    <result column="resend_time" jdbcType="TIMESTAMP" property="resendTime" />
+  </resultMap>
+
+  <insert id="insert" parameterType="demo.tool.pojo.MailRecord">
+    insert into mail_record (mail_id, user_id, valid_time, mail_key, 
+      mail_type, was_used, create_time, used_time, send_count, resend_time
+      )
+    values (#{mailId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{validTime,jdbcType=TIMESTAMP}, #{mailKey,jdbcType=CHAR}, 
+      #{mailType,jdbcType=INTEGER}, #{wasUsed,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, #{usedTime,jdbcType=TIMESTAMP},
+      #{sendCount,jdbcType=INTEGER}, #{resendTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+
+  <insert id="insertSelective" parameterType="demo.tool.pojo.MailRecord">
+    insert into mail_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="mailId != null">
+        mail_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="validTime != null">
+        valid_time,
+      </if>
+      <if test="mailKey != null">
+        mail_key,
+      </if>
+      <if test="mailType != null">
+        mail_type,
+      </if>
+      <if test="wasUsed != null">
+        was_used,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="usedTime != null">
+        used_time,
+      </if>
+      <if test="sendCount != null">
+        send_count,
+      </if>
+      <if test="resendTime != null">
+        resend_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="mailId != null">
+        #{mailId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="validTime != null">
+        #{validTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mailKey != null">
+        #{mailKey,jdbcType=CHAR},
+      </if>
+      <if test="mailType != null">
+        #{mailType,jdbcType=INTEGER},
+      </if>
+      <if test="wasUsed != null">
+        #{wasUsed,jdbcType=BIT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="usedTime != null">
+        #{usedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sendCount != null">
+        #{sendCount,jdbcType=INTEGER},
+      </if>
+      <if test="resendTime != null">
+        #{resendTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="findMailByMailKeyMailType" resultMap="BaseResultMap">
+    select
+      *
+
+    from 
+      mail_record
+
+    where
+      was_used = 0
+      and valid_time &gt;= now()
+      and mail_type = #{mailType}
+      and mail_key = #{mailKey}
+  </select>
+
+  <update id="updateWasUsed">
+    update mail_record set was_used = 1, used_time = now() where mail_id = #{mailId}
+  </update>
+
+  <select id="findUnusedByUserId" resultMap="BaseResultMap">
+    select
+      *
+    from
+      mail_record
+    where
+      was_used = 0
+      and user_id = #{userId}
+      and mail_type = #{mailType}
+      and valid_time &gt;= now()
+    order by create_time desc
+    limit 1
+  </select>
+
+  <update id="updateResend">
+    update 
+      mail_record 
+    set 
+      send_count = send_count + 1, 
+      resend_time = now()
+      <if test="newVaildTime != null">
+        ,
+        valid_time = #{newVaildTime}
+      </if>
+
+    where 
+      mail_key = #{mailKey}
+  </update>
+
+  <delete id="cleanMailRecord">
+    delete from
+      mail_record
+    <where>
+      was_used = 1 
+      <if test="validTime != null">
+        or valid_time &lt;= #{validTime}
+      </if>
+      <if test="validTime == null">
+        or valid_time &lt;= date_sub(now(), interval 1 day)
+      </if>
+    </where>
+  </delete>
+
+  <insert id="insertNewMailRecord">
+    insert into mail_record (user_id, valid_time, mail_key, 
+      mail_type, was_used
+      )
+    values (#{userId}, #{validTime}, #{mailKey}, 
+      #{mailType}, false
+      )
+
+    on duplicate key 
+      update valid_time = #{validTime}, mail_key = #{mailKey}
+  </insert>
+
+  <select id="hasMailTask" resultType="int">
+    select exists(
+      select 1 from mail_record where was_used = false and valid_time &gt;= now()
+    )
+  </select>
+
+  
+
+</mapper>

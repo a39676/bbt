@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.base.user.mapper.UserRegistMapper">
+
+  <select id="isUserExists" parameterType="String" resultType="int">
+    select exists(select * from users where user_name = #{userName})
+  </select>
+
+  <update id="resetPassword">
+    update 
+      users
+    set
+      pwd = #{pwd},
+      pwdd = #{pwdd}
+    where 
+      user_id = #{userId}
+  </update>
+
+  <insert id="insertNewUser">
+    insert into 
+      users(
+        user_id,
+        user_name,
+        pwd,
+        pwdd
+      )
+      values(
+        #{userId},
+        #{userName},
+        #{pwd},
+        #{pwdd}
+      )
+  </insert>
+
+
+</mapper>

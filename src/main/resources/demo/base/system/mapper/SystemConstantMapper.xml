@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.base.system.mapper.SystemConstantMapper">
+
+  <resultMap id="BaseResultMap" type="demo.base.system.pojo.bo.SystemConstant">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="constantName" jdbcType="CHAR" property="constantName" />
+    <result column="constantValue" jdbcType="CHAR" property="constantValue" />
+    <result column="createTime" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="isDelete" jdbcType="BIT" property="isDelete" />
+  </resultMap>
+
+  <insert id="insert" parameterType="demo.base.system.pojo.bo.SystemConstant">
+    insert into systemconstant (id, constantName, constantValue, 
+      createTime, isDelete)
+    values (#{id,jdbcType=INTEGER}, #{constantname,jdbcType=CHAR}, #{constantvalue,jdbcType=CHAR}, 
+      #{createtime,jdbcType=TIMESTAMP}, #{isdelete,jdbcType=BIT})
+  </insert>
+
+  <insert id="insertSelective" parameterType="demo.base.system.pojo.bo.SystemConstant">
+    insert into systemconstant
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="constantname != null">
+        constantName,
+      </if>
+      <if test="constantvalue != null">
+        constantValue,
+      </if>
+      <if test="createtime != null">
+        createTime,
+      </if>
+      <if test="isdelete != null">
+        isDelete,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="constantname != null">
+        #{constantname,jdbcType=CHAR},
+      </if>
+      <if test="constantvalue != null">
+        #{constantvalue,jdbcType=CHAR},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isdelete != null">
+        #{isdelete,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="getValByName" resultMap="BaseResultMap">
+    select
+      constantName,
+      constantValue
+    from
+      systemConstant
+
+    where
+      isDelete = 0
+      and constantName = #{constantName}
+  </select>
+
+  <select id="getValsByName" resultMap="BaseResultMap">
+    select
+      constantName,
+      constantValue
+    from
+      systemConstant
+
+    where
+      isDelete = 0
+      and constantName in
+      <foreach item="constantName" index="index" collection="list" open="(" separator="," close=")">
+        #{constantName}
+      </foreach>
+  </select>
+
+  
+
+</mapper>
