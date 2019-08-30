@@ -46,8 +46,6 @@ public class ScreenshotServiceImpl extends CommonService implements ScreenshotSe
 			String targetFilePath = targetFolderPath + "/" + targetFileName;
 			FileUtils.copyFile(dto.getScreenShotFile(), new File(targetFilePath));
 			
-			Screenshot i = screenshotMapper.selectByPrimaryKey(1L);
-			System.out.println(i.toString());
 			Long newScreenShotId = snowFlake.getNextId(); 
 			Screenshot po = new Screenshot();
 			po.setId(newScreenShotId);

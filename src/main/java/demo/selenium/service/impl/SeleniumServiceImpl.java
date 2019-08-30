@@ -11,6 +11,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -72,14 +73,24 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 			driver.manage().timeouts().implicitlyWait(8, TimeUnit.SECONDS);
 			
 			auxiliaryToolService.fluentWait(driver, b);
-			Actions action = new Actions(driver);
-			action
+			Actions clickWithCtrl = new Actions(driver);
+			clickWithCtrl
 			.keyDown(Keys.CONTROL).click(imageButton).keyUp(Keys.CONTROL).build()
 			.perform();
 			
 			jsUtil.openNewTab(driver);
 			
 			auxiliaryToolService.tabSwitch(driver, 0);
+			
+//			auxiliaryToolService.dragAndDrop(driver, sourceElement, targetElement);
+			
+			Select s = new Select(driver.findElement(By.id("demo")));
+			s.getOptions();
+			
+			WebElement radioElement = driver.findElement(By.id("demoRadioId"));
+			radioElement.click();
+			
+			
 			
 			takeScreenshot(driver, testEven);
 			

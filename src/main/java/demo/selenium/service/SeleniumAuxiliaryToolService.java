@@ -20,4 +20,6 @@ public interface SeleniumAuxiliaryToolService {
 
 	void tabSwitch(WebDriver driver, Integer tabIndex);
 
+	void dragAndDrop(WebDriver driver, WebElement sourceElement, WebElement targetElement);
+
 }
