@@ -1,18 +1,10 @@
 package demo.selenium.service.impl;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-
-import javax.imageio.ImageIO;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.Point;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -21,13 +13,11 @@ import org.openqa.selenium.support.ui.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import constant.FileSuffixNameConstant;
 import demo.baseCommon.service.CommonService;
+import demo.config.costom_component.Tess;
 import demo.selenium.mapper.TestEventMapper;
-import demo.selenium.pojo.dto.ScreenshotSaveDTO;
 import demo.selenium.pojo.po.TestEvent;
 import demo.selenium.pojo.result.ScreenshotSaveResult;
-import demo.selenium.service.ScreenshotService;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.SeleniumService;
 import demo.selenium.service.WebDriverService;
@@ -39,12 +29,11 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 	@Autowired
 	private WebDriverService webDriverService;
 	@Autowired
-	private ScreenshotService screenshotService;
-	@Autowired
 	private SeleniumAuxiliaryToolService auxiliaryToolService;
 	@Autowired
 	private JavaScriptCommonUtil jsUtil;
-	
+	@Autowired
+	private Tess tess;
 	@Autowired
 	private TestEventMapper testEventMapper;
 	
@@ -102,8 +91,13 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 			 * 验证码使用 tess 识别
 			 */
 			
-			takeScreenshot(driver, testEvent);
-			takeElementScreenshot(driver, testEvent, By.id("demoId"));
+			auxiliaryToolService.takeScreenshot(driver, testEvent);
+			ScreenshotSaveResult elementImageSaveResult = auxiliaryToolService.takeElementScreenshot(driver, testEvent, By.id("demoId"));
+			String ocrResult = null;
+			if(elementImageSaveResult.isSuccess() && StringUtils.isNotBlank(elementImageSaveResult.getSavingPath())) {
+				 ocrResult = tess.ocr(elementImageSaveResult.getSavingPath());
+			}
+			System.out.println(ocrResult);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -114,57 +108,4 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 		}
 	}
 	
-	private ScreenshotSaveResult takeScreenshot(WebDriver driver, TestEvent testEvent, String fileName) {
-		File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-		ScreenshotSaveDTO screenshotSaveDto = new ScreenshotSaveDTO();
-		screenshotSaveDto.setScreenShotFile(scrFile);
-		screenshotSaveDto.setEventId(testEvent.getId());
-		screenshotSaveDto.setEventName(testEvent.getEventName());
-		if(StringUtils.isBlank(fileName)) {
-			screenshotSaveDto.setFileName(testEvent.getEventName());
-		} else {
-			screenshotSaveDto.setFileName(fileName);
-		}
-		ScreenshotSaveResult r = screenshotService.screenshotSave(screenshotSaveDto);
-		return r;
-	}
-	
-	private ScreenshotSaveResult takeScreenshot(WebDriver driver, TestEvent testEvent) {
-		return takeScreenshot(driver, testEvent, null);
-	}
-	
-	private ScreenshotSaveResult takeElementScreenshot(WebDriver driver, TestEvent testEvent, By by, String fileName) throws IOException {
-		// Get entire page screenshot
-		File screenshot = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-		BufferedImage  fullImg = ImageIO.read(screenshot);
-		
-		WebElement recaptcha = driver.findElement(by);
-		
-		Point point = recaptcha.getLocation();
-
-		// Get width and height of the element
-		int eleWidth = recaptcha.getSize().getWidth();
-		int eleHeight = recaptcha.getSize().getHeight();
-
-		// Crop the entire page screenshot to get only element screenshot
-		BufferedImage eleScreenshot= fullImg.getSubimage(point.getX(), point.getY(),
-		    eleWidth, eleHeight);
-		ImageIO.write(eleScreenshot, FileSuffixNameConstant.png, screenshot);
-
-		ScreenshotSaveDTO screenshotSaveDto = new ScreenshotSaveDTO();
-		screenshotSaveDto.setScreenShotFile(screenshot);
-		screenshotSaveDto.setEventId(testEvent.getId());
-		screenshotSaveDto.setEventName(testEvent.getEventName());
-		if(StringUtils.isBlank(fileName)) {
-			screenshotSaveDto.setFileName(testEvent.getEventName());
-		} else {
-			screenshotSaveDto.setFileName(fileName);
-		}
-		ScreenshotSaveResult r = screenshotService.screenshotSave(screenshotSaveDto);
-		return r;
-	}
-	
-	private ScreenshotSaveResult takeElementScreenshot(WebDriver driver, TestEvent testEvent, By by) throws IOException {
-		return takeElementScreenshot(driver, testEvent, by, null);
-	}
 }

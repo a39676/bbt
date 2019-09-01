@@ -1,40 +1,47 @@
 package demo.selenium.service.impl;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.imageio.ImageIO;
+
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.Point;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import constant.FileSuffixNameConstant;
 import demo.baseCommon.service.CommonService;
 import demo.selenium.pojo.constant.RegexConstant;
 import demo.selenium.pojo.constant.WebDriverConstant;
+import demo.selenium.pojo.dto.ScreenshotSaveDTO;
+import demo.selenium.pojo.po.TestEvent;
+import demo.selenium.pojo.result.ScreenshotSaveResult;
+import demo.selenium.service.ScreenshotService;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
 
 @Service
 public class SeleniumAuxiliaryToolServiceImpl extends CommonService implements SeleniumAuxiliaryToolService {
 
-	public void saveImageFromWebElement(WebElement webElement, String fileName) {
-		/*
-		 * TODO testing
-		 */
-//		String src = webElement.getAttribute("src");
-//		\.\w{3,4}($|\?)
-
-//		String suffix = 
-//		ImageIO.write(im, formatName, output);
-	}
-
+	@Autowired
+	private ScreenshotService screenshotService;
+	
 	@Override
 	public WebElement fluentWait(WebDriver driver, final By locator) {
 		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
@@ -92,22 +99,77 @@ public class SeleniumAuxiliaryToolServiceImpl extends CommonService implements S
 	}
 
 	public void closeTab(WebDriver driver, Integer closeTabIndex) {
-		//		TODO
+		// TODO
 		/*
 		 * 待完善指定标签关闭
 		 */
 		driver.close();
 	}
-	
+
 	@Override
 	public void dragAndDrop(WebDriver driver, WebElement sourceElement, WebElement targetElement) {
 		Actions builder = new Actions(driver);
-		Action dragAndDrop = builder.clickAndHold(sourceElement)
-				.moveToElement(targetElement)
-				.release(targetElement)
+		Action dragAndDrop = builder.clickAndHold(sourceElement).moveToElement(targetElement).release(targetElement)
 				.build();
 		dragAndDrop.perform();
 	}
-	
 
+	@Override
+	public ScreenshotSaveResult takeScreenshot(WebDriver driver, TestEvent testEvent, String fileName) {
+		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+		ScreenshotSaveDTO screenshotSaveDto = new ScreenshotSaveDTO();
+		screenshotSaveDto.setScreenShotFile(scrFile);
+		screenshotSaveDto.setEventId(testEvent.getId());
+		screenshotSaveDto.setEventName(testEvent.getEventName());
+		if (StringUtils.isBlank(fileName)) {
+			screenshotSaveDto.setFileName(testEvent.getEventName());
+		} else {
+			screenshotSaveDto.setFileName(fileName);
+		}
+		ScreenshotSaveResult r = screenshotService.screenshotSave(screenshotSaveDto);
+		return r;
+	}
+
+	@Override
+	public ScreenshotSaveResult takeScreenshot(WebDriver driver, TestEvent testEvent) {
+		return takeScreenshot(driver, testEvent, null);
+	}
+
+	@Override
+	public ScreenshotSaveResult takeElementScreenshot(WebDriver driver, TestEvent testEvent, By by, String fileName)
+			throws IOException {
+		// Get entire page screenshot
+		File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+		BufferedImage fullImg = ImageIO.read(screenshot);
+
+		WebElement recaptcha = driver.findElement(by);
+
+		Point point = recaptcha.getLocation();
+
+		// Get width and height of the element
+		int eleWidth = recaptcha.getSize().getWidth();
+		int eleHeight = recaptcha.getSize().getHeight();
+
+		// Crop the entire page screenshot to get only element screenshot
+		BufferedImage eleScreenshot = fullImg.getSubimage(point.getX(), point.getY(), eleWidth, eleHeight);
+		ImageIO.write(eleScreenshot, FileSuffixNameConstant.png, screenshot);
+
+		ScreenshotSaveDTO screenshotSaveDto = new ScreenshotSaveDTO();
+		screenshotSaveDto.setScreenShotFile(screenshot);
+		screenshotSaveDto.setEventId(testEvent.getId());
+		screenshotSaveDto.setEventName(testEvent.getEventName());
+		if (StringUtils.isBlank(fileName)) {
+			screenshotSaveDto.setFileName(testEvent.getEventName());
+		} else {
+			screenshotSaveDto.setFileName(fileName);
+		}
+		ScreenshotSaveResult r = screenshotService.screenshotSave(screenshotSaveDto);
+		return r;
+	}
+
+	@Override
+	public ScreenshotSaveResult takeElementScreenshot(WebDriver driver, TestEvent testEvent, By by)
+			throws IOException {
+		return takeElementScreenshot(driver, testEvent, by, null);
+	}
 }

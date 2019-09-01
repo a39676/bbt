@@ -1,8 +1,13 @@
 package demo.selenium.service;
 
+import java.io.IOException;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+
+import demo.selenium.pojo.po.TestEvent;
+import demo.selenium.pojo.result.ScreenshotSaveResult;
 
 public interface SeleniumAuxiliaryToolService {
 
@@ -21,5 +26,14 @@ public interface SeleniumAuxiliaryToolService {
 	void tabSwitch(WebDriver driver, Integer tabIndex);
 
 	void dragAndDrop(WebDriver driver, WebElement sourceElement, WebElement targetElement);
+
+	ScreenshotSaveResult takeScreenshot(WebDriver driver, TestEvent testEvent, String fileName);
+
+	ScreenshotSaveResult takeScreenshot(WebDriver driver, TestEvent testEvent);
+
+	ScreenshotSaveResult takeElementScreenshot(WebDriver driver, TestEvent testEvent, By by, String fileName)
+			throws IOException;
+
+	ScreenshotSaveResult takeElementScreenshot(WebDriver driver, TestEvent testEvent, By by) throws IOException;
 
 }
