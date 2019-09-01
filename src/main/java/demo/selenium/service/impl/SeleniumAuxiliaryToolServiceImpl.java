@@ -92,13 +92,13 @@ public class SeleniumAuxiliaryToolServiceImpl extends CommonService implements S
 	}
 
 	public void closeTab(WebDriver driver, Integer closeTabIndex) {
-//		TODO
+		//		TODO
 		/*
 		 * 待完善指定标签关闭
 		 */
 		driver.close();
 	}
-
+	
 	@Override
 	public void dragAndDrop(WebDriver driver, WebElement sourceElement, WebElement targetElement) {
 		Actions builder = new Actions(driver);
@@ -109,4 +109,5 @@ public class SeleniumAuxiliaryToolServiceImpl extends CommonService implements S
 		dragAndDrop.perform();
 	}
 	
+
 }

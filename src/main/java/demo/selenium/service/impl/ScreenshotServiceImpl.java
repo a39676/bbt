@@ -7,11 +7,11 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import constant.FileSuffixNameConstant;
 import dateTimeHandle.DateTimeHandle;
 import demo.baseCommon.pojo.constant.DateTimeConstant;
 import demo.baseCommon.service.CommonService;
 import demo.selenium.mapper.ScreenshotMapper;
-import demo.selenium.pojo.constant.FileSuffixNameConstant;
 import demo.selenium.pojo.constant.WebDriverGlobalOption;
 import demo.selenium.pojo.dto.ScreenshotSaveDTO;
 import demo.selenium.pojo.po.Screenshot;
@@ -52,7 +52,6 @@ public class ScreenshotServiceImpl extends CommonService implements ScreenshotSe
 			po.setLocalPath(targetFilePath);
 			po.setTestEventId(dto.getEventId());
 			screenshotMapper.insertSelective(po);
-			
 			
 			result.setIsSuccess();
 			result.setSavingPath(targetFilePath);

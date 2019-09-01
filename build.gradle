@@ -119,7 +119,12 @@ dependencies {
 	// weka
 	compile group: 'weka', name: 'weka', version: '3.6.2'
 	
+	// selenium
 	compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
-
+	// appium
 	compile group: 'io.appium', name: 'java-client', version: '7.1.0'
+	
+	// tess4j
+	compile group: 'net.sourceforge.tess4j', name: 'tess4j', version: '4.4.0'
+	compile group: 'net.java.dev.jna', name: 'jna', version: '5.4.0'
 }

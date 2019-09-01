@@ -1,11 +1,17 @@
 package demo.selenium.service.impl;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import javax.imageio.ImageIO;
+
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.OutputType;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -15,6 +21,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import constant.FileSuffixNameConstant;
 import demo.baseCommon.service.CommonService;
 import demo.selenium.mapper.TestEventMapper;
 import demo.selenium.pojo.dto.ScreenshotSaveDTO;
@@ -46,7 +53,7 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 	
 	@Override
 	public void testDemo() {
-		TestEvent testEven = testEventMapper.selectByPrimaryKey(1L);
+		TestEvent testEvent = testEventMapper.selectByPrimaryKey(1L);
 		ChromeOptions chromeOption = new ChromeOptions();
 //		chromeOption.addArguments(WebDriverGlobalOption.headLess);
 		WebDriver driver = webDriverService.buildChromeWebDriver(chromeOption);
@@ -66,11 +73,11 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 			WebElement imageButton = driver.findElement(By.partialLinkText("图片"));
 			By b = By.partialLinkText("图片");
 			
-//			imageButton.click();
-//			WebElement link = driver.findElement(By.linkText("百度翻译"));
-//			link.click();
-			
 			driver.manage().timeouts().implicitlyWait(8, TimeUnit.SECONDS);
+
+			WebElement recaptcha = driver.findElement(By.id("demoId"));
+			String src = recaptcha.getAttribute("src");
+			System.out.println(src);
 			
 			auxiliaryToolService.fluentWait(driver, b);
 			Actions clickWithCtrl = new Actions(driver);
@@ -90,9 +97,13 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 			WebElement radioElement = driver.findElement(By.id("demoRadioId"));
 			radioElement.click();
 			
+			/*
+			 * TODO 
+			 * 验证码使用 tess 识别
+			 */
 			
-			
-			takeScreenshot(driver, testEven);
+			takeScreenshot(driver, testEvent);
+			takeElementScreenshot(driver, testEvent, By.id("demoId"));
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -101,18 +112,59 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 				driver.quit();
 			}
 		}
-		
 	}
 	
-	private ScreenshotSaveResult takeScreenshot(WebDriver driver, TestEvent testEven) {
+	private ScreenshotSaveResult takeScreenshot(WebDriver driver, TestEvent testEvent, String fileName) {
 		File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
 		ScreenshotSaveDTO screenshotSaveDto = new ScreenshotSaveDTO();
 		screenshotSaveDto.setScreenShotFile(scrFile);
-		screenshotSaveDto.setEventId(testEven.getId());
-		screenshotSaveDto.setEventName(testEven.getEventName());
-		screenshotSaveDto.setFileName("testFile");
+		screenshotSaveDto.setEventId(testEvent.getId());
+		screenshotSaveDto.setEventName(testEvent.getEventName());
+		if(StringUtils.isBlank(fileName)) {
+			screenshotSaveDto.setFileName(testEvent.getEventName());
+		} else {
+			screenshotSaveDto.setFileName(fileName);
+		}
 		ScreenshotSaveResult r = screenshotService.screenshotSave(screenshotSaveDto);
 		return r;
 	}
 	
+	private ScreenshotSaveResult takeScreenshot(WebDriver driver, TestEvent testEvent) {
+		return takeScreenshot(driver, testEvent, null);
+	}
+	
+	private ScreenshotSaveResult takeElementScreenshot(WebDriver driver, TestEvent testEvent, By by, String fileName) throws IOException {
+		// Get entire page screenshot
+		File screenshot = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+		BufferedImage  fullImg = ImageIO.read(screenshot);
+		
+		WebElement recaptcha = driver.findElement(by);
+		
+		Point point = recaptcha.getLocation();
+
+		// Get width and height of the element
+		int eleWidth = recaptcha.getSize().getWidth();
+		int eleHeight = recaptcha.getSize().getHeight();
+
+		// Crop the entire page screenshot to get only element screenshot
+		BufferedImage eleScreenshot= fullImg.getSubimage(point.getX(), point.getY(),
+		    eleWidth, eleHeight);
+		ImageIO.write(eleScreenshot, FileSuffixNameConstant.png, screenshot);
+
+		ScreenshotSaveDTO screenshotSaveDto = new ScreenshotSaveDTO();
+		screenshotSaveDto.setScreenShotFile(screenshot);
+		screenshotSaveDto.setEventId(testEvent.getId());
+		screenshotSaveDto.setEventName(testEvent.getEventName());
+		if(StringUtils.isBlank(fileName)) {
+			screenshotSaveDto.setFileName(testEvent.getEventName());
+		} else {
+			screenshotSaveDto.setFileName(fileName);
+		}
+		ScreenshotSaveResult r = screenshotService.screenshotSave(screenshotSaveDto);
+		return r;
+	}
+	
+	private ScreenshotSaveResult takeElementScreenshot(WebDriver driver, TestEvent testEvent, By by) throws IOException {
+		return takeElementScreenshot(driver, testEvent, by, null);
+	}
 }

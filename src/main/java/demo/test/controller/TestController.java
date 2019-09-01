@@ -34,6 +34,8 @@ public class TestController extends CommonController {
 	@Autowired
 	private SeleniumService seleniumService;
 	
+	
+	
 	@ApiOperation(value="测试", notes="测试notes")
 	@GetMapping(value = { "/test" })
 	public ModelAndView jspTest(HttpServletRequest request) throws Exception {
@@ -85,5 +87,15 @@ public class TestController extends CommonController {
 	public void logTest() {
 		String str = "strrrrrr";
 		log.info("something {}", str);
+	}
+	
+	@GetMapping(value = "tess1")
+	public void tess1() {
+		testService.tessTest1();
+	}
+	
+	@GetMapping(value = "tess2")
+	public void tess2() {
+		testService.tessTest2();
 	}
 }
