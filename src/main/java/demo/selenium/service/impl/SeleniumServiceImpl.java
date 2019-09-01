@@ -37,9 +37,6 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 	@Autowired
 	private TestEventMapper testEventMapper;
 	
-//	@Autowired
-//	private VerificationCodeMapper verificationCodeMapper;
-	
 	@Override
 	public void testDemo() {
 		TestEvent testEvent = testEventMapper.selectByPrimaryKey(1L);
@@ -85,11 +82,6 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 			
 			WebElement radioElement = driver.findElement(By.id("demoRadioId"));
 			radioElement.click();
-			
-			/*
-			 * TODO 
-			 * 验证码使用 tess 识别
-			 */
 			
 			auxiliaryToolService.takeScreenshot(driver, testEvent);
 			ScreenshotSaveResult elementImageSaveResult = auxiliaryToolService.takeElementScreenshot(driver, testEvent, By.id("demoId"));
