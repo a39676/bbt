@@ -28,6 +28,8 @@ import org.springframework.stereotype.Service;
 
 import constant.FileSuffixNameConstant;
 import demo.baseCommon.service.CommonService;
+import demo.selenium.pojo.bo.ByXpathConditionBO;
+import demo.selenium.pojo.bo.ByXpathConditionSubBO;
 import demo.selenium.pojo.constant.RegexConstant;
 import demo.selenium.pojo.constant.WebDriverConstant;
 import demo.selenium.pojo.dto.ScreenshotSaveDTO;
@@ -43,14 +45,14 @@ public class SeleniumAuxiliaryToolServiceImpl extends CommonService implements S
 	private ScreenshotService screenshotService;
 	
 	@Override
-	public WebElement fluentWait(WebDriver driver, final By locator) {
+	public WebElement fluentWait(WebDriver driver, final By by) {
 		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
 				.withTimeout(WebDriverConstant.pageWaitingTimeoutSecond, TimeUnit.SECONDS)
 				.pollingEvery(5, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
 
 		WebElement foo = wait.until(new Function<WebDriver, WebElement>() {
 			public WebElement apply(WebDriver driver) {
-				return driver.findElement(locator);
+				return driver.findElement(by);
 			}
 		});
 
@@ -171,5 +173,40 @@ public class SeleniumAuxiliaryToolServiceImpl extends CommonService implements S
 	public ScreenshotSaveResult takeElementScreenshot(WebDriver driver, TestEvent testEvent, By by)
 			throws IOException {
 		return takeElementScreenshot(driver, testEvent, by, null);
+	}
+
+	@Override
+	public By byXpathBuilder(ByXpathConditionBO bo) {
+		StringBuffer s = new StringBuffer("//" + bo.getPrefix() + "[");
+		if(bo.getKvList() == null || bo.getKvList().size() < 1) {
+			s.append("]");
+			return By.xpath(s.toString());
+		}
+		ByXpathConditionSubBO b = null;
+		for(int i = 0; i < bo.getKvList().size(); i++) {
+			b = bo.getKvList().get(i);
+			s.append("(@"+ b.getKey() + "='" + b.getValue() + "')");
+			if(i < bo.getKvList().size() - 1) {
+				s.append(" and ");
+			}
+		}
+		s.append("]");
+		return By.xpath(s.toString());
+	}
+	
+	
+	public static void main(String[] args) {
+		SeleniumAuxiliaryToolServiceImpl t = new SeleniumAuxiliaryToolServiceImpl();
+		ByXpathConditionBO bo = ByXpathConditionBO
+				.build("tag", "k", "v")
+				.addCondition("k1", "v2")
+				;
+		t.byXpathBuilder(bo);
+		
+		bo = ByXpathConditionBO
+				.build("tag", "k3", "v")
+				.addCondition("k4", "v2")
+				;
+		t.byXpathBuilder(bo);
 	}
 }

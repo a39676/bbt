@@ -1,8 +1,11 @@
 package demo.config;
 
+import java.nio.charset.StandardCharsets;
+
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -34,6 +37,9 @@ import demo.web.handler.LimitLoginAuthenticationProvider;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+	
+	@Value("${envName}")
+	private String envName;
 	
 	@Autowired
 	private DataSource dataSource;
@@ -87,9 +93,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             	.access(hasAnyRole(RolesType.ROLE_SUPER_ADMIN, RolesType.ROLE_DBA)) 
             .antMatchers(ToolUrlConstant.root + "/**")
             	.access(hasRole(RolesType.ROLE_SUPER_ADMIN))
-//            	TODO dev mark
-//            .antMatchers("/test/**")
-//            	.access(hasRole(RolesType.ROLE_SUPER_ADMIN))
             .antMatchers(UploadUrlConstant.uploadPriRoot + "/**")
             	.access(hasAnyRole(RolesType.ROLE_SUPER_ADMIN, RolesType.ROLE_DEV))
             .and()
@@ -113,13 +116,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //		    .and()
 //		        .headers().frameOptions().sameOrigin()
 		    ;
+        if(!"dev".equals(envName)) {
+        	http.authorizeRequests()
+        	.antMatchers("/test/**")
+        	.access(hasRole(RolesType.ROLE_SUPER_ADMIN));
+        }
 	  
         /*
          * 增加filter在此  同样操作 但建议使用
          * http.addFilterAfter(newFilter,CsrfFilter.class); 
          */
         CharacterEncodingFilter encodingFilter = new CharacterEncodingFilter();
-        encodingFilter.setEncoding("UTF-8");
+        encodingFilter.setEncoding(StandardCharsets.UTF_8.displayName());
         encodingFilter.setForceEncoding(true);
         http.addFilterBefore(encodingFilter, CsrfFilter.class);
         

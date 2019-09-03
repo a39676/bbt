@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.baseCommon.controller.CommonController;
+import demo.selenium.service.SeForJoke;
 import demo.selenium.service.SeleniumService;
 import demo.test.pojo.constant.TestUrl;
 import demo.test.pojo.constant.TestViewConstants;
@@ -33,6 +34,9 @@ public class TestController extends CommonController {
 	private WekaCluster weka;
 	@Autowired
 	private SeleniumService seleniumService;
+	
+	@Autowired
+	private SeForJoke seForJoke;
 	
 	
 	
@@ -97,5 +101,10 @@ public class TestController extends CommonController {
 	@GetMapping(value = "tess2")
 	public void tess2() {
 		testService.tessTest2();
+	}
+	
+	@GetMapping(value = "sjlanxiang")
+	public void sjlanxiang() {
+		seForJoke.lanxiang();
 	}
 }
