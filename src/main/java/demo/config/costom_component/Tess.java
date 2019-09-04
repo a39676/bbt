@@ -13,7 +13,7 @@ import net.sourceforge.tess4j.TesseractException;
 @Scope("singleton")
 public class Tess {
 	
-	private static final String dataPath = "d:/soft/tessdata";
+	private static final String dataPath = "d:/soft/tessdataInUse";
 	private static final ITesseract instance;
 	
 	static {
@@ -31,4 +31,5 @@ public class Tess {
 		}
 		return result;
 	}
+	
 }

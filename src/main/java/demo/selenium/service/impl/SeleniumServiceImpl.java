@@ -18,6 +18,7 @@ import demo.config.costom_component.Tess;
 import demo.selenium.mapper.TestEventMapper;
 import demo.selenium.pojo.po.TestEvent;
 import demo.selenium.pojo.result.ScreenshotSaveResult;
+import demo.selenium.pojo.result.TestEventResult;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.SeleniumService;
 import demo.selenium.service.WebDriverService;
@@ -38,7 +39,9 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 	private TestEventMapper testEventMapper;
 	
 	@Override
-	public void testDemo() {
+	public TestEventResult testDemo() {
+		TestEventResult r = new TestEventResult();
+		
 		TestEvent testEvent = testEventMapper.selectByPrimaryKey(1L);
 		ChromeOptions chromeOption = new ChromeOptions();
 //		chromeOption.addArguments(WebDriverGlobalOption.headLess);
@@ -91,13 +94,18 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 			}
 			System.out.println(ocrResult);
 			
+			r.setIsSuccess();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
+			
 		} finally {
 			if(driver != null) {
 				driver.quit();
 			}
+			
 		}
+		return r;
 	}
 	
 }

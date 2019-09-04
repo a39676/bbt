@@ -26,17 +26,20 @@ public class SeForJokeImpl extends CommonService implements SeForJoke {
 	
 	private String jokerName = "冯安";
 	private String jokerPhone = "18826485386";
+	private Integer jokerAge = 22;
+	private String jokerAddress = "广州市越秀区万菱广场2204室";
 	
 	@Override
-	public void lanxiang() {
+	public void lanXiang() {
 		TestEvent te = new TestEvent();
 		te.setId(1L);
-		te.setEventName("lx");
+		te.setEventName("lanXiang");
 //		ChromeOptions options = new ChromeOptions();
 		FirefoxOptions options = new FirefoxOptions();
 //		options.addArguments(WebDriverGlobalOption.headLess);
 //		WebDriver d = webDriverService.buildChromeWebDriver(options);
 		WebDriver d = webDriverService.buildFireFoxWebDriver(options);
+		
 		try {
 			String url = "http://www.lxjx.cn/index.php?a=Index&c=Index&m=baoming";
 			d.get(url);
@@ -73,7 +76,7 @@ public class SeForJokeImpl extends CommonService implements SeForJoke {
 			byXpathConditionBo = ByXpathConditionBO.build("input", "name", "age");
 			By ageBy = auxTool.byXpathBuilder(byXpathConditionBo);
 			WebElement ageInput = d.findElement(ageBy);
-			ageInput.sendKeys("22");
+			ageInput.sendKeys(jokerAge.toString());
 			
 			WebElement phoneInput = d.findElement(By.id("phone"));
 			phoneInput.sendKeys(jokerPhone);
@@ -81,9 +84,83 @@ public class SeForJokeImpl extends CommonService implements SeForJoke {
 			byXpathConditionBo = ByXpathConditionBO.build("input", "name", "address");
 			By addressBy = auxTool.byXpathBuilder(byXpathConditionBo);
 			WebElement addressInput = d.findElement(addressBy);
-			addressInput.sendKeys("广州市越秀区万菱广场2204室");
+			addressInput.sendKeys(jokerAddress);
 			
 			byXpathConditionBo = ByXpathConditionBO.build("input", "type", "submit").addCondition("value", "报名");
+			By submitBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			WebElement submitButton = d.findElement(submitBy);
+			submitButton.click();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(d != null) {
+				d.quit();
+			}
+		}
+	}
+	
+	@Override
+	public void liuXue() {
+		TestEvent te = new TestEvent();
+		te.setId(1L);
+		te.setEventName("liuXue");
+//		ChromeOptions options = new ChromeOptions();
+		FirefoxOptions options = new FirefoxOptions();
+//		options.addArguments(WebDriverGlobalOption.headLess);
+//		WebDriver d = webDriverService.buildChromeWebDriver(options);
+		WebDriver d = webDriverService.buildFireFoxWebDriver(options);
+		
+		try {
+			String url = "https://liuxue.xdf.cn/blog/ExpertBlog/";
+			d.get(url);
+			
+			// driver等待
+			ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("form", "id", "myform");
+			By regFormWrapBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			
+			WebElement regFormWrap = auxTool.fluentWait(d, regFormWrapBy);
+			regFormWrap.click();
+			
+			byXpathConditionBo = ByXpathConditionBO.build("input", "id", "stu_Name");
+			By nameBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			WebElement nameInput = d.findElement(nameBy);
+			nameInput.sendKeys(jokerName);
+			
+			WebElement phoneInput = d.findElement(By.id("stu_Phone"));
+			phoneInput.sendKeys(jokerPhone);
+			
+			byXpathConditionBo = ByXpathConditionBO.build("select", "id", "stu_Country");
+			By countrySelectBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			WebElement countrySelect = d.findElement(countrySelectBy);
+			countrySelect.click();
+			
+			byXpathConditionBo = ByXpathConditionBO.build("option", "value", "亚洲");
+			By countryOptionBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			WebElement countryOption = d.findElement(countryOptionBy);
+			countryOption.click();
+			
+			byXpathConditionBo = ByXpathConditionBO.build("select", "id", "stu_Degree");
+			By degreeSelectBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			WebElement degreeSelect = d.findElement(degreeSelectBy);
+			degreeSelect.click();
+			
+			byXpathConditionBo = ByXpathConditionBO.build("option", "value", "本科");
+			By degreeOptionBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			WebElement degreeOption = d.findElement(degreeOptionBy);
+			degreeOption.click();
+			
+			byXpathConditionBo = ByXpathConditionBO.build("select", "id", "stu_City");
+			By stuCitySelectBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			WebElement stuCitySelect = d.findElement(stuCitySelectBy);
+			stuCitySelect.click();
+			
+			byXpathConditionBo = ByXpathConditionBO.build("option", "value", "广州");
+			By stuCityOptionBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			WebElement stuCityOption = d.findElement(stuCityOptionBy);
+			stuCityOption.click();
+			
+			byXpathConditionBo = ByXpathConditionBO.build("input", "type", "button").addCondition("id", "dosubmit");
 			By submitBy = auxTool.byXpathBuilder(byXpathConditionBo);
 			WebElement submitButton = d.findElement(submitBy);
 			submitButton.click();

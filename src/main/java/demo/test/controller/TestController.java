@@ -105,6 +105,11 @@ public class TestController extends CommonController {
 	
 	@GetMapping(value = "sjlanxiang")
 	public void sjlanxiang() {
-		seForJoke.lanxiang();
+		seForJoke.lanXiang();
+	}
+	
+	@GetMapping(value = "sjLiuXue")
+	public void sjLiuXue() {
+		seForJoke.liuXue();
 	}
 }

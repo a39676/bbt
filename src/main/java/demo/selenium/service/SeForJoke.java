@@ -2,6 +2,8 @@ package demo.selenium.service;
 
 public interface SeForJoke {
 
-	void lanxiang();
+	void lanXiang();
+
+	void liuXue();
 
 }
