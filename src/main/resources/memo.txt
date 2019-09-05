@@ -1,0 +1,1 @@
+modify BrowserConfigType.edge.path  :  MicrosoftWebDriver  ------>   like (msedgedriver78_x64)

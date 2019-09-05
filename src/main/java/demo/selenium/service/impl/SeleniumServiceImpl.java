@@ -45,7 +45,7 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 		TestEvent testEvent = testEventMapper.selectByPrimaryKey(1L);
 		ChromeOptions chromeOption = new ChromeOptions();
 //		chromeOption.addArguments(WebDriverGlobalOption.headLess);
-		WebDriver driver = webDriverService.buildChromeWebDriver(chromeOption);
+		WebDriver driver = webDriverService.buildChrome76WebDriver(chromeOption);
 		try {
 			String url = "http://www.baidu.com";
 			driver.get(url);

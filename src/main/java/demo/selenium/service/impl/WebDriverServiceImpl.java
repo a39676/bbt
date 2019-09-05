@@ -8,6 +8,8 @@ import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.springframework.stereotype.Service;
 
 import demo.selenium.pojo.constant.ChromeConstant;
@@ -64,8 +66,8 @@ public class WebDriverServiceImpl implements WebDriverService {
 	}
 
 	@Override
-	public WebDriver buildChromeWebDriver(ChromeOptions options) {
-		BrowserConfigType browserType = BrowserConfigType.chrome;
+	public WebDriver buildChrome76WebDriver(ChromeOptions options) {
+		BrowserConfigType browserType = BrowserConfigType.chrome76;
 		System.setProperty(browserType.getDriver(), browserType.getPath());
 		WebDriver driver = null;
 		if (options == null) {
@@ -82,7 +84,43 @@ public class WebDriverServiceImpl implements WebDriverService {
 	}
 
 	@Override
-	public WebDriver buildChromeWebDriver() {
-		return buildChromeWebDriver(null);
+	public WebDriver buildChrome76WebDriver() {
+		return buildChrome76WebDriver(null);
 	}
+	
+	@Override
+	public WebDriver buildChrome45WebDriver(ChromeOptions options) {
+		BrowserConfigType browserType = BrowserConfigType.chrome45;
+		System.setProperty(browserType.getDriver(), browserType.getPath());
+		WebDriver driver = null;
+		if (options == null) {
+			options = new ChromeOptions();
+			options.addArguments(WebDriverGlobalOption.headLess);
+			options.setExperimentalOption(ChromeConstant.downloadDir, WebDriverGlobalOption.downloadDir);
+			options.setExperimentalOption(ChromeConstant.promptForDownload, false);
+			options.setExperimentalOption(ChromeConstant.directoryUpgrade, true);
+			options.setExperimentalOption(ChromeConstant.safebrowsingEnabled, true);
+		}
+
+		driver = new ChromeDriver(options);
+		return driver;
+	}
+
+	@Override
+	public WebDriver buildChrome45WebDriver() {
+		return buildChrome45WebDriver(null);
+	}
+	
+	@SuppressWarnings("deprecation")
+	@Override
+	public WebDriver buildIEWebDriver() {
+		BrowserConfigType browserType = BrowserConfigType.ie;
+		System.setProperty(browserType.getDriver(), browserType.getPath());
+		DesiredCapabilities ieCapabilities = DesiredCapabilities.internetExplorer();
+		ieCapabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
+		WebDriver driver = new InternetExplorerDriver(ieCapabilities);
+		
+		return driver;
+	}
+
 }

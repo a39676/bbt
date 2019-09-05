@@ -2,6 +2,7 @@ package demo.config.costom_component;
 
 import java.io.File;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -32,4 +33,45 @@ public class Tess {
 		return result;
 	}
 	
+	public String ocr(String imgPath, boolean numberAndLetterOnly) {
+		String result = ocr(imgPath);
+		if(numberAndLetterOnly && StringUtils.isNotBlank(result)) {
+			result = result.replaceAll("[^\\dA-Za-z]", "");
+		}
+		return result;
+	}
+	
+	public static void main(String[] args) {
+		Tess t = new Tess();
+		String fileSourceFormat = "png";
+//		String fileTargetFormat = "png";
+//		t.batchRename(fileSourceFormat, fileTargetFormat, 43, 49);
+		
+		t.batchOcr(fileSourceFormat, 42, 49);
+		
+	}
+	
+	public void batchOcr(String fileFormat, int start, int end) {
+		String filePath = null;
+		for(Integer i = start; i <= end; i++) {
+			filePath = buildFilePath(i.toString(), fileFormat);
+			System.out.println(ocr(filePath, true));
+		}
+	}
+	
+	public String buildFilePath(String name, String fileFormat) {
+		return String.format("D:\\\\auxiliary\\\\captcha/%s.%s", name, fileFormat);
+	}
+	
+	public void batchRename(String oldSuffixName, String newSuffixName, int start, int end) {
+		String filePath = null;
+		for(Integer i = start; i <= end; i++) {
+			filePath = buildFilePath(i.toString(), oldSuffixName);
+			File oldF = new File(filePath);
+			File newF = new File(filePath.replaceAll(oldSuffixName, newSuffixName));
+			if(oldF.renameTo(newF)) {
+				oldF.delete();
+			}
+		}
+	}
 }

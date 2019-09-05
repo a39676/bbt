@@ -35,10 +35,13 @@ public class SeForJokeImpl extends CommonService implements SeForJoke {
 		te.setId(1L);
 		te.setEventName("lanXiang");
 //		ChromeOptions options = new ChromeOptions();
-		FirefoxOptions options = new FirefoxOptions();
+//		FirefoxOptions options = new FirefoxOptions();
+//		EdgeOptions options = new EdgeOptions();
 //		options.addArguments(WebDriverGlobalOption.headLess);
 //		WebDriver d = webDriverService.buildChromeWebDriver(options);
-		WebDriver d = webDriverService.buildFireFoxWebDriver(options);
+//		WebDriver d = webDriverService.buildFireFoxWebDriver(options);
+//		WebDriver d = webDriverService.buildEdgeWebDriver(options);
+		WebDriver d = webDriverService.buildIEWebDriver();
 		
 		try {
 			String url = "http://www.lxjx.cn/index.php?a=Index&c=Index&m=baoming";
