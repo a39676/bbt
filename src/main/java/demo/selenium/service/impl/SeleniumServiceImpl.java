@@ -63,6 +63,10 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 			By b = By.partialLinkText("图片");
 			
 			driver.manage().timeouts().implicitlyWait(8, TimeUnit.SECONDS);
+			
+			WebElement uploadEle = driver.findElement(By.id("uploadButton"));
+			uploadEle.clear();
+			uploadEle.sendKeys("/path/to/target/file");
 
 			WebElement recaptcha = driver.findElement(By.id("demoId"));
 			String src = recaptcha.getAttribute("src");

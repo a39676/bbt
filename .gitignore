@@ -135,5 +135,6 @@ Temporary Items
 
 /.gradle/
 /build/
+/seleniumWebDriver/
 
 nohup.out
