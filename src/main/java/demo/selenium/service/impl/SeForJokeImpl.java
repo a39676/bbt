@@ -89,6 +89,8 @@ public class SeForJokeImpl extends CommonService implements SeForJoke {
 			WebElement addressInput = d.findElement(addressBy);
 			addressInput.sendKeys(jokerAddress);
 			
+			auxTool.takeScreenshot(d, te);
+			
 			byXpathConditionBo = ByXpathConditionBO.build("input", "type", "submit").addCondition("value", "报名");
 			By submitBy = auxTool.byXpathBuilder(byXpathConditionBo);
 			WebElement submitButton = d.findElement(submitBy);
