@@ -10,17 +10,22 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.baseCommon.service.CommonService;
 import demo.selenium.pojo.constant.ChromeConstant;
 import demo.selenium.pojo.constant.FireFoxConstant;
-import demo.selenium.pojo.constant.WebDriverGlobalOption;
+import demo.selenium.pojo.constant.WebDriverConstant;
 import demo.selenium.pojo.type.BrowserConfigType;
+import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.WebDriverService;
 
 @Service
 public class WebDriverServiceImpl extends CommonService implements WebDriverService {
+	
+	@Autowired
+	private SeleniumGlobalOptionService globalOptionService;
 
 	@Override
 	public WebDriver buildFireFoxWebDriver(FirefoxOptions options) {
@@ -33,12 +38,12 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 		System.setProperty(browserType.getDriver(), browserType.getPath());
 		if (options == null) {
 			options = new FirefoxOptions();
-			options.addArguments(WebDriverGlobalOption.headLess);
+			options.addArguments(WebDriverConstant.headLess);
 		}
 
 		if (options.getProfile() == null) {
 			FirefoxProfile profile = new FirefoxProfile();
-			profile.setPreference(FireFoxConstant.downloadDir, WebDriverGlobalOption.downloadDir);
+			profile.setPreference(FireFoxConstant.downloadDir, globalOptionService.getDownloadDir());
 			profile.setPreference(FireFoxConstant.folderList, 2);
 			profile.setPreference(FireFoxConstant.downloadShowWhenStarting, false);
 			profile.setPreference(FireFoxConstant.neverAskSaveToDisk, "text/csv");
@@ -83,8 +88,8 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 		WebDriver driver = null;
 		if (options == null) {
 			options = new ChromeOptions();
-			options.addArguments(WebDriverGlobalOption.headLess);
-			options.setExperimentalOption(ChromeConstant.downloadDir, WebDriverGlobalOption.downloadDir);
+			options.addArguments(WebDriverConstant.headLess);
+			options.setExperimentalOption(ChromeConstant.downloadDir, globalOptionService.getDownloadDir());
 			options.setExperimentalOption(ChromeConstant.promptForDownload, false);
 			options.setExperimentalOption(ChromeConstant.directoryUpgrade, true);
 			options.setExperimentalOption(ChromeConstant.safebrowsingEnabled, true);
@@ -111,8 +116,8 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 		WebDriver driver = null;
 		if (options == null) {
 			options = new ChromeOptions();
-			options.addArguments(WebDriverGlobalOption.headLess);
-			options.setExperimentalOption(ChromeConstant.downloadDir, WebDriverGlobalOption.downloadDir);
+			options.addArguments(WebDriverConstant.headLess);
+			options.setExperimentalOption(ChromeConstant.downloadDir, globalOptionService.getDownloadDir());
 			options.setExperimentalOption(ChromeConstant.promptForDownload, false);
 			options.setExperimentalOption(ChromeConstant.directoryUpgrade, true);
 			options.setExperimentalOption(ChromeConstant.safebrowsingEnabled, true);

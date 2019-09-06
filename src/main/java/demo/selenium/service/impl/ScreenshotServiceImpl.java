@@ -12,15 +12,18 @@ import dateTimeHandle.DateTimeHandle;
 import demo.baseCommon.pojo.constant.DateTimeConstant;
 import demo.baseCommon.service.CommonService;
 import demo.selenium.mapper.ScreenshotMapper;
-import demo.selenium.pojo.constant.WebDriverGlobalOption;
+import demo.selenium.pojo.constant.WebDriverConstant;
 import demo.selenium.pojo.dto.ScreenshotSaveDTO;
 import demo.selenium.pojo.po.Screenshot;
 import demo.selenium.pojo.result.ScreenshotSaveResult;
 import demo.selenium.service.ScreenshotService;
+import demo.selenium.service.SeleniumGlobalOptionService;
 
 @Service
 public class ScreenshotServiceImpl extends CommonService implements ScreenshotService {
 
+	@Autowired
+	private SeleniumGlobalOptionService globalOptionService;
 	@Autowired
 	private ScreenshotMapper screenshotMapper;
 	
@@ -32,14 +35,14 @@ public class ScreenshotServiceImpl extends CommonService implements ScreenshotSe
 		 */
 		ScreenshotSaveResult result = new ScreenshotSaveResult();
 		try {
-			String targetFolderPath = WebDriverGlobalOption.screenShotSavingFolder + "/" + dto.getEventName() + "/" + dto.getEventId();
+			String targetFolderPath = globalOptionService.getScreenshotSavingFolder() + "/" + dto.getEventName() + "/" + dto.getEventId();
 			File targetFolder = new File(targetFolderPath);
 			if(!targetFolder.exists()) {
 				targetFolder.mkdirs();
 			}
 			String targetFileName = 
 					String.format(
-							WebDriverGlobalOption.screenSHotFilenameFormat, 
+							WebDriverConstant.screenSHotFilenameFormat, 
 							dto.getFileName(), 
 							DateTimeHandle.dateToStr(LocalDateTime.now(), DateTimeConstant.datetimeCompactFormat), 
 							FileSuffixNameConstant.png);

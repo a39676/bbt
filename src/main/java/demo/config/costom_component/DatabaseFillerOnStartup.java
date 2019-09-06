@@ -15,7 +15,6 @@ import demo.base.user.service.UserRegistService;
 import demo.base.user.service.UsersService;
 
 @Component
-//public class DatabaseFillerOnStartup implements ApplicationListener<ContextStartedEvent> {
 public class DatabaseFillerOnStartup implements ApplicationListener<ApplicationReadyEvent> {
 	
 	@Autowired
@@ -27,28 +26,9 @@ public class DatabaseFillerOnStartup implements ApplicationListener<ApplicationR
 	@Autowired
 	private UserRegistService userRegistService;
 	
-/*
- * ContextStartedEvent
- * ContextStoppedEvent
- * ContextRefreshedEvent
- * ContextClosedEvent
- * RequestHandleEvent
- */
-	
-	/*
-	 * TODO 
-	 * 如果初始化机构管理员 机构
-	 * 绑定归属关系
-	 * 未创建机构-部门-人员关联表 待设计
-	 * 需考虑:
-	 *     如果已有管理机构??
-	 */
-	
 	@Override
-//	public void onApplicationEvent(ContextStartedEvent event) {
 	public void onApplicationEvent(ApplicationReadyEvent event) {
 		
-//		if (event.getApplicationContext().getDisplayName().equals("Root WebApplicationContext")) {}
 		if (event.getApplicationContext().getParent() == null) {
 			roleService.__initBaseRole();
 			
