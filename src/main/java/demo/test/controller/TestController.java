@@ -110,7 +110,7 @@ public class TestController extends CommonController {
 		seForJoke.lanXiang();
 	}
 	
-	@GetMapping(value = "sjLiuXue")
+	@GetMapping(value = "sjliuxue")
 	public void sjLiuXue() {
 		seForJoke.liuXue();
 	}
