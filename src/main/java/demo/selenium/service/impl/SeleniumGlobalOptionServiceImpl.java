@@ -21,7 +21,7 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 	private String screenshotSavingFolder = "/screenShot";
 	
 	private String downloadDirRedisKey = "seleniumDownloadDir";
-	private String screenshotSavingFloderRedisKey = "seleniumDownloadDir";
+	private String screenshotSavingFloderRedisKey = "seleniumScreenshotSavingDir";
 	
 
 	private String seleniumWebDriverFolder = "./seleniumWebDriver";
@@ -37,24 +37,24 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 	
 	@Override
 	public String getDownloadDir() {
-		String downloadDir = constantService.getValByName(downloadDirRedisKey);
+		String downloadFolderPath = constantService.getValByName(downloadDirRedisKey);
 		
-		if(StringUtils.isNotBlank(downloadDir)) {
-			return downloadDir;
+		if(StringUtils.isNotBlank(downloadFolderPath)) {
+			return downloadFolderPath;
 		}
 		
 		if(isWindows()) {
-			downloadDir = mainSavingFolder_win + downloadFolder;
+			downloadFolderPath = mainSavingFolder_win + downloadFolder;
 		} else {
-			downloadDir = mainSavingFolder_linx + downloadFolder;
+			downloadFolderPath = mainSavingFolder_linx + downloadFolder;
 		}
 		
-		SystemConstant systemConstant = new SystemConstant();
-		systemConstant.setConstantName(downloadDirRedisKey);
-		systemConstant.setConstantValue(downloadDir);
-		constantService.setValByName(systemConstant);
+		SystemConstant constant = new SystemConstant();
+		constant.setConstantName(downloadDirRedisKey);
+		constant.setConstantValue(downloadFolderPath);
+		constantService.setValByName(constant);
 		
-		return downloadDir;
+		return downloadFolderPath;
 	}
 	
 	@Override
