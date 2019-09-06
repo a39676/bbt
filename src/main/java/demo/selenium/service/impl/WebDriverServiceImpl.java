@@ -12,6 +12,7 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.springframework.stereotype.Service;
 
+import demo.baseCommon.service.CommonService;
 import demo.selenium.pojo.constant.ChromeConstant;
 import demo.selenium.pojo.constant.FireFoxConstant;
 import demo.selenium.pojo.constant.WebDriverGlobalOption;
@@ -19,11 +20,16 @@ import demo.selenium.pojo.type.BrowserConfigType;
 import demo.selenium.service.WebDriverService;
 
 @Service
-public class WebDriverServiceImpl implements WebDriverService {
+public class WebDriverServiceImpl extends CommonService implements WebDriverService {
 
 	@Override
 	public WebDriver buildFireFoxWebDriver(FirefoxOptions options) {
-		BrowserConfigType browserType = BrowserConfigType.gecko;
+		BrowserConfigType browserType = null;
+		if(isWindows()) {
+			browserType = BrowserConfigType.gecko_win;
+		} else {
+			browserType = BrowserConfigType.gecko_linux;
+		}
 		System.setProperty(browserType.getDriver(), browserType.getPath());
 		if (options == null) {
 			options = new FirefoxOptions();
@@ -67,7 +73,12 @@ public class WebDriverServiceImpl implements WebDriverService {
 
 	@Override
 	public WebDriver buildChrome76WebDriver(ChromeOptions options) {
-		BrowserConfigType browserType = BrowserConfigType.chrome76;
+		BrowserConfigType browserType = null;
+		if(isWindows()) {
+			browserType = BrowserConfigType.chrome76_win;
+		} else {
+			browserType = BrowserConfigType.chrome76_linux;
+		}
 		System.setProperty(browserType.getDriver(), browserType.getPath());
 		WebDriver driver = null;
 		if (options == null) {
@@ -90,7 +101,12 @@ public class WebDriverServiceImpl implements WebDriverService {
 	
 	@Override
 	public WebDriver buildChrome45WebDriver(ChromeOptions options) {
-		BrowserConfigType browserType = BrowserConfigType.chrome45;
+		BrowserConfigType browserType = null;
+		if(isWindows()) {
+			browserType = BrowserConfigType.chrome45_win;
+		} else {
+			browserType = BrowserConfigType.chrome45_linux;
+		}
 		System.setProperty(browserType.getDriver(), browserType.getPath());
 		WebDriver driver = null;
 		if (options == null) {

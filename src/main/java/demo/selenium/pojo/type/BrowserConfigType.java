@@ -3,10 +3,13 @@ package demo.selenium.pojo.type;
 public enum BrowserConfigType {
 	
 	/** chrome */
-	chrome76("chrome76", "./seleniumWebDriver/chromeDriver76.exe", "webdriver.chrome.driver"),
-	chrome45("chrome45", "./seleniumWebDriver/chromeDriver45.exe", "webdriver.chrome.driver"),
+	chrome76_win("chrome76", "./seleniumWebDriver/chrome76Driver.exe", "webdriver.chrome.driver"),
+	chrome45_win("chrome45", "./seleniumWebDriver/chrome45Driver.exe", "webdriver.chrome.driver"),
+	chrome76_linux("chrome76", "./seleniumWebDriver/chrome76Driver", "webdriver.chrome.driver"),
+	chrome45_linux("chrome45", "./seleniumWebDriver/chrome45Driver", "webdriver.chrome.driver"),
 	/** fireFox ---> gecko */
-	gecko("gecko", "./seleniumWebDriver/geckodriver-v0.24.0-win64/geckodriver.exe", "webdriver.gecko.driver"),
+	gecko_win("gecko", "./seleniumWebDriver/geckodriver-v0.24.0-win64.exe", "webdriver.gecko.driver"),
+	gecko_linux("gecko", "./seleniumWebDriver/geckodriver-v0.24.0-linux", "webdriver.gecko.driver"),
 	/** edge */
 	edge("edge", "./seleniumWebDriver/MicrosoftWebDriver.exe", "webdriver.edge.driver"),
 	/** ie */

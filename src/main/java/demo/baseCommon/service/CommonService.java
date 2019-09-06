@@ -111,13 +111,24 @@ public abstract class CommonService {
 		return result;
 	}
 	
-	protected static boolean isWindows() {
-		String os = System.getProperty("os.name").toLowerCase();
-		if(os.contains("windows")) {
-			return true;
-		} else {
-			return false;
+	protected boolean isWindows() {
+		String os = System.getProperty("os.name");
+		if(os != null) {
+			if(os.toLowerCase().contains("windows")) {
+				return true;
+			}
 		}
+		return false;
+	}
+	
+	protected boolean isLinux() {
+		String os = System.getProperty("os.name");
+		if(os != null) {
+			if(os.toLowerCase().contains("linux")) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
