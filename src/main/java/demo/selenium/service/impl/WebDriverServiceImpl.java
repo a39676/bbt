@@ -17,7 +17,6 @@ import demo.baseCommon.service.CommonService;
 import demo.selenium.pojo.constant.ChromeConstant;
 import demo.selenium.pojo.constant.FireFoxConstant;
 import demo.selenium.pojo.constant.WebDriverConstant;
-import demo.selenium.pojo.type.BrowserConfigType;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.WebDriverService;
 
@@ -29,13 +28,9 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 
 	@Override
 	public WebDriver buildFireFoxWebDriver(FirefoxOptions options) {
-		BrowserConfigType browserType = null;
-		if(isWindows()) {
-			browserType = BrowserConfigType.gecko_win;
-		} else {
-			browserType = BrowserConfigType.gecko_linux;
-		}
-		System.setProperty(browserType.getDriver(), browserType.getPath());
+		String path = globalOptionService.getGeckoPath();
+		String driverType = WebDriverConstant.geckoDriver;
+		System.setProperty(driverType, path);
 		if (options == null) {
 			options = new FirefoxOptions();
 			options.addArguments(WebDriverConstant.headLess);
@@ -62,8 +57,9 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 
 	@Override
 	public WebDriver buildEdgeWebDriver(EdgeOptions options) {
-		BrowserConfigType browserType = BrowserConfigType.edge;
-		System.setProperty(browserType.getDriver(), browserType.getPath());
+		String path = globalOptionService.getEdgePath();
+		String driverType = WebDriverConstant.edgeDriver;
+		System.setProperty(driverType, path);
 		if (options == null) {
 			options = new EdgeOptions();
 		}
@@ -78,13 +74,9 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 
 	@Override
 	public WebDriver buildChrome76WebDriver(ChromeOptions options) {
-		BrowserConfigType browserType = null;
-		if(isWindows()) {
-			browserType = BrowserConfigType.chrome76_win;
-		} else {
-			browserType = BrowserConfigType.chrome76_linux;
-		}
-		System.setProperty(browserType.getDriver(), browserType.getPath());
+		String path = globalOptionService.getChrome76Path();
+		String driverType = WebDriverConstant.chromeDriver;
+		System.setProperty(driverType, path);
 		WebDriver driver = null;
 		if (options == null) {
 			options = new ChromeOptions();
@@ -106,13 +98,9 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 	
 	@Override
 	public WebDriver buildChrome45WebDriver(ChromeOptions options) {
-		BrowserConfigType browserType = null;
-		if(isWindows()) {
-			browserType = BrowserConfigType.chrome45_win;
-		} else {
-			browserType = BrowserConfigType.chrome45_linux;
-		}
-		System.setProperty(browserType.getDriver(), browserType.getPath());
+		String path = globalOptionService.getChrome45Path();
+		String driverType = WebDriverConstant.chromeDriver;
+		System.setProperty(driverType, path);
 		WebDriver driver = null;
 		if (options == null) {
 			options = new ChromeOptions();
@@ -135,8 +123,9 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 	@SuppressWarnings("deprecation")
 	@Override
 	public WebDriver buildIEWebDriver() {
-		BrowserConfigType browserType = BrowserConfigType.ie;
-		System.setProperty(browserType.getDriver(), browserType.getPath());
+		String path = globalOptionService.getIePath();
+		String driverType = WebDriverConstant.ieDriver;
+		System.setProperty(driverType, path);
 		DesiredCapabilities ieCapabilities = DesiredCapabilities.internetExplorer();
 		ieCapabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
 		WebDriver driver = new InternetExplorerDriver(ieCapabilities);

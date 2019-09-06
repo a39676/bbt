@@ -23,6 +23,18 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 	private String downloadDirRedisKey = "seleniumDownloadDir";
 	private String screenshotSavingFloderRedisKey = "seleniumDownloadDir";
 	
+
+	private String seleniumWebDriverFolder = "./seleniumWebDriver";
+	private String chrome76Path_win = seleniumWebDriverFolder + "/chrome76Driver.exe";
+	private String chrome45Path_win = seleniumWebDriverFolder + "/chrome45Driver.exe";
+	private String chrome76Path_linux = seleniumWebDriverFolder + "/chrome76Driver";
+	private String chrome45Path_linux = seleniumWebDriverFolder + "/chrome45Driver";
+	private String geckoPath_win = seleniumWebDriverFolder + "/geckodriver-v0.24.0-win64.exe";
+	private String geckoPath_linux = seleniumWebDriverFolder + "/geckodriver-v0.24.0-linux";
+	private String edgePath = seleniumWebDriverFolder + "/MicrosoftWebDriver.exe";
+	private String iePath = seleniumWebDriverFolder + "/IEDriverServer.exe";
+	
+	
 	@Override
 	public String getDownloadDir() {
 		String downloadDir = constantService.getValByName(downloadDirRedisKey);
@@ -65,5 +77,42 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 		constantService.setValByName(systemConstant);
 		
 		return screenshotSavingDir;
+	}
+
+	@Override
+	public String getChrome76Path() {
+		if(isWindows()) {
+			return chrome76Path_win;
+		} else {
+			return chrome76Path_linux;
+		}
+	}
+	
+	@Override
+	public String getChrome45Path() {
+		if(isWindows()) {
+			return chrome45Path_win;
+		} else {
+			return chrome45Path_linux;
+		}
+	}
+	
+	@Override
+	public String getGeckoPath() {
+		if(isWindows()) {
+			return geckoPath_win;
+		} else {
+			return geckoPath_linux;
+		}
+	}
+	
+	@Override
+	public String getEdgePath() {
+		return edgePath;
+	}
+	
+	@Override
+	public String getIePath() {
+		return iePath;
 	}
 }

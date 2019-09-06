@@ -6,4 +6,14 @@ public interface SeleniumGlobalOptionService {
 
 	String getScreenshotSavingFolder();
 
+	String getChrome76Path();
+	String getChrome45Path();
+
+	String getGeckoPath();
+
+	String getEdgePath();
+
+	String getIePath();
+
+
 }
