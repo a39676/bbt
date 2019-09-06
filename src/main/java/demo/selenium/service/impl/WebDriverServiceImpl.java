@@ -80,11 +80,11 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 		WebDriver driver = null;
 		if (options == null) {
 			options = new ChromeOptions();
-//			options.addArguments(WebDriverConstant.headLess);
-//			options.setExperimentalOption(ChromeConstant.downloadDir, globalOptionService.getDownloadDir());
-//			options.setExperimentalOption(ChromeConstant.promptForDownload, false);
-//			options.setExperimentalOption(ChromeConstant.directoryUpgrade, true);
-//			options.setExperimentalOption(ChromeConstant.safebrowsingEnabled, true);
+			options.addArguments(WebDriverConstant.headLess);
+			options.setExperimentalOption(ChromeConstant.downloadDir, globalOptionService.getDownloadDir());
+			options.setExperimentalOption(ChromeConstant.promptForDownload, false);
+			options.setExperimentalOption(ChromeConstant.directoryUpgrade, true);
+			options.setExperimentalOption(ChromeConstant.safebrowsingEnabled, true);
 		}
 
 		driver = new ChromeDriver(options);
