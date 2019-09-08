@@ -38,7 +38,7 @@ public class SeForJokeImpl extends CommonService implements SeForJoke {
 //		FirefoxOptions options = new FirefoxOptions();
 //		EdgeOptions options = new EdgeOptions();
 //		options.addArguments(WebDriverGlobalOption.headLess);
-//		WebDriver d = webDriverService.buildChrome76WebDriver(options);
+//		WebDriver d = webDriverService.buildChrome76WebDriver();
 		WebDriver d = webDriverService.buildFireFoxWebDriver();
 //		WebDriver d = webDriverService.buildEdgeWebDriver(options);
 //		WebDriver d = webDriverService.buildIEWebDriver();

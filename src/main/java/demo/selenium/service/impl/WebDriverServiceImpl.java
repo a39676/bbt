@@ -1,5 +1,9 @@
 package demo.selenium.service.impl;
 
+import java.util.Arrays;
+import java.util.Hashtable;
+import java.util.Map;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -23,7 +27,7 @@ import demo.selenium.service.WebDriverService;
 
 @Service
 public class WebDriverServiceImpl extends CommonService implements WebDriverService {
-	
+
 	@Autowired
 	private SeleniumGlobalOptionService globalOptionService;
 
@@ -34,17 +38,18 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 		System.setProperty(driverType, path);
 		if (options == null) {
 			options = new FirefoxOptions();
-//			options.addArguments(WebDriverConstant.headLess);
+			if (!"dev".equals(envName)) {
+				options.addArguments(WebDriverConstant.headLess);
+			}
 		}
 
 		if (options.getProfile() == null) {
 			FirefoxProfile profile = new FirefoxProfile();
 			profile.setPreference(FireFoxConstant.folderList, 2);
-//			profile.setPreference(FireFoxConstant.downloadDir, globalOptionService.getDownloadDir());
-			profile.setPreference(FireFoxConstant.downloadDir, "d:\\auxiliary\\tmp\\download");
+			profile.setPreference(FireFoxConstant.downloadDir, globalOptionService.getDownloadDir());
 			profile.setPreference(FireFoxConstant.downloadShowWhenStarting, false);
 			StringBuffer sb = new StringBuffer();
-			for(HtmlMimeType i : HtmlMimeType.values()) {
+			for (HtmlMimeType i : HtmlMimeType.values()) {
 				sb.append(i.getCode() + ",");
 			}
 			profile.setPreference(FireFoxConstant.neverAskSaveToDisk, sb.toString());
@@ -85,24 +90,56 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 		String driverType = WebDriverConstant.chromeDriver;
 		System.setProperty(driverType, path);
 		WebDriver driver = null;
+		/*
+		 * 2019-09-08
+		 * I have no idea why 
+		 * can NOT set any experimental option with this code
+		 * every experimental option call "unrecognized chrome option" error
 		if (options == null) {
 			options = new ChromeOptions();
-			options.addArguments(WebDriverConstant.headLess);
+			if (!"dev".equals(envName)) {
+				options.addArguments(WebDriverConstant.headLess);
+			}
 			options.setExperimentalOption(ChromeConstant.downloadDir, globalOptionService.getDownloadDir());
 			options.setExperimentalOption(ChromeConstant.promptForDownload, false);
 			options.setExperimentalOption(ChromeConstant.directoryUpgrade, true);
 			options.setExperimentalOption(ChromeConstant.safebrowsingEnabled, true);
 		}
+		 */
 
-		driver = new ChromeDriver(options);
+		driver = buildChromeDriverBugFix(options);
 		return driver;
+	}
+
+	@SuppressWarnings("deprecation")
+	private ChromeDriver buildChromeDriverBugFix(ChromeOptions options) {
+		if(options == null) {
+			options = new ChromeOptions();
+		}
+		DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+		Map<String, String> prefs = new Hashtable<>();
+		prefs.put(ChromeConstant.downloadDir, globalOptionService.getDownloadDir());
+		prefs.put(ChromeConstant.promptForDownload, "false");
+		prefs.put(ChromeConstant.directoryUpgrade, "true");
+		prefs.put(ChromeConstant.safebrowsingEnabled, "false");
+		prefs.put("profile.default_content_settings.popups", "0");
+		String[] switches = { "--start-maximized", "--ignore-certificate-errors" };
+		capabilities.setJavascriptEnabled(true);
+		capabilities.setCapability("chrome.prefs", prefs);
+		capabilities.setCapability("chrome.switches", Arrays.asList(switches));
+		if (!"dev".equals(envName)) {
+			options.addArguments(WebDriverConstant.headLess);
+		}
+		capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+		
+		return new ChromeDriver(capabilities);
 	}
 
 	@Override
 	public WebDriver buildChrome76WebDriver() {
 		return buildChrome76WebDriver(null);
 	}
-	
+
 	@Override
 	public WebDriver buildChrome45WebDriver(ChromeOptions options) {
 		String path = globalOptionService.getChrome45Path();
@@ -111,11 +148,13 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 		WebDriver driver = null;
 		if (options == null) {
 			options = new ChromeOptions();
-			options.addArguments(WebDriverConstant.headLess);
-			options.setExperimentalOption(ChromeConstant.downloadDir, globalOptionService.getDownloadDir());
-			options.setExperimentalOption(ChromeConstant.promptForDownload, false);
-			options.setExperimentalOption(ChromeConstant.directoryUpgrade, true);
-			options.setExperimentalOption(ChromeConstant.safebrowsingEnabled, true);
+			if (!"dev".equals(envName)) {
+				options.addArguments(WebDriverConstant.headLess);
+			}
+			options.setExperimentalOption(ChromeConstant.downloadDir, globalOptionService.getDownloadDir())
+					.setExperimentalOption(ChromeConstant.promptForDownload, false)
+					.setExperimentalOption(ChromeConstant.directoryUpgrade, true)
+					.setExperimentalOption(ChromeConstant.safebrowsingEnabled, true);
 		}
 
 		driver = new ChromeDriver(options);
@@ -126,7 +165,7 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 	public WebDriver buildChrome45WebDriver() {
 		return buildChrome45WebDriver(null);
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	@Override
 	public WebDriver buildIEWebDriver() {
@@ -136,7 +175,7 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 		DesiredCapabilities ieCapabilities = DesiredCapabilities.internetExplorer();
 		ieCapabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
 		WebDriver driver = new InternetExplorerDriver(ieCapabilities);
-		
+
 		return driver;
 	}
 

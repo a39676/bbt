@@ -41,7 +41,7 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 
 		if (StringUtils.isNotBlank(downloadFolderPath)) {
 			checkFolderExists(downloadFolderPath);
-			return downloadFolderPath;
+			return pathChangeByDetectOS(downloadFolderPath);
 		}
 
 		if (isWindows()) {
@@ -75,7 +75,7 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 
 		if (StringUtils.isNotBlank(screenshotSavingDir)) {
 			checkFolderExists(screenshotSavingDir);
-			return screenshotSavingDir;
+			return pathChangeByDetectOS(screenshotSavingDir);
 		}
 
 		if (isWindows()) {
