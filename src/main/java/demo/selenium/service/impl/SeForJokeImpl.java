@@ -30,16 +30,56 @@ public class SeForJokeImpl extends CommonService implements SeForJoke {
 	private String jokerAddress = "广州市越秀区万菱广场2204室";
 	
 	@Override
+	public void test() {
+		TestEvent te = new TestEvent();
+		te.setId(1L);
+		te.setEventName("test");
+//		ChromeOptions options = new ChromeOptions();
+//		FirefoxOptions options = new FirefoxOptions();
+//		EdgeOptions options = new EdgeOptions();
+//		options.addArguments(WebDriverGlobalOption.headLess);
+//		WebDriver d = webDriverService.buildChrome76WebDriver(options);
+		WebDriver d = webDriverService.buildFireFoxWebDriver();
+//		WebDriver d = webDriverService.buildEdgeWebDriver(options);
+//		WebDriver d = webDriverService.buildIEWebDriver();
+		
+		try {
+			String url = "https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-actuator/2.1.8.RELEASE";
+			d.get(url);
+			
+			auxTool.takeScreenshot(d, te);
+
+			ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("a", "class", "vbtn");
+			By downloadJarBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			WebElement downloadJar = d.findElement(downloadJarBy);
+			downloadJar.click();
+			
+			auxTool.takeScreenshot(d, te);
+			
+			d.get("http://www.baidu.com");
+			
+			auxTool.takeScreenshot(d, te);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(d != null) {
+				d.quit();
+			}
+		}
+	}
+	
+	@Override
 	public void lanXiang() {
 		TestEvent te = new TestEvent();
 		te.setId(1L);
 		te.setEventName("lanXiang");
 //		ChromeOptions options = new ChromeOptions();
-		FirefoxOptions options = new FirefoxOptions();
+//		FirefoxOptions options = new FirefoxOptions();
 //		EdgeOptions options = new EdgeOptions();
 //		options.addArguments(WebDriverGlobalOption.headLess);
-//		WebDriver d = webDriverService.buildChrome76WebDriver();
-		WebDriver d = webDriverService.buildFireFoxWebDriver(options);
+		WebDriver d = webDriverService.buildChrome76WebDriver();
+//		WebDriver d = webDriverService.buildFireFoxWebDriver(options);
 //		WebDriver d = webDriverService.buildEdgeWebDriver(options);
 //		WebDriver d = webDriverService.buildIEWebDriver();
 		

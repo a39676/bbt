@@ -14,7 +14,6 @@ public class OnStartup implements ApplicationListener<ApplicationReadyEvent> {
 	@Autowired
 	private SeleniumGlobalOptionService globalOptionService;
 	
-	
 /*
  * ContextStartedEvent
  * ContextStoppedEvent

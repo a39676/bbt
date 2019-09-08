@@ -13,6 +13,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import constant.HtmlMimeType;
 import demo.baseCommon.service.CommonService;
 import demo.selenium.pojo.constant.ChromeConstant;
 import demo.selenium.pojo.constant.FireFoxConstant;
@@ -33,19 +34,25 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 		System.setProperty(driverType, path);
 		if (options == null) {
 			options = new FirefoxOptions();
-			options.addArguments(WebDriverConstant.headLess);
+//			options.addArguments(WebDriverConstant.headLess);
 		}
 
 		if (options.getProfile() == null) {
 			FirefoxProfile profile = new FirefoxProfile();
-			profile.setPreference(FireFoxConstant.downloadDir, globalOptionService.getDownloadDir());
 			profile.setPreference(FireFoxConstant.folderList, 2);
+//			profile.setPreference(FireFoxConstant.downloadDir, globalOptionService.getDownloadDir());
+			profile.setPreference(FireFoxConstant.downloadDir, "d:\\auxiliary\\tmp\\download");
 			profile.setPreference(FireFoxConstant.downloadShowWhenStarting, false);
-			profile.setPreference(FireFoxConstant.neverAskSaveToDisk, "text/csv");
+			StringBuffer sb = new StringBuffer();
+			for(HtmlMimeType i : HtmlMimeType.values()) {
+				sb.append(i.getCode() + ",");
+			}
+			profile.setPreference(FireFoxConstant.neverAskSaveToDisk, sb.toString());
+//			profile.setPreference(FireFoxConstant.browserDownloadUseDownloadDir, true);
 			options.setProfile(profile);
 		}
 
-		WebDriver driver = new FirefoxDriver(options);
+		FirefoxDriver driver = new FirefoxDriver(options);
 
 		return driver;
 	}

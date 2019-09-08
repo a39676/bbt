@@ -119,4 +119,9 @@ public class TestController extends CommonController {
 	public void oaTmpTest() {
 		seComplexOA.tmpTest();
 	}
+	
+	@GetMapping(value = "sjtest")
+	public void sjTest() {
+		seForJoke.test();
+	}
 }

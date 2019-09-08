@@ -1,6 +1,6 @@
 package demo.selenium.pojo.constant;
 
-public class ChromeConstant {
+public class ChromeConstant extends WebDriverConstant {
 	
 	public static final String downloadDir = "download.default_directory";
 	
