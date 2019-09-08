@@ -38,7 +38,7 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 		System.setProperty(driverType, path);
 		if (options == null) {
 			options = new FirefoxOptions();
-			if (!"dev".equals(envName)) {
+			if (!"dev".equals(envName) || !isWindows()) {
 				options.addArguments(WebDriverConstant.headLess);
 			}
 		}
@@ -127,7 +127,7 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 		capabilities.setJavascriptEnabled(true);
 		capabilities.setCapability("chrome.prefs", prefs);
 		capabilities.setCapability("chrome.switches", Arrays.asList(switches));
-		if (!"dev".equals(envName)) {
+		if (!"dev".equals(envName) || !isWindows()) {
 			options.addArguments(WebDriverConstant.headLess);
 		}
 		capabilities.setCapability(ChromeOptions.CAPABILITY, options);
@@ -148,7 +148,7 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 		WebDriver driver = null;
 		if (options == null) {
 			options = new ChromeOptions();
-			if (!"dev".equals(envName)) {
+			if (!"dev".equals(envName) || !isWindows()) {
 				options.addArguments(WebDriverConstant.headLess);
 			}
 			options.setExperimentalOption(ChromeConstant.downloadDir, globalOptionService.getDownloadDir())
