@@ -2,8 +2,10 @@ package demo.clawing.pojo.type;
 
 public enum MedicineDocumentType {
 	
-	up("↑↑", 1),
-	down("↓↓", -1),
+	/** 药理 */
+	pharmacology("pharmacology", 1),
+	/** 疗效 */
+	efficacy("efficacy", 2),
 	;
 	
 	private String name;
