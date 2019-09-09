@@ -5,7 +5,7 @@
   
 <generatorConfiguration>    
 	<!-- 数据库驱动-->    
-    <classPathEntry  location="D:/jar/sql/mysql-connector-java-8.0.16.jar"/>    
+    <classPathEntry  location="D:/jar/sql/mysql-connector-java-8.0.17.jar"/>    
     <context id="DB2Tables"  targetRuntime="MyBatis3">    
         <commentGenerator>    
             <property name="suppressDate" value="true"/>    
@@ -30,7 +30,7 @@
         </javaTypeResolver>  
           
         <!-- 生成模型的包名和位置-->    
-        <javaModelGenerator targetPackage="demo.selenium.pojo.po" targetProject="bbt">    
+        <javaModelGenerator targetPackage="demo.clawing.pojo.po" targetProject="bbt">    
             <property name="enableSubPackages" value="true"/>    
             <property name="trimStrings" value="true"/> 
             <!-- for MyBatis3 / MyBatis3Simple
@@ -41,18 +41,18 @@
         </javaModelGenerator>    
         
         <!-- 生成映射文件的包名和位置-->    
-        <sqlMapGenerator targetPackage="demo.selenium.mapper" targetProject="bbt">    
+        <sqlMapGenerator targetPackage="demo.clawing.mapper" targetProject="bbt">    
             <property name="enableSubPackages" value="true"/>    
         </sqlMapGenerator>    
         
         <!-- 生成DAO的包名和位置-->    
-        <javaClientGenerator type="XMLMAPPER" targetPackage="demo.selenium.mapper" targetProject="bbt">    
+        <javaClientGenerator type="XMLMAPPER" targetPackage="demo.clawing.mapper" targetProject="bbt">    
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="screenshot">
-        	<property name="tableName" value="screenshot"></property>
-        	<property name="domainObjectName" value="screenshot" ></property>
+        <table tableName="medicine_info">
+        	<property name="tableName" value="medicine_info"></property>
+        	<property name="domainObjectName" value="medicine_info" ></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

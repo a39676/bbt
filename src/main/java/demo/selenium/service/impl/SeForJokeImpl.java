@@ -3,7 +3,6 @@ package demo.selenium.service.impl;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -150,11 +149,7 @@ public class SeForJokeImpl extends CommonService implements SeForJoke {
 		TestEvent te = new TestEvent();
 		te.setId(1L);
 		te.setEventName("liuXue");
-//		ChromeOptions options = new ChromeOptions();
-		FirefoxOptions options = new FirefoxOptions();
-//		options.addArguments(WebDriverGlobalOption.headLess);
-//		WebDriver d = webDriverService.buildChromeWebDriver(options);
-		WebDriver d = webDriverService.buildFireFoxWebDriver(options);
+		WebDriver d = webDriverService.buildFireFoxWebDriver();
 		
 		try {
 			String url = "https://liuxue.xdf.cn/blog/ExpertBlog/";

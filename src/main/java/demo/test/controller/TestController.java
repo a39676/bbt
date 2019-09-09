@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.baseCommon.controller.CommonController;
+import demo.clawing.service.ClawingMedicineService;
 import demo.selenium.service.SeComplexOA;
 import demo.selenium.service.SeForJoke;
 import demo.selenium.service.SeleniumService;
@@ -40,6 +41,8 @@ public class TestController extends CommonController {
 	private SeForJoke seForJoke;
 	@Autowired
 	private SeComplexOA seComplexOA;
+	@Autowired
+	private ClawingMedicineService medicineService;
 	
 	
 	@ApiOperation(value="测试", notes="测试notes")
@@ -123,5 +126,10 @@ public class TestController extends CommonController {
 	@GetMapping(value = "sjtest")
 	public void sjTest() {
 		seForJoke.test();
+	}
+	
+	@GetMapping(value = "mtest")
+	public void mTest() {
+		medicineService.medicineTest();
 	}
 }
