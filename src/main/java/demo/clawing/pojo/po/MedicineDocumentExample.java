@@ -104,6 +104,66 @@ public class MedicineDocumentExample {
             criteria.add(new Criterion(condition, value1, value2));
         }
 
+        public Criteria andIdIsNull() {
+            addCriterion("id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdIsNotNull() {
+            addCriterion("id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdEqualTo(Long value) {
+            addCriterion("id =", value, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdNotEqualTo(Long value) {
+            addCriterion("id <>", value, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdGreaterThan(Long value) {
+            addCriterion("id >", value, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("id >=", value, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdLessThan(Long value) {
+            addCriterion("id <", value, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdLessThanOrEqualTo(Long value) {
+            addCriterion("id <=", value, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdIn(List<Long> values) {
+            addCriterion("id in", values, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdNotIn(List<Long> values) {
+            addCriterion("id not in", values, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdBetween(Long value1, Long value2) {
+            addCriterion("id between", value1, value2, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdNotBetween(Long value1, Long value2) {
+            addCriterion("id not between", value1, value2, "id");
+            return (Criteria) this;
+        }
+
         public Criteria andMedicineIdIsNull() {
             addCriterion("medicine_id is null");
             return (Criteria) this;
@@ -164,143 +224,133 @@ public class MedicineDocumentExample {
             return (Criteria) this;
         }
 
-        public Criteria andDetailPathIsNull() {
-            addCriterion("detail_path is null");
+        public Criteria andDocumentPathIsNull() {
+            addCriterion("document_path is null");
             return (Criteria) this;
         }
 
-        public Criteria andDetailPathIsNotNull() {
-            addCriterion("detail_path is not null");
+        public Criteria andDocumentPathIsNotNull() {
+            addCriterion("document_path is not null");
             return (Criteria) this;
         }
 
-        public Criteria andDetailPathEqualTo(String value) {
-            addCriterion("detail_path =", value, "detailPath");
+        public Criteria andDocumentPathEqualTo(String value) {
+            addCriterion("document_path =", value, "documentPath");
             return (Criteria) this;
         }
 
-        public Criteria andDetailPathNotEqualTo(String value) {
-            addCriterion("detail_path <>", value, "detailPath");
+        public Criteria andDocumentPathNotEqualTo(String value) {
+            addCriterion("document_path <>", value, "documentPath");
             return (Criteria) this;
         }
 
-        public Criteria andDetailPathGreaterThan(String value) {
-            addCriterion("detail_path >", value, "detailPath");
+        public Criteria andDocumentPathGreaterThan(String value) {
+            addCriterion("document_path >", value, "documentPath");
             return (Criteria) this;
         }
 
-        public Criteria andDetailPathGreaterThanOrEqualTo(String value) {
-            addCriterion("detail_path >=", value, "detailPath");
+        public Criteria andDocumentPathGreaterThanOrEqualTo(String value) {
+            addCriterion("document_path >=", value, "documentPath");
             return (Criteria) this;
         }
 
-        public Criteria andDetailPathLessThan(String value) {
-            addCriterion("detail_path <", value, "detailPath");
+        public Criteria andDocumentPathLessThan(String value) {
+            addCriterion("document_path <", value, "documentPath");
             return (Criteria) this;
         }
 
-        public Criteria andDetailPathLessThanOrEqualTo(String value) {
-            addCriterion("detail_path <=", value, "detailPath");
+        public Criteria andDocumentPathLessThanOrEqualTo(String value) {
+            addCriterion("document_path <=", value, "documentPath");
             return (Criteria) this;
         }
 
-        public Criteria andDetailPathLike(String value) {
-            addCriterion("detail_path like", value, "detailPath");
+        public Criteria andDocumentPathLike(String value) {
+            addCriterion("document_path like", value, "documentPath");
             return (Criteria) this;
         }
 
-        public Criteria andDetailPathNotLike(String value) {
-            addCriterion("detail_path not like", value, "detailPath");
+        public Criteria andDocumentPathNotLike(String value) {
+            addCriterion("document_path not like", value, "documentPath");
             return (Criteria) this;
         }
 
-        public Criteria andDetailPathIn(List<String> values) {
-            addCriterion("detail_path in", values, "detailPath");
+        public Criteria andDocumentPathIn(List<String> values) {
+            addCriterion("document_path in", values, "documentPath");
             return (Criteria) this;
         }
 
-        public Criteria andDetailPathNotIn(List<String> values) {
-            addCriterion("detail_path not in", values, "detailPath");
+        public Criteria andDocumentPathNotIn(List<String> values) {
+            addCriterion("document_path not in", values, "documentPath");
             return (Criteria) this;
         }
 
-        public Criteria andDetailPathBetween(String value1, String value2) {
-            addCriterion("detail_path between", value1, value2, "detailPath");
+        public Criteria andDocumentPathBetween(String value1, String value2) {
+            addCriterion("document_path between", value1, value2, "documentPath");
             return (Criteria) this;
         }
 
-        public Criteria andDetailPathNotBetween(String value1, String value2) {
-            addCriterion("detail_path not between", value1, value2, "detailPath");
+        public Criteria andDocumentPathNotBetween(String value1, String value2) {
+            addCriterion("document_path not between", value1, value2, "documentPath");
             return (Criteria) this;
         }
 
-        public Criteria andPharmacologyPathIsNull() {
-            addCriterion("pharmacology_path is null");
+        public Criteria andDocumentTypeIsNull() {
+            addCriterion("document_type is null");
             return (Criteria) this;
         }
 
-        public Criteria andPharmacologyPathIsNotNull() {
-            addCriterion("pharmacology_path is not null");
+        public Criteria andDocumentTypeIsNotNull() {
+            addCriterion("document_type is not null");
             return (Criteria) this;
         }
 
-        public Criteria andPharmacologyPathEqualTo(String value) {
-            addCriterion("pharmacology_path =", value, "pharmacologyPath");
+        public Criteria andDocumentTypeEqualTo(Byte value) {
+            addCriterion("document_type =", value, "documentType");
             return (Criteria) this;
         }
 
-        public Criteria andPharmacologyPathNotEqualTo(String value) {
-            addCriterion("pharmacology_path <>", value, "pharmacologyPath");
+        public Criteria andDocumentTypeNotEqualTo(Byte value) {
+            addCriterion("document_type <>", value, "documentType");
             return (Criteria) this;
         }
 
-        public Criteria andPharmacologyPathGreaterThan(String value) {
-            addCriterion("pharmacology_path >", value, "pharmacologyPath");
+        public Criteria andDocumentTypeGreaterThan(Byte value) {
+            addCriterion("document_type >", value, "documentType");
             return (Criteria) this;
         }
 
-        public Criteria andPharmacologyPathGreaterThanOrEqualTo(String value) {
-            addCriterion("pharmacology_path >=", value, "pharmacologyPath");
+        public Criteria andDocumentTypeGreaterThanOrEqualTo(Byte value) {
+            addCriterion("document_type >=", value, "documentType");
             return (Criteria) this;
         }
 
-        public Criteria andPharmacologyPathLessThan(String value) {
-            addCriterion("pharmacology_path <", value, "pharmacologyPath");
+        public Criteria andDocumentTypeLessThan(Byte value) {
+            addCriterion("document_type <", value, "documentType");
             return (Criteria) this;
         }
 
-        public Criteria andPharmacologyPathLessThanOrEqualTo(String value) {
-            addCriterion("pharmacology_path <=", value, "pharmacologyPath");
+        public Criteria andDocumentTypeLessThanOrEqualTo(Byte value) {
+            addCriterion("document_type <=", value, "documentType");
             return (Criteria) this;
         }
 
-        public Criteria andPharmacologyPathLike(String value) {
-            addCriterion("pharmacology_path like", value, "pharmacologyPath");
+        public Criteria andDocumentTypeIn(List<Byte> values) {
+            addCriterion("document_type in", values, "documentType");
             return (Criteria) this;
         }
 
-        public Criteria andPharmacologyPathNotLike(String value) {
-            addCriterion("pharmacology_path not like", value, "pharmacologyPath");
+        public Criteria andDocumentTypeNotIn(List<Byte> values) {
+            addCriterion("document_type not in", values, "documentType");
             return (Criteria) this;
         }
 
-        public Criteria andPharmacologyPathIn(List<String> values) {
-            addCriterion("pharmacology_path in", values, "pharmacologyPath");
+        public Criteria andDocumentTypeBetween(Byte value1, Byte value2) {
+            addCriterion("document_type between", value1, value2, "documentType");
             return (Criteria) this;
         }
 
-        public Criteria andPharmacologyPathNotIn(List<String> values) {
-            addCriterion("pharmacology_path not in", values, "pharmacologyPath");
-            return (Criteria) this;
-        }
-
-        public Criteria andPharmacologyPathBetween(String value1, String value2) {
-            addCriterion("pharmacology_path between", value1, value2, "pharmacologyPath");
-            return (Criteria) this;
-        }
-
-        public Criteria andPharmacologyPathNotBetween(String value1, String value2) {
-            addCriterion("pharmacology_path not between", value1, value2, "pharmacologyPath");
+        public Criteria andDocumentTypeNotBetween(Byte value1, Byte value2) {
+            addCriterion("document_type not between", value1, value2, "documentType");
             return (Criteria) this;
         }
 

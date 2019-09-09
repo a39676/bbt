@@ -1,13 +1,28 @@
 package demo.clawing.pojo.po;
 
+import demo.clawing.pojo.type.MedicineDocumentType;
+
 public class MedicineDocument {
+    private Long id;
+
     private Long medicineId;
 
-    private String detailPath;
+    private String documentPath;
 
-    private String pharmacologyPath;
+    /**
+     * {@link MedicineDocumentType}
+     */
+    private Byte documentType;
 
     private Boolean isDelete;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getMedicineId() {
         return medicineId;
@@ -17,20 +32,20 @@ public class MedicineDocument {
         this.medicineId = medicineId;
     }
 
-    public String getDetailPath() {
-        return detailPath;
+    public String getDocumentPath() {
+        return documentPath;
     }
 
-    public void setDetailPath(String detailPath) {
-        this.detailPath = detailPath == null ? null : detailPath.trim();
+    public void setDocumentPath(String documentPath) {
+        this.documentPath = documentPath == null ? null : documentPath.trim();
     }
 
-    public String getPharmacologyPath() {
-        return pharmacologyPath;
+    public Byte getDocumentType() {
+        return documentType;
     }
 
-    public void setPharmacologyPath(String pharmacologyPath) {
-        this.pharmacologyPath = pharmacologyPath == null ? null : pharmacologyPath.trim();
+    public void setDocumentType(Byte documentType) {
+        this.documentType = documentType;
     }
 
     public Boolean getIsDelete() {

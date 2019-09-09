@@ -5,7 +5,6 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="factory_name" jdbcType="VARCHAR" property="factoryName" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -67,7 +66,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, factory_name, create_time, end_time, is_delete
+    id, factory_name, create_time, is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.clawing.pojo.po.MedicineFactoryExample" resultMap="BaseResultMap">
     select
@@ -101,9 +100,9 @@
   </delete>
   <insert id="insert" parameterType="demo.clawing.pojo.po.MedicineFactory">
     insert into medicine_factory (id, factory_name, create_time, 
-      end_time, is_delete)
+      is_delete)
     values (#{id,jdbcType=BIGINT}, #{factoryName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{endTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT})
+      #{isDelete,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="demo.clawing.pojo.po.MedicineFactory">
     insert into medicine_factory
@@ -116,9 +115,6 @@
       </if>
       <if test="createTime != null">
         create_time,
-      </if>
-      <if test="endTime != null">
-        end_time,
       </if>
       <if test="isDelete != null">
         is_delete,
@@ -133,9 +129,6 @@
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="endTime != null">
-        #{endTime,jdbcType=TIMESTAMP},
       </if>
       <if test="isDelete != null">
         #{isDelete,jdbcType=BIT},
@@ -160,9 +153,6 @@
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.endTime != null">
-        end_time = #{record.endTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="record.isDelete != null">
         is_delete = #{record.isDelete,jdbcType=BIT},
       </if>
@@ -176,7 +166,6 @@
     set id = #{record.id,jdbcType=BIGINT},
       factory_name = #{record.factoryName,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      end_time = #{record.endTime,jdbcType=TIMESTAMP},
       is_delete = #{record.isDelete,jdbcType=BIT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -191,9 +180,6 @@
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="endTime != null">
-        end_time = #{endTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="isDelete != null">
         is_delete = #{isDelete,jdbcType=BIT},
       </if>
@@ -204,7 +190,6 @@
     update medicine_factory
     set factory_name = #{factoryName,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      end_time = #{endTime,jdbcType=TIMESTAMP},
       is_delete = #{isDelete,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>

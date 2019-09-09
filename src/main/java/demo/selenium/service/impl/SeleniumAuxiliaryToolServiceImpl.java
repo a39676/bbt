@@ -177,7 +177,7 @@ public class SeleniumAuxiliaryToolServiceImpl extends CommonService implements S
 
 	@Override
 	public By byXpathBuilder(ByXpathConditionBO bo) {
-		StringBuffer s = new StringBuffer("//" + bo.getPrefix() + "[");
+		StringBuffer s = new StringBuffer("//" + bo.getTagName() + "[");
 		if(bo.getKvList() == null || bo.getKvList().size() < 1) {
 			s.append("]");
 			return By.xpath(s.toString());

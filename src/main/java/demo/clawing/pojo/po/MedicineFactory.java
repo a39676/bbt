@@ -9,8 +9,6 @@ public class MedicineFactory {
 
     private LocalDateTime createTime;
 
-    private LocalDateTime endTime;
-
     private Boolean isDelete;
 
     public Long getId() {
@@ -35,14 +33,6 @@ public class MedicineFactory {
 
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
-    }
-
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
     }
 
     public Boolean getIsDelete() {

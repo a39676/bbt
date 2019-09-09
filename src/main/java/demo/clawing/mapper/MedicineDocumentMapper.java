@@ -10,7 +10,7 @@ public interface MedicineDocumentMapper {
 
     int deleteByExample(MedicineDocumentExample example);
 
-    int deleteByPrimaryKey(Long medicineId);
+    int deleteByPrimaryKey(Long id);
 
     int insert(MedicineDocument record);
 
@@ -18,7 +18,7 @@ public interface MedicineDocumentMapper {
 
     List<MedicineDocument> selectByExample(MedicineDocumentExample example);
 
-    MedicineDocument selectByPrimaryKey(Long medicineId);
+    MedicineDocument selectByPrimaryKey(Long id);
 
     int updateByExampleSelective(@Param("record") MedicineDocument record, @Param("example") MedicineDocumentExample example);
 

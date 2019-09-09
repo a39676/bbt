@@ -2,9 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="demo.clawing.mapper.MedicineDocumentMapper">
   <resultMap id="BaseResultMap" type="demo.clawing.pojo.po.MedicineDocument">
-    <id column="medicine_id" jdbcType="BIGINT" property="medicineId" />
-    <result column="detail_path" jdbcType="VARCHAR" property="detailPath" />
-    <result column="pharmacology_path" jdbcType="VARCHAR" property="pharmacologyPath" />
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="medicine_id" jdbcType="BIGINT" property="medicineId" />
+    <result column="document_path" jdbcType="VARCHAR" property="documentPath" />
+    <result column="document_type" jdbcType="TINYINT" property="documentType" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -66,7 +67,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    medicine_id, detail_path, pharmacology_path, is_delete
+    id, medicine_id, document_path, document_type, is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.clawing.pojo.po.MedicineDocumentExample" resultMap="BaseResultMap">
     select
@@ -86,11 +87,11 @@
     select 
     <include refid="Base_Column_List" />
     from medicine_document
-    where medicine_id = #{medicineId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from medicine_document
-    where medicine_id = #{medicineId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="demo.clawing.pojo.po.MedicineDocumentExample">
     delete from medicine_document
@@ -99,36 +100,42 @@
     </if>
   </delete>
   <insert id="insert" parameterType="demo.clawing.pojo.po.MedicineDocument">
-    insert into medicine_document (medicine_id, detail_path, pharmacology_path, 
-      is_delete)
-    values (#{medicineId,jdbcType=BIGINT}, #{detailPath,jdbcType=VARCHAR}, #{pharmacologyPath,jdbcType=VARCHAR}, 
-      #{isDelete,jdbcType=BIT})
+    insert into medicine_document (id, medicine_id, document_path, 
+      document_type, is_delete)
+    values (#{id,jdbcType=BIGINT}, #{medicineId,jdbcType=BIGINT}, #{documentPath,jdbcType=VARCHAR}, 
+      #{documentType,jdbcType=TINYINT}, #{isDelete,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="demo.clawing.pojo.po.MedicineDocument">
     insert into medicine_document
     <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
       <if test="medicineId != null">
         medicine_id,
       </if>
-      <if test="detailPath != null">
-        detail_path,
+      <if test="documentPath != null">
+        document_path,
       </if>
-      <if test="pharmacologyPath != null">
-        pharmacology_path,
+      <if test="documentType != null">
+        document_type,
       </if>
       <if test="isDelete != null">
         is_delete,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
       <if test="medicineId != null">
         #{medicineId,jdbcType=BIGINT},
       </if>
-      <if test="detailPath != null">
-        #{detailPath,jdbcType=VARCHAR},
+      <if test="documentPath != null">
+        #{documentPath,jdbcType=VARCHAR},
       </if>
-      <if test="pharmacologyPath != null">
-        #{pharmacologyPath,jdbcType=VARCHAR},
+      <if test="documentType != null">
+        #{documentType,jdbcType=TINYINT},
       </if>
       <if test="isDelete != null">
         #{isDelete,jdbcType=BIT},
@@ -144,14 +151,17 @@
   <update id="updateByExampleSelective" parameterType="map">
     update medicine_document
     <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
       <if test="record.medicineId != null">
         medicine_id = #{record.medicineId,jdbcType=BIGINT},
       </if>
-      <if test="record.detailPath != null">
-        detail_path = #{record.detailPath,jdbcType=VARCHAR},
+      <if test="record.documentPath != null">
+        document_path = #{record.documentPath,jdbcType=VARCHAR},
       </if>
-      <if test="record.pharmacologyPath != null">
-        pharmacology_path = #{record.pharmacologyPath,jdbcType=VARCHAR},
+      <if test="record.documentType != null">
+        document_type = #{record.documentType,jdbcType=TINYINT},
       </if>
       <if test="record.isDelete != null">
         is_delete = #{record.isDelete,jdbcType=BIT},
@@ -163,9 +173,10 @@
   </update>
   <update id="updateByExample" parameterType="map">
     update medicine_document
-    set medicine_id = #{record.medicineId,jdbcType=BIGINT},
-      detail_path = #{record.detailPath,jdbcType=VARCHAR},
-      pharmacology_path = #{record.pharmacologyPath,jdbcType=VARCHAR},
+    set id = #{record.id,jdbcType=BIGINT},
+      medicine_id = #{record.medicineId,jdbcType=BIGINT},
+      document_path = #{record.documentPath,jdbcType=VARCHAR},
+      document_type = #{record.documentType,jdbcType=TINYINT},
       is_delete = #{record.isDelete,jdbcType=BIT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -174,23 +185,27 @@
   <update id="updateByPrimaryKeySelective" parameterType="demo.clawing.pojo.po.MedicineDocument">
     update medicine_document
     <set>
-      <if test="detailPath != null">
-        detail_path = #{detailPath,jdbcType=VARCHAR},
+      <if test="medicineId != null">
+        medicine_id = #{medicineId,jdbcType=BIGINT},
       </if>
-      <if test="pharmacologyPath != null">
-        pharmacology_path = #{pharmacologyPath,jdbcType=VARCHAR},
+      <if test="documentPath != null">
+        document_path = #{documentPath,jdbcType=VARCHAR},
+      </if>
+      <if test="documentType != null">
+        document_type = #{documentType,jdbcType=TINYINT},
       </if>
       <if test="isDelete != null">
         is_delete = #{isDelete,jdbcType=BIT},
       </if>
     </set>
-    where medicine_id = #{medicineId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="demo.clawing.pojo.po.MedicineDocument">
     update medicine_document
-    set detail_path = #{detailPath,jdbcType=VARCHAR},
-      pharmacology_path = #{pharmacologyPath,jdbcType=VARCHAR},
+    set medicine_id = #{medicineId,jdbcType=BIGINT},
+      document_path = #{documentPath,jdbcType=VARCHAR},
+      document_type = #{documentType,jdbcType=TINYINT},
       is_delete = #{isDelete,jdbcType=BIT}
-    where medicine_id = #{medicineId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

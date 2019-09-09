@@ -1,6 +1,6 @@
 package demo.clawing.service;
 
-public interface ClawingMedicineService {
+public interface ClawingSinaMedicineService {
 
 	void medicineTest();
 

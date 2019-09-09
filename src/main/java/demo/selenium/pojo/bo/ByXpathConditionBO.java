@@ -5,16 +5,16 @@ import java.util.List;
 
 public class ByXpathConditionBO {
 
-	private String prefix;
+	private String tagName;
 
 	private List<ByXpathConditionSubBO> kvList;
 
-	public String getPrefix() {
-		return prefix;
+	public String getTagName() {
+		return tagName;
 	}
 
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
+	public void setTagName(String tagName) {
+		this.tagName = tagName;
 	}
 
 	public List<ByXpathConditionSubBO> getKvList() {
@@ -30,12 +30,12 @@ public class ByXpathConditionBO {
 		return "ByXpathBO [kvList=" + kvList + "]";
 	}
 	
-	public static ByXpathConditionBO build(String prefix, String key, String value) {
+	public static ByXpathConditionBO build(String tagName, String key, String value) {
 		ByXpathConditionBO bo = new ByXpathConditionBO();
 		if (bo.kvList == null) {
 			bo.setKvList(new ArrayList<ByXpathConditionSubBO>());
 		}
-		bo.setPrefix(prefix);
+		bo.setTagName(tagName);
 		ByXpathConditionSubBO ele = new ByXpathConditionSubBO();
 		ele.setKey(key);
 		ele.setValue(value);

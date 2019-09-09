@@ -50,9 +50,9 @@
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="medicine_info">
-        	<property name="tableName" value="medicine_info"></property>
-        	<property name="domainObjectName" value="medicine_info" ></property>
+        <table tableName="medicine_document">
+        	<property name="tableName" value="medicine_document"></property>
+        	<property name="domainObjectName" value="medicine_document" ></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>
