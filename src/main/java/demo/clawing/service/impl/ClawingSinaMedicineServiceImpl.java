@@ -13,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.baseCommon.service.CommonService;
+import demo.clawing.mapper.MedicineInfoErrorMapper;
 import demo.clawing.mapper.MedicineInfoMapper;
 import demo.clawing.pojo.po.MedicineInfo;
+import demo.clawing.pojo.po.MedicineInfoError;
 import demo.clawing.pojo.result.SinaMedicineDetailHeadHandleResult;
 import demo.clawing.pojo.result.SinaMedicineDetailMainHandleResult;
 import demo.clawing.service.ClawingSinaMedicineFactoryService;
@@ -38,6 +40,8 @@ public class ClawingSinaMedicineServiceImpl extends CommonService implements Cla
 	private ClawingSinaMedicineFactoryService factoryService;
 	@Autowired
 	private MedicineInfoMapper medicineMapper;
+	@Autowired
+	private MedicineInfoErrorMapper medicinErrorMapper;
 	
 	public void sinaMedicineClawing() {
 //		TODO
@@ -77,11 +81,13 @@ public class ClawingSinaMedicineServiceImpl extends CommonService implements Cla
 		ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("div", "class", "xx1_text");
 		By medicineDetailHeadBy = auxTool.byXpathBuilder(byXpathConditionBo);
 		WebElement medicineDetailHead = d.findElement(medicineDetailHeadBy);
+		MedicineInfoError medicineInfoError = null;
 		SinaMedicineDetailHeadHandleResult detailHeadResult = sinaMedicineDetailHeadHandle(medicineDetailHead);
 		if (!detailHeadResult.isSuccess()) {
-			/*
-			 * TODO insert new fail record and handle it later
-			 */
+			if(medicineInfoError == null) {
+				medicineInfoError = new MedicineInfoError();
+			}
+			medicineInfoError.setHeadDetailError(true);
 		}
 		Long factoryId = factoryService.findFactoryId(detailHeadResult.getFactoryName());
 		
@@ -90,9 +96,7 @@ public class ClawingSinaMedicineServiceImpl extends CommonService implements Cla
 		WebElement medicineDetailMain = d.findElement(medicineDetailMainBy);
 		SinaMedicineDetailMainHandleResult detailMainResult = sinaMedicineDetailMainHandle(medicineDetailMain);
 		if (!detailMainResult.isSuccess()) {
-			/*
-			 * TODO insert new fail record and handle it later
-			 */
+			medicineInfoError.setMainDetailError(true);
 		}
 		
 		List<WebElement> allTagAList = d.findElements(ByTagName.tagName("a"));
@@ -100,8 +104,12 @@ public class ClawingSinaMedicineServiceImpl extends CommonService implements Cla
 		if(targetTagAList.size() > 0) {
 			/*
 			 * TODO
-			 * handle target document
 			 */
+		} else {
+			if(medicineInfoError == null) {
+				medicineInfoError = new MedicineInfoError();
+			}
+			medicineInfoError.setDocumentError(true);
 		}
 		
 		Long newMedicineId = snowFlake.getNextId();
@@ -116,6 +124,11 @@ public class ClawingSinaMedicineServiceImpl extends CommonService implements Cla
 		po.setMedicineManagerPreffix(detailHeadResult.getMedicineManagerCodePrefix());
 		po.setMedicineName(detailHeadResult.getCommodityName());
 		medicineMapper.insertSelective(po);
+		
+		if(medicineInfoError != null) {
+			medicineInfoError.setMedicineId(newMedicineId);
+			medicinErrorMapper.insertSelective(medicineInfoError);
+		}
 	}
 
 	private SinaMedicineDetailHeadHandleResult sinaMedicineDetailHeadHandle(WebElement ele) {
@@ -246,4 +259,20 @@ public class ClawingSinaMedicineServiceImpl extends CommonService implements Cla
 		
 		return targetList;
 	}
+	
+	public void medicineDocumentHandler(WebDriver d, TestEvent te, List<WebElement> targetEleList) {
+		/*
+		 * TODO
+		 */
+		for(WebElement ele : targetEleList) {
+			ele.click();
+			ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("div", "class", "Yp_xx_text");
+			By textDivBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			WebElement textDiv = d.findElement(textDivBy);
+			String text = textDiv.getText();
+			System.out.println(text);
+		}
+	}
+	
+	
 }
