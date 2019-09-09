@@ -1,5 +1,6 @@
 package demo.clawing.service.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class ClawingSinaMedicineServiceImpl extends CommonService implements Cla
 	private MedicineInfoMapper medicineMapper;
 	
 	public void sinaMedicineClawing() {
-
+//		TODO
 	}
 
 	@Override
@@ -73,49 +74,48 @@ public class ClawingSinaMedicineServiceImpl extends CommonService implements Cla
 		/*
 		 * TODO
 		 */
-		try {
-			auxTool.takeScreenshot(d, te);
-
-			ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("div", "class", "xx1_text");
-			By medicineDetailHeadBy = auxTool.byXpathBuilder(byXpathConditionBo);
-			WebElement medicineDetailHead = d.findElement(medicineDetailHeadBy);
-			SinaMedicineDetailHeadHandleResult detailHeadResult = sinaMedicineDetailHeadHandle(medicineDetailHead);
-			if (!detailHeadResult.isSuccess()) {
-				/*
-				 * TODO insert new fail record and handle it later
-				 */
-			}
-			Long factoryId = factoryService.findFactoryId(detailHeadResult.getFactoryName());
-			
-			byXpathConditionBo = ByXpathConditionBO.build("div", "class", "xx2");
-			By medicineDetailMainBy = auxTool.byXpathBuilder(byXpathConditionBo);
-			WebElement medicineDetailMain = d.findElement(medicineDetailMainBy);
-			SinaMedicineDetailMainHandleResult detailMainResult = sinaMedicineDetailMainHandle(medicineDetailMain);
-			if (!detailMainResult.isSuccess()) {
-				/*
-				 * TODO insert new fail record and handle it later
-				 */
-			}
-			
-//			byXpathConditionBo = ByXpathConditionBO.build("div", "class", "news");
-//			By medicineDetailMainBy = auxTool.byXpathBuilder(byXpathConditionBo);
-//			WebElement medicineDetailMain = d.findElement(medicineDetailMainBy);
-			
-			List<WebElement> tagAList = d.findElements(ByTagName.tagName("a"));
-			sinaMedicineTagAListHandle (detailHeadResult, detailMainResult, tagAList);
-			
-			MedicineInfo po = new MedicineInfo();
-			po.setMedicineFactoryId(factoryId);
-			
-			medicineMapper.insertSelective(po);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (d != null) {
-				d.quit();
-			}
+		ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("div", "class", "xx1_text");
+		By medicineDetailHeadBy = auxTool.byXpathBuilder(byXpathConditionBo);
+		WebElement medicineDetailHead = d.findElement(medicineDetailHeadBy);
+		SinaMedicineDetailHeadHandleResult detailHeadResult = sinaMedicineDetailHeadHandle(medicineDetailHead);
+		if (!detailHeadResult.isSuccess()) {
+			/*
+			 * TODO insert new fail record and handle it later
+			 */
 		}
+		Long factoryId = factoryService.findFactoryId(detailHeadResult.getFactoryName());
+		
+		byXpathConditionBo = ByXpathConditionBO.build("div", "class", "xx2");
+		By medicineDetailMainBy = auxTool.byXpathBuilder(byXpathConditionBo);
+		WebElement medicineDetailMain = d.findElement(medicineDetailMainBy);
+		SinaMedicineDetailMainHandleResult detailMainResult = sinaMedicineDetailMainHandle(medicineDetailMain);
+		if (!detailMainResult.isSuccess()) {
+			/*
+			 * TODO insert new fail record and handle it later
+			 */
+		}
+		
+		List<WebElement> allTagAList = d.findElements(ByTagName.tagName("a"));
+		List<WebElement> targetTagAList = sinaMedicineTagAListHandle (detailHeadResult, detailMainResult, allTagAList);
+		if(targetTagAList.size() > 0) {
+			/*
+			 * TODO
+			 * handle target document
+			 */
+		}
+		
+		Long newMedicineId = snowFlake.getNextId();
+		MedicineInfo po = new MedicineInfo();
+		po.setMedicineFactoryId(factoryId);
+		po.setId(newMedicineId);
+		po.setIsMedicalInsurance(detailHeadResult.getIsMedicineInsurance());
+		po.setIsNationalBasicMedicine(detailHeadResult.getIsNationalBasicMedicine());
+		po.setIsPrescription(detailHeadResult.getIsPrescription());
+		po.setMedicineCommonName(detailHeadResult.getCommonName());
+		po.setMedicineManagerNumber(detailHeadResult.getMedicineManagerCodeNumber().longValue());
+		po.setMedicineManagerPreffix(detailHeadResult.getMedicineManagerCodePrefix());
+		po.setMedicineName(detailHeadResult.getCommodityName());
+		medicineMapper.insertSelective(po);
 	}
 
 	private SinaMedicineDetailHeadHandleResult sinaMedicineDetailHeadHandle(WebElement ele) {
@@ -221,16 +221,29 @@ public class ClawingSinaMedicineServiceImpl extends CommonService implements Cla
 		return r;
 	}
 
-	public void sinaMedicineTagAListHandle(SinaMedicineDetailHeadHandleResult head, SinaMedicineDetailMainHandleResult main, List<WebElement> tagAList) {
+	private List<WebElement> sinaMedicineTagAListHandle(SinaMedicineDetailHeadHandleResult head, SinaMedicineDetailMainHandleResult main, List<WebElement> tagAList) {
 		/*
 		 * TODO
 		 * 脚本难以辨别页面上
-		 * 不良反应
-		 * 临床资料/疗效分析
-		 * 药理毒理
+		 * (不良反应, 临床资料/疗效分析, 药理毒理)
 		 * 此三栏目
 		 * 
 		 * 需要批量获取tagA标签后, 排查
+		 * 暂时选取特征 无title属性, 无target属性
 		 */
+		String commodityName = head.getCommodityName();
+		String commonName = head.getCommonName();
+		String mainIngredient = main.getMainIngredient();
+		
+		List<WebElement> targetList = new ArrayList<WebElement>();
+		for(WebElement ele : tagAList) {
+			if(StringUtils.isBlank(ele.getAttribute("title")) && StringUtils.isBlank(ele.getAttribute("target"))) {
+				if(ele.getText().contains(commodityName) || ele.getText().contains(commonName) || ele.getText().contains(mainIngredient)) {
+					targetList.add(ele);
+				}
+			}
+		}
+		
+		return targetList;
 	}
 }
