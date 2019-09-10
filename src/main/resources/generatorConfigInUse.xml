@@ -50,9 +50,9 @@
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="medicine_info_error">
-        	<property name="tableName" value="medicine_info_error"></property>
-        	<property name="domainObjectName" value="medicine_info_error" ></property>
+        <table tableName="meizitu_group_record">
+        	<property name="tableName" value="meizitu_group_record"></property>
+        	<property name="domainObjectName" value="meizitu_group_record" ></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

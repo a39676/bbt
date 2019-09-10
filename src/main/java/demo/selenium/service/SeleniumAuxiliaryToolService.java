@@ -39,4 +39,6 @@ public interface SeleniumAuxiliaryToolService {
 
 	By byXpathBuilder(ByXpathConditionBO bo);
 
+	String saveImg(WebElement ele, String folderPath) throws IOException;
+
 }

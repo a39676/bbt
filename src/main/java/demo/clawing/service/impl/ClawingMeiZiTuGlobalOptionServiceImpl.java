@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 import demo.base.system.pojo.bo.SystemConstant;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.service.CommonService;
-import demo.clawing.service.ClawingSinaMedicineGlobalOptionService;
+import demo.clawing.service.ClawingMeiZiTuGlobalOptionService;
 import demo.selenium.service.SeleniumGlobalOptionService;
 
 @Service
-public class ClawingSinaMedicineGlobalOptionServiceImpl extends CommonService implements ClawingSinaMedicineGlobalOptionService {
+public class ClawingMeiZiTuGlobalOptionServiceImpl extends CommonService implements ClawingMeiZiTuGlobalOptionService {
 
 	@Autowired
 	private SystemConstantService constantService;
@@ -20,13 +20,13 @@ public class ClawingSinaMedicineGlobalOptionServiceImpl extends CommonService im
 	
 	protected String mainSavingFolder_win = "d:/auxiliary";
 	protected String mainSavingFolder_linx = "/home/u2";
-	protected String medicineDocumentFolder = "/medicineDocument";
+	protected String meiZiTuFolder = "/meiZiTu";
 
-	protected String medicineDocumentFolderRedisKey = "medicineDocumentFolder";
+	protected String meiZiTuFolderRedisKey = "meiZiTuFolder";
 	
 	@Override
-	public String getMedicineDocumentDir() {
-		String medicineDocumentFolderPath = constantService.getValByName(medicineDocumentFolder);
+	public String getMeiZiTuFolder() {
+		String medicineDocumentFolderPath = constantService.getValByName(meiZiTuFolder);
 
 		if (StringUtils.isNotBlank(medicineDocumentFolderPath)) {
 			globalOptionService.checkFolderExists(medicineDocumentFolderPath);
@@ -34,14 +34,14 @@ public class ClawingSinaMedicineGlobalOptionServiceImpl extends CommonService im
 		}
 
 		if (isWindows()) {
-			medicineDocumentFolderPath = mainSavingFolder_win + medicineDocumentFolder;
+			medicineDocumentFolderPath = mainSavingFolder_win + meiZiTuFolder;
 		} else {
-			medicineDocumentFolderPath = mainSavingFolder_linx + medicineDocumentFolder;
+			medicineDocumentFolderPath = mainSavingFolder_linx + meiZiTuFolder;
 		}
 		medicineDocumentFolderPath = globalOptionService.pathChangeByDetectOS(medicineDocumentFolderPath);
 
 		SystemConstant constant = new SystemConstant();
-		constant.setConstantName(medicineDocumentFolder);
+		constant.setConstantName(meiZiTuFolder);
 		constant.setConstantValue(medicineDocumentFolderPath);
 		constantService.setValByName(constant);
 

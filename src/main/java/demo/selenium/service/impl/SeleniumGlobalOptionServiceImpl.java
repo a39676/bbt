@@ -15,25 +15,25 @@ import demo.selenium.service.SeleniumGlobalOptionService;
 public class SeleniumGlobalOptionServiceImpl extends CommonService implements SeleniumGlobalOptionService {
 
 	@Autowired
-	protected SystemConstantService constantService;
+	private SystemConstantService constantService;
 
-	protected String mainSavingFolder_win = "d:/auxiliary";
-	protected String mainSavingFolder_linx = "/home/u2";
-	protected String downloadFolder = "/tmp";
-	protected String screenshotSavingFolder = "/screenshot";
+	private String mainSavingFolder_win = "d:/auxiliary";
+	private String mainSavingFolder_linx = "/home/u2";
+	private String downloadFolder = "/tmp";
+	private String screenshotSavingFolder = "/screenshot";
 
-	protected String downloadDirRedisKey = "seleniumDownloadDir";
-	protected String screenshotSavingFloderRedisKey = "seleniumScreenshotSavingDir";
+	private String downloadDirRedisKey = "seleniumDownloadDir";
+	private String screenshotSavingFloderRedisKey = "seleniumScreenshotSavingDir";
 
-	protected String seleniumWebDriverFolder = "./seleniumWebDriver";
-	protected String chrome76Path_win = seleniumWebDriverFolder + "/chrome76Driver.exe";
-	protected String chrome45Path_win = seleniumWebDriverFolder + "/chrome45Driver.exe";
-	protected String chrome76Path_linux = seleniumWebDriverFolder + "/chrome76Driver";
-	protected String chrome45Path_linux = seleniumWebDriverFolder + "/chrome45Driver";
-	protected String geckoPath_win = seleniumWebDriverFolder + "/geckodriver-v0.24.0-win64.exe";
-	protected String geckoPath_linux = seleniumWebDriverFolder + "/geckodriver-v0.24.0-linux";
-	protected String edgePath = seleniumWebDriverFolder + "/MicrosoftWebDriver.exe";
-	protected String iePath = seleniumWebDriverFolder + "/IEDriverServer.exe";
+	private String seleniumWebDriverFolder = "./seleniumWebDriver";
+	private String chrome76Path_win = seleniumWebDriverFolder + "/chrome76Driver.exe";
+	private String chrome45Path_win = seleniumWebDriverFolder + "/chrome45Driver.exe";
+	private String chrome76Path_linux = seleniumWebDriverFolder + "/chrome76Driver";
+	private String chrome45Path_linux = seleniumWebDriverFolder + "/chrome45Driver";
+	private String geckoPath_win = seleniumWebDriverFolder + "/geckodriver-v0.24.0-win64.exe";
+	private String geckoPath_linux = seleniumWebDriverFolder + "/geckodriver-v0.24.0-linux";
+	private String edgePath = seleniumWebDriverFolder + "/MicrosoftWebDriver.exe";
+	private String iePath = seleniumWebDriverFolder + "/IEDriverServer.exe";
 
 	@Override
 	public String getDownloadDir() {
@@ -60,7 +60,8 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 		return downloadFolderPath;
 	}
 	
-	protected boolean checkFolderExists(String path) {
+	@Override
+	public boolean checkFolderExists(String path) {
 		File f = new File(path);
 		if(!f.exists() || !f.isDirectory()) {
 			return f.mkdirs();
@@ -138,7 +139,8 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 		return pathChangeByDetectOS(iePath);
 	}
 
-	protected String pathChangeByDetectOS(String oldPath) {
+	@Override
+	public String pathChangeByDetectOS(String oldPath) {
 		if(isWindows()) {
 			return oldPath.replaceAll("/", "\\\\");
 		} else {

@@ -3,6 +3,7 @@ package demo.selenium.service.impl;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -43,7 +44,7 @@ public class SeleniumAuxiliaryToolServiceImpl extends CommonService implements S
 
 	@Autowired
 	private ScreenshotService screenshotService;
-	
+
 	@Override
 	public WebElement fluentWait(WebDriver driver, final By by) {
 		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
@@ -170,43 +171,52 @@ public class SeleniumAuxiliaryToolServiceImpl extends CommonService implements S
 	}
 
 	@Override
-	public ScreenshotSaveResult takeElementScreenshot(WebDriver driver, TestEvent testEvent, By by)
-			throws IOException {
+	public ScreenshotSaveResult takeElementScreenshot(WebDriver driver, TestEvent testEvent, By by) throws IOException {
 		return takeElementScreenshot(driver, testEvent, by, null);
 	}
 
 	@Override
 	public By byXpathBuilder(ByXpathConditionBO bo) {
 		StringBuffer s = new StringBuffer("//" + bo.getTagName() + "[");
-		if(bo.getKvList() == null || bo.getKvList().size() < 1) {
+		if (bo.getKvList() == null || bo.getKvList().size() < 1) {
 			s.append("]");
 			return By.xpath(s.toString());
 		}
 		ByXpathConditionSubBO b = null;
-		for(int i = 0; i < bo.getKvList().size(); i++) {
+		for (int i = 0; i < bo.getKvList().size(); i++) {
 			b = bo.getKvList().get(i);
-			s.append("(@"+ b.getKey() + "='" + b.getValue() + "')");
-			if(i < bo.getKvList().size() - 1) {
+			s.append("(@" + b.getKey() + "='" + b.getValue() + "')");
+			if (i < bo.getKvList().size() - 1) {
 				s.append(" and ");
 			}
 		}
 		s.append("]");
 		return By.xpath(s.toString());
 	}
-	
-	
-	public static void main(String[] args) {
-		SeleniumAuxiliaryToolServiceImpl t = new SeleniumAuxiliaryToolServiceImpl();
-		ByXpathConditionBO bo = ByXpathConditionBO
-				.build("tag", "k", "v")
-				.addCondition("k1", "v2")
-				;
-		t.byXpathBuilder(bo);
-		
-		bo = ByXpathConditionBO
-				.build("tag", "k3", "v")
-				.addCondition("k4", "v2")
-				;
-		t.byXpathBuilder(bo);
+
+	@Override
+	public String saveImg(WebElement ele, String folderPath) throws IOException {
+		if (ele == null) {
+			return null;
+		}
+		String src = ele.getAttribute("src");
+		if (StringUtils.isBlank(src)) {
+			return null;
+		}
+
+		URL imageURL = new URL(src);
+		BufferedImage saveImage = ImageIO.read(imageURL);
+		String fileName = findFileNameFromUrl(src);
+		String suffix = findFileNameSuffixFromUrl(src);
+
+		String filePath = folderPath + File.separator + fileName;
+		ImageIO.write(saveImage, suffix, new File(filePath));
+
+		return filePath;
+	}
+
+	public static void main(String[] args) throws IOException {
+//		SeleniumAuxiliaryToolServiceImpl t = new SeleniumAuxiliaryToolServiceImpl();
+//		Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36
 	}
 }

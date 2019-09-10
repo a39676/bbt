@@ -8,7 +8,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class JavaScriptCommonUtil {
 	
-	public static final String openNewTab = "window.open('%s','_blank');";
+	public final String openNewTab = "window.open('%s','_blank');";
+	
 
 	public void openNewTab(WebDriver driver, String url) {
 		JavascriptExecutor jse = (JavascriptExecutor) driver;

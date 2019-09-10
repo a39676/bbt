@@ -15,5 +15,9 @@ public interface SeleniumGlobalOptionService {
 
 	String getIePath();
 
+	String pathChangeByDetectOS(String oldPath);
+
+	boolean checkFolderExists(String path);
+
 
 }
