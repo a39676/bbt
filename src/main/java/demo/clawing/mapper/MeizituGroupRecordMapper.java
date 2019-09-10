@@ -17,6 +17,7 @@ public interface MeizituGroupRecordMapper {
     int insertSelective(MeizituGroupRecord record);
 
     List<MeizituGroupRecord> selectByExample(MeizituGroupRecordExample example);
+    MeizituGroupRecord hasClawedThisGroup(String url);
 
     MeizituGroupRecord selectByPrimaryKey(Long id);
 

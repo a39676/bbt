@@ -10,9 +10,8 @@ public class JavaScriptCommonUtil {
 	
 	public final String openNewTab = "window.open('%s','_blank');";
 	
-
-	public void openNewTab(WebDriver driver, String url) {
-		JavascriptExecutor jse = (JavascriptExecutor) driver;
+	public void openNewTab(WebDriver d, String url) {
+		JavascriptExecutor jse = (JavascriptExecutor) d;
 		if(StringUtils.isEmpty(url)) {
 			url = "";
 		}

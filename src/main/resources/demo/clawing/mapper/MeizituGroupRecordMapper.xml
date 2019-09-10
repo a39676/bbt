@@ -178,4 +178,8 @@
       is_delete = #{isDelete,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="hasClawedThisGroup" resultMap="BaseResultMap">
+    select id from meizitu_group_record where group_url = #{url} and is_delete = false limit 1
+  </select>
 </mapper>

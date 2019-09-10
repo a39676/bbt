@@ -25,8 +25,6 @@ import demo.clawing.mapper.ImageStoreMapper;
 import demo.clawing.mapper.MeizituGroupRecordMapper;
 import demo.clawing.pojo.po.ImageStore;
 import demo.clawing.pojo.po.MeizituGroupRecord;
-import demo.clawing.pojo.po.MeizituGroupRecordExample;
-import demo.clawing.pojo.po.MeizituGroupRecordExample.Criteria;
 import demo.clawing.pojo.type.ImageType;
 import demo.clawing.service.ClawingMeiZiTuGlobalOptionService;
 import demo.clawing.service.ClawingMeiZiTuService;
@@ -85,7 +83,7 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 			 */
 				ele = groups.get(i);
 				tmpUrl = ele.getAttribute("href");
-				groupHandler(ele, d);
+				groupHandler(ele, d, mainWindow);
 				groupRecord(tmpUrl);
 				d.switchTo().window(mainWindow);
 			}
@@ -125,10 +123,11 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 		return targetA;
 	}
 
-	private void groupHandler(WebElement ele, WebDriver d) throws InterruptedException {
+	private void groupHandler(WebElement ele, WebDriver d, String mainWindowHandler) throws InterruptedException {
 		String url = ele.getAttribute("href");
-		System.out.println("handing : " + url);
+		System.out.println("handing : " + url + "; mainWindowHandler: " + mainWindowHandler);
 		if(hasClawedThisGroup(url)) {
+			System.out.println(url + " has clawed");
 			return;
 		}
 		
@@ -136,6 +135,7 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 		
 		Set<String> windowHandlesSet = d.getWindowHandles();
 		List<String> windowHandles = new ArrayList<String>(windowHandlesSet);
+		System.out.println("allWindowHandles: " + windowHandles);
 		String title = null;
 		WebElement titleEle = null;
 		
@@ -143,11 +143,14 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 		By titleBy = auxTool.byXpathBuilder(byXpathConditionBo);
 		for(int i = 0; i < windowHandles.size() && title == null; i++) {
 			d.switchTo().window(windowHandles.get(i));
-			try {
-				titleEle = d.findElement(titleBy);
-				title = titleEle.getText();
-			} catch (Exception e) {
-//				
+			System.out.println("switchTo: " + windowHandles.get(i));
+			if(!windowHandles.get(i).equals(mainWindowHandler)) {
+				try {
+					titleEle = d.findElement(titleBy);
+					title = titleEle.getText();
+					System.out.println("title: " + title);
+				} catch (Exception e) {
+				}
 			}
 		}
 		
@@ -163,8 +166,8 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 		
 		WebElement nextPageButton = fineNextPageButton(d);
 		
-		long leftLimit = 1500L;
-	    long rightLimit = 2100L;
+		long leftLimit = 800L;
+	    long rightLimit = 1300L;
 	    RandomDataGenerator r = new RandomDataGenerator();
 	    long randomSleep = 0L;
 		while(nextPageButton != null) {
@@ -265,12 +268,8 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 		if(StringUtils.isBlank(url)) {
 			return false;
 		}
-		
-		MeizituGroupRecordExample example = new MeizituGroupRecordExample();
-		Criteria c = example.createCriteria();
-		c.andGroupUrlEqualTo(url);
-		List<MeizituGroupRecord> p = groupRecordMapper.selectByExample(example);
-		if(p != null && p.size() > 0) {
+		MeizituGroupRecord p = groupRecordMapper.hasClawedThisGroup(url);
+		if(p != null) {
 			return true;
 		}
 		return false;
