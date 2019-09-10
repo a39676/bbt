@@ -34,6 +34,7 @@ import demo.selenium.pojo.bo.ByXpathConditionBO;
 import demo.selenium.pojo.po.TestEvent;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.WebDriverService;
+import demo.selenium.util.JavaScriptCommonUtil;
 import httpHandel.HttpUtil;
 
 @Service
@@ -43,8 +44,8 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 	private WebDriverService webDriverService;
 	@Autowired
 	private SeleniumAuxiliaryToolService auxTool;
-//	@Autowired
-//	private JavaScriptCommonUtil jsUtil;
+	@Autowired
+	private JavaScriptCommonUtil jsUtil;
 	@Autowired
 	private ClawingMeiZiTuGlobalOptionService optionService;
 	
@@ -54,6 +55,12 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 	private MeizituGroupRecordMapper groupRecordMapper;
 	
 	private String mainUrl = "https://www.mzitu.com";
+	private static TestEvent t = new TestEvent();
+	
+	static {
+		t.setEventName("mzt");
+		t.setId(1L);
+	}
 	
 	@Override
 	public void meiZiTuMain() {
@@ -70,19 +77,22 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 			List<WebElement> groups = meiZiTuGroupFinder(d);
 			
 			WebElement ele = null;
+			String tmpUrl = null;
 			for(int i = 0;i < groups.size(); i++) {
 			/*
 			 * TODO
 			 * what if fail?
 			 */
 				ele = groups.get(i);
+				tmpUrl = ele.getAttribute("href");
 				groupHandler(ele, d);
-				groupRecord(ele.getAttribute("href"));
+				groupRecord(tmpUrl);
 				d.switchTo().window(mainWindow);
 			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+			auxTool.takeScreenshot(d, t);
 		} finally {
 			if (d != null) {
 				d.quit();
@@ -116,23 +126,20 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 	}
 
 	private void groupHandler(WebElement ele, WebDriver d) throws InterruptedException {
-		System.out.println("handing :" + ele.getAttribute("href"));
-		if(hasClawedThisGroup(ele.getAttribute("href"))) {
+		String url = ele.getAttribute("href");
+		System.out.println("handing : " + url);
+		if(hasClawedThisGroup(url)) {
 			return;
 		}
 		
-		ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("img", "class", "lazy");
-		By targetImgBy = auxTool.byXpathBuilder(byXpathConditionBo);
-		
-		WebElement targetButton = ele.findElement(targetImgBy);
-		targetButton.click();
+		jsUtil.openNewTab(d, url);
 		
 		Set<String> windowHandlesSet = d.getWindowHandles();
 		List<String> windowHandles = new ArrayList<String>(windowHandlesSet);
 		String title = null;
 		WebElement titleEle = null;
 		
-		byXpathConditionBo = ByXpathConditionBO.build("h2", "class", "main-title");
+		ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("h2", "class", "main-title");
 		By titleBy = auxTool.byXpathBuilder(byXpathConditionBo);
 		for(int i = 0; i < windowHandles.size() && title == null; i++) {
 			d.switchTo().window(windowHandles.get(i));
@@ -157,7 +164,7 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 		WebElement nextPageButton = fineNextPageButton(d);
 		
 		long leftLimit = 1500L;
-	    long rightLimit = 2500L;
+	    long rightLimit = 2100L;
 	    RandomDataGenerator r = new RandomDataGenerator();
 	    long randomSleep = 0L;
 		while(nextPageButton != null) {
@@ -189,9 +196,6 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 			try {
 				imgEle = auxTool.fluentWait(d, imgBy);
 			} catch (Exception e2) {
-				TestEvent t = new TestEvent();
-				t.setEventName("mzt");
-				t.setId(snowFlake.getNextId());
 				auxTool.takeScreenshot(d, t);
 				return;
 			}
@@ -261,6 +265,7 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 		if(StringUtils.isBlank(url)) {
 			return false;
 		}
+		
 		MeizituGroupRecordExample example = new MeizituGroupRecordExample();
 		Criteria c = example.createCriteria();
 		c.andGroupUrlEqualTo(url);
