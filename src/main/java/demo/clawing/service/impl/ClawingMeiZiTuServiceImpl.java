@@ -34,6 +34,7 @@ import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.WebDriverService;
 import demo.selenium.util.JavaScriptCommonUtil;
 import httpHandel.HttpUtil;
+import numericHandel.NumericUtilCustom;
 
 @Service
 public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingMeiZiTuService {
@@ -46,48 +47,55 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 	private JavaScriptCommonUtil jsUtil;
 	@Autowired
 	private ClawingMeiZiTuGlobalOptionService optionService;
-	
+
 	@Autowired
 	private ImageStoreMapper imageStoreMapper;
 	@Autowired
 	private MeizituGroupRecordMapper groupRecordMapper;
-	
+
 	private String mainUrl = "https://www.mzitu.com";
 	private static TestEvent t = new TestEvent();
+	private RandomDataGenerator randomDateGenerator = new RandomDataGenerator();
 	
 	static {
 		t.setEventName("mzt");
 		t.setId(1L);
 	}
-	
+
 	@Override
 	public void meiZiTuMain() {
 		TestEvent te = new TestEvent();
 		te.setId(1L);
 		te.setEventName("clawingMedicineTest");
 		WebDriver d = webDriverService.buildFireFoxWebDriver();
-		
+
 		String mainWindow = d.getWindowHandle();
-		
+
 		try {
 			d.get(mainUrl);
-			
-			List<WebElement> groups = meiZiTuGroupFinder(d);
-			
-			WebElement ele = null;
-			String tmpUrl = null;
-			for(int i = 0;i < groups.size(); i++) {
-			/*
-			 * TODO
-			 * what if fail?
-			 */
-				ele = groups.get(i);
-				tmpUrl = ele.getAttribute("href");
-				groupHandler(ele, d, mainWindow);
-				groupRecord(tmpUrl);
+
+			List<WebElement> groups = null;
+			WebElement singleGroup = null;
+			WebElement nextPageButton = findNextPageButton(d);
+
+			while (nextPageButton != null) {
 				d.switchTo().window(mainWindow);
+				ThreadSleepRandomTime();
+				groups = meiZiTuGroupFinder(d);
+				for (int i = 0; i < groups.size(); i++) {
+					/*
+					 * TODO what if fail?
+					 */
+					singleGroup = groups.get(i);
+					groupHandler(singleGroup, d, mainWindow);
+
+					d.switchTo().window(mainWindow);
+				}
+				d.switchTo().window(mainWindow);
+				nextPageButton = findNextPageButton(d);
+				nextPageButton.click();
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			auxTool.takeScreenshot(d, t);
@@ -97,24 +105,24 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 			}
 		}
 	}
-	
+
 	private List<WebElement> meiZiTuGroupFinder(WebDriver d) {
 		ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("a", "target", "_blank");
 		By groupFindBy = auxTool.byXpathBuilder(byXpathConditionBo);
-		
+
 		byXpathConditionBo = ByXpathConditionBO.build("img", "class", "lazy");
 		By groupImgBy = auxTool.byXpathBuilder(byXpathConditionBo);
-		
+
 		List<WebElement> sourceA = d.findElements(groupFindBy);
 		List<WebElement> targetA = new ArrayList<WebElement>();
 		WebElement tmpEle = null;
-		for(WebElement i : sourceA) {
-			if(i.getAttribute("href") != null && i.getAttribute("href").matches(mainUrl + "/\\d{1,9}")) {
+		for (WebElement i : sourceA) {
+			if (i.getAttribute("href") != null && i.getAttribute("href").matches(mainUrl + "/\\d{1,9}")) {
 				try {
 					tmpEle = i.findElement(groupImgBy);
 				} catch (Exception e) {
 				}
-				if(tmpEle != null) {
+				if (tmpEle != null) {
 					targetA.add(i);
 				}
 				tmpEle = null;
@@ -126,58 +134,59 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 	private void groupHandler(WebElement ele, WebDriver d, String mainWindowHandler) throws InterruptedException {
 		String url = ele.getAttribute("href");
 		System.out.println("handing : " + url + "; mainWindowHandler: " + mainWindowHandler);
-		if(hasClawedThisGroup(url)) {
+		if (hasClawedThisGroup(url)) {
 			System.out.println(url + " has clawed");
 			return;
 		}
-		
+
 		jsUtil.openNewTab(d, url);
-		
+
 		Set<String> windowHandlesSet = d.getWindowHandles();
 		List<String> windowHandles = new ArrayList<String>(windowHandlesSet);
 		System.out.println("allWindowHandles: " + windowHandles);
+		windowHandles.remove(mainWindowHandler);
 		String title = null;
 		WebElement titleEle = null;
-		
+
 		ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("h2", "class", "main-title");
 		By titleBy = auxTool.byXpathBuilder(byXpathConditionBo);
-		for(int i = 0; i < windowHandles.size() && title == null; i++) {
-			d.switchTo().window(windowHandles.get(i));
-			System.out.println("switchTo: " + windowHandles.get(i));
-			if(!windowHandles.get(i).equals(mainWindowHandler)) {
+		String tmpWindowHandle = null;
+		for (int i = 0; title == null; i++) {
+			tmpWindowHandle = windowHandles.get(i % windowHandles.size());
+			d.switchTo().window(tmpWindowHandle);
+			System.out.println("switchTo: " + tmpWindowHandle);
+			try {
+				titleEle = d.findElement(titleBy);
+				title = titleEle.getText();
+				System.out.println("title: " + title);
+			} catch (Exception e) {
 				try {
-					titleEle = d.findElement(titleBy);
+					titleEle = auxTool.fluentWait(d, titleBy);
 					title = titleEle.getText();
 					System.out.println("title: " + title);
-				} catch (Exception e) {
+				} catch (Exception e2) {
 				}
+
 			}
 		}
-		
+
 		String mainFolerPath = optionService.getMeiZiTuFolder();
 		File folder = new File(mainFolerPath + File.separator + title);
-		boolean createFolderFlag = false;
-		if(!folder.exists() || !folder.isDirectory()) {
-			createFolderFlag = folder.mkdirs();
+		if (!folder.exists() || !folder.isDirectory()) {
+			boolean createFolderFlag = folder.mkdirs();
+			if (!createFolderFlag) {
+//				TODO
+			}
 		}
-		if(!createFolderFlag) {
-//			TODO
-		}
-		
-		WebElement nextPageButton = fineNextPageButton(d);
-		
-		long leftLimit = 800L;
-	    long rightLimit = 1300L;
-	    RandomDataGenerator r = new RandomDataGenerator();
-	    long randomSleep = 0L;
-		while(nextPageButton != null) {
-			randomSleep = r.nextLong(leftLimit, rightLimit);
-			System.out.println("randomSleep: " + randomSleep);
-			Thread.sleep(randomSleep);
+
+		WebElement nextPageButton = findNextPageButton(d);
+
+		while (nextPageButton != null) {
+			ThreadSleepRandomTime();
 			subImgHandler(d, title);
 			nextPageButton.click();
-			nextPageButton = fineNextPageButton(d);
-		} 
+			nextPageButton = findNextPageButton(d);
+		}
 		if (nextPageButton == null) {
 			try {
 				subImgHandler(d, title);
@@ -185,36 +194,69 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 				e.printStackTrace();
 			}
 		}
-		
+
+		groupRecord(url);
 		d.close();
 	}
-	
+
 	private void subImgHandler(WebDriver d, String title) {
-		ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("img", "alt", title);
-		By imgBy = auxTool.byXpathBuilder(byXpathConditionBo);
-		WebElement imgEle = null;
+//		ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("img", "alt", title);
+//		By imgBy = auxTool.byXpathBuilder(byXpathConditionBo);
+		By imgBy = ByTagName.tagName("img");
+		List<WebElement> imgs = null;
 		try {
-			imgEle = d.findElement(imgBy);
+			imgs = d.findElements(imgBy);
 		} catch (Exception e) {
-			try {
-				imgEle = auxTool.fluentWait(d, imgBy);
-			} catch (Exception e2) {
-				auxTool.takeScreenshot(d, t);
-				return;
+			System.out.println("can not find img in: " + title);
+			auxTool.takeScreenshot(d, t);
+			return;
+		}
+		
+		WebElement imgEle = null;
+		
+		String subTitle = null;
+		if(title.length() < 10) {
+			subTitle = title.substring(0, title.length() - 1);
+		} else {
+			subTitle = title.substring(0, 10);
+		}
+		
+		String src = null;
+		int width = 0;
+		int height = 0;
+		WebElement ele = null;
+		for(int i = 0; i < imgs.size() && imgEle == null; i++) {
+			ele = imgs.get(i);
+			src = ele.getAttribute("src");
+			if(src != null && src.startsWith("https://i5.meizitu") 
+					&& ele.getAttribute("alt") != null && ele.getAttribute("alt").startsWith(subTitle)) {
+				if(NumericUtilCustom.matchInteger(ele.getAttribute("width")) && NumericUtilCustom.matchInteger(ele.getAttribute("height"))) {
+					width = Integer.parseInt(ele.getAttribute("width"));
+					height = Integer.parseInt(ele.getAttribute("height"));
+					if(width > 300 && height > 300) {
+						imgEle = ele;
+					}
+				}
 			}
 		}
 		
-		String currentUrl = d.getCurrentUrl();
+		if(imgEle == null) {
+			System.out.println("can not find img in: " + title);
+			auxTool.takeScreenshot(d, t);
+			return;
+		}
 		
+		String currentUrl = d.getCurrentUrl();
+
 		String folderPath = optionService.getMeiZiTuFolder();
 		String fileName = auxTool.findFileNameFromUrl(imgEle.getAttribute("src"));
 		String filePath = folderPath + File.separator + title + File.separator + fileName;
 		File tmpFile = new File(filePath);
-		if(tmpFile.exists()) {
-			System.out.println(fileName + "exists");
+		if (tmpFile.exists()) {
+			System.out.println(fileName + " exists");
 			return;
 		}
-		
+
 		HashMap<String, String> m = new HashMap<>();
 		m.put("Referer", currentUrl);
 
@@ -225,8 +267,8 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 			Files.copy(is, Paths.get(filePath));
 		} catch (IOException e1) {
 			e1.printStackTrace();
-		} 
-		
+		}
+
 		System.out.println(fileName);
 		Long newImgId = snowFlake.getNextId();
 		ImageStore po = new ImageStore();
@@ -235,8 +277,8 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 		po.setImageType(ImageType.meizi.getCode().byteValue());
 		imageStoreMapper.insertSelective(po);
 	}
-	
-	private WebElement fineNextPageButton(WebDriver d) {
+
+	private WebElement findNextPageButton(WebDriver d) {
 		By nextPageButtonBy = By.partialLinkText("下一页»");
 		WebElement nextPageButton = null;
 		try {
@@ -244,16 +286,16 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		if(nextPageButton == null) {
+		if (nextPageButton == null) {
 			d.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 			List<WebElement> spans = d.findElements(ByTagName.tagName("span"));
-			for(WebElement i : spans) {
-				if(i.getText() != null && i.getText().contains("下一页")) {
+			for (WebElement i : spans) {
+				if (i.getText() != null && i.getText().contains("下一页")) {
 					nextPageButton = i;
 				}
 			}
 		}
-		
+
 		return nextPageButton;
 	}
 
@@ -263,16 +305,24 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 		po.setGroupUrl(url);
 		groupRecordMapper.insertSelective(po);
 	}
-	
+
 	private boolean hasClawedThisGroup(String url) {
-		if(StringUtils.isBlank(url)) {
+		if (StringUtils.isBlank(url)) {
 			return false;
 		}
 		MeizituGroupRecord p = groupRecordMapper.hasClawedThisGroup(url);
-		if(p != null) {
+		if (p != null) {
 			return true;
 		}
 		return false;
 	}
 	
+	private void ThreadSleepRandomTime() throws InterruptedException {
+		long leftLimit = 400L;
+		long rightLimit = 700L;
+		long randomSleep = randomDateGenerator.nextLong(leftLimit, rightLimit);
+		System.out.println("randomSleep: " + randomSleep);
+		Thread.sleep(randomSleep);
+	}
+
 }

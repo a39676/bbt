@@ -45,6 +45,7 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 			}
 			options.addArguments(WebDriverConstant.headLess);
 		}
+		
 
 		if (options.getProfile() == null) {
 			FirefoxProfile profile = new FirefoxProfile();
