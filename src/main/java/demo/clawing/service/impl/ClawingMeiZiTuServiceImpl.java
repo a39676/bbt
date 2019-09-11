@@ -140,10 +140,11 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 		}
 
 		jsUtil.openNewTab(d, url);
+		String urlSuffix = url.substring(url.lastIndexOf("/") + 1, url.length());
 
 		Set<String> windowHandlesSet = d.getWindowHandles();
 		List<String> windowHandles = new ArrayList<String>(windowHandlesSet);
-		System.out.println("allWindowHandles: " + windowHandles);
+		System.out.println("allWindowHandles:  " + windowHandles);
 		windowHandles.remove(mainWindowHandler);
 		String title = null;
 		WebElement titleEle = null;
@@ -171,7 +172,7 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 		}
 
 		String mainFolerPath = optionService.getMeiZiTuFolder();
-		File folder = new File(mainFolerPath + File.separator + title);
+		File folder = new File(mainFolerPath + File.separator + urlSuffix);
 		if (!folder.exists() || !folder.isDirectory()) {
 			boolean createFolderFlag = folder.mkdirs();
 			if (!createFolderFlag) {
@@ -183,13 +184,13 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 
 		while (nextPageButton != null) {
 			ThreadSleepRandomTime();
-			subImgHandler(d, title);
+			subImgHandler(d, title, folder);
 			nextPageButton.click();
 			nextPageButton = findNextPageButton(d);
 		}
 		if (nextPageButton == null) {
 			try {
-				subImgHandler(d, title);
+				subImgHandler(d, title, folder);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -199,7 +200,7 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 		d.close();
 	}
 
-	private void subImgHandler(WebDriver d, String title) {
+	private void subImgHandler(WebDriver d, String title, File folder) {
 //		ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("img", "alt", title);
 //		By imgBy = auxTool.byXpathBuilder(byXpathConditionBo);
 		By imgBy = ByTagName.tagName("img");
@@ -248,9 +249,8 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 		
 		String currentUrl = d.getCurrentUrl();
 
-		String folderPath = optionService.getMeiZiTuFolder();
 		String fileName = auxTool.findFileNameFromUrl(imgEle.getAttribute("src"));
-		String filePath = folderPath + File.separator + String.valueOf(snowFlake.getNextId()) + File.separator + fileName;
+		String filePath = folder.getAbsolutePath() + File.separator + fileName;
 		File tmpFile = new File(filePath);
 		if (tmpFile.exists()) {
 			System.out.println(fileName + " exists");
