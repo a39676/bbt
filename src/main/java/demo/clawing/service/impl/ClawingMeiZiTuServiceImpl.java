@@ -250,7 +250,7 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 
 		String folderPath = optionService.getMeiZiTuFolder();
 		String fileName = auxTool.findFileNameFromUrl(imgEle.getAttribute("src"));
-		String filePath = folderPath + File.separator + title + File.separator + fileName;
+		String filePath = folderPath + File.separator + String.valueOf(snowFlake.getNextId()) + File.separator + fileName;
 		File tmpFile = new File(filePath);
 		if (tmpFile.exists()) {
 			System.out.println(fileName + " exists");
