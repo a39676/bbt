@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import demo.baseCommon.controller.CommonController;
 import demo.clawing.service.ClawingMeiZiTuService;
 import demo.clawing.service.ClawingSinaMedicineService;
+import demo.selenium.pojo.testCases.TestCaseDemo;
 import demo.selenium.service.SeComplexOA;
 import demo.selenium.service.SeForJoke;
 import demo.selenium.service.SeleniumService;
@@ -92,7 +93,7 @@ public class TestController extends CommonController {
 	
 	@GetMapping(value = "/seleniumTest")
 	public void seleniumTest() { 
-		seleniumService.testDemo();
+		seleniumService.testDemo(new TestCaseDemo());
 	}
 	
 	@GetMapping(value = "/logTest")
