@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 public class TestEvent {
     private Long id;
 
+    private Long caseId;
+
     private String eventName;
 
     private String remark;
@@ -23,6 +25,14 @@ public class TestEvent {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getCaseId() {
+        return caseId;
+    }
+
+    public void setCaseId(Long caseId) {
+        this.caseId = caseId;
     }
 
     public String getEventName() {
