@@ -30,10 +30,10 @@ public class JavaScriptServiceImpl extends CommonService implements JavaScriptSe
 		openNewTab(driver, "");
 	}
 	
-	public void getHtmlSource(WebDriver driver) {
+	@Override
+	public String getHtmlSource(WebDriver driver) {
 		JavascriptExecutor jse = (JavascriptExecutor) driver;
-//		TODO
 		Object htmlSource = jse.executeScript(getHtmlSource);
-		System.out.println(htmlSource);
+		return String.valueOf(htmlSource);
 	}
 }

@@ -8,4 +8,6 @@ public interface JavaScriptService {
 
 	void openNewTab(WebDriver driver);
 
+	String getHtmlSource(WebDriver driver);
+
 }
