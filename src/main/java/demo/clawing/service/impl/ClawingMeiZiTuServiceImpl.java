@@ -30,9 +30,9 @@ import demo.clawing.service.ClawingMeiZiTuGlobalOptionService;
 import demo.clawing.service.ClawingMeiZiTuService;
 import demo.selenium.pojo.bo.ByXpathConditionBO;
 import demo.selenium.pojo.po.TestEvent;
+import demo.selenium.service.JavaScriptService;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.WebDriverService;
-import demo.selenium.util.JavaScriptCommonUtil;
 import httpHandel.HttpUtil;
 import numericHandel.NumericUtilCustom;
 
@@ -44,7 +44,7 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 	@Autowired
 	private SeleniumAuxiliaryToolService auxTool;
 	@Autowired
-	private JavaScriptCommonUtil jsUtil;
+	private JavaScriptService jsUtil;
 	@Autowired
 	private ClawingMeiZiTuGlobalOptionService optionService;
 

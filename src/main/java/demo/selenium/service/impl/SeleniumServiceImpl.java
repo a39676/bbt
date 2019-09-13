@@ -19,10 +19,10 @@ import demo.selenium.pojo.po.TestEvent;
 import demo.selenium.pojo.result.ScreenshotSaveResult;
 import demo.selenium.pojo.result.TestEventResult;
 import demo.selenium.pojo.testCases.TestCaseDemo;
+import demo.selenium.service.JavaScriptService;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.SeleniumService;
 import demo.selenium.service.WebDriverService;
-import demo.selenium.util.JavaScriptCommonUtil;
 
 @Service
 public class SeleniumServiceImpl extends CommonService implements SeleniumService {
@@ -32,7 +32,7 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 	@Autowired
 	private SeleniumAuxiliaryToolService auxiliaryToolService;
 	@Autowired
-	private JavaScriptCommonUtil jsUtil;
+	private JavaScriptService jsUtil;
 	@Autowired
 	private Tess tess;
 	@Autowired

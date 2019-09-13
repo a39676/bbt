@@ -14,8 +14,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import demo.selenium.service.impl.JavaScriptServiceImpl;
 import demo.selenium.service.impl.WebDriverServiceImpl;
-import demo.selenium.util.JavaScriptCommonUtil;
 
 
 public class Selenium {
@@ -39,7 +39,7 @@ public class Selenium {
 		.keyDown(Keys.CONTROL).click(imageButton).keyUp(Keys.CONTROL).build()
 	    .perform();
 		
-		JavaScriptCommonUtil jsUtil = new JavaScriptCommonUtil();
+		JavaScriptServiceImpl jsUtil = new JavaScriptServiceImpl();
 		jsUtil.openNewTab(driver);
 		
 		ArrayList<String> tabs = new ArrayList<String> (driver.getWindowHandles());
