@@ -19,5 +19,7 @@ public interface SeleniumGlobalOptionService {
 
 	boolean checkFolderExists(String path);
 
+	String getTmpDir();
+
 
 }

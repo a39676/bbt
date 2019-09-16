@@ -20,9 +20,11 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 	private String mainSavingFolder_win = "d:/auxiliary";
 	private String mainSavingFolder_linx = "/home/u2";
 	private String downloadFolder = "/tmp";
+	private String tmpFolder = "/tmp";
 	private String screenshotSavingFolder = "/screenshot";
 
 	private String downloadDirRedisKey = "seleniumDownloadDir";
+	private String tmpFolderRedisKey = "tmpFolder";
 	private String screenshotSavingFloderRedisKey = "seleniumScreenshotSavingDir";
 
 	private String seleniumWebDriverFolder = "./seleniumWebDriver";
@@ -58,6 +60,31 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 
 		checkFolderExists(downloadFolderPath);
 		return downloadFolderPath;
+	}
+	
+	@Override
+	public String getTmpDir() {
+		String tmpFolderPath = constantService.getValByName(tmpFolderRedisKey);
+
+		if (StringUtils.isNotBlank(tmpFolderPath)) {
+			checkFolderExists(tmpFolderPath);
+			return pathChangeByDetectOS(tmpFolderPath);
+		}
+
+		if (isWindows()) {
+			tmpFolderPath = mainSavingFolder_win + tmpFolder;
+		} else {
+			tmpFolderPath = mainSavingFolder_linx + tmpFolder;
+		}
+		tmpFolderPath = pathChangeByDetectOS(tmpFolderPath);
+
+		SystemConstant constant = new SystemConstant();
+		constant.setConstantName(tmpFolderRedisKey);
+		constant.setConstantValue(tmpFolderPath);
+		constantService.setValByName(constant);
+
+		checkFolderExists(tmpFolderPath);
+		return tmpFolderPath;
 	}
 	
 	@Override

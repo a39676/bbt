@@ -2,6 +2,7 @@ package demo.baseCommon.service;
 
 import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,4 +132,10 @@ public abstract class CommonService {
 		return false;
 	}
 
+	protected String getSuffixName(String str) {
+		if(StringUtils.isBlank(str)) {
+			return "";
+		}
+		return str.substring(str.lastIndexOf("."));
+	}
 }

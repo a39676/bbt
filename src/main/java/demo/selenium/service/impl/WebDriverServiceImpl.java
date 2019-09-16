@@ -43,7 +43,7 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 			if (!"dev".equals(envName) || !isWindows()) {
 				options.addArguments(WebDriverConstant.headLess);
 			}
-			options.addArguments(WebDriverConstant.headLess);
+//			options.addArguments(WebDriverConstant.headLess);
 		}
 		
 
@@ -65,7 +65,7 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 		if ("dev".equals(envName) ) {
 			Point p = new Point(0, 0);
 			driver.manage().window().setPosition(p);
-			Dimension targetSize = new Dimension(1440, 900);
+			Dimension targetSize = new Dimension(1024, 800);
 			driver.manage().window().setSize(targetSize);
 		}
 		return driver;

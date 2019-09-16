@@ -41,4 +41,7 @@ public interface SeleniumAuxiliaryToolService {
 
 	String saveImg(WebElement ele, String folderPath) throws IOException;
 
+	ScreenshotSaveResult takeElementScreenshot(WebDriver driver, TestEvent testEvent, WebElement ele, String fileName)
+			throws IOException;
+
 }

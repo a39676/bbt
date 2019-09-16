@@ -169,6 +169,36 @@ public class SeleniumAuxiliaryToolServiceImpl extends CommonService implements S
 		ScreenshotSaveResult r = screenshotService.screenshotSave(screenshotSaveDto);
 		return r;
 	}
+	
+	@Override
+	public ScreenshotSaveResult takeElementScreenshot(WebDriver driver, TestEvent testEvent, WebElement ele, String fileName)
+			throws IOException {
+		// Get entire page screenshot
+		File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+		BufferedImage fullImg = ImageIO.read(screenshot);
+
+		Point point = ele.getLocation();
+
+		// Get width and height of the element
+		int eleWidth = ele.getSize().getWidth();
+		int eleHeight = ele.getSize().getHeight();
+
+		// Crop the entire page screenshot to get only element screenshot
+		BufferedImage eleScreenshot = fullImg.getSubimage(point.getX(), point.getY(), eleWidth, eleHeight);
+		ImageIO.write(eleScreenshot, FileSuffixNameConstant.png, screenshot);
+
+		ScreenshotSaveDTO screenshotSaveDto = new ScreenshotSaveDTO();
+		screenshotSaveDto.setScreenShotFile(screenshot);
+		screenshotSaveDto.setEventId(testEvent.getId());
+		screenshotSaveDto.setEventName(testEvent.getEventName());
+		if (StringUtils.isBlank(fileName)) {
+			screenshotSaveDto.setFileName(testEvent.getEventName());
+		} else {
+			screenshotSaveDto.setFileName(fileName);
+		}
+		ScreenshotSaveResult r = screenshotService.screenshotSave(screenshotSaveDto);
+		return r;
+	}
 
 	@Override
 	public ScreenshotSaveResult takeElementScreenshot(WebDriver driver, TestEvent testEvent, By by) throws IOException {

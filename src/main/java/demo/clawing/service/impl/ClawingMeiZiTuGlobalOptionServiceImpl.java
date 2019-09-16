@@ -18,11 +18,11 @@ public class ClawingMeiZiTuGlobalOptionServiceImpl extends CommonService impleme
 	@Autowired
 	private SeleniumGlobalOptionService globalOptionService;
 	
-	protected String mainSavingFolder_win = "d:/auxiliary";
-	protected String mainSavingFolder_linx = "/home/u2";
-	protected String meiZiTuFolder = "/meiZiTu";
+	private String mainSavingFolder_win = "d:/auxiliary";
+	private String mainSavingFolder_linx = "/home/u2";
+	private String meiZiTuFolder = "/meiZiTu";
 
-	protected String meiZiTuFolderRedisKey = "meiZiTuFolder";
+//	private String meiZiTuFolderRedisKey = "meiZiTuFolder";
 	
 	@Override
 	public String getMeiZiTuFolder() {
