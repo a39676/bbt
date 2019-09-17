@@ -1,9 +1,11 @@
-package demo.selenium.pojo.po;
+package demo.dfsw.pojo.po;
 
 import java.time.LocalDateTime;
 
 public class TestCase {
     private Long id;
+
+    private String caseCode;
 
     private String remark;
 
@@ -19,6 +21,14 @@ public class TestCase {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getCaseCode() {
+        return caseCode;
+    }
+
+    public void setCaseCode(String caseCode) {
+        this.caseCode = caseCode == null ? null : caseCode.trim();
     }
 
     public String getRemark() {

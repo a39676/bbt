@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="demo.selenium.mapper.TestCaseMapper">
-  <resultMap id="BaseResultMap" type="demo.selenium.pojo.po.TestCase">
+<mapper namespace="demo.dfsw.mapper.TestCaseMapper">
+  <resultMap id="BaseResultMap" type="demo.dfsw.pojo.po.TestCase">
     <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="case_code" jdbcType="VARCHAR" property="caseCode" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
     <result column="param_file_path" jdbcType="VARCHAR" property="paramFilePath" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -67,9 +68,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, remark, param_file_path, create_time, is_delete
+    id, case_code, remark, param_file_path, create_time, is_delete
   </sql>
-  <select id="selectByExample" parameterType="demo.selenium.pojo.po.TestCaseExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="demo.dfsw.pojo.po.TestCaseExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -93,23 +94,28 @@
     delete from test_case
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="demo.selenium.pojo.po.TestCaseExample">
+  <delete id="deleteByExample" parameterType="demo.dfsw.pojo.po.TestCaseExample">
     delete from test_case
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="demo.selenium.pojo.po.TestCase">
-    insert into test_case (id, remark, param_file_path, 
-      create_time, is_delete)
-    values (#{id,jdbcType=BIGINT}, #{remark,jdbcType=VARCHAR}, #{paramFilePath,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT})
+  <insert id="insert" parameterType="demo.dfsw.pojo.po.TestCase">
+    insert into test_case (id, case_code, remark, 
+      param_file_path, create_time, is_delete
+      )
+    values (#{id,jdbcType=BIGINT}, #{caseCode,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{paramFilePath,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="demo.selenium.pojo.po.TestCase">
+  <insert id="insertSelective" parameterType="demo.dfsw.pojo.po.TestCase">
     insert into test_case
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
+      </if>
+      <if test="caseCode != null">
+        case_code,
       </if>
       <if test="remark != null">
         remark,
@@ -128,6 +134,9 @@
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
+      <if test="caseCode != null">
+        #{caseCode,jdbcType=VARCHAR},
+      </if>
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
       </if>
@@ -142,7 +151,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="demo.selenium.pojo.po.TestCaseExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="demo.dfsw.pojo.po.TestCaseExample" resultType="java.lang.Long">
     select count(*) from test_case
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -153,6 +162,9 @@
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.caseCode != null">
+        case_code = #{record.caseCode,jdbcType=VARCHAR},
       </if>
       <if test="record.remark != null">
         remark = #{record.remark,jdbcType=VARCHAR},
@@ -174,6 +186,7 @@
   <update id="updateByExample" parameterType="map">
     update test_case
     set id = #{record.id,jdbcType=BIGINT},
+      case_code = #{record.caseCode,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
       param_file_path = #{record.paramFilePath,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -182,9 +195,12 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="demo.selenium.pojo.po.TestCase">
+  <update id="updateByPrimaryKeySelective" parameterType="demo.dfsw.pojo.po.TestCase">
     update test_case
     <set>
+      <if test="caseCode != null">
+        case_code = #{caseCode,jdbcType=VARCHAR},
+      </if>
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
       </if>
@@ -200,9 +216,10 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="demo.selenium.pojo.po.TestCase">
+  <update id="updateByPrimaryKey" parameterType="demo.dfsw.pojo.po.TestCase">
     update test_case
-    set remark = #{remark,jdbcType=VARCHAR},
+    set case_code = #{caseCode,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
       param_file_path = #{paramFilePath,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       is_delete = #{isDelete,jdbcType=BIT}

@@ -1,7 +1,7 @@
-package demo.selenium.mapper;
+package demo.dfsw.mapper;
 
-import demo.selenium.pojo.po.TestCase;
-import demo.selenium.pojo.po.TestCaseExample;
+import demo.dfsw.pojo.po.TestCase;
+import demo.dfsw.pojo.po.TestCaseExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

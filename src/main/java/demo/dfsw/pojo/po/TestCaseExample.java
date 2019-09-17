@@ -1,4 +1,4 @@
-package demo.selenium.pojo.po;
+package demo.dfsw.pojo.po;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -162,6 +162,76 @@ public class TestCaseExample {
 
         public Criteria andIdNotBetween(Long value1, Long value2) {
             addCriterion("id not between", value1, value2, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseCodeIsNull() {
+            addCriterion("case_code is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseCodeIsNotNull() {
+            addCriterion("case_code is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseCodeEqualTo(String value) {
+            addCriterion("case_code =", value, "caseCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseCodeNotEqualTo(String value) {
+            addCriterion("case_code <>", value, "caseCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseCodeGreaterThan(String value) {
+            addCriterion("case_code >", value, "caseCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("case_code >=", value, "caseCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseCodeLessThan(String value) {
+            addCriterion("case_code <", value, "caseCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseCodeLessThanOrEqualTo(String value) {
+            addCriterion("case_code <=", value, "caseCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseCodeLike(String value) {
+            addCriterion("case_code like", value, "caseCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseCodeNotLike(String value) {
+            addCriterion("case_code not like", value, "caseCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseCodeIn(List<String> values) {
+            addCriterion("case_code in", values, "caseCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseCodeNotIn(List<String> values) {
+            addCriterion("case_code not in", values, "caseCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseCodeBetween(String value1, String value2) {
+            addCriterion("case_code between", value1, value2, "caseCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseCodeNotBetween(String value1, String value2) {
+            addCriterion("case_code not between", value1, value2, "caseCode");
             return (Criteria) this;
         }
 
