@@ -10,6 +10,7 @@ import java.net.URLConnection;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
@@ -19,6 +20,9 @@ import ioHandle.FileUtilCustom;
 @Service
 public class DownloadServiceImpl implements DownloadService {
 
+	@Autowired
+	private FileUtilCustom ioUtil;
+	
 	@Override
 	public void downloadFile(HttpServletResponse response, String filePath) throws IOException {
 		File inputFile = new File(filePath);
@@ -34,12 +38,11 @@ public class DownloadServiceImpl implements DownloadService {
 			outputZip = new File(inputFile.getAbsolutePath() + ".zip");
 		}
 		
-		FileUtilCustom fileUtil = new FileUtilCustom();
 		File targetFile = new File(filePath);
 		if(targetFile.isFile()) {
-			fileUtil.fileToZip(outputZip.getAbsolutePath(), filePath);
+			ioUtil.fileToZip(outputZip.getAbsolutePath(), filePath);
 		} else {
-			fileUtil.folderToZip(outputZip.getAbsolutePath(), filePath);
+			ioUtil.folderToZip(outputZip.getAbsolutePath(), filePath);
 		}
 		
 		String mimeType= URLConnection.guessContentTypeFromName(outputZip.getName());

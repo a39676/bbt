@@ -21,6 +21,8 @@ public class AdminServiceImpl implements AdminService {
 	private UserIpMapper userIpMapper;
 	@Autowired
 	private SystemConstantService systemConstantService;
+	@Autowired
+	private FileUtilCustom ioUtil;
 	
 	@Override
 	public CommonResult deleteUserIpRecord(UserIpDeleteDTO param) {
@@ -38,11 +40,10 @@ public class AdminServiceImpl implements AdminService {
 	
 	@Override
 	public void loadHomepageAnnouncementStr() {
-		FileUtilCustom iou = new FileUtilCustom();
 		String filePath = systemConstantService.getValByName(SystemConstantStore.homepageAnnouncement);
 		File f = new File(filePath);
 		if(f.exists()) {
-			String strContent = iou.getStringFromFile(filePath);
+			String strContent = ioUtil.getStringFromFile(filePath);
 			systemConstantService.setValByName(SystemConstantStore.homepageAnnouncementStr, strContent);
 		}
 	}

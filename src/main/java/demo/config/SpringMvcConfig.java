@@ -14,6 +14,8 @@ import org.springframework.web.servlet.view.JstlView;
 
 import demo.config.costom_component.SnowFlake;
 import demo.util.BaseUtilCustom;
+import ioHandle.FileUtilCustom;
+import stringHandle.StringUtilCustom;
 
 @EnableWebMvc // <mvc:annotation-driven />
 @Configuration
@@ -62,4 +64,13 @@ public class SpringMvcConfig implements WebMvcConfigurer {
 		return new SnowFlake();
 	}
 
+	@Bean
+	public StringUtilCustom getStringUtilCustom() {
+		return new StringUtilCustom();
+	}
+	
+	@Bean
+	public FileUtilCustom getFileUtilCustom() {
+		return new FileUtilCustom();
+	}
 }

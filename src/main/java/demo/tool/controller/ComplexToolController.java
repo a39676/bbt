@@ -32,12 +32,12 @@ public class ComplexToolController extends CommonController {
 
 	@Autowired
 	private ToolMapper toolMapper;
-
 	@Autowired
 	private DownloadService downloadService;
-	
 	@Autowired
 	private ComplexToolServiceImpl complexToolServiceImpl;
+	@Autowired
+	private FileUtilCustom ioUtil;
 
 	public List<File> getLocalTxt(String inputPath) {
 		File mainFolder = new File(inputPath);
@@ -54,10 +54,9 @@ public class ComplexToolController extends CommonController {
 	private List<List<String>> getTxtInfo(File file) {
 
 		List<List<String>> resultList = new ArrayList<List<String>>();
-		FileUtilCustom fuc = new FileUtilCustom();
 
 		try {
-			String fileInfo = new String(fuc.getByteFromFile(file.getAbsolutePath()), "utf8");
+			String fileInfo = new String(ioUtil.getByteFromFile(file.getAbsolutePath()), "utf8");
 			List<String> fileLines = Arrays.asList(fileInfo.split("\n"));
 			List<String> currentLine = null;
 

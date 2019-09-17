@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -21,6 +22,9 @@ import ioHandle.FileUtilCustom;
 @Service
 public class UploadServiceImpl implements UploadService {
 
+	@Autowired
+	private FileUtilCustom ioUtil;
+	
 	@Override
 	public Map<String, MultipartFile> getFiles(MultipartHttpServletRequest request) {
 		return request.getFileMap();
@@ -28,7 +32,6 @@ public class UploadServiceImpl implements UploadService {
 
 	@Override
 	public UploadResult saveFiles(Map<String, MultipartFile> fileMap, String storePath) {
-		FileUtilCustom io = new FileUtilCustom();
 		MultipartFile tmpFile = null;
 		UploadResult result = new UploadResult();
 		List<String> uploadSuccessFileNameList = new ArrayList<String>();
@@ -41,7 +44,7 @@ public class UploadServiceImpl implements UploadService {
 			tmpFile = entry.getValue();
 			
 			try {
-				io.byteToFile(tmpFile.getBytes(), storePath + tmpFile.getOriginalFilename());
+				ioUtil.byteToFile(tmpFile.getBytes(), storePath + tmpFile.getOriginalFilename());
 			} catch (IOException e) {
 				e.printStackTrace();
 				flag = false;

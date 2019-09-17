@@ -30,8 +30,6 @@ public class TestController extends CommonController {
 	
 //	@Autowired
 //	private TestMapper testMapper;
-//	@Autowired
-//	private WeixinService weixinService;
 	@Autowired
 	private TestService testService;
 	@Autowired
@@ -140,4 +138,5 @@ public class TestController extends CommonController {
 	public void noebuxTest() {
 		nbService.test1();
 	}
+	
 }

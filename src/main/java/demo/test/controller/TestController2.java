@@ -25,5 +25,5 @@ public class TestController2 extends CommonController {
 	public String snowFlake() {
 		return String.valueOf(snowFlake.getNextId());
 	}
-
+	
 }
