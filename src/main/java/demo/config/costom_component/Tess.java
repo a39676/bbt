@@ -65,37 +65,11 @@ public class Tess {
 		}
 	}
 
-//	public String filterPic(String fileName) {
-//		// 图片去噪
-//		Mat src = Imgcodecs.imread(sourceFolderPath + File.separator + fileName);
-//		Mat dst = new Mat(src.width(), src.height(), CvType.CV_8UC1);
-//
-//		Imgproc.boxFilter(src, dst, src.depth(), new Size(3.2, 3.2));
-//		Imgcodecs.imwrite(filterFolderPath + File.separator + fileName, dst);
-//
-//		// 图片阈值处理，二值化
-//		Mat src1 = Imgcodecs.imread(filterFolderPath + File.separator + fileName, Imgcodecs.IMREAD_UNCHANGED);
-//		Mat dst1 = new Mat(src1.width(), src1.height(), CvType.CV_8UC1);
-//
-//		Imgproc.threshold(src1, dst1, 165, 200, Imgproc.THRESH_TRUNC);
-//		Imgcodecs.imwrite(processFolderPath + File.separator + fileName, dst1);
-//
-//		// 图片截取
-//		Mat src2 = Imgcodecs.imread(processFolderPath + File.separator + fileName, Imgcodecs.IMREAD_UNCHANGED);
-//		Rect roi = new Rect(4, 2, src2.cols() - 7, src2.rows() - 4); // 参数：x坐标，y坐标，截取的长度，截取的宽度
-//		Mat dst2 = new Mat(src2, roi);
-//
-//		String resultFilePath = resultFolderPath + File.separator + fileName;
-//		Imgcodecs.imwrite(resultFilePath, dst2);
-//
-//		return resultFilePath;
-//	}
-	
 	public static void main(String[] args) {
 		Tess ob = new Tess();
 		String fileSourceFormat = "gif";
 //		String fileTargetFormat = "png";
 //		t.batchRename(fileSourceFormat, fileTargetFormat, 43, 49);
-		ob.batchOcr(fileSourceFormat, 59, 60);
+		ob.batchOcr(fileSourceFormat, 10, 23);
 	}
 }

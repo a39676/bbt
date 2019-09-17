@@ -8,14 +8,43 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import demo.baseCommon.service.CommonService;
 import demo.captcha.service.CaptchaService;
+import demo.config.costom_component.Tess;
 
+@Scope("singleton")
 @Service
 public class CaptchaServiceImpl extends CommonService implements CaptchaService {
+	
+	@Autowired
+	private Tess tess;
 
+	private final String captchaFolder = "/tmp/captchas";
+	
+	@Override
+	public String ocr(String imgPath, boolean numberAndLetterOnly) {
+		File img = new File(imgPath);
+		if(!img.exists()) {
+			return null;
+		}
+		
+		String outputFolderPath = captchaFolder;
+		if(isWindows()) {
+			outputFolderPath = "d:" + outputFolderPath;
+		}
+		
+		if(!cleanImage(img, outputFolderPath)) {
+			return null;
+		}
+		
+		return tess.ocr(imgPath + File.separator + img.getName(), true);
+		
+	}
+	
 	/**
 	 * 
 	 * @param sfile   需要去噪的图像
@@ -34,7 +63,6 @@ public class CaptchaServiceImpl extends CommonService implements CaptchaService 
 		try {
 			bufferedImage = ImageIO.read(sfile);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
@@ -92,45 +120,44 @@ public class CaptchaServiceImpl extends CommonService implements CaptchaService 
 		
 		String suffix = getSuffixName(sfile.getAbsolutePath());
 		String outputPath = outputFolerPath + File.separator + sfile.getName();
-		System.out.println(outputPath);
 		try {
-			boolean flag = ImageIO.write(binaryBufferedImage, suffix, new File(outputPath));
-			System.out.println(flag);
+			ImageIO.write(binaryBufferedImage, suffix, new File(outputPath));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
 		return true;
 	}
 
-//	private boolean isBlack(int colorInt) {
-//		Color color = new Color(colorInt);
-//		if (color.getRed() + color.getGreen() + color.getBlue() <= 300) {
-//			return true;
-//		}
-//		return false;
-//	}
-//
-//	private boolean isWhite(int colorInt) {
-//		Color color = new Color(colorInt);
-//		if (color.getRed() + color.getGreen() + color.getBlue() > 300) {
-//			return true;
-//		}
-//		return false;
-//	}
-//
-//	private int isBlackOrWhite(int colorInt) {
-//		if (getColorBright(colorInt) < 30 || getColorBright(colorInt) > 730) {
-//			return 1;
-//		}
-//		return 0;
-//	}
-//
-//	private int getColorBright(int colorInt) {
-//		Color color = new Color(colorInt);
-//		return color.getRed() + color.getGreen() + color.getBlue();
-//	}
+	/*
+	private boolean isBlack(int colorInt) {
+		Color color = new Color(colorInt);
+		if (color.getRed() + color.getGreen() + color.getBlue() <= 300) {
+			return true;
+		}
+		return false;
+	}
+
+	private boolean isWhite(int colorInt) {
+		Color color = new Color(colorInt);
+		if (color.getRed() + color.getGreen() + color.getBlue() > 300) {
+			return true;
+		}
+		return false;
+	}
+
+	private int isBlackOrWhite(int colorInt) {
+		if (getColorBright(colorInt) < 30 || getColorBright(colorInt) > 730) {
+			return 1;
+		}
+		return 0;
+	}
+
+	private int getColorBright(int colorInt) {
+		Color color = new Color(colorInt);
+		return color.getRed() + color.getGreen() + color.getBlue();
+	}
+	*/
 
 	private int ostu(int[][] gray, int w, int h) {
 		int[] histData = new int[w * h];
@@ -201,19 +228,14 @@ public class CaptchaServiceImpl extends CommonService implements CaptchaService 
 	}
 
 	public static void main(String[] args) throws IOException {
-		/*
-		 * File testDataDir = new File("testdata"); final String destDir =
-		 * testDataDir.getAbsolutePath()+"/tmp"; for (File file :
-		 * testDataDir.listFiles()){ cleanImage(file, destDir); }
-		 */
 		CaptchaServiceImpl t = new CaptchaServiceImpl();
-		String sourceFilePath = "D:\\auxiliary\\captchas";
-//		File testDataDir = new File(sourceFilePath);
-//		String destDir = "D:\\auxiliary\\captcha";
-//		t.cleanImage(testDataDir, destDir);
-		
-		File testDataDir = new File(sourceFilePath + File.separator + "45.png");
+		String sourceFolderPath = "D:\\auxiliary\\captchas";
+		File sourceFolder = new File(sourceFolderPath);
 		String destDir ="D:\\auxiliary\\tmp";
-		t.cleanImage(testDataDir, destDir);
+		
+		for(File f : sourceFolder.listFiles()) {
+			t.cleanImage(f, destDir);
+		}
+//		t.cleanImage(testDataDir, destDir);
 	}
 }

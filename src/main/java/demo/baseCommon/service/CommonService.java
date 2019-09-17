@@ -136,6 +136,6 @@ public abstract class CommonService {
 		if(StringUtils.isBlank(str)) {
 			return "";
 		}
-		return str.substring(str.lastIndexOf("."));
+		return str.substring(str.lastIndexOf(".") + 1);
 	}
 }

@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.baseCommon.service.CommonService;
-import demo.config.costom_component.Tess;
+import demo.captcha.service.CaptchaService;
 import demo.neobux.service.NeobuxOptionService;
 import demo.neobux.service.NeobuxService;
 import demo.selenium.pojo.bo.ByXpathConditionBO;
@@ -27,7 +27,7 @@ public class NeobuxServiceImpl extends CommonService implements NeobuxService {
 	@Autowired
 	private SeleniumAuxiliaryToolService auxTool;
 	@Autowired
-	private Tess tess;
+	private CaptchaService captchaService;
 	@Autowired
 	private NeobuxOptionService optionService;
 //	@Autowired
@@ -183,7 +183,7 @@ public class NeobuxServiceImpl extends CommonService implements NeobuxService {
 		if(!r.isSuccess()) {
 			return null;
 		}
-		String ocrResult = tess.ocr(r.getSavingPath(), true);
+		String ocrResult = captchaService.ocr(r.getSavingPath(), true);
 		log.info(ocrResult);
 		return ocrResult;
 	}

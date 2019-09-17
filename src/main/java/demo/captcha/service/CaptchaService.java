@@ -8,4 +8,6 @@ public interface CaptchaService {
 
 	boolean gray(File srcImageFile, String outputPath);
 
+	String ocr(String imgPath, boolean numberAndLetterOnly);
+
 }
