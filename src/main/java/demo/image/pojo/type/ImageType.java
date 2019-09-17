@@ -1,4 +1,4 @@
-package demo.clawing.pojo.type;
+package demo.image.pojo.type;
 
 public enum ImageType {
 	
@@ -6,6 +6,8 @@ public enum ImageType {
 	zoo("zoo", 2),
 	/** meizi */
 	meizi("meizi", 9),
+	/** moviePoster */
+	moviePoster("moviePoster", 10),
 	;
 	
 	private String name;

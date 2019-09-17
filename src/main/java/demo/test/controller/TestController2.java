@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.baseCommon.controller.CommonController;
 import demo.config.costom_component.SnowFlake;
+import demo.movie.service.DyttClawingService;
 import demo.test.pojo.constant.TestUrl;
 
 @Controller
@@ -16,6 +17,8 @@ public class TestController2 extends CommonController {
 
 //	@Autowired
 //	private TestService testService;
+	@Autowired
+	private DyttClawingService dytt;
 
 	@Autowired
 	private SnowFlake snowFlake;
@@ -24,6 +27,13 @@ public class TestController2 extends CommonController {
 	@ResponseBody
 	public String snowFlake() {
 		return String.valueOf(snowFlake.getNextId());
+	}
+	
+	@GetMapping(value = "/dytt")
+	@ResponseBody
+	public String dytt() {
+		dytt.test();
+		return null;
 	}
 	
 }

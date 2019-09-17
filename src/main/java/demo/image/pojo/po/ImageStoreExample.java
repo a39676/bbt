@@ -1,4 +1,4 @@
-package demo.clawing.pojo.po;
+package demo.image.pojo.po;
 
 import java.util.ArrayList;
 import java.util.List;

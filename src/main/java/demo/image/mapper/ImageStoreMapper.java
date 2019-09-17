@@ -1,9 +1,11 @@
-package demo.clawing.mapper;
+package demo.image.mapper;
 
-import demo.clawing.pojo.po.ImageStore;
-import demo.clawing.pojo.po.ImageStoreExample;
 import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
+
+import demo.image.pojo.po.ImageStore;
+import demo.image.pojo.po.ImageStoreExample;
 
 public interface ImageStoreMapper {
     long countByExample(ImageStoreExample example);

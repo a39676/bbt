@@ -21,13 +21,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.baseCommon.service.CommonService;
-import demo.clawing.mapper.ImageStoreMapper;
 import demo.clawing.mapper.MeizituGroupRecordMapper;
-import demo.clawing.pojo.po.ImageStore;
 import demo.clawing.pojo.po.MeizituGroupRecord;
-import demo.clawing.pojo.type.ImageType;
 import demo.clawing.service.ClawingMeiZiTuGlobalOptionService;
 import demo.clawing.service.ClawingMeiZiTuService;
+import demo.image.mapper.ImageStoreMapper;
+import demo.image.pojo.po.ImageStore;
+import demo.image.pojo.type.ImageType;
 import demo.selenium.pojo.bo.ByXpathConditionBO;
 import demo.selenium.pojo.po.TestEvent;
 import demo.selenium.service.JavaScriptService;

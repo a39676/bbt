@@ -1,4 +1,4 @@
-package demo.clawing.pojo.po;
+package demo.image.pojo.po;
 
 public class ImageStore {
     private Long id;
