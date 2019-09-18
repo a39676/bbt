@@ -29,10 +29,10 @@ import demo.image.mapper.ImageStoreMapper;
 import demo.image.pojo.po.ImageStore;
 import demo.image.pojo.type.ImageType;
 import demo.selenium.pojo.bo.ByXpathConditionBO;
-import demo.selenium.pojo.po.TestEvent;
 import demo.selenium.service.JavaScriptService;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.WebDriverService;
+import demo.testCase.pojo.po.TestEvent;
 import httpHandel.HttpUtil;
 import numericHandel.NumericUtilCustom;
 

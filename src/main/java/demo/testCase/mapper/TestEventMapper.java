@@ -1,7 +1,7 @@
-package demo.selenium.mapper;
+package demo.testCase.mapper;
 
-import demo.selenium.pojo.po.TestEvent;
-import demo.selenium.pojo.po.TestEventExample;
+import demo.testCase.pojo.po.TestEvent;
+import demo.testCase.pojo.po.TestEventExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

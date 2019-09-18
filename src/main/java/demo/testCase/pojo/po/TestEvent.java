@@ -1,9 +1,11 @@
-package demo.selenium.pojo.po;
+package demo.testCase.pojo.po;
 
 import java.time.LocalDateTime;
 
 public class TestEvent {
     private Long id;
+
+    private Long projectId;
 
     private Long caseId;
 
@@ -19,12 +21,22 @@ public class TestEvent {
 
     private Boolean isPass;
 
+    private Boolean isDelete;
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 
     public Long getCaseId() {
@@ -81,5 +93,13 @@ public class TestEvent {
 
     public void setIsPass(Boolean isPass) {
         this.isPass = isPass;
+    }
+
+    public Boolean getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(Boolean isDelete) {
+        this.isDelete = isDelete;
     }
 }

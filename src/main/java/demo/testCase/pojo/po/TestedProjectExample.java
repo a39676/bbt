@@ -1,17 +1,17 @@
-package demo.dfsw.pojo.po;
+package demo.testCase.pojo.po;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestCaseExample {
+public class TestedProjectExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public TestCaseExample() {
+    public TestedProjectExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -165,73 +165,73 @@ public class TestCaseExample {
             return (Criteria) this;
         }
 
-        public Criteria andCaseCodeIsNull() {
-            addCriterion("case_code is null");
+        public Criteria andProjectNameIsNull() {
+            addCriterion("project_name is null");
             return (Criteria) this;
         }
 
-        public Criteria andCaseCodeIsNotNull() {
-            addCriterion("case_code is not null");
+        public Criteria andProjectNameIsNotNull() {
+            addCriterion("project_name is not null");
             return (Criteria) this;
         }
 
-        public Criteria andCaseCodeEqualTo(String value) {
-            addCriterion("case_code =", value, "caseCode");
+        public Criteria andProjectNameEqualTo(String value) {
+            addCriterion("project_name =", value, "projectName");
             return (Criteria) this;
         }
 
-        public Criteria andCaseCodeNotEqualTo(String value) {
-            addCriterion("case_code <>", value, "caseCode");
+        public Criteria andProjectNameNotEqualTo(String value) {
+            addCriterion("project_name <>", value, "projectName");
             return (Criteria) this;
         }
 
-        public Criteria andCaseCodeGreaterThan(String value) {
-            addCriterion("case_code >", value, "caseCode");
+        public Criteria andProjectNameGreaterThan(String value) {
+            addCriterion("project_name >", value, "projectName");
             return (Criteria) this;
         }
 
-        public Criteria andCaseCodeGreaterThanOrEqualTo(String value) {
-            addCriterion("case_code >=", value, "caseCode");
+        public Criteria andProjectNameGreaterThanOrEqualTo(String value) {
+            addCriterion("project_name >=", value, "projectName");
             return (Criteria) this;
         }
 
-        public Criteria andCaseCodeLessThan(String value) {
-            addCriterion("case_code <", value, "caseCode");
+        public Criteria andProjectNameLessThan(String value) {
+            addCriterion("project_name <", value, "projectName");
             return (Criteria) this;
         }
 
-        public Criteria andCaseCodeLessThanOrEqualTo(String value) {
-            addCriterion("case_code <=", value, "caseCode");
+        public Criteria andProjectNameLessThanOrEqualTo(String value) {
+            addCriterion("project_name <=", value, "projectName");
             return (Criteria) this;
         }
 
-        public Criteria andCaseCodeLike(String value) {
-            addCriterion("case_code like", value, "caseCode");
+        public Criteria andProjectNameLike(String value) {
+            addCriterion("project_name like", value, "projectName");
             return (Criteria) this;
         }
 
-        public Criteria andCaseCodeNotLike(String value) {
-            addCriterion("case_code not like", value, "caseCode");
+        public Criteria andProjectNameNotLike(String value) {
+            addCriterion("project_name not like", value, "projectName");
             return (Criteria) this;
         }
 
-        public Criteria andCaseCodeIn(List<String> values) {
-            addCriterion("case_code in", values, "caseCode");
+        public Criteria andProjectNameIn(List<String> values) {
+            addCriterion("project_name in", values, "projectName");
             return (Criteria) this;
         }
 
-        public Criteria andCaseCodeNotIn(List<String> values) {
-            addCriterion("case_code not in", values, "caseCode");
+        public Criteria andProjectNameNotIn(List<String> values) {
+            addCriterion("project_name not in", values, "projectName");
             return (Criteria) this;
         }
 
-        public Criteria andCaseCodeBetween(String value1, String value2) {
-            addCriterion("case_code between", value1, value2, "caseCode");
+        public Criteria andProjectNameBetween(String value1, String value2) {
+            addCriterion("project_name between", value1, value2, "projectName");
             return (Criteria) this;
         }
 
-        public Criteria andCaseCodeNotBetween(String value1, String value2) {
-            addCriterion("case_code not between", value1, value2, "caseCode");
+        public Criteria andProjectNameNotBetween(String value1, String value2) {
+            addCriterion("project_name not between", value1, value2, "projectName");
             return (Criteria) this;
         }
 
@@ -302,76 +302,6 @@ public class TestCaseExample {
 
         public Criteria andRemarkNotBetween(String value1, String value2) {
             addCriterion("remark not between", value1, value2, "remark");
-            return (Criteria) this;
-        }
-
-        public Criteria andParamFilePathIsNull() {
-            addCriterion("param_file_path is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andParamFilePathIsNotNull() {
-            addCriterion("param_file_path is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andParamFilePathEqualTo(String value) {
-            addCriterion("param_file_path =", value, "paramFilePath");
-            return (Criteria) this;
-        }
-
-        public Criteria andParamFilePathNotEqualTo(String value) {
-            addCriterion("param_file_path <>", value, "paramFilePath");
-            return (Criteria) this;
-        }
-
-        public Criteria andParamFilePathGreaterThan(String value) {
-            addCriterion("param_file_path >", value, "paramFilePath");
-            return (Criteria) this;
-        }
-
-        public Criteria andParamFilePathGreaterThanOrEqualTo(String value) {
-            addCriterion("param_file_path >=", value, "paramFilePath");
-            return (Criteria) this;
-        }
-
-        public Criteria andParamFilePathLessThan(String value) {
-            addCriterion("param_file_path <", value, "paramFilePath");
-            return (Criteria) this;
-        }
-
-        public Criteria andParamFilePathLessThanOrEqualTo(String value) {
-            addCriterion("param_file_path <=", value, "paramFilePath");
-            return (Criteria) this;
-        }
-
-        public Criteria andParamFilePathLike(String value) {
-            addCriterion("param_file_path like", value, "paramFilePath");
-            return (Criteria) this;
-        }
-
-        public Criteria andParamFilePathNotLike(String value) {
-            addCriterion("param_file_path not like", value, "paramFilePath");
-            return (Criteria) this;
-        }
-
-        public Criteria andParamFilePathIn(List<String> values) {
-            addCriterion("param_file_path in", values, "paramFilePath");
-            return (Criteria) this;
-        }
-
-        public Criteria andParamFilePathNotIn(List<String> values) {
-            addCriterion("param_file_path not in", values, "paramFilePath");
-            return (Criteria) this;
-        }
-
-        public Criteria andParamFilePathBetween(String value1, String value2) {
-            addCriterion("param_file_path between", value1, value2, "paramFilePath");
-            return (Criteria) this;
-        }
-
-        public Criteria andParamFilePathNotBetween(String value1, String value2) {
-            addCriterion("param_file_path not between", value1, value2, "paramFilePath");
             return (Criteria) this;
         }
 

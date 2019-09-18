@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 
 import demo.baseCommon.service.CommonService;
 import demo.selenium.pojo.bo.ByXpathConditionBO;
-import demo.selenium.pojo.po.TestEvent;
 import demo.selenium.service.JavaScriptService;
 import demo.selenium.service.SeComplexOA;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.WebDriverService;
+import demo.testCase.pojo.po.TestEvent;
 
 @Service
 public class SeComplexOAImpl extends CommonService implements SeComplexOA {

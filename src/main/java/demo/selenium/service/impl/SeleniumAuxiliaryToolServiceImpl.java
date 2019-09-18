@@ -34,10 +34,10 @@ import demo.selenium.pojo.bo.ByXpathConditionSubBO;
 import demo.selenium.pojo.constant.RegexConstant;
 import demo.selenium.pojo.constant.WebDriverConstant;
 import demo.selenium.pojo.dto.ScreenshotSaveDTO;
-import demo.selenium.pojo.po.TestEvent;
 import demo.selenium.pojo.result.ScreenshotSaveResult;
 import demo.selenium.service.ScreenshotService;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
+import demo.testCase.pojo.po.TestEvent;
 
 @Service
 public class SeleniumAuxiliaryToolServiceImpl extends CommonService implements SeleniumAuxiliaryToolService {

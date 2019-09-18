@@ -14,15 +14,15 @@ import org.springframework.stereotype.Service;
 
 import demo.baseCommon.service.CommonService;
 import demo.config.costom_component.Tess;
-import demo.selenium.mapper.TestEventMapper;
-import demo.selenium.pojo.po.TestEvent;
 import demo.selenium.pojo.result.ScreenshotSaveResult;
 import demo.selenium.pojo.result.TestEventResult;
-import demo.selenium.pojo.testCases.TestCaseDemo;
 import demo.selenium.service.JavaScriptService;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.SeleniumService;
 import demo.selenium.service.WebDriverService;
+import demo.testCase.pojo.bo.TestEventDemoBO;
+import demo.testCase.pojo.po.TestEvent;
+import demo.testCase.service.TestEventService;
 
 @Service
 public class SeleniumServiceImpl extends CommonService implements SeleniumService {
@@ -36,21 +36,18 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 	@Autowired
 	private Tess tess;
 	@Autowired
-	private TestEventMapper testEventMapper;
+	private TestEventService eventService;
 	
 	@Override
-	public TestEventResult testDemo(TestCaseDemo testCase) {
+	public TestEventResult testDemo() {
 		TestEventResult r = new TestEventResult();
 		
-		Long newEventId = snowFlake.getNextId();
-		TestEvent testEvent = new TestEvent();
-		testEvent.setCaseId(TestCaseDemo.id);
-		testEvent.setId(newEventId);
-		testEventMapper.insertSelective(testEvent);
+		TestEventDemoBO eventBO = new TestEventDemoBO().build();
+		TestEvent testEvent = eventService.runNewTestEvent(eventBO);
 
 		WebDriver driver = webDriverService.buildFireFoxWebDriver();
 		try {
-			String url = TestCaseDemo.mainUrl;
+			String url = eventBO.getMainUrl();
 			driver.get(url);
 			
 			// driver等待  (如果页面已经加载完成, 即进入下一步逻辑)
@@ -64,7 +61,7 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 			
 //			检出页面上的搜索框
 			WebElement searchBox = driver.findElement(By.id("kw"));
-			searchBox.sendKeys(TestCaseDemo.searchKeyWord);
+			searchBox.sendKeys(eventBO.getKeyWord());
 			searchBox.submit();
 			
 			WebElement imageButton = driver.findElement(By.partialLinkText("图片"));

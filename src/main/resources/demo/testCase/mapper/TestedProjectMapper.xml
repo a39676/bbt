@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="demo.selenium.mapper.TestEventMapper">
-  <resultMap id="BaseResultMap" type="demo.selenium.pojo.po.TestEvent">
+<mapper namespace="demo.testCase.mapper.TestedProjectMapper">
+  <resultMap id="BaseResultMap" type="demo.testCase.pojo.po.TestedProject">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="case_id" jdbcType="BIGINT" property="caseId" />
-    <result column="event_name" jdbcType="VARCHAR" property="eventName" />
+    <result column="project_name" jdbcType="VARCHAR" property="projectName" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
-    <result column="report_path" jdbcType="VARCHAR" property="reportPath" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
-    <result column="is_pass" jdbcType="BIT" property="isPass" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -70,15 +67,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, case_id, event_name, remark, report_path, create_time, end_time, is_pass
+    id, project_name, remark, create_time, is_delete
   </sql>
-  <select id="selectByExample" parameterType="demo.selenium.pojo.po.TestEventExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="demo.testCase.pojo.po.TestedProjectExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from test_event
+    from tested_project
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -89,114 +86,85 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from test_event
+    from tested_project
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from test_event
+    delete from tested_project
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="demo.selenium.pojo.po.TestEventExample">
-    delete from test_event
+  <delete id="deleteByExample" parameterType="demo.testCase.pojo.po.TestedProjectExample">
+    delete from tested_project
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="demo.selenium.pojo.po.TestEvent">
-    insert into test_event (id, case_id, event_name, 
-      remark, report_path, create_time, 
-      end_time, is_pass)
-    values (#{id,jdbcType=BIGINT}, #{caseId,jdbcType=BIGINT}, #{eventName,jdbcType=VARCHAR}, 
-      #{remark,jdbcType=VARCHAR}, #{reportPath,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{endTime,jdbcType=TIMESTAMP}, #{isPass,jdbcType=BIT})
+  <insert id="insert" parameterType="demo.testCase.pojo.po.TestedProject">
+    insert into tested_project (id, project_name, remark, 
+      create_time, is_delete)
+    values (#{id,jdbcType=BIGINT}, #{projectName,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT})
   </insert>
-  <insert id="insertSelective" parameterType="demo.selenium.pojo.po.TestEvent">
-    insert into test_event
+  <insert id="insertSelective" parameterType="demo.testCase.pojo.po.TestedProject">
+    insert into tested_project
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
       </if>
-      <if test="caseId != null">
-        case_id,
-      </if>
-      <if test="eventName != null">
-        event_name,
+      <if test="projectName != null">
+        project_name,
       </if>
       <if test="remark != null">
         remark,
       </if>
-      <if test="reportPath != null">
-        report_path,
-      </if>
       <if test="createTime != null">
         create_time,
       </if>
-      <if test="endTime != null">
-        end_time,
-      </if>
-      <if test="isPass != null">
-        is_pass,
+      <if test="isDelete != null">
+        is_delete,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="caseId != null">
-        #{caseId,jdbcType=BIGINT},
-      </if>
-      <if test="eventName != null">
-        #{eventName,jdbcType=VARCHAR},
+      <if test="projectName != null">
+        #{projectName,jdbcType=VARCHAR},
       </if>
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="reportPath != null">
-        #{reportPath,jdbcType=VARCHAR},
-      </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="endTime != null">
-        #{endTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="isPass != null">
-        #{isPass,jdbcType=BIT},
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="demo.selenium.pojo.po.TestEventExample" resultType="java.lang.Long">
-    select count(*) from test_event
+  <select id="countByExample" parameterType="demo.testCase.pojo.po.TestedProjectExample" resultType="java.lang.Long">
+    select count(*) from tested_project
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update test_event
+    update tested_project
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.caseId != null">
-        case_id = #{record.caseId,jdbcType=BIGINT},
-      </if>
-      <if test="record.eventName != null">
-        event_name = #{record.eventName,jdbcType=VARCHAR},
+      <if test="record.projectName != null">
+        project_name = #{record.projectName,jdbcType=VARCHAR},
       </if>
       <if test="record.remark != null">
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
-      <if test="record.reportPath != null">
-        report_path = #{record.reportPath,jdbcType=VARCHAR},
-      </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.endTime != null">
-        end_time = #{record.endTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.isPass != null">
-        is_pass = #{record.isPass,jdbcType=BIT},
+      <if test="record.isDelete != null">
+        is_delete = #{record.isDelete,jdbcType=BIT},
       </if>
     </set>
     <if test="_parameter != null">
@@ -204,55 +172,55 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update test_event
+    update tested_project
     set id = #{record.id,jdbcType=BIGINT},
-      case_id = #{record.caseId,jdbcType=BIGINT},
-      event_name = #{record.eventName,jdbcType=VARCHAR},
+      project_name = #{record.projectName,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
-      report_path = #{record.reportPath,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      end_time = #{record.endTime,jdbcType=TIMESTAMP},
-      is_pass = #{record.isPass,jdbcType=BIT}
+      is_delete = #{record.isDelete,jdbcType=BIT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="demo.selenium.pojo.po.TestEvent">
-    update test_event
+  <update id="updateByPrimaryKeySelective" parameterType="demo.testCase.pojo.po.TestedProject">
+    update tested_project
     <set>
-      <if test="caseId != null">
-        case_id = #{caseId,jdbcType=BIGINT},
-      </if>
-      <if test="eventName != null">
-        event_name = #{eventName,jdbcType=VARCHAR},
+      <if test="projectName != null">
+        project_name = #{projectName,jdbcType=VARCHAR},
       </if>
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="reportPath != null">
-        report_path = #{reportPath,jdbcType=VARCHAR},
-      </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="endTime != null">
-        end_time = #{endTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="isPass != null">
-        is_pass = #{isPass,jdbcType=BIT},
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="demo.selenium.pojo.po.TestEvent">
-    update test_event
-    set case_id = #{caseId,jdbcType=BIGINT},
-      event_name = #{eventName,jdbcType=VARCHAR},
+  <update id="updateByPrimaryKey" parameterType="demo.testCase.pojo.po.TestedProject">
+    update tested_project
+    set project_name = #{projectName,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
-      report_path = #{reportPath,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      end_time = #{endTime,jdbcType=TIMESTAMP},
-      is_pass = #{isPass,jdbcType=BIT}
+      is_delete = #{isDelete,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="findByProjectName" resultMap="BaseResultMap">
+    select
+      *
+    from
+      tested_project
+    <where>
+      <if test="projectName != null">
+        and project_name = #{projectName}
+      </if>
+      and is_delete = false
+    </where>
+
+    limit 1
+  </select>
 </mapper>

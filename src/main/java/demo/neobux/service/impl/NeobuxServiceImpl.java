@@ -14,10 +14,10 @@ import demo.captcha.service.CaptchaService;
 import demo.neobux.service.NeobuxOptionService;
 import demo.neobux.service.NeobuxService;
 import demo.selenium.pojo.bo.ByXpathConditionBO;
-import demo.selenium.pojo.po.TestEvent;
 import demo.selenium.pojo.result.ScreenshotSaveResult;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.WebDriverService;
+import demo.testCase.pojo.po.TestEvent;
 
 @Service
 public class NeobuxServiceImpl extends CommonService implements NeobuxService {

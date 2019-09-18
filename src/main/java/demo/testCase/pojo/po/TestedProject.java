@@ -1,15 +1,13 @@
-package demo.dfsw.pojo.po;
+package demo.testCase.pojo.po;
 
 import java.time.LocalDateTime;
 
-public class TestCase {
+public class TestedProject {
     private Long id;
 
-    private String caseCode;
+    private String projectName;
 
     private String remark;
-
-    private String paramFilePath;
 
     private LocalDateTime createTime;
 
@@ -23,12 +21,12 @@ public class TestCase {
         this.id = id;
     }
 
-    public String getCaseCode() {
-        return caseCode;
+    public String getProjectName() {
+        return projectName;
     }
 
-    public void setCaseCode(String caseCode) {
-        this.caseCode = caseCode == null ? null : caseCode.trim();
+    public void setProjectName(String projectName) {
+        this.projectName = projectName == null ? null : projectName.trim();
     }
 
     public String getRemark() {
@@ -37,14 +35,6 @@ public class TestCase {
 
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
-    }
-
-    public String getParamFilePath() {
-        return paramFilePath;
-    }
-
-    public void setParamFilePath(String paramFilePath) {
-        this.paramFilePath = paramFilePath == null ? null : paramFilePath.trim();
     }
 
     public LocalDateTime getCreateTime() {

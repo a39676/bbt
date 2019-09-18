@@ -1,7 +1,7 @@
-package demo.dfsw.mapper;
+package demo.testCase.mapper;
 
-import demo.dfsw.pojo.po.TestCase;
-import demo.dfsw.pojo.po.TestCaseExample;
+import demo.testCase.pojo.po.TestCase;
+import demo.testCase.pojo.po.TestCaseExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
@@ -27,4 +27,6 @@ public interface TestCaseMapper {
     int updateByPrimaryKeySelective(TestCase record);
 
     int updateByPrimaryKey(TestCase record);
+    
+    TestCase findByCaseCode(String caseCode);
 }

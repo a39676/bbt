@@ -22,9 +22,9 @@ import demo.clawing.pojo.result.SinaMedicineDetailMainHandleResult;
 import demo.clawing.service.ClawingSinaMedicineFactoryService;
 import demo.clawing.service.ClawingSinaMedicineService;
 import demo.selenium.pojo.bo.ByXpathConditionBO;
-import demo.selenium.pojo.po.TestEvent;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.WebDriverService;
+import demo.testCase.pojo.po.TestEvent;
 
 @Service
 public class ClawingSinaMedicineServiceImpl extends CommonService implements ClawingSinaMedicineService {

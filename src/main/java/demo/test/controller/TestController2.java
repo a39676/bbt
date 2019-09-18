@@ -17,8 +17,11 @@ public class TestController2 extends CommonController {
 
 //	@Autowired
 //	private TestService testService;
+//	@Autowired
+//	private TestCaseService caseService;
 	@Autowired
 	private DyttClawingService dytt;
+	
 
 	@Autowired
 	private SnowFlake snowFlake;
@@ -33,6 +36,12 @@ public class TestController2 extends CommonController {
 	@ResponseBody
 	public String dytt() {
 		dytt.test();
+		return null;
+	}
+	
+	@GetMapping(value = "/insertCommonCase")
+	@ResponseBody
+	public String insertCommonCase() {
 		return null;
 	}
 	

@@ -7,8 +7,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import demo.selenium.pojo.bo.ByXpathConditionBO;
-import demo.selenium.pojo.po.TestEvent;
 import demo.selenium.pojo.result.ScreenshotSaveResult;
+import demo.testCase.pojo.po.TestEvent;
 
 public interface SeleniumAuxiliaryToolService {
 

@@ -20,9 +20,9 @@ import demo.movie.mapper.MovieImageMapper;
 import demo.movie.pojo.po.MovieImage;
 import demo.movie.service.DyttClawingService;
 import demo.selenium.pojo.bo.ByXpathConditionBO;
-import demo.selenium.pojo.po.TestEvent;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.WebDriverService;
+import demo.testCase.pojo.po.TestEvent;
 
 @Service
 public class DyttClawingServiceImpl extends CommonService implements DyttClawingService {
