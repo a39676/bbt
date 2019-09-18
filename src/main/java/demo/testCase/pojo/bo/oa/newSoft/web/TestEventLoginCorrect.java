@@ -16,7 +16,7 @@ public class TestEventLoginCorrect extends TestEventBO {
 	}
 
 	@Override
-	public TestEventBO build() {
+	public TestEventLoginCorrect build() {
 		this.caseCode = "STUC_CC01002";
 		this.projectName = "newSoftOA7.5";
 		this.mainUrl = "http://localhost:8080/NSOA7-GROUP/Login.jsp";

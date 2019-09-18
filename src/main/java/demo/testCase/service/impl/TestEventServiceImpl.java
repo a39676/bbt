@@ -1,12 +1,13 @@
 package demo.testCase.service.impl;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.baseCommon.service.CommonService;
 import demo.testCase.mapper.TestEventMapper;
 import demo.testCase.pojo.bo.TestEventBO;
-import demo.testCase.pojo.bo.TestEventDemoBO;
 import demo.testCase.pojo.po.TestCase;
 import demo.testCase.pojo.po.TestEvent;
 import demo.testCase.pojo.po.TestedProject;
@@ -47,10 +48,12 @@ public class TestEventServiceImpl extends CommonService implements TestEventServ
 		return testEvent;
 	}
 	
-	public static void main(String[] args) {
-		TestEventServiceImpl t = new TestEventServiceImpl();
-		TestEventDemoBO b = new TestEventDemoBO().build();
-		t.runNewTestEvent(b);
+	@Override
+	public Integer endTestEvent(TestEvent po, boolean success, String remark) {
+		po.setIsPass(success);
+		po.setEndTime(LocalDateTime.now());
+		po.setRemark(remark);
+		return eventMapper.updateByPrimaryKeySelective(po);
 	}
 	
 }

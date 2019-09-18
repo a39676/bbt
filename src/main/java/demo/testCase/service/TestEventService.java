@@ -9,4 +9,6 @@ public interface TestEventService {
 
 	TestEvent runNewTestEvent(TestEventBO bo);
 
+	Integer endTestEvent(TestEvent po, boolean success, String remark);
+
 }
