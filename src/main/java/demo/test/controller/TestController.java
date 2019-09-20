@@ -13,7 +13,6 @@ import org.springframework.web.servlet.ModelAndView;
 import demo.baseCommon.controller.CommonController;
 import demo.clawing.service.ClawingSinaMedicineService;
 import demo.neobux.service.NeobuxService;
-import demo.selenium.service.SeComplexOA;
 import demo.selenium.service.SeForJoke;
 import demo.selenium.service.SeleniumService;
 import demo.test.pojo.constant.TestUrl;
@@ -38,8 +37,6 @@ public class TestController extends CommonController {
 	
 	@Autowired
 	private SeForJoke seForJoke;
-	@Autowired
-	private SeComplexOA seComplexOA;
 	@Autowired
 	private ClawingSinaMedicineService medicineService;
 	@Autowired
@@ -117,12 +114,7 @@ public class TestController extends CommonController {
 	public void sjLiuXue() {
 		seForJoke.liuXue();
 	}
-	
-	@GetMapping(value = "oatmptest")
-	public void oaTmpTest() {
-		seComplexOA.tmpTest();
-	}
-	
+
 	@GetMapping(value = "sjtest")
 	public void sjTest() {
 		seForJoke.test();

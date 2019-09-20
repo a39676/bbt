@@ -27,15 +27,16 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 	private String tmpFolderRedisKey = "tmpFolder";
 	private String screenshotSavingFloderRedisKey = "seleniumScreenshotSavingDir";
 
-	private String seleniumWebDriverFolder = "./seleniumWebDriver";
-	private String chrome76Path_win = seleniumWebDriverFolder + "/chrome76Driver.exe";
-	private String chrome45Path_win = seleniumWebDriverFolder + "/chrome45Driver.exe";
-	private String chrome76Path_linux = seleniumWebDriverFolder + "/chrome76Driver";
-	private String chrome45Path_linux = seleniumWebDriverFolder + "/chrome45Driver";
-	private String geckoPath_win = seleniumWebDriverFolder + "/geckodriver-v0.24.0-win64.exe";
-	private String geckoPath_linux = seleniumWebDriverFolder + "/geckodriver-v0.24.0-linux";
-	private String edgePath = seleniumWebDriverFolder + "/MicrosoftWebDriver.exe";
-	private String iePath = seleniumWebDriverFolder + "/IEDriverServer.exe";
+	private String winSeleniumWebDriverFolder = "d:/auxiliary/seleniumWebDriver";
+	private String linuxSeleniumWebDriverFolder = "/home/u2/seleniumWebDriver";
+	private String chrome76Path_win = winSeleniumWebDriverFolder + "/chrome76Driver.exe";
+	private String chrome45Path_win = winSeleniumWebDriverFolder + "/chrome45Driver.exe";
+	private String chrome76Path_linux = linuxSeleniumWebDriverFolder + "/chrome76Driver";
+	private String chrome45Path_linux = linuxSeleniumWebDriverFolder + "/chrome45Driver";
+	private String geckoPath_win = winSeleniumWebDriverFolder + "/geckodriver-v0.24.0-win64.exe";
+	private String geckoPath_linux = linuxSeleniumWebDriverFolder + "/geckodriver-v0.24.0-linux";
+	private String edgePath = winSeleniumWebDriverFolder + "/MicrosoftWebDriver.exe";
+	private String iePath = winSeleniumWebDriverFolder + "/IEDriverServer.exe";
 
 	@Override
 	public String getDownloadDir() {
