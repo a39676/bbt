@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="demo.movie.mapper.MovieUrlMapper">
-  <resultMap id="BaseResultMap" type="demo.movie.pojo.po.MovieUrl">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="movie_id" jdbcType="BIGINT" property="movieId" />
-    <result column="url" jdbcType="VARCHAR" property="url" />
+<mapper namespace="demo.movie.mapper.MovieIntroductionMapper">
+  <resultMap id="BaseResultMap" type="demo.movie.pojo.po.MovieIntroduction">
+    <id column="movie_id" jdbcType="BIGINT" property="movieId" />
+    <result column="intro_path" jdbcType="VARCHAR" property="introPath" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
   </resultMap>
@@ -67,15 +66,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, movie_id, url, create_time, is_delete
+    movie_id, intro_path, create_time, is_delete
   </sql>
-  <select id="selectByExample" parameterType="demo.movie.pojo.po.MovieUrlExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="demo.movie.pojo.po.MovieIntroductionExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from movie_url
+    from movie_introduction
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -86,36 +85,33 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from movie_url
-    where id = #{id,jdbcType=BIGINT}
+    from movie_introduction
+    where movie_id = #{movieId,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from movie_url
-    where id = #{id,jdbcType=BIGINT}
+    delete from movie_introduction
+    where movie_id = #{movieId,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="demo.movie.pojo.po.MovieUrlExample">
-    delete from movie_url
+  <delete id="deleteByExample" parameterType="demo.movie.pojo.po.MovieIntroductionExample">
+    delete from movie_introduction
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="demo.movie.pojo.po.MovieUrl">
-    insert into movie_url (id, movie_id, url, 
-      create_time, is_delete)
-    values (#{id,jdbcType=BIGINT}, #{movieId,jdbcType=BIGINT}, #{url,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT})
+  <insert id="insert" parameterType="demo.movie.pojo.po.MovieIntroduction">
+    insert into movie_introduction (movie_id, intro_path, create_time, 
+      is_delete)
+    values (#{movieId,jdbcType=BIGINT}, #{introPath,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{isDelete,jdbcType=BIT})
   </insert>
-  <insert id="insertSelective" parameterType="demo.movie.pojo.po.MovieUrl">
-    insert into movie_url
+  <insert id="insertSelective" parameterType="demo.movie.pojo.po.MovieIntroduction">
+    insert into movie_introduction
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
       <if test="movieId != null">
         movie_id,
       </if>
-      <if test="url != null">
-        url,
+      <if test="introPath != null">
+        intro_path,
       </if>
       <if test="createTime != null">
         create_time,
@@ -125,14 +121,11 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=BIGINT},
-      </if>
       <if test="movieId != null">
         #{movieId,jdbcType=BIGINT},
       </if>
-      <if test="url != null">
-        #{url,jdbcType=VARCHAR},
+      <if test="introPath != null">
+        #{introPath,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -142,23 +135,20 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="demo.movie.pojo.po.MovieUrlExample" resultType="java.lang.Long">
-    select count(*) from movie_url
+  <select id="countByExample" parameterType="demo.movie.pojo.po.MovieIntroductionExample" resultType="java.lang.Long">
+    select count(*) from movie_introduction
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update movie_url
+    update movie_introduction
     <set>
-      <if test="record.id != null">
-        id = #{record.id,jdbcType=BIGINT},
-      </if>
       <if test="record.movieId != null">
         movie_id = #{record.movieId,jdbcType=BIGINT},
       </if>
-      <if test="record.url != null">
-        url = #{record.url,jdbcType=VARCHAR},
+      <if test="record.introPath != null">
+        intro_path = #{record.introPath,jdbcType=VARCHAR},
       </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -172,24 +162,20 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update movie_url
-    set id = #{record.id,jdbcType=BIGINT},
-      movie_id = #{record.movieId,jdbcType=BIGINT},
-      url = #{record.url,jdbcType=VARCHAR},
+    update movie_introduction
+    set movie_id = #{record.movieId,jdbcType=BIGINT},
+      intro_path = #{record.introPath,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       is_delete = #{record.isDelete,jdbcType=BIT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="demo.movie.pojo.po.MovieUrl">
-    update movie_url
+  <update id="updateByPrimaryKeySelective" parameterType="demo.movie.pojo.po.MovieIntroduction">
+    update movie_introduction
     <set>
-      <if test="movieId != null">
-        movie_id = #{movieId,jdbcType=BIGINT},
-      </if>
-      <if test="url != null">
-        url = #{url,jdbcType=VARCHAR},
+      <if test="introPath != null">
+        intro_path = #{introPath,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -198,14 +184,13 @@
         is_delete = #{isDelete,jdbcType=BIT},
       </if>
     </set>
-    where id = #{id,jdbcType=BIGINT}
+    where movie_id = #{movieId,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="demo.movie.pojo.po.MovieUrl">
-    update movie_url
-    set movie_id = #{movieId,jdbcType=BIGINT},
-      url = #{url,jdbcType=VARCHAR},
+  <update id="updateByPrimaryKey" parameterType="demo.movie.pojo.po.MovieIntroduction">
+    update movie_introduction
+    set intro_path = #{introPath,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       is_delete = #{isDelete,jdbcType=BIT}
-    where id = #{id,jdbcType=BIGINT}
+    where movie_id = #{movieId,jdbcType=BIGINT}
   </update>
 </mapper>

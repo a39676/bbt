@@ -35,8 +35,8 @@ public class TestController2 extends CommonController {
 	@GetMapping(value = "/dytt")
 	@ResponseBody
 	public String dytt() {
-		dytt.test();
-		return null;
+		dytt.clawing();
+		return "done";
 	}
 	
 	@GetMapping(value = "/insertCommonCase")

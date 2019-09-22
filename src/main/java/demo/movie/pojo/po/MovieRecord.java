@@ -2,10 +2,8 @@ package demo.movie.pojo.po;
 
 import java.time.LocalDateTime;
 
-public class MovieUrl {
+public class MovieRecord {
     private Long id;
-
-    private Long movieId;
 
     private String url;
 
@@ -19,14 +17,6 @@ public class MovieUrl {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getMovieId() {
-        return movieId;
-    }
-
-    public void setMovieId(Long movieId) {
-        this.movieId = movieId;
     }
 
     public String getUrl() {

@@ -1,6 +1,6 @@
 package demo.movie.service.impl;
 
-import java.util.Arrays;
+import java.io.File;
 import java.util.List;
 import java.util.Set;
 
@@ -13,23 +13,32 @@ import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import demo.baseCommon.service.CommonService;
 import demo.image.mapper.ImageStoreMapper;
 import demo.image.pojo.po.ImageStore;
 import demo.image.pojo.type.ImageType;
 import demo.movie.mapper.MovieImageMapper;
-import demo.movie.mapper.MovieUrlMapper;
+import demo.movie.mapper.MovieInfoMapper;
+import demo.movie.mapper.MovieIntroductionMapper;
+import demo.movie.mapper.MovieMagnetUrlMapper;
+import demo.movie.mapper.MovieRecordMapper;
+import demo.movie.pojo.dto.MovieRecordFindByConditionDTO;
 import demo.movie.pojo.po.MovieImage;
 import demo.movie.pojo.po.MovieInfo;
-import demo.movie.pojo.po.MovieUrl;
+import demo.movie.pojo.po.MovieIntroduction;
+import demo.movie.pojo.po.MovieMagnetUrl;
+import demo.movie.pojo.po.MovieRecord;
 import demo.movie.service.DyttClawingService;
 import demo.selenium.pojo.bo.ByXpathConditionBO;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.WebDriverService;
 import demo.testCase.pojo.po.TestEvent;
+import ioHandle.FileUtilCustom;
 
 @Service
-public class DyttClawingServiceImpl extends CommonService implements DyttClawingService {
+public class DyttClawingServiceImpl extends MovieClawingCommonService implements DyttClawingService {
+
+	@Autowired
+	private FileUtilCustom iou;
 
 	@Autowired
 	private WebDriverService webDriverService;
@@ -37,47 +46,41 @@ public class DyttClawingServiceImpl extends CommonService implements DyttClawing
 	private SeleniumAuxiliaryToolService auxTool;
 //	@Autowired
 //	private JavaScriptService jsUtil;
-	
+
 	@Autowired
 	private ImageStoreMapper imageStoreMapper;
 	@Autowired
 	private MovieImageMapper movieImageMapper;
 	@Autowired
-	private MovieUrlMapper movieUrlMapper;
-	
+	private MovieInfoMapper infoMapper;
+	@Autowired
+	private MovieMagnetUrlMapper movieMangetUrlMapper;
+	@Autowired
+	private MovieRecordMapper recordMapper;
+	@Autowired
+	private MovieIntroductionMapper introduectionMapper;
+
 	private String mainUrl = "https://www.dytt8.net";
 	private String newMovie = mainUrl + "/html/gndy/dyzz/index.html";
-	
+
 	@Override
-	public void test() {
+	public void clawing() {
 		TestEvent te = new TestEvent();
 		te.setId(5L);
 		te.setEventName("dyttTest");
 		WebDriver d = webDriverService.buildFireFoxWebDriver();
 
-		String mainWindowHandle = d.getWindowHandle();
-		
+		int maxClawPageCount = 20;
+
 		try {
-			Set<String> windowHandles = null;
-			d.switchTo().window(mainWindowHandle);
 			d.get(newMovie);
 			
-			ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("a", "class", "ulink");
-			By targetAListBy = auxTool.byXpathBuilder(byXpathConditionBo);
-			
-			List<WebElement> targetAList = d.findElements(targetAListBy);
-			for(WebElement ele : targetAList) {
-				singleMovieHandle(d, ele, mainWindowHandle);
-				windowHandles = d.getWindowHandles();
-				if(windowHandles.size() > 5) {
-					throw new Exception();
-				}
-				d.switchTo().window(mainWindowHandle);
+			while(maxClawPageCount > 0) {
+				pageHandler(d, te);
+				swithToNextPage(d);
+				maxClawPageCount--;
 			}
-			/*
-			 * TODO
-			 */
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			auxTool.takeScreenshot(d, te);
@@ -88,27 +91,72 @@ public class DyttClawingServiceImpl extends CommonService implements DyttClawing
 		}
 	}
 	
+	private void pageHandler(WebDriver d, TestEvent te) throws Exception {
+		String mainWindowHandle = d.getWindowHandle();
+		Set<String> windowHandles = null;
+		d.switchTo().window(mainWindowHandle);
+
+		ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("a", "class", "ulink");
+		By targetAListBy = auxTool.byXpathBuilder(byXpathConditionBo);
+
+		List<WebElement> targetAList = d.findElements(targetAListBy);
+		WebElement ele = null;
+		for (int i = 0; i < targetAList.size(); i++) {
+			ele = targetAList.get(i);
+			singleMovieHandle(d, ele, mainWindowHandle);
+			windowHandles = d.getWindowHandles();
+			if (windowHandles.size() > 5) {
+				throw new Exception();
+			}
+			d.switchTo().window(mainWindowHandle);
+		}
+	}
+
+	private void swithToNextPage(WebDriver d) throws InterruptedException {
+		String oldHandle = d.getWindowHandle();
+		WebElement nextPageButton = d.findElement(By.linkText("下一页"));
+		nextPageButton.click();
+		Thread.sleep(500L);
+		Set<String> handlers = d.getWindowHandles();
+		for(String h : handlers) {
+			if(!h.equals(oldHandle)) {
+				d.close();
+				d.switchTo().window(h);
+			}
+		}
+	}
+	
 	private void singleMovieHandle(WebDriver d, WebElement ele, String mainWindowHandler) throws Exception {
-//		TODO
-		if(ele == null || StringUtils.isBlank(ele.getAttribute("href"))) {
+		if (ele == null || StringUtils.isBlank(ele.getAttribute("href"))) {
 			return;
 		}
-		ele.click();
-		Thread.sleep(300L);
 		
 		String subUrl = ele.getAttribute("href");
+		MovieRecordFindByConditionDTO findMovieRecordDTO = new MovieRecordFindByConditionDTO();
+		findMovieRecordDTO.setUrl(subUrl);
+		List<MovieRecord> records = recordMapper.findByCondition(findMovieRecordDTO);
+		if (records != null && records.size() > 0) {
+			log.info(subUrl + " was clawed");
+			return;
+		}
+		
+		ele.click();
+		Thread.sleep(1200L);
+
 		String currentUrl = null;
 		String targetWindowHandle = null;
-		
+
 		Set<String> windows = d.getWindowHandles();
-		for(String w : windows) {
+		for (String w : windows) {
 			d.switchTo().window(w);
 			currentUrl = d.getCurrentUrl();
-			if(targetWindowHandle == null && currentUrl.contains(subUrl)) {
+			if (targetWindowHandle == null && currentUrl.contains(subUrl)) {
 				targetWindowHandle = w;
 			}
 		}
-		if(targetWindowHandle == null) {
+
+
+		if (targetWindowHandle == null) {
 			log.info("can not find correct window");
 			throw new Exception();
 		} else {
@@ -116,47 +164,56 @@ public class DyttClawingServiceImpl extends CommonService implements DyttClawing
 			log.info("switch to : " + targetWindowHandle);
 		}
 		currentUrl = d.getCurrentUrl();
-		
+
 		ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("div", "id", "Zoom");
 		By divZoomBy = auxTool.byXpathBuilder(byXpathConditionBo);
-		
+		Thread.sleep(300L);
 		WebElement divZoom = null;
-		
+
 		try {
 			divZoom = d.findElement(divZoomBy);
 			Long newMovieId = snowFlake.getNextId();
 
 			List<WebElement> imgs = divZoom.findElements(ByTagName.tagName("img"));
 			saveMovieImg(imgs, newMovieId);
-			
+
 			List<WebElement> aTags = divZoom.findElements(ByTagName.tagName("a"));
-			saveMovieUrl(aTags, newMovieId);
-			
+			saveMovieMagnetUrl(aTags, newMovieId);
+
 			List<WebElement> pTags = divZoom.findElements(ByTagName.tagName("p"));
 			saveMovieInfo(pTags, newMovieId);
-			
+
+			MovieInfo info = new MovieInfo();
+			info.setId(newMovieId);
+			infoMapper.insertSelective(info);
+
+			MovieRecord record = new MovieRecord();
+			record.setUrl(currentUrl);
+			record.setId(snowFlake.getNextId());
+			recordMapper.insertSelective(record);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if(!mainWindowHandler.equals(d.getWindowHandle())) {
+			if (!mainWindowHandler.equals(d.getWindowHandle())) {
 				d.close();
 			}
 		}
 	}
-	
+
 	private void saveMovieImg(List<WebElement> imgs, Long movieId) {
 		String src = null;
-		for(WebElement i : imgs) {
+		for (WebElement i : imgs) {
 			src = i.getAttribute("src");
 			Dimension s = i.getSize();
-			if(s.height > 200 && s.width > 200) {
+			if (s.height > 200 && s.width > 200) {
 				Long newImgId = snowFlake.getNextId();
 				ImageStore po = new ImageStore();
 				po.setId(newImgId);
 				po.setImagePath(src);
 				po.setImageType(ImageType.moviePoster.getCode().byteValue());
 				imageStoreMapper.insertSelective(po);
-				
+
 				MovieImage record = new MovieImage();
 				record.setMovidId(movieId);
 				record.setImageId(newImgId);
@@ -164,44 +221,41 @@ public class DyttClawingServiceImpl extends CommonService implements DyttClawing
 			}
 		}
 	}
-	
-	private void saveMovieUrl(List<WebElement> aTags, Long movieId) {
+
+	private void saveMovieMagnetUrl(List<WebElement> aTags, Long movieId) {
 		String href = null;
-		for(WebElement ele : aTags) {
+		for (WebElement ele : aTags) {
 			href = ele.getAttribute("href");
-			if(href.startsWith("magnet:?xt")) {
-				Long newMovieUrlId = snowFlake.getNextId();
-				MovieUrl po = new MovieUrl();
-				po.setId(newMovieUrlId);
+			if (href.startsWith("magnet:?xt")) {
+				Long newMovieMagnetUrlId = snowFlake.getNextId();
+				MovieMagnetUrl po = new MovieMagnetUrl();
+				po.setId(newMovieMagnetUrlId);
 				po.setMovieId(movieId);
 				po.setUrl(href);
-				movieUrlMapper.insertSelective(po);
+				movieMangetUrlMapper.insertSelective(po);
 			}
 		}
 	}
 
 	private void saveMovieInfo(List<WebElement> pTags, Long movieId) {
 		WebElement p = null;
-		String detailInfo = null;
 		WebElement tmpEle = null;
-		for(int i = 0; i < pTags.size() && tmpEle == null; i++) {
+		for (int i = 0; i < pTags.size() && tmpEle == null; i++) {
 			tmpEle = pTags.get(i);
-			if(StringUtils.isNotBlank(tmpEle.getText())) {
-				detailInfo = tmpEle.getText().replaceAll(" ", "");
-				if(detailInfo.contains("片名")) {
-					p = tmpEle;
-					System.out.println(p);
-				}
+			if (StringUtils.isNotBlank(tmpEle.getText())) {
+				p = tmpEle;
 			}
 		}
-		
-		List<String> lines = Arrays.asList(detailInfo.split("\\s"));
-//		MovieInfo m = new MovieInfo();
-//		for(String line : lines) {
-//			if(line.contains("译名")) {
-//				m.setCnTitle(cnTitle);
-//			}
-//		}
-		System.out.println(lines);
+
+		String content = p.getText();
+		content = content.replaceAll("【下载地址】", "").replaceAll("磁力链下载点击这里", "");
+
+		String savePath = introductionSavePath + File.separator + movieId + ".txt";
+		iou.byteToFile(content.getBytes(), savePath);
+
+		MovieIntroduction po = new MovieIntroduction();
+		po.setMovieId(movieId);
+		po.setIntroPath(savePath);
+		introduectionMapper.insertSelective(po);
 	}
 }

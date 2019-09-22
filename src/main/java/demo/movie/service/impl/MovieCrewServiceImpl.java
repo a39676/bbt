@@ -5,14 +5,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import demo.baseCommon.service.CommonService;
 import demo.movie.mapper.MovieCrewMapper;
 import demo.movie.po.dto.MovieCrewfindByConditionDTO;
 import demo.movie.pojo.po.MovieCrew;
 import demo.movie.service.MovieCrewService;
 
 @Service
-public class MovieCrewServiceImpl extends CommonService implements MovieCrewService {
+public class MovieCrewServiceImpl extends MovieClawingCommonService implements MovieCrewService {
 
 //	@Autowired
 //	private MovieAssociationCrewMapper movieAndCrewMapper;

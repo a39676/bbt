@@ -4,14 +4,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieUrlExample {
+public class MovieMagnetUrlExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public MovieUrlExample() {
+    public MovieMagnetUrlExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
