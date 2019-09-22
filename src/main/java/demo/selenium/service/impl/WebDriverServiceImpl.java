@@ -4,8 +4,6 @@ import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Map;
 
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -63,10 +61,11 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 
 		FirefoxDriver driver = new FirefoxDriver(options);
 		if ("dev".equals(envName) ) {
-			Point p = new Point(0, 0);
-			driver.manage().window().setPosition(p);
-			Dimension targetSize = new Dimension(1024, 800);
-			driver.manage().window().setSize(targetSize);
+//			Point p = new Point(0, 0);
+//			driver.manage().window().setPosition(p);
+//			Dimension targetSize = new Dimension(1024, 800);
+//			driver.manage().window().setSize(targetSize);
+			driver.manage().window().maximize();
 		}
 		return driver;
 	}

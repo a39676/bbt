@@ -1,13 +1,13 @@
-package demo.image.pojo.po;
+package demo.movie.pojo.po;
 
 import java.time.LocalDateTime;
 
-public class ImageStore {
+public class MovieUrl {
     private Long id;
 
-    private String imagePath;
+    private Long movieId;
 
-    private Byte imageType;
+    private String url;
 
     private LocalDateTime createTime;
 
@@ -21,20 +21,20 @@ public class ImageStore {
         this.id = id;
     }
 
-    public String getImagePath() {
-        return imagePath;
+    public Long getMovieId() {
+        return movieId;
     }
 
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath == null ? null : imagePath.trim();
+    public void setMovieId(Long movieId) {
+        this.movieId = movieId;
     }
 
-    public Byte getImageType() {
-        return imageType;
+    public String getUrl() {
+        return url;
     }
 
-    public void setImageType(Byte imageType) {
-        this.imageType = imageType;
+    public void setUrl(String url) {
+        this.url = url == null ? null : url.trim();
     }
 
     public LocalDateTime getCreateTime() {

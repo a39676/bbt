@@ -1,17 +1,17 @@
-package demo.image.pojo.po;
+package demo.movie.pojo.po;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageStoreExample {
+public class MovieUrlExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public ImageStoreExample() {
+    public MovieUrlExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -165,133 +165,133 @@ public class ImageStoreExample {
             return (Criteria) this;
         }
 
-        public Criteria andImagePathIsNull() {
-            addCriterion("image_path is null");
+        public Criteria andMovieIdIsNull() {
+            addCriterion("movie_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andImagePathIsNotNull() {
-            addCriterion("image_path is not null");
+        public Criteria andMovieIdIsNotNull() {
+            addCriterion("movie_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andImagePathEqualTo(String value) {
-            addCriterion("image_path =", value, "imagePath");
+        public Criteria andMovieIdEqualTo(Long value) {
+            addCriterion("movie_id =", value, "movieId");
             return (Criteria) this;
         }
 
-        public Criteria andImagePathNotEqualTo(String value) {
-            addCriterion("image_path <>", value, "imagePath");
+        public Criteria andMovieIdNotEqualTo(Long value) {
+            addCriterion("movie_id <>", value, "movieId");
             return (Criteria) this;
         }
 
-        public Criteria andImagePathGreaterThan(String value) {
-            addCriterion("image_path >", value, "imagePath");
+        public Criteria andMovieIdGreaterThan(Long value) {
+            addCriterion("movie_id >", value, "movieId");
             return (Criteria) this;
         }
 
-        public Criteria andImagePathGreaterThanOrEqualTo(String value) {
-            addCriterion("image_path >=", value, "imagePath");
+        public Criteria andMovieIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("movie_id >=", value, "movieId");
             return (Criteria) this;
         }
 
-        public Criteria andImagePathLessThan(String value) {
-            addCriterion("image_path <", value, "imagePath");
+        public Criteria andMovieIdLessThan(Long value) {
+            addCriterion("movie_id <", value, "movieId");
             return (Criteria) this;
         }
 
-        public Criteria andImagePathLessThanOrEqualTo(String value) {
-            addCriterion("image_path <=", value, "imagePath");
+        public Criteria andMovieIdLessThanOrEqualTo(Long value) {
+            addCriterion("movie_id <=", value, "movieId");
             return (Criteria) this;
         }
 
-        public Criteria andImagePathLike(String value) {
-            addCriterion("image_path like", value, "imagePath");
+        public Criteria andMovieIdIn(List<Long> values) {
+            addCriterion("movie_id in", values, "movieId");
             return (Criteria) this;
         }
 
-        public Criteria andImagePathNotLike(String value) {
-            addCriterion("image_path not like", value, "imagePath");
+        public Criteria andMovieIdNotIn(List<Long> values) {
+            addCriterion("movie_id not in", values, "movieId");
             return (Criteria) this;
         }
 
-        public Criteria andImagePathIn(List<String> values) {
-            addCriterion("image_path in", values, "imagePath");
+        public Criteria andMovieIdBetween(Long value1, Long value2) {
+            addCriterion("movie_id between", value1, value2, "movieId");
             return (Criteria) this;
         }
 
-        public Criteria andImagePathNotIn(List<String> values) {
-            addCriterion("image_path not in", values, "imagePath");
+        public Criteria andMovieIdNotBetween(Long value1, Long value2) {
+            addCriterion("movie_id not between", value1, value2, "movieId");
             return (Criteria) this;
         }
 
-        public Criteria andImagePathBetween(String value1, String value2) {
-            addCriterion("image_path between", value1, value2, "imagePath");
+        public Criteria andUrlIsNull() {
+            addCriterion("url is null");
             return (Criteria) this;
         }
 
-        public Criteria andImagePathNotBetween(String value1, String value2) {
-            addCriterion("image_path not between", value1, value2, "imagePath");
+        public Criteria andUrlIsNotNull() {
+            addCriterion("url is not null");
             return (Criteria) this;
         }
 
-        public Criteria andImageTypeIsNull() {
-            addCriterion("image_type is null");
+        public Criteria andUrlEqualTo(String value) {
+            addCriterion("url =", value, "url");
             return (Criteria) this;
         }
 
-        public Criteria andImageTypeIsNotNull() {
-            addCriterion("image_type is not null");
+        public Criteria andUrlNotEqualTo(String value) {
+            addCriterion("url <>", value, "url");
             return (Criteria) this;
         }
 
-        public Criteria andImageTypeEqualTo(Byte value) {
-            addCriterion("image_type =", value, "imageType");
+        public Criteria andUrlGreaterThan(String value) {
+            addCriterion("url >", value, "url");
             return (Criteria) this;
         }
 
-        public Criteria andImageTypeNotEqualTo(Byte value) {
-            addCriterion("image_type <>", value, "imageType");
+        public Criteria andUrlGreaterThanOrEqualTo(String value) {
+            addCriterion("url >=", value, "url");
             return (Criteria) this;
         }
 
-        public Criteria andImageTypeGreaterThan(Byte value) {
-            addCriterion("image_type >", value, "imageType");
+        public Criteria andUrlLessThan(String value) {
+            addCriterion("url <", value, "url");
             return (Criteria) this;
         }
 
-        public Criteria andImageTypeGreaterThanOrEqualTo(Byte value) {
-            addCriterion("image_type >=", value, "imageType");
+        public Criteria andUrlLessThanOrEqualTo(String value) {
+            addCriterion("url <=", value, "url");
             return (Criteria) this;
         }
 
-        public Criteria andImageTypeLessThan(Byte value) {
-            addCriterion("image_type <", value, "imageType");
+        public Criteria andUrlLike(String value) {
+            addCriterion("url like", value, "url");
             return (Criteria) this;
         }
 
-        public Criteria andImageTypeLessThanOrEqualTo(Byte value) {
-            addCriterion("image_type <=", value, "imageType");
+        public Criteria andUrlNotLike(String value) {
+            addCriterion("url not like", value, "url");
             return (Criteria) this;
         }
 
-        public Criteria andImageTypeIn(List<Byte> values) {
-            addCriterion("image_type in", values, "imageType");
+        public Criteria andUrlIn(List<String> values) {
+            addCriterion("url in", values, "url");
             return (Criteria) this;
         }
 
-        public Criteria andImageTypeNotIn(List<Byte> values) {
-            addCriterion("image_type not in", values, "imageType");
+        public Criteria andUrlNotIn(List<String> values) {
+            addCriterion("url not in", values, "url");
             return (Criteria) this;
         }
 
-        public Criteria andImageTypeBetween(Byte value1, Byte value2) {
-            addCriterion("image_type between", value1, value2, "imageType");
+        public Criteria andUrlBetween(String value1, String value2) {
+            addCriterion("url between", value1, value2, "url");
             return (Criteria) this;
         }
 
-        public Criteria andImageTypeNotBetween(Byte value1, Byte value2) {
-            addCriterion("image_type not between", value1, value2, "imageType");
+        public Criteria andUrlNotBetween(String value1, String value2) {
+            addCriterion("url not between", value1, value2, "url");
             return (Criteria) this;
         }
 
