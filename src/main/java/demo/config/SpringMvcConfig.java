@@ -22,8 +22,6 @@ import stringHandle.StringUtilCustom;
 @EnableScheduling // 开启定时任务支持
 public class SpringMvcConfig implements WebMvcConfigurer {
 
-	// 添加 filter 需转至 SecurityConfig
-
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/static_resources/**").addResourceLocations("classpath:/static_resources/");

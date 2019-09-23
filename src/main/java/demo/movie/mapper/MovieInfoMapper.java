@@ -1,9 +1,12 @@
 package demo.movie.mapper;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import demo.movie.pojo.dto.FindMovieListByConditionDTO;
 import demo.movie.pojo.po.MovieInfo;
 import demo.movie.pojo.po.MovieInfoExample;
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
 public interface MovieInfoMapper {
     long countByExample(MovieInfoExample example);
@@ -27,4 +30,6 @@ public interface MovieInfoMapper {
     int updateByPrimaryKeySelective(MovieInfo record);
 
     int updateByPrimaryKey(MovieInfo record);
+    
+    List<MovieInfo> findListByCondition(FindMovieListByConditionDTO dto);
 }

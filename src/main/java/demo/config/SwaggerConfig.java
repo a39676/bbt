@@ -30,9 +30,9 @@ public class SwaggerConfig {
         return new ApiInfoBuilder()
                 .title("swagger title")
                 .description("swagger description")
-                .termsOfServiceUrl("http://www.seekingdreamwork.site")
+                .termsOfServiceUrl("http://www.demo.site")
                 .version("1.1")
-                .contact(new Contact("Acorn", "http://www.seekingdreamwork.site", "q39676@gmail.com"))
+                .contact(new Contact("Acorn", "http://www.demo.site", "demo@demo.com"))
                 .build();
     }
     

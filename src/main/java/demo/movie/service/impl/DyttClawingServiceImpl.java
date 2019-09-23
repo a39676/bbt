@@ -1,6 +1,7 @@
 package demo.movie.service.impl;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -33,6 +34,7 @@ import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.WebDriverService;
 import demo.testCase.pojo.po.TestEvent;
 import ioHandle.FileUtilCustom;
+import movie.pojo.type.MovieRegionType;
 
 @Service
 public class DyttClawingServiceImpl extends MovieClawingCommonService implements DyttClawingService {
@@ -183,9 +185,6 @@ public class DyttClawingServiceImpl extends MovieClawingCommonService implements
 			List<WebElement> pTags = divZoom.findElements(ByTagName.tagName("p"));
 			saveMovieInfo(pTags, newMovieId);
 
-			MovieInfo info = new MovieInfo();
-			info.setId(newMovieId);
-			infoMapper.insertSelective(info);
 
 			MovieRecord record = new MovieRecord();
 			record.setUrl(currentUrl);
@@ -249,6 +248,21 @@ public class DyttClawingServiceImpl extends MovieClawingCommonService implements
 
 		String content = p.getText();
 		content = content.replaceAll("【下载地址】", "").replaceAll("磁力链下载点击这里", "");
+		
+		MovieInfo info = new MovieInfo();
+		info.setId(movieId);
+		
+		List<String> lines = Arrays.asList(content.split("◎"));
+		for(String line : lines) {
+			if(line.contains("片") && line.contains("名")) {
+				info.setEngTitle(line.replaceAll("片　　名　", ""));
+			} else if(line.contains("译") && line.contains("名")) {
+				info.setCnTitle(line.replaceAll("译　　名　", ""));
+			} else if(line.contains("产") && line.contains("地")) {
+				info.setId(detectMovieRegion(line).longValue());
+			} 
+		}
+		infoMapper.insertSelective(info);
 
 		String savePath = introductionSavePath + File.separator + movieId + ".txt";
 		iou.byteToFile(content.getBytes(), savePath);
@@ -257,5 +271,22 @@ public class DyttClawingServiceImpl extends MovieClawingCommonService implements
 		po.setMovieId(movieId);
 		po.setIntroPath(savePath);
 		introduectionMapper.insertSelective(po);
+	}
+	
+	private Integer detectMovieRegion(String countryDesc) {
+		if(countryDesc == null) {
+			return MovieRegionType.otherMovie.getCode();
+			
+		} else if (StringUtils.containsAny(countryDesc, "美", "英", "欧", "法", "加", "意")) {
+			return MovieRegionType.eurAndAmerica.getCode();
+			
+		} else if (StringUtils.containsAny(countryDesc, "日", "韩")) {
+			return MovieRegionType.jpAndKr.getCode();
+			
+		} else if (StringUtils.containsAny(countryDesc, "中", "大陆", "香", "台")) {
+			return MovieRegionType.domestic.getCode();
+		} 
+		
+		return MovieRegionType.otherMovie.getCode();
 	}
 }

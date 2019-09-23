@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import demo.movie.po.dto.MovieCrewfindByConditionDTO;
+import demo.movie.pojo.dto.MovieCrewfindByConditionDTO;
 import demo.movie.pojo.po.MovieCrew;
 import demo.movie.pojo.po.MovieCrewExample;
 

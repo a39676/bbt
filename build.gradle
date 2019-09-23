@@ -49,6 +49,7 @@ repositories {
 dependencies {
 	// tools
 	compile project(':toolPacksG') 
+	compile project(':auxiliaryCommon')
 
 	// spring boot
     compile group: 'org.springframework.boot', name: 'spring-boot-starter', version: '2.1.5.RELEASE'
@@ -129,6 +130,9 @@ dependencies {
 	// tess4j
 	compile group: 'net.sourceforge.tess4j', name: 'tess4j', version: '4.4.0'
 	compile group: 'net.java.dev.jna', name: 'jna', version: '5.4.0'
+	
+	// bit torrent
+	compile group: 'org.eclipse', name: 'bittorrent', version: '0.3.0-v20070627-1030'
 	
 	// opencv
 	// compile group: 'org.bytedeco.javacpp-presets', name: 'opencv', version: '4.0.1-1.4.4'

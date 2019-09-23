@@ -1,0 +1,26 @@
+package demo.movie.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import demo.movie.pojo.result.FindMovieSummaryListResult;
+import demo.movie.service.MovieInteractionService;
+import movie.pojo.dto.FindMovieSummaryListDTO;
+
+@Controller
+@RequestMapping(value = "/movieInteraction")
+public class MovieInteractionController {
+
+	@Autowired
+	private MovieInteractionService service;
+	
+	@PostMapping(value = "/simpleList")
+	@ResponseBody
+	public FindMovieSummaryListResult findMovieSummaryList(FindMovieSummaryListDTO dto) {
+		return service.findMovieSummaryList(dto);
+	}
+	
+}

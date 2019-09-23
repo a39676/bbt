@@ -8,23 +8,12 @@ import org.springframework.stereotype.Component;
 import demo.selenium.service.SeleniumGlobalOptionService;
 
 @Component
-//public class DatabaseFillerOnStartup implements ApplicationListener<ContextStartedEvent> {
 public class OnStartup implements ApplicationListener<ApplicationReadyEvent> {
 	
 	@Autowired
 	private SeleniumGlobalOptionService globalOptionService;
 	
-/*
- * ContextStartedEvent
- * ContextStoppedEvent
- * ContextRefreshedEvent
- * ContextClosedEvent
- * RequestHandleEvent
- */
-	
-	
 	@Override
-//	public void onApplicationEvent(ContextStartedEvent event) {
 	public void onApplicationEvent(ApplicationReadyEvent event) {
 		globalOptionService.getDownloadDir();
 		globalOptionService.getScreenshotSavingFolder();

@@ -1,4 +1,4 @@
-package demo.movie.po.dto;
+package demo.movie.pojo.dto;
 
 import demo.movie.pojo.type.MovieCrewType;
 

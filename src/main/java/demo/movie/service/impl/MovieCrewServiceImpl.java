@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.movie.mapper.MovieCrewMapper;
-import demo.movie.po.dto.MovieCrewfindByConditionDTO;
+import demo.movie.pojo.dto.MovieCrewfindByConditionDTO;
 import demo.movie.pojo.po.MovieCrew;
 import demo.movie.service.MovieCrewService;
 
