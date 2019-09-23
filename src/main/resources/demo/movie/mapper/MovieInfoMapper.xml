@@ -240,4 +240,24 @@
       is_delete = #{isDelete,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="findListByCondition" resultMap="BaseResultMap">
+    select
+      *
+    from
+      movie_info
+    <where>
+      <if test="createTimeStart != null">
+        and create_time &gt; #{createTimeStart}
+      </if>
+      <if test="createTimeEnd != null">
+        and create_time &lt; #{createTimeEnd}
+      </if>
+      <if test="movieRegionType != null">
+        and nation_id = #{movieRegionType}
+      </if>
+      <if test="title != null">
+        and (cn_title like concat('%', #{title}, '%') or eng_title like concat('%', #{title}, '%'))
+      </if>
+    </where>
+  </select>
 </mapper>
