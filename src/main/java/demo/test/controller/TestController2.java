@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.baseCommon.controller.CommonController;
 import demo.config.costom_component.SnowFlake;
-import demo.movie.service.DyttClawingService;
 import demo.test.pojo.constant.TestUrl;
 
 @Controller
@@ -19,8 +18,7 @@ public class TestController2 extends CommonController {
 //	private TestService testService;
 //	@Autowired
 //	private TestCaseService caseService;
-	@Autowired
-	private DyttClawingService dytt;
+	
 	
 
 	@Autowired
@@ -32,12 +30,6 @@ public class TestController2 extends CommonController {
 		return String.valueOf(snowFlake.getNextId());
 	}
 	
-	@GetMapping(value = "/dytt")
-	@ResponseBody
-	public String dytt() {
-		dytt.clawing();
-		return "done";
-	}
 	
 	@GetMapping(value = "/insertCommonCase")
 	@ResponseBody
