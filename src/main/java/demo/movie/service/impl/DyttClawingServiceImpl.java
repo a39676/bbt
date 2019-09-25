@@ -258,11 +258,11 @@ public class DyttClawingServiceImpl extends MovieClawingCommonService implements
 		
 		List<String> lines = Arrays.asList(content.split("◎"));
 		for(String line : lines) {
-			if(line.contains("片") && line.contains("名")) {
+			if(line.contains("片") && line.contains("名") && line.matches("^片\\s+名.*")) {
 				info.setEngTitle(line.replaceAll("片　　名　", ""));
-			} else if(line.contains("译") && line.contains("名")) {
+			} else if(line.contains("译") && line.contains("名") && line.matches("^译\\s+名.*")) {
 				info.setCnTitle(line.replaceAll("译　　名　", ""));
-			} else if(line.contains("产") && line.contains("地")) {
+			} else if(line.contains("产") && line.contains("地") && line.matches("^产\\s+地.*")) {
 				info.setNationId(detectMovieRegion(line).longValue());
 			} 
 		}
