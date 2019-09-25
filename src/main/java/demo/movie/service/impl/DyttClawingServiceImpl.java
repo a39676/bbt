@@ -144,12 +144,15 @@ public class DyttClawingServiceImpl extends MovieClawingCommonService implements
 		}
 		
 		ele.click();
-		Thread.sleep(2200L);
+		Thread.sleep(1200L);
 
 		String currentUrl = null;
 		String targetWindowHandle = null;
 
 		Set<String> windows = d.getWindowHandles();
+		if(windows.size() < 2) {
+			Thread.sleep(3200L);
+		}
 		for (String w : windows) {
 			d.switchTo().window(w);
 			currentUrl = d.getCurrentUrl();
