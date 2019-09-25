@@ -138,3 +138,5 @@ Temporary Items
 /seleniumWebDriver/
 
 nohup.out
+
+/.temp*.txt
