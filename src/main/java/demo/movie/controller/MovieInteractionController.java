@@ -8,16 +8,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.movie.pojo.result.FindMovieSummaryListResult;
 import demo.movie.service.MovieInteractionService;
+import movie.pojo.constant.MovieInteractionUrl;
 import movie.pojo.dto.FindMovieSummaryListDTO;
 
 @Controller
-@RequestMapping(value = "/movieInteraction")
+@RequestMapping(value = MovieInteractionUrl.root)
 public class MovieInteractionController {
 
 	@Autowired
 	private MovieInteractionService service;
 	
-	@PostMapping(value = "/simpleList")
+	@PostMapping(value = MovieInteractionUrl.simpleList)
 	@ResponseBody
 	public FindMovieSummaryListResult findMovieSummaryList(FindMovieSummaryListDTO dto) {
 		return service.findMovieSummaryList(dto);

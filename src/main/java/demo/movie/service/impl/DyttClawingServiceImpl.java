@@ -115,6 +115,7 @@ public class DyttClawingServiceImpl extends MovieClawingCommonService implements
 	}
 
 	private void swithToNextPage(WebDriver d) throws InterruptedException {
+		Thread.sleep(800L);
 		String oldHandle = d.getWindowHandle();
 		WebElement nextPageButton = d.findElement(By.linkText("下一页"));
 		nextPageButton.click();
@@ -143,7 +144,7 @@ public class DyttClawingServiceImpl extends MovieClawingCommonService implements
 		}
 		
 		ele.click();
-		Thread.sleep(1200L);
+		Thread.sleep(2200L);
 
 		String currentUrl = null;
 		String targetWindowHandle = null;

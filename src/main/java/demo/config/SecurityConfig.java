@@ -112,6 +112,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		    	.authorizeRequests()
 		    .and()
 		    	.csrf()
+		    	.disable()
 //		    尝试搭建 web socket, 修改同源策略
 //		    .and()
 //		        .headers().frameOptions().sameOrigin()
