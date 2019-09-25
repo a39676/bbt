@@ -263,7 +263,7 @@ public class DyttClawingServiceImpl extends MovieClawingCommonService implements
 			} else if(line.contains("译") && line.contains("名")) {
 				info.setCnTitle(line.replaceAll("译　　名　", ""));
 			} else if(line.contains("产") && line.contains("地")) {
-				info.setId(detectMovieRegion(line).longValue());
+				info.setNationId(detectMovieRegion(line).longValue());
 			} 
 		}
 		infoMapper.insertSelective(info);
