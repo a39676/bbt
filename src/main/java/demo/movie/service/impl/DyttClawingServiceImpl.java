@@ -72,7 +72,7 @@ public class DyttClawingServiceImpl extends MovieClawingCommonService implements
 		te.setEventName("dyttTest");
 		WebDriver d = webDriverService.buildFireFoxWebDriver();
 
-		int maxClawPageCount = 20;
+		int maxClawPageCount = 10;
 
 		try {
 			d.get(newMovie);
@@ -257,12 +257,13 @@ public class DyttClawingServiceImpl extends MovieClawingCommonService implements
 		info.setId(movieId);
 		
 		List<String> lines = Arrays.asList(content.split("◎"));
+		/* 下列匹配式中, 看似空白字符串的部分, 不可以用 \s, 其实不是空白字符, 具体是何字符未知 */
 		for(String line : lines) {
-			if(line.contains("片") && line.contains("名") && line.matches("片\\s+名.*")) {
+			if(line.startsWith("片") && line.contains("名")) {
 				info.setEngTitle(line.replaceAll("片　　名　", ""));
-			} else if(line.contains("译") && line.contains("名") && line.matches("译\\s+名.*")) {
+			} else if(line.startsWith("译") && line.contains("名")) {
 				info.setCnTitle(line.replaceAll("译　　名　", ""));
-			} else if(line.contains("产") && line.contains("地") && line.matches("产\\s+地.*")) {
+			} else if(line.startsWith("产") && line.contains("地")) {
 				info.setNationId(detectMovieRegion(line).longValue());
 			} 
 		}
