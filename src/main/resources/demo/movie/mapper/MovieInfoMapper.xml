@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="demo.movie.pojo.po.MovieInfo">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="nation_id" jdbcType="BIGINT" property="nationId" />
-    <result column="eng_title" jdbcType="VARCHAR" property="engTitle" />
+    <result column="original_title" jdbcType="VARCHAR" property="originalTitle" />
     <result column="cn_title" jdbcType="VARCHAR" property="cnTitle" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="release_time" jdbcType="TIMESTAMP" property="releaseTime" />
@@ -69,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, nation_id, eng_title, cn_title, create_time, release_time, is_delete
+    id, nation_id, original_title, cn_title, create_time, release_time, is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.movie.pojo.po.MovieInfoExample" resultMap="BaseResultMap">
     select
@@ -102,10 +102,10 @@
     </if>
   </delete>
   <insert id="insert" parameterType="demo.movie.pojo.po.MovieInfo">
-    insert into movie_info (id, nation_id, eng_title, 
+    insert into movie_info (id, nation_id, original_title, 
       cn_title, create_time, release_time, 
       is_delete)
-    values (#{id,jdbcType=BIGINT}, #{nationId,jdbcType=BIGINT}, #{engTitle,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=BIGINT}, #{nationId,jdbcType=BIGINT}, #{originalTitle,jdbcType=VARCHAR}, 
       #{cnTitle,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{releaseTime,jdbcType=TIMESTAMP}, 
       #{isDelete,jdbcType=BIT})
   </insert>
@@ -118,8 +118,8 @@
       <if test="nationId != null">
         nation_id,
       </if>
-      <if test="engTitle != null">
-        eng_title,
+      <if test="originalTitle != null">
+        original_title,
       </if>
       <if test="cnTitle != null">
         cn_title,
@@ -141,8 +141,8 @@
       <if test="nationId != null">
         #{nationId,jdbcType=BIGINT},
       </if>
-      <if test="engTitle != null">
-        #{engTitle,jdbcType=VARCHAR},
+      <if test="originalTitle != null">
+        #{originalTitle,jdbcType=VARCHAR},
       </if>
       <if test="cnTitle != null">
         #{cnTitle,jdbcType=VARCHAR},
@@ -173,8 +173,8 @@
       <if test="record.nationId != null">
         nation_id = #{record.nationId,jdbcType=BIGINT},
       </if>
-      <if test="record.engTitle != null">
-        eng_title = #{record.engTitle,jdbcType=VARCHAR},
+      <if test="record.originalTitle != null">
+        original_title = #{record.originalTitle,jdbcType=VARCHAR},
       </if>
       <if test="record.cnTitle != null">
         cn_title = #{record.cnTitle,jdbcType=VARCHAR},
@@ -197,7 +197,7 @@
     update movie_info
     set id = #{record.id,jdbcType=BIGINT},
       nation_id = #{record.nationId,jdbcType=BIGINT},
-      eng_title = #{record.engTitle,jdbcType=VARCHAR},
+      original_title = #{record.originalTitle,jdbcType=VARCHAR},
       cn_title = #{record.cnTitle,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       release_time = #{record.releaseTime,jdbcType=TIMESTAMP},
@@ -212,8 +212,8 @@
       <if test="nationId != null">
         nation_id = #{nationId,jdbcType=BIGINT},
       </if>
-      <if test="engTitle != null">
-        eng_title = #{engTitle,jdbcType=VARCHAR},
+      <if test="originalTitle != null">
+        original_title = #{originalTitle,jdbcType=VARCHAR},
       </if>
       <if test="cnTitle != null">
         cn_title = #{cnTitle,jdbcType=VARCHAR},
@@ -233,7 +233,7 @@
   <update id="updateByPrimaryKey" parameterType="demo.movie.pojo.po.MovieInfo">
     update movie_info
     set nation_id = #{nationId,jdbcType=BIGINT},
-      eng_title = #{engTitle,jdbcType=VARCHAR},
+      original_title = #{originalTitle,jdbcType=VARCHAR},
       cn_title = #{cnTitle,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       release_time = #{releaseTime,jdbcType=TIMESTAMP},

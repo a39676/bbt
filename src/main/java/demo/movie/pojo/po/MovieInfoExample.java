@@ -225,73 +225,73 @@ public class MovieInfoExample {
             return (Criteria) this;
         }
 
-        public Criteria andEngTitleIsNull() {
-            addCriterion("eng_title is null");
+        public Criteria andOriginalTitleIsNull() {
+            addCriterion("original_title is null");
             return (Criteria) this;
         }
 
-        public Criteria andEngTitleIsNotNull() {
-            addCriterion("eng_title is not null");
+        public Criteria andOriginalTitleIsNotNull() {
+            addCriterion("original_title is not null");
             return (Criteria) this;
         }
 
-        public Criteria andEngTitleEqualTo(String value) {
-            addCriterion("eng_title =", value, "engTitle");
+        public Criteria andOriginalTitleEqualTo(String value) {
+            addCriterion("original_title =", value, "originalTitle");
             return (Criteria) this;
         }
 
-        public Criteria andEngTitleNotEqualTo(String value) {
-            addCriterion("eng_title <>", value, "engTitle");
+        public Criteria andOriginalTitleNotEqualTo(String value) {
+            addCriterion("original_title <>", value, "originalTitle");
             return (Criteria) this;
         }
 
-        public Criteria andEngTitleGreaterThan(String value) {
-            addCriterion("eng_title >", value, "engTitle");
+        public Criteria andOriginalTitleGreaterThan(String value) {
+            addCriterion("original_title >", value, "originalTitle");
             return (Criteria) this;
         }
 
-        public Criteria andEngTitleGreaterThanOrEqualTo(String value) {
-            addCriterion("eng_title >=", value, "engTitle");
+        public Criteria andOriginalTitleGreaterThanOrEqualTo(String value) {
+            addCriterion("original_title >=", value, "originalTitle");
             return (Criteria) this;
         }
 
-        public Criteria andEngTitleLessThan(String value) {
-            addCriterion("eng_title <", value, "engTitle");
+        public Criteria andOriginalTitleLessThan(String value) {
+            addCriterion("original_title <", value, "originalTitle");
             return (Criteria) this;
         }
 
-        public Criteria andEngTitleLessThanOrEqualTo(String value) {
-            addCriterion("eng_title <=", value, "engTitle");
+        public Criteria andOriginalTitleLessThanOrEqualTo(String value) {
+            addCriterion("original_title <=", value, "originalTitle");
             return (Criteria) this;
         }
 
-        public Criteria andEngTitleLike(String value) {
-            addCriterion("eng_title like", value, "engTitle");
+        public Criteria andOriginalTitleLike(String value) {
+            addCriterion("original_title like", value, "originalTitle");
             return (Criteria) this;
         }
 
-        public Criteria andEngTitleNotLike(String value) {
-            addCriterion("eng_title not like", value, "engTitle");
+        public Criteria andOriginalTitleNotLike(String value) {
+            addCriterion("original_title not like", value, "originalTitle");
             return (Criteria) this;
         }
 
-        public Criteria andEngTitleIn(List<String> values) {
-            addCriterion("eng_title in", values, "engTitle");
+        public Criteria andOriginalTitleIn(List<String> values) {
+            addCriterion("original_title in", values, "originalTitle");
             return (Criteria) this;
         }
 
-        public Criteria andEngTitleNotIn(List<String> values) {
-            addCriterion("eng_title not in", values, "engTitle");
+        public Criteria andOriginalTitleNotIn(List<String> values) {
+            addCriterion("original_title not in", values, "originalTitle");
             return (Criteria) this;
         }
 
-        public Criteria andEngTitleBetween(String value1, String value2) {
-            addCriterion("eng_title between", value1, value2, "engTitle");
+        public Criteria andOriginalTitleBetween(String value1, String value2) {
+            addCriterion("original_title between", value1, value2, "originalTitle");
             return (Criteria) this;
         }
 
-        public Criteria andEngTitleNotBetween(String value1, String value2) {
-            addCriterion("eng_title not between", value1, value2, "engTitle");
+        public Criteria andOriginalTitleNotBetween(String value1, String value2) {
+            addCriterion("original_title not between", value1, value2, "originalTitle");
             return (Criteria) this;
         }
 

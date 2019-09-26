@@ -260,7 +260,7 @@ public class DyttClawingServiceImpl extends MovieClawingCommonService implements
 		/* 下列匹配式中, 看似空白字符串的部分, 不可以用 \s, 其实不是空白字符, 具体是何字符未知 */
 		for(String line : lines) {
 			if(line.startsWith("片") && line.contains("名")) {
-				info.setEngTitle(line.replaceAll("片　　名　", ""));
+				info.setOriginalTitle(line.replaceAll("片　　名　", ""));
 			} else if(line.startsWith("译") && line.contains("名")) {
 				info.setCnTitle(line.replaceAll("译　　名　", ""));
 			} else if(line.startsWith("产") && line.contains("地")) {

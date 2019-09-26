@@ -7,7 +7,7 @@ public class MovieInfo {
 
     private Long nationId;
 
-    private String engTitle;
+    private String originalTitle;
 
     private String cnTitle;
 
@@ -33,12 +33,12 @@ public class MovieInfo {
         this.nationId = nationId;
     }
 
-    public String getEngTitle() {
-        return engTitle;
+    public String getOriginalTitle() {
+        return originalTitle;
     }
 
-    public void setEngTitle(String engTitle) {
-        this.engTitle = engTitle == null ? null : engTitle.trim();
+    public void setOriginalTitle(String originalTitle) {
+        this.originalTitle = originalTitle == null ? null : originalTitle.trim();
     }
 
     public String getCnTitle() {

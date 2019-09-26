@@ -50,9 +50,9 @@
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="movie_magnet_url">
-        	<property name="tableName" value="movie_magnet_url"></property>
-        	<property name="domainObjectName" value="movie_magnet_url" ></property>
+        <table tableName="movie_info">
+        	<property name="tableName" value="movie_info"></property>
+        	<property name="domainObjectName" value="movie_info" ></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>
