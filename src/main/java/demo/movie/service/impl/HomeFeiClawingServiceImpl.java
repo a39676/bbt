@@ -102,6 +102,8 @@ public class HomeFeiClawingServiceImpl extends MovieClawingCommonService impleme
 			
 			checkInInterfaceButton.click();
 			
+			Thread.sleep(2200L);
+			
 			Set<String> windows = d.getWindowHandles();
 			for(String w : windows) {
 				if(!w.equals(mainWindowHandler)) {
