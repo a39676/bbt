@@ -29,7 +29,6 @@ import demo.base.user.service.impl.CustomAuthenticationSuccessHandler;
 import demo.base.user.service.impl.CustomUserDetailsService;
 import demo.config.costom_component.CustomAuthenticationProvider;
 import demo.config.costom_component.CustomPasswordEncoder;
-import demo.fakeFTP.pojo.constant.FakeFTPUrlConstant;
 import demo.tool.pojo.constant.ToolUrlConstant;
 import demo.tool.pojo.constant.UploadUrlConstant;
 import demo.web.handler.LimitLoginAuthenticationProvider;
@@ -87,8 +86,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             	.access(hasAnyRole(RolesType.ROLE_ADMIN, RolesType.ROLE_USER))
             .antMatchers(AdminUrlConstant.root + "/**")
             	.access(hasAnyRole(RolesType.ROLE_SUPER_ADMIN))
-            .antMatchers(FakeFTPUrlConstant.root + "/**")
-            	.access(hasRole(RolesType.ROLE_SUPER_ADMIN))
             .antMatchers("/dba/**")
             	.access(hasAnyRole(RolesType.ROLE_SUPER_ADMIN, RolesType.ROLE_DBA)) 
             .antMatchers(ToolUrlConstant.root + "/**")
