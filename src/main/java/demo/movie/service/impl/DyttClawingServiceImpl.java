@@ -161,7 +161,6 @@ public class DyttClawingServiceImpl extends MovieClawingCommonService implements
 			}
 		}
 
-
 		if (targetWindowHandle == null) {
 			log.info("can not find correct window");
 			throw new Exception();

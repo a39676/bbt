@@ -258,6 +258,7 @@
       <if test="title != null">
         and (cn_title like concat('%', #{title}, '%') or eng_title like concat('%', #{title}, '%'))
       </if>
+      limit #{pageStart}, #{pageSize}
     </where>
   </select>
 </mapper>
