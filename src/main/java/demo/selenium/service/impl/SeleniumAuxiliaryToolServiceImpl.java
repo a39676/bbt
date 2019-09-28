@@ -223,6 +223,12 @@ public class SeleniumAuxiliaryToolServiceImpl extends CommonService implements S
 		s.append("]");
 		return By.xpath(s.toString());
 	}
+	
+	@Override
+	public By byXpathBuilder(String tagName, String attributeName, String attributeValue) {
+		ByXpathConditionBO bo = ByXpathConditionBO.build(tagName, attributeName, attributeValue);
+		return byXpathBuilder(bo);
+	}
 
 	@Override
 	public String saveImg(WebElement ele, String folderPath) throws IOException {

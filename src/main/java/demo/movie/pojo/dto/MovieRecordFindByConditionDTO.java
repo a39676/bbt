@@ -1,13 +1,23 @@
 package demo.movie.pojo.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class MovieRecordFindByConditionDTO {
 
 	private boolean isDelete = false;
 	private String url;
+	private List<String> urlList;
 	private LocalDateTime createTimeStart = LocalDateTime.now().minusMonths(3L);
 	private LocalDateTime createTimeEnd;
+
+	public List<String> getUrlList() {
+		return urlList;
+	}
+
+	public void setUrlList(List<String> urlList) {
+		this.urlList = urlList;
+	}
 
 	public boolean isDelete() {
 		return isDelete;

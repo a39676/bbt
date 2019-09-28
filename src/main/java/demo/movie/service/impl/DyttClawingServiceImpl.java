@@ -72,7 +72,7 @@ public class DyttClawingServiceImpl extends MovieClawingCommonService implements
 		te.setEventName("dyttTest");
 		WebDriver d = webDriverService.buildFireFoxWebDriver();
 
-		int maxClawPageCount = 10;
+		int maxClawPageCount = 3;
 
 		try {
 			d.get(newMovie);

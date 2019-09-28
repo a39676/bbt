@@ -14,6 +14,7 @@ public interface SeleniumAuxiliaryToolService {
 
 	/**
 	 * 等待, 直至页面出现指定元素
+	 * 
 	 * @param driver
 	 * @param locator
 	 * @return
@@ -38,6 +39,8 @@ public interface SeleniumAuxiliaryToolService {
 	ScreenshotSaveResult takeElementScreenshot(WebDriver driver, TestEvent testEvent, By by) throws IOException;
 
 	By byXpathBuilder(ByXpathConditionBO bo);
+
+	By byXpathBuilder(String tagName, String attributeName, String attributeValue);
 
 	String saveImg(WebElement ele, String folderPath) throws IOException;
 
