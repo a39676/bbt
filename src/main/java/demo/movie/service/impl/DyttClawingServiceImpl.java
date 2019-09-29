@@ -8,22 +8,16 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.By.ByTagName;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import demo.image.mapper.ImageStoreMapper;
-import demo.image.pojo.po.ImageStore;
-import demo.image.pojo.type.ImageType;
-import demo.movie.mapper.MovieImageMapper;
 import demo.movie.mapper.MovieInfoMapper;
 import demo.movie.mapper.MovieIntroductionMapper;
 import demo.movie.mapper.MovieMagnetUrlMapper;
 import demo.movie.mapper.MovieRecordMapper;
 import demo.movie.pojo.dto.MovieRecordFindByConditionDTO;
-import demo.movie.pojo.po.MovieImage;
 import demo.movie.pojo.po.MovieInfo;
 import demo.movie.pojo.po.MovieIntroduction;
 import demo.movie.pojo.po.MovieMagnetUrl;
@@ -34,7 +28,6 @@ import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.WebDriverService;
 import demo.testCase.pojo.po.TestEvent;
 import ioHandle.FileUtilCustom;
-import movie.pojo.type.MovieRegionType;
 
 @Service
 public class DyttClawingServiceImpl extends MovieClawingCommonService implements DyttClawingService {
@@ -49,10 +42,7 @@ public class DyttClawingServiceImpl extends MovieClawingCommonService implements
 //	@Autowired
 //	private JavaScriptService jsUtil;
 
-	@Autowired
-	private ImageStoreMapper imageStoreMapper;
-	@Autowired
-	private MovieImageMapper movieImageMapper;
+	
 	@Autowired
 	private MovieInfoMapper infoMapper;
 	@Autowired
@@ -203,27 +193,6 @@ public class DyttClawingServiceImpl extends MovieClawingCommonService implements
 		}
 	}
 
-	private void saveMovieImg(List<WebElement> imgs, Long movieId) {
-		String src = null;
-		for (WebElement i : imgs) {
-			src = i.getAttribute("src");
-			Dimension s = i.getSize();
-			if (s.height > 200 && s.width > 200) {
-				Long newImgId = snowFlake.getNextId();
-				ImageStore po = new ImageStore();
-				po.setId(newImgId);
-				po.setImagePath(src);
-				po.setImageType(ImageType.moviePoster.getCode().byteValue());
-				imageStoreMapper.insertSelective(po);
-
-				MovieImage record = new MovieImage();
-				record.setMovidId(movieId);
-				record.setImageId(newImgId);
-				movieImageMapper.insertSelective(record);
-			}
-		}
-	}
-
 	private void saveMovieMagnetUrl(List<WebElement> aTags, Long movieId) {
 		String href = null;
 		for (WebElement ele : aTags) {
@@ -240,16 +209,16 @@ public class DyttClawingServiceImpl extends MovieClawingCommonService implements
 	}
 
 	private void saveMovieInfo(List<WebElement> pTags, Long movieId) {
-		WebElement p = null;
+		WebElement targetP = null;
 		WebElement tmpEle = null;
-		for (int i = 0; i < pTags.size() && tmpEle == null; i++) {
+		for (int i = 0; i < pTags.size() && targetP == null; i++) {
 			tmpEle = pTags.get(i);
 			if (StringUtils.isNotBlank(tmpEle.getText())) {
-				p = tmpEle;
+				targetP = tmpEle;
 			}
 		}
 
-		String content = p.getText();
+		String content = targetP.getText();
 		content = content.replaceAll("【下载地址】", "").replaceAll("磁力链下载点击这里", "");
 		
 		MovieInfo info = new MovieInfo();
@@ -276,20 +245,4 @@ public class DyttClawingServiceImpl extends MovieClawingCommonService implements
 		introduectionMapper.insertSelective(po);
 	}
 	
-	private Integer detectMovieRegion(String countryDesc) {
-		if(countryDesc == null) {
-			return MovieRegionType.otherMovie.getCode();
-			
-		} else if (StringUtils.containsAny(countryDesc, "美", "英", "欧", "法", "加", "意")) {
-			return MovieRegionType.eurAndAmerica.getCode();
-			
-		} else if (StringUtils.containsAny(countryDesc, "日", "韩")) {
-			return MovieRegionType.jpAndKr.getCode();
-			
-		} else if (StringUtils.containsAny(countryDesc, "中", "大陆", "香", "台")) {
-			return MovieRegionType.domestic.getCode();
-		} 
-		
-		return MovieRegionType.otherMovie.getCode();
-	}
 }
