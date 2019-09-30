@@ -91,38 +91,10 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 
 			List<String> postLinks = new ArrayList<String>();
 
-			d.get(part1);
-			for (int i = 0; i < clawPageCount; i++) {
-				postLinks.addAll(pageHandle(d, i));
-				Thread.sleep(800L);
-				if (i < clawPageCount - 1) {
-					nextPage(d);
-				}
-			}
-			d.get(part2);
-			for (int i = 0; i < clawPageCount; i++) {
-				postLinks.addAll(pageHandle(d, i));
-				Thread.sleep(800L);
-				if (i < clawPageCount - 1) {
-					nextPage(d);
-				}
-			}
-			d.get(part3);
-			for (int i = 0; i < clawPageCount; i++) {
-				postLinks.addAll(pageHandle(d, i));
-				Thread.sleep(800L);
-				if (i < clawPageCount - 1) {
-					nextPage(d);
-				}
-			}
-			d.get(part4);
-			for (int i = 0; i < clawPageCount; i++) {
-				postLinks.addAll(pageHandle(d, i));
-				Thread.sleep(800L);
-				if (i < clawPageCount - 1) {
-					nextPage(d);
-				}
-			}
+			partHandle(d, clawPageCount, postLinks, part1);
+			partHandle(d, clawPageCount, postLinks, part2);
+			partHandle(d, clawPageCount, postLinks, part3);
+			partHandle(d, clawPageCount, postLinks, part4);
 			
 			for(int i = 0; i < postLinks.size(); i++) {
 				postLinkHandle(d, postLinks);
@@ -136,6 +108,18 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 		} finally {
 			if (d != null) {
 				d.quit();
+			}
+		}
+	}
+	
+	private void partHandle(WebDriver d, int clawPageCount, List<String> postLinks, String url) throws InterruptedException {
+		d.get(url);
+		Thread.sleep(1200L);
+		for (int i = 0; i < clawPageCount; i++) {
+			postLinks.addAll(pageHandle(d, i));
+			Thread.sleep(1200L);
+			if (i < clawPageCount - 1) {
+				nextPage(d);
 			}
 		}
 	}
