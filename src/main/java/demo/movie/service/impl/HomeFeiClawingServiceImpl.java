@@ -77,7 +77,7 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 		}
 		TestEvent te = buildTesetEvent();
 		startEvent(te);
-		int clawPageCount = 20;
+		int clawPageCount = 5;
 		WebDriver d = webDriverService.buildFireFoxWebDriver();
 
 		try {
