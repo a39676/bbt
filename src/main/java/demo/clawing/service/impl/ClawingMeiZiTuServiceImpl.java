@@ -133,9 +133,7 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 
 	private void groupHandler(WebElement ele, WebDriver d, String mainWindowHandler) throws InterruptedException {
 		String url = ele.getAttribute("href");
-		System.out.println("handing : " + url + "; mainWindowHandler: " + mainWindowHandler);
 		if (hasClawedThisGroup(url)) {
-			System.out.println(url + " has clawed");
 			return;
 		}
 
@@ -144,7 +142,6 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 
 		Set<String> windowHandlesSet = d.getWindowHandles();
 		List<String> windowHandles = new ArrayList<String>(windowHandlesSet);
-		System.out.println("allWindowHandles:  " + windowHandles);
 		windowHandles.remove(mainWindowHandler);
 		String title = null;
 		WebElement titleEle = null;
@@ -155,16 +152,13 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 		for (int i = 0; title == null; i++) {
 			tmpWindowHandle = windowHandles.get(i % windowHandles.size());
 			d.switchTo().window(tmpWindowHandle);
-			System.out.println("switchTo: " + tmpWindowHandle);
 			try {
 				titleEle = d.findElement(titleBy);
 				title = titleEle.getText();
-				System.out.println("title: " + title);
 			} catch (Exception e) {
 				try {
 					titleEle = auxTool.fluentWait(d, titleBy);
 					title = titleEle.getText();
-					System.out.println("title: " + title);
 				} catch (Exception e2) {
 				}
 
@@ -208,7 +202,6 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 		try {
 			imgs = d.findElements(imgBy);
 		} catch (Exception e) {
-			System.out.println("can not find img in: " + title);
 			auxTool.takeScreenshot(d, t);
 			return;
 		}
@@ -242,7 +235,6 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 		}
 		
 		if(imgEle == null) {
-			System.out.println("can not find img in: " + title);
 			auxTool.takeScreenshot(d, t);
 			return;
 		}
@@ -253,7 +245,6 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 		String filePath = folder.getAbsolutePath() + File.separator + fileName;
 		File tmpFile = new File(filePath);
 		if (tmpFile.exists()) {
-			System.out.println(fileName + " exists");
 			return;
 		}
 
@@ -269,7 +260,6 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 			e1.printStackTrace();
 		}
 
-		System.out.println(fileName);
 		Long newImgId = snowFlake.getNextId();
 		ImageStore po = new ImageStore();
 		po.setId(newImgId);
@@ -321,7 +311,6 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 		long leftLimit = 400L;
 		long rightLimit = 700L;
 		long randomSleep = randomDateGenerator.nextLong(leftLimit, rightLimit);
-		System.out.println("randomSleep: " + randomSleep);
 		Thread.sleep(randomSleep);
 	}
 
