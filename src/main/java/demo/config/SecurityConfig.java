@@ -5,7 +5,6 @@ import java.nio.charset.StandardCharsets;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -21,6 +20,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 import demo.base.admin.pojo.constant.AdminUrlConstant;
+import demo.base.system.service.impl.SystemConstantService;
 import demo.base.user.pojo.constant.LoginUrlConstant;
 import demo.base.user.pojo.constant.UsersUrlConstant;
 import demo.base.user.pojo.type.RolesType;
@@ -37,11 +37,10 @@ import demo.web.handler.LimitLoginAuthenticationProvider;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
-	@Value("${envName}")
-	private String envName;
-	
 	@Autowired
 	private DataSource dataSource;
+	@Autowired
+	private SystemConstantService constantService;
 
 	@Autowired
 	private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
@@ -70,6 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		String envName = constantService.getValByName("envName");
         http.authorizeRequests()
             .antMatchers("/welcome**").permitAll()
             .antMatchers(LoginUrlConstant.login + "/**").permitAll()

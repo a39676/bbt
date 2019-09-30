@@ -290,6 +290,6 @@
   </update>
 
   <select id="existsRuningEvent" resultType="int">
-    select exists(select 1 from test_event where end_time is null)
+    select exists(select 1 from test_event where is_delete = false and end_time is null)
   </select>
 </mapper>

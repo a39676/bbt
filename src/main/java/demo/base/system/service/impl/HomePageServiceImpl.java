@@ -23,19 +23,19 @@ public class HomePageServiceImpl extends CommonService implements HomePageServic
 	private BaseUtilCustom baseUtilCustom;
 
 	@Autowired
-	private SystemConstantService systemConstantService;
+	private SystemConstantService constantService;
 
 	
 	@Override
 	public ModelAndView baseRootHandlerV3(@RequestParam(value = "vcode", defaultValue = "") String vcode,
 			String hostName) {
-
+		String envName = constantService.getValByName("envName");
 		ModelAndView view = new ModelAndView();
 //		TODO
 //		考虑随域名变更起始页面
 		view.setViewName(BaseViewConstant.homeV3);
 
-		view.addObject("title", systemConstantService.getValByName(SystemConstantStore.webSiteTitle));
+		view.addObject("title", constantService.getValByName(SystemConstantStore.webSiteTitle));
 
 		if(!"dev".equals(envName)) {
 			if (StringUtils.isBlank(hostName)) {
@@ -44,8 +44,8 @@ public class HomePageServiceImpl extends CommonService implements HomePageServic
 			}
 		}
 
-		if (hostName.contains(systemConstantService.getValByName(SystemConstantStore.hostName2))) {
-			if(!"1".contentEquals(systemConstantService.getValByName(SystemConstantStore.jobing))) {
+		if (hostName.contains(constantService.getValByName(SystemConstantStore.hostName2))) {
+			if(!"1".contentEquals(constantService.getValByName(SystemConstantStore.jobing))) {
 				view.setViewName(BaseViewConstant.empty);
 				return view;
 			}

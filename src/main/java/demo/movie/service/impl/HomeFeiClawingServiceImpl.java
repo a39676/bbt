@@ -14,6 +14,7 @@ import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import demo.base.system.service.impl.SystemConstantService;
 import demo.movie.mapper.MovieInfoMapper;
 import demo.movie.mapper.MovieIntroductionMapper;
 import demo.movie.mapper.MovieRecordMapper;
@@ -38,6 +39,8 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 	private FileUtilCustom iou;
 	
 	@Autowired
+	private SystemConstantService constantService;
+	@Autowired
 	private SeleniumGlobalOptionService globalOptionService;
 	@Autowired
 	private WebDriverService webDriverService;
@@ -59,7 +62,6 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 	private String part1 = mainUrl + "/thread-htm-fid-108.html";
 	private String part2 = mainUrl + "/thread-htm-fid-55.html";
 	private String part3 = mainUrl + "/thread-htm-fid-115.html";
-	private String part4 = mainUrl + "/thread-htm-fid-123.html";
 
 	@Override
 	protected TestEvent buildTesetEvent() {
@@ -77,7 +79,8 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 		}
 		TestEvent te = buildTesetEvent();
 		startEvent(te);
-		int clawPageCount = 5;
+		String envName = constantService.getValByName("envName");
+		int clawPageCount = 2;
 		WebDriver d = webDriverService.buildFireFoxWebDriver();
 
 		try {
@@ -87,18 +90,29 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 
 			login(d, te);
 			Thread.sleep(2500L);
-			dailyCheckIn(d, mainWindowHandler, te);
+			if(!"dev".equals(envName)) {
+				dailyCheckIn(d, mainWindowHandler, te);
+			}
 
 			List<String> postLinks = new ArrayList<String>();
 
 			partHandle(d, clawPageCount, postLinks, part1);
 			partHandle(d, clawPageCount, postLinks, part2);
 			partHandle(d, clawPageCount, postLinks, part3);
-			partHandle(d, clawPageCount, postLinks, part4);
 			
-			for(int i = 0; i < postLinks.size(); i++) {
-				postLinkHandle(d, postLinks);
+			
+			MovieRecordFindByConditionDTO dto = new MovieRecordFindByConditionDTO();
+			dto.setUrlList(postLinks);
+			List<MovieRecord> records = recordMapper.findByCondition(dto);
+
+			for (MovieRecord i : records) {
+				postLinks.remove(i.getUrl());
 			}
+			
+			for (String url : postLinks) {
+				subLinkHandle(d, url);
+			}
+			
 			
 			endEvent(te, true);
 		} catch (Exception e) {
@@ -119,7 +133,7 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 		for (int i = 0; i < clawPageCount && hasNextPage == true; i++) {
 			postLinks.addAll(pageHandle(d, i));
 			Thread.sleep(1200L);
-			if (i < clawPageCount - 1) {
+			if (i < clawPageCount - 1 && hasNextPage) {
 				hasNextPage = nextPage(d);
 			}
 		}
@@ -226,20 +240,6 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 			return true;
 		} catch (Exception e) {
 			return false;
-		}
-	}
-
-	private void postLinkHandle(WebDriver d, List<String> subLinks) throws InterruptedException {
-		MovieRecordFindByConditionDTO dto = new MovieRecordFindByConditionDTO();
-		dto.setUrlList(subLinks);
-		List<MovieRecord> records = recordMapper.findByCondition(dto);
-
-		for (MovieRecord i : records) {
-			subLinks.remove(i.getUrl());
-		}
-
-		for (String url : subLinks) {
-			subLinkHandle(d, url);
 		}
 	}
 

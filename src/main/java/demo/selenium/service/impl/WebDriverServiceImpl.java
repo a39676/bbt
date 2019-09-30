@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import constant.HtmlMimeType;
+import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.service.CommonService;
 import demo.selenium.pojo.constant.ChromeConstant;
 import demo.selenium.pojo.constant.FireFoxConstant;
@@ -29,10 +30,13 @@ import demo.selenium.service.WebDriverService;
 public class WebDriverServiceImpl extends CommonService implements WebDriverService {
 
 	@Autowired
+	private SystemConstantService constantService;
+	@Autowired
 	private SeleniumGlobalOptionService globalOptionService;
 
 	@Override
 	public WebDriver buildFireFoxWebDriver(FirefoxOptions options) {
+		String envName = constantService.getValByName("envName");
 		String path = globalOptionService.getGeckoPath();
 		String driverType = WebDriverConstant.geckoDriver;
 		System.setProperty(driverType, path);
@@ -121,6 +125,7 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 
 	@SuppressWarnings("deprecation")
 	private ChromeDriver buildChromeDriverBugFix(ChromeOptions options) {
+		String envName = constantService.getValByName("envName");
 		if(options == null) {
 			options = new ChromeOptions();
 		}
@@ -150,6 +155,7 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 
 	@Override
 	public WebDriver buildChrome45WebDriver(ChromeOptions options) {
+		String envName = constantService.getValByName("envName");
 		String path = globalOptionService.getChrome45Path();
 		String driverType = WebDriverConstant.chromeDriver;
 		System.setProperty(driverType, path);
