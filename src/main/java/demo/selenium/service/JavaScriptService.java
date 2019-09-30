@@ -10,4 +10,6 @@ public interface JavaScriptService {
 
 	String getHtmlSource(WebDriver driver);
 
+	void scrollToButton(WebDriver driver);
+
 }

@@ -27,6 +27,7 @@ import demo.selenium.pojo.bo.ByXpathConditionBO;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.WebDriverService;
+import demo.selenium.service.impl.JavaScriptServiceImpl;
 import demo.testCase.pojo.po.TestEvent;
 import ioHandle.FileUtilCustom;
 
@@ -44,8 +45,8 @@ public class HomeFeiClawingServiceImpl extends MovieClawingCommonService impleme
 	private SeleniumAuxiliaryToolService auxTool;
 	@Autowired
 	private MovieClawingOptionService optionService;
-//	@Autowired
-//	private JavaScriptServiceImpl jsUtil;
+	@Autowired
+	private JavaScriptServiceImpl jsUtil;
 
 	@Autowired
 	private MovieRecordMapper recordMapper;
@@ -55,15 +56,12 @@ public class HomeFeiClawingServiceImpl extends MovieClawingCommonService impleme
 	private MovieIntroductionMapper introduectionMapper;
 	
 	private String mainUrl = "http://bbs.homefei.me";
-	private String newMovie = mainUrl + "/thread-htm-fid-108.html";
+//	private String newMovie = mainUrl + "/thread-htm-fid-108.html";
+	private String newMovie = mainUrl + "/thread-htm-fid-55.html";
 
 	@Override
 	public void clawing() {
-		/*
-		 * TODO
-		 * testing
-		 */
-		int clawPageCount = 3;
+		int clawPageCount = 20;
 		TestEvent te = getTestEvent();
 		WebDriver d = webDriverService.buildFireFoxWebDriver();
 
@@ -74,11 +72,7 @@ public class HomeFeiClawingServiceImpl extends MovieClawingCommonService impleme
 
 			login(d);
 			Thread.sleep(2500L);
-			/*
-			 * TODO
-			 * testing
-			 * */
-//			dailyCheckIn(d, mainWindowHandler);
+			dailyCheckIn(d, mainWindowHandler);
 
 			d.get(newMovie);
 			List<String> postLinks = new ArrayList<String>();
@@ -200,70 +194,10 @@ public class HomeFeiClawingServiceImpl extends MovieClawingCommonService impleme
 		for (WebElement ele : linkEleList) {
 			subLinks.add(ele.getAttribute("href"));
 		}
-		
-		if(page == 0) {
-			List<String> topTopicUrlsWithoutNewMovie = topTopicUrlSearch(d);
-			for(String i : topTopicUrlsWithoutNewMovie) {
-				subLinks.remove(i);
-			}
-		}
 
 		return subLinks;
 	}
 	
-	/*
-	 * find all top topic
-	 * and remove new movie top topics
-	 */
-	private List<String> topTopicUrlSearch(WebDriver d) {
-		By topicTrListBy = auxTool.byXpathBuilder("tr", "class", "tr3");
-		List<WebElement> topicTrList = d.findElements(topicTrListBy);
-		List<String> topTopicUrl = new ArrayList<String>();
-		for(WebElement ele : topicTrList) {
-			if(!isNewMovieTopic(ele)) {
-				topTopicUrl.add(findTopicUrl(ele));
-			}
-		}
-		
-		return topTopicUrl;
-	}
-	
-	private String findTopicUrl(WebElement ele) {
-		WebElement a = ele.findElement(auxTool.byXpathBuilder("a", "class", "subject_t f14"));
-		return a.getAttribute("href");
-	}
-	
-	private boolean isNewMovieTopic(WebElement topicTr) {
-		boolean isTop = false;
-		
-		/*
-		 * TODO testing
-		 */
-		System.out.println(topicTr.getText());
-		
-		List<WebElement> imgs = topicTr.findElements(By.tagName("img"));
-		WebElement tmpEle = null;
-		
-		for(int i = 0; i < imgs.size() && isTop == false; i++) {
-			tmpEle = imgs.get(i);
-			if("置顶帖".equals(tmpEle.getAttribute("alt")) || "公告".equals(tmpEle.getAttribute("alt"))) {
-				isTop = true;
-			}
-		}
-		if(!isTop) {
-			return true;
-		} 
-		
-		for(int i = 0; i < imgs.size(); i++) {
-			tmpEle = imgs.get(i);
-			if(tmpEle.getAttribute("src") != null && tmpEle.getAttribute("src").endsWith("zip.gif")) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
-
 	private void nextPage(WebDriver d) {
 		By nextPageButtonBy = auxTool.byXpathBuilder("a", "class", "pages_next");
 		WebElement nextPageButton = d.findElement(nextPageButtonBy);
@@ -279,16 +213,7 @@ public class HomeFeiClawingServiceImpl extends MovieClawingCommonService impleme
 			subLinks.remove(i.getUrl());
 		}
 
-		/*
-		 * TODO
-		 * testing
-		 */
-//		for (String url : subLinks) {
-//			subLinkHandle(d, url);
-//		}
-		String url = null;
-		for (int i = 0; i < subLinks.size() && i < 5; i++) {
-			url = subLinks.get(i);
+		for (String url : subLinks) {
 			subLinkHandle(d, url);
 		}
 	}
@@ -296,6 +221,7 @@ public class HomeFeiClawingServiceImpl extends MovieClawingCommonService impleme
 	private void subLinkHandle(WebDriver d, String url) throws InterruptedException {
 		d.get(url);
 		Thread.sleep(800L);
+		jsUtil.scrollToButton(d);
 		
 		Long newMovieId = snowFlake.getNextId();
 
@@ -315,13 +241,26 @@ public class HomeFeiClawingServiceImpl extends MovieClawingCommonService impleme
 				isMagnetLink = true; 
 			}
 		}
+		
+		/* 部分非资源主题(公告, 通知等), 仅记录, 避免下次爬取 */
+		MovieRecord record = new MovieRecord();
+		record.setUrl(url);
+		record.setId(snowFlake.getNextId());
+		if(targetA == null) {
+			recordMapper.insertSelective(record);
+			return;
+		}
 
 		String magnetUrl = null;
 		if(isMagnetLink) {
 			magnetUrl = targetA.getAttribute("href");
 		} else {
 			WebElement font = targetA.findElement(By.tagName("font"));
-			magnetUrl = handleTorrentDownload(d, font.getText());
+			if(!font.getText().endsWith("torrent")) {
+				recordMapper.insertSelective(record);
+				return;
+			}
+			magnetUrl = handleTorrentDownload(d, targetA, font.getText());
 			if(magnetUrl == null) {
 //				TODO
 			}
@@ -333,9 +272,6 @@ public class HomeFeiClawingServiceImpl extends MovieClawingCommonService impleme
 		
 		saveMovieInfo(tpcDiv, newMovieId);
 		
-		MovieRecord record = new MovieRecord();
-		record.setUrl(url);
-		record.setId(snowFlake.getNextId());
 		recordMapper.insertSelective(record);
 	}
 	
@@ -365,9 +301,10 @@ public class HomeFeiClawingServiceImpl extends MovieClawingCommonService impleme
 		introduectionMapper.insertSelective(po);
 	}
 	
-	private String handleTorrentDownload(WebDriver d, String torrentFileName) {
+	private String handleTorrentDownload(WebDriver d, WebElement targetA, String torrentFileName) {
 		String downloadFolderPath = globalOptionService.getDownloadDir();
 		
+		targetA.click();
 		List<WebElement> buttons = d.findElements(By.tagName("button"));
 		WebElement tmpButton = null;
 		WebElement targetButton = null;
