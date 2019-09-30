@@ -56,8 +56,10 @@ public class HomeFeiClawingServiceImpl extends MovieClawingCommonService impleme
 	private MovieIntroductionMapper introduectionMapper;
 	
 	private String mainUrl = "http://bbs.homefei.me";
-//	private String newMovie = mainUrl + "/thread-htm-fid-108.html";
-	private String newMovie = mainUrl + "/thread-htm-fid-55.html";
+	private String part1 = mainUrl + "/thread-htm-fid-108.html";
+	private String part2 = mainUrl + "/thread-htm-fid-55.html";
+	private String part3 = mainUrl + "/thread-htm-fid-115.html";
+	private String part4 = mainUrl + "/thread-htm-fid-123.html";
 
 	@Override
 	public void clawing() {
@@ -74,9 +76,33 @@ public class HomeFeiClawingServiceImpl extends MovieClawingCommonService impleme
 			Thread.sleep(2500L);
 			dailyCheckIn(d, mainWindowHandler);
 
-			d.get(newMovie);
 			List<String> postLinks = new ArrayList<String>();
 
+			d.get(part1);
+			for (int i = 0; i < clawPageCount; i++) {
+				postLinks.addAll(pageHandle(d, i));
+				Thread.sleep(800L);
+				if (i < clawPageCount - 1) {
+					nextPage(d);
+				}
+			}
+			d.get(part2);
+			for (int i = 0; i < clawPageCount; i++) {
+				postLinks.addAll(pageHandle(d, i));
+				Thread.sleep(800L);
+				if (i < clawPageCount - 1) {
+					nextPage(d);
+				}
+			}
+			d.get(part3);
+			for (int i = 0; i < clawPageCount; i++) {
+				postLinks.addAll(pageHandle(d, i));
+				Thread.sleep(800L);
+				if (i < clawPageCount - 1) {
+					nextPage(d);
+				}
+			}
+			d.get(part4);
 			for (int i = 0; i < clawPageCount; i++) {
 				postLinks.addAll(pageHandle(d, i));
 				Thread.sleep(800L);
@@ -242,7 +268,13 @@ public class HomeFeiClawingServiceImpl extends MovieClawingCommonService impleme
 			}
 		}
 		
-		/* 部分非资源主题(公告, 通知等), 仅记录, 避免下次爬取 */
+		/* 
+		 * 部分非资源主题(公告, 通知等), 仅记录, 避免下次爬取 
+		 * 2019/09/30
+		 * 开始发现部分18+资源采取回复后可下载torrent
+		 * 因帖子回复前无直接展示下载链接
+		 * 此方法会暂时回避此类资源
+		 * */
 		MovieRecord record = new MovieRecord();
 		record.setUrl(url);
 		record.setId(snowFlake.getNextId());
