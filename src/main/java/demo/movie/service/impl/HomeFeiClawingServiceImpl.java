@@ -102,7 +102,7 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 			
 			endEvent(te, true);
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			log.error("error:{}, url: {}" + e.getMessage() + d.getCurrentUrl());
 			endEvent(te, false);
 			auxTool.takeScreenshot(d, te);
 		} finally {
