@@ -115,11 +115,12 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 	private void partHandle(WebDriver d, int clawPageCount, List<String> postLinks, String url) throws InterruptedException {
 		d.get(url);
 		Thread.sleep(1200L);
-		for (int i = 0; i < clawPageCount; i++) {
+		boolean hasNextPage = true;
+		for (int i = 0; i < clawPageCount && hasNextPage == true; i++) {
 			postLinks.addAll(pageHandle(d, i));
 			Thread.sleep(1200L);
 			if (i < clawPageCount - 1) {
-				nextPage(d);
+				hasNextPage = nextPage(d);
 			}
 		}
 	}
@@ -216,10 +217,16 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 		return subLinks;
 	}
 	
-	private void nextPage(WebDriver d) {
+	private boolean nextPage(WebDriver d) {
 		By nextPageButtonBy = auxTool.byXpathBuilder("a", "class", "pages_next");
-		WebElement nextPageButton = d.findElement(nextPageButtonBy);
-		nextPageButton.click();
+		WebElement nextPageButton = null;
+		try {
+			nextPageButton = d.findElement(nextPageButtonBy);
+			nextPageButton.click();
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	private void postLinkHandle(WebDriver d, List<String> subLinks) throws InterruptedException {
