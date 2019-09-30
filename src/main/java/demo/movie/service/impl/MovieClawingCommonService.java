@@ -73,8 +73,12 @@ public abstract class MovieClawingCommonService extends CommonService {
 		} else if (StringUtils.containsAny(countryDesc, "日", "韩")) {
 			return MovieRegionType.jpAndKr.getCode();
 			
-		} else if (StringUtils.containsAny(countryDesc, "中", "大陆", "香", "台")) {
+		} else if (StringUtils.containsAny(countryDesc, "中", "大陆")) {
 			return MovieRegionType.domestic.getCode();
+			
+		} else if (StringUtils.containsAny(countryDesc, "香", "港", "台")) {
+			return MovieRegionType.hongKongMarcoTaiwan.getCode();
+			
 		} 
 		
 		return MovieRegionType.otherMovie.getCode();
