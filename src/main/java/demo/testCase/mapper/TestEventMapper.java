@@ -27,4 +27,6 @@ public interface TestEventMapper {
     int updateByPrimaryKeySelective(TestEvent record);
 
     int updateByPrimaryKey(TestEvent record);
+    
+    int existsRuningEvent();
 }

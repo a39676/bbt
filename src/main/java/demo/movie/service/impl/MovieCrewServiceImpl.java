@@ -9,9 +9,10 @@ import demo.movie.mapper.MovieCrewMapper;
 import demo.movie.pojo.dto.MovieCrewfindByConditionDTO;
 import demo.movie.pojo.po.MovieCrew;
 import demo.movie.service.MovieCrewService;
+import demo.testCase.pojo.po.TestEvent;
 
 @Service
-public class MovieCrewServiceImpl extends MovieClawingCommonService implements MovieCrewService {
+public final class MovieCrewServiceImpl extends MovieClawingCommonService implements MovieCrewService {
 
 //	@Autowired
 //	private MovieAssociationCrewMapper movieAndCrewMapper;
@@ -43,5 +44,11 @@ public class MovieCrewServiceImpl extends MovieClawingCommonService implements M
 		po.setEngName(dto.getEngName());
 		crewMapper.insertSelective(po);
 		return po;
+	}
+
+	@Override
+	protected TestEvent buildTesetEvent() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

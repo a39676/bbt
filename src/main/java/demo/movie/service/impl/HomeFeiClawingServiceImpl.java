@@ -32,7 +32,7 @@ import demo.testCase.pojo.po.TestEvent;
 import ioHandle.FileUtilCustom;
 
 @Service
-public class HomeFeiClawingServiceImpl extends MovieClawingCommonService implements HomeFeiClawingService {
+public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService implements HomeFeiClawingService {
 
 	@Autowired
 	private FileUtilCustom iou;
@@ -62,9 +62,22 @@ public class HomeFeiClawingServiceImpl extends MovieClawingCommonService impleme
 	private String part4 = mainUrl + "/thread-htm-fid-123.html";
 
 	@Override
+	protected TestEvent buildTesetEvent() {
+		TestEvent te = new TestEvent();
+		te.setCaseId(6L);
+		te.setId(snowFlake.getNextId());
+		te.setEventName("homeFei");
+		return te;
+	}
+	
+	@Override
 	public void clawing() {
+		if(existsRuningEvent()) {
+			return;
+		}
+		TestEvent te = buildTesetEvent();
+		startEvent(te);
 		int clawPageCount = 20;
-		TestEvent te = getTestEvent();
 		WebDriver d = webDriverService.buildFireFoxWebDriver();
 
 		try {
@@ -72,9 +85,9 @@ public class HomeFeiClawingServiceImpl extends MovieClawingCommonService impleme
 
 			String mainWindowHandler = d.getWindowHandle();
 
-			login(d);
+			login(d, te);
 			Thread.sleep(2500L);
-			dailyCheckIn(d, mainWindowHandler);
+			dailyCheckIn(d, mainWindowHandler, te);
 
 			List<String> postLinks = new ArrayList<String>();
 
@@ -114,9 +127,11 @@ public class HomeFeiClawingServiceImpl extends MovieClawingCommonService impleme
 			for(int i = 0; i < postLinks.size(); i++) {
 				postLinkHandle(d, postLinks);
 			}
-
+			
+			endEvent(te, true);
 		} catch (Exception e) {
 			log.error(e.getMessage());
+			endEvent(te, false);
 			auxTool.takeScreenshot(d, te);
 		} finally {
 			if (d != null) {
@@ -125,14 +140,7 @@ public class HomeFeiClawingServiceImpl extends MovieClawingCommonService impleme
 		}
 	}
 
-	private TestEvent getTestEvent() {
-		TestEvent te = new TestEvent();
-		te.setId(6L);
-		te.setEventName("homeFei");
-		return te;
-	}
-
-	private void login(WebDriver d) {
+	private void login(WebDriver d, TestEvent te) {
 		ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("input", "id", "nav_pwuser");
 		By usernameInputBy = auxTool.byXpathBuilder(byXpathConditionBo);
 
@@ -153,13 +161,13 @@ public class HomeFeiClawingServiceImpl extends MovieClawingCommonService impleme
 			pwdInput.sendKeys(optionService.getHomeFeiPwd());
 			loginButton.click();
 		} catch (Exception e) {
-			log.error(e.getMessage());
-			auxTool.takeScreenshot(d, getTestEvent());
+			log.error("homeFei login error {} " + e.getMessage());
+			auxTool.takeScreenshot(d, te);
 		}
 
 	}
 
-	private void dailyCheckIn(WebDriver d, String mainWindowHandler) {
+	private void dailyCheckIn(WebDriver d, String mainWindowHandler, TestEvent te) {
 		try {
 			List<WebElement> bList = d.findElements(By.tagName("b"));
 			WebElement tmpEle = null;
@@ -172,7 +180,7 @@ public class HomeFeiClawingServiceImpl extends MovieClawingCommonService impleme
 			}
 			if (checkInInterfaceButton == null) {
 				log.debug("homeFei can not found check in button");
-				auxTool.takeScreenshot(d, getTestEvent());
+				auxTool.takeScreenshot(d, te);
 				return;
 			}
 
@@ -196,7 +204,7 @@ public class HomeFeiClawingServiceImpl extends MovieClawingCommonService impleme
 
 		} catch (Exception e) {
 			log.debug("homeFei daily check in fail {} " + e.getMessage());
-			auxTool.takeScreenshot(d, getTestEvent());
+			auxTool.takeScreenshot(d, te);
 		} finally {
 			Set<String> windows = d.getWindowHandles();
 			for (String w : windows) {
@@ -357,5 +365,7 @@ public class HomeFeiClawingServiceImpl extends MovieClawingCommonService impleme
 		String magnetUrl = getMangetUrlFromTorrent(torrentPath);
 		return magnetUrl;
 	}
+
+	
 
 }

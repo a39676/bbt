@@ -30,7 +30,7 @@ import demo.testCase.pojo.po.TestEvent;
 import ioHandle.FileUtilCustom;
 
 @Service
-public class DyttClawingServiceImpl extends MovieClawingCommonService implements DyttClawingService {
+public final class DyttClawingServiceImpl extends MovieClawingCommonService implements DyttClawingService {
 
 	@Autowired
 	private FileUtilCustom iou;
@@ -56,10 +56,22 @@ public class DyttClawingServiceImpl extends MovieClawingCommonService implements
 	private String newMovie = mainUrl + "/html/gndy/dyzz/index.html";
 
 	@Override
-	public void clawing() {
+	protected TestEvent buildTesetEvent() {
 		TestEvent te = new TestEvent();
-		te.setId(5L);
+		te.setCaseId(5L);
+		te.setId(snowFlake.getNextId());
 		te.setEventName("dyttTest");
+		return te;
+	}
+	
+	@Override
+	public void clawing() {
+		if(existsRuningEvent()) {
+			return;
+		}
+		TestEvent te = buildTesetEvent();
+		startEvent(te);
+		
 		WebDriver d = webDriverService.buildFireFoxWebDriver();
 
 		int maxClawPageCount = 3;
@@ -72,9 +84,10 @@ public class DyttClawingServiceImpl extends MovieClawingCommonService implements
 				swithToNextPage(d);
 				maxClawPageCount--;
 			}
-
+			endEvent(te, true);
 		} catch (Exception e) {
 			e.printStackTrace();
+			endEvent(te, false);
 			auxTool.takeScreenshot(d, te);
 		} finally {
 			if (d != null) {
@@ -244,5 +257,5 @@ public class DyttClawingServiceImpl extends MovieClawingCommonService implements
 		po.setIntroPath(savePath);
 		introduectionMapper.insertSelective(po);
 	}
-	
+
 }

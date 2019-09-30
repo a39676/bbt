@@ -2,6 +2,7 @@ package demo.movie.service.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -16,6 +17,8 @@ import demo.image.pojo.po.ImageStore;
 import demo.image.pojo.type.ImageType;
 import demo.movie.mapper.MovieImageMapper;
 import demo.movie.pojo.po.MovieImage;
+import demo.testCase.mapper.TestEventMapper;
+import demo.testCase.pojo.po.TestEvent;
 import movie.pojo.type.MovieRegionType;
 
 public abstract class MovieClawingCommonService extends CommonService {
@@ -27,6 +30,10 @@ public abstract class MovieClawingCommonService extends CommonService {
 	protected ImageStoreMapper imageStoreMapper;
 	@Autowired
 	protected MovieImageMapper movieImageMapper;
+	@Autowired
+	private TestEventMapper eventMapper;
+	
+	protected abstract TestEvent buildTesetEvent();
 	
 	public String getMangetUrlFromTorrent(String path) {
 		File t = new File(path);
@@ -82,5 +89,22 @@ public abstract class MovieClawingCommonService extends CommonService {
 		} 
 		
 		return MovieRegionType.otherMovie.getCode();
+	}
+
+	protected void startEvent(TestEvent te) {
+		eventMapper.insertSelective(te);
+	}
+	
+	protected void endEvent(TestEvent te, boolean success) {
+		te.setEndTime(LocalDateTime.now());
+		te.setIsPass(success);
+		eventMapper.updateByPrimaryKeySelective(te);
+	}
+	
+	protected boolean existsRuningEvent() {
+		if(eventMapper.existsRuningEvent() == 0) {
+			return false;
+		} 
+		return true;
 	}
 }

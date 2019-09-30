@@ -288,4 +288,8 @@
       is_delete = #{isDelete,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="existsRuningEvent" resultType="int">
+    select exists(select 1 from test_event where end_time is null)
+  </select>
 </mapper>
