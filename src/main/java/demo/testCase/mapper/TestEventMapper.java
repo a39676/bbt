@@ -29,4 +29,9 @@ public interface TestEventMapper {
     int updateByPrimaryKey(TestEvent record);
     
     int existsRuningEvent();
+    
+    /**
+	 * 个别异常情况下, testEvent 数据表未记录正常结束, 会导致其他 event 无法进行, 需要手动修正状态
+	 */
+    int fixMovieClawingTestEventStatus();
 }

@@ -65,6 +65,11 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 	private String part3 = mainUrl + "/thread-htm-fid-115.html";
 
 	@Override
+	public int fixMovieClawingTestEventStatus() {
+		return eventMapper.fixMovieClawingTestEventStatus();
+	}
+	
+	@Override
 	protected TestEvent buildTesetEvent() {
 		TestEvent te = new TestEvent();
 		te.setCaseId(6L);
@@ -73,19 +78,6 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 		return te;
 	}
 	
-	@Override
-	public void test() {
-		WebDriver d = webDriverService.buildFireFoxWebDriver();
-		try {
-			d.get(mainUrl);
-			Thread.sleep(10000L);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (TimeoutException e) {
-			jsUtil.windowStop(d);
-		}
-		d.quit();
-	}
 	
 	@Override
 	public void clawing() {

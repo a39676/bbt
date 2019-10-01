@@ -18,6 +18,13 @@ public class MovieClawingController {
 	@Autowired
 	private HomeFeiClawingService homeFei;
 	
+	@GetMapping(value = "/fixMovieClawingTestEventStatus")
+	@ResponseBody
+	public String fixMovieClawingTestEventStatus() {
+		int c = homeFei.fixMovieClawingTestEventStatus();
+		return String.valueOf(c);
+	}
+	
 	@GetMapping(value = "/dytt")
 	@ResponseBody
 	public String dytt() {
@@ -32,10 +39,4 @@ public class MovieClawingController {
 		return "done";
 	}
 	
-	@GetMapping(value = "/test")
-	@ResponseBody
-	public String test() {
-		homeFei.test();
-		return "done";
-	}
 }

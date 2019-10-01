@@ -31,7 +31,7 @@ public abstract class MovieClawingCommonService extends CommonService {
 	@Autowired
 	protected MovieImageMapper movieImageMapper;
 	@Autowired
-	private TestEventMapper eventMapper;
+	protected TestEventMapper eventMapper;
 	
 	protected abstract TestEvent buildTesetEvent();
 	
@@ -107,4 +107,5 @@ public abstract class MovieClawingCommonService extends CommonService {
 		} 
 		return true;
 	}
+
 }

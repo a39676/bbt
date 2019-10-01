@@ -292,4 +292,8 @@
   <select id="existsRuningEvent" resultType="int">
     select exists(select 1 from test_event where is_delete = false and end_time is null)
   </select>
+
+  <update id="fixMovieClawingTestEventStatus" resultType="int">
+    update test_event set end_time = now(), is_pass = false where end_time is null and is_delete = false
+  </update>
 </mapper>
