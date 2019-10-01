@@ -15,6 +15,8 @@ public class JavaScriptServiceImpl extends CommonService implements JavaScriptSe
 	
 	public final String getHtmlSource = "return document.documentElement.outerHTML;";
 	
+	public final String windowStop = "window.stop()";
+	
 	@Override
 	public void openNewTab(WebDriver d, String url) {
 		JavascriptExecutor jse = (JavascriptExecutor) d;
@@ -41,5 +43,11 @@ public class JavaScriptServiceImpl extends CommonService implements JavaScriptSe
 	public void scrollToButton(WebDriver driver) {
 		JavascriptExecutor jse = (JavascriptExecutor) driver;
 		jse.executeScript("window.scrollTo(0, document.body.scrollHeight)");
+	}
+	
+	@Override
+	public void windowStop(WebDriver driver) {
+		JavascriptExecutor jse = (JavascriptExecutor) driver;
+		jse.executeScript(windowStop);
 	}
 }

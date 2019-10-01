@@ -9,6 +9,7 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.By.ByTagName;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +74,20 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 	}
 	
 	@Override
+	public void test() {
+		WebDriver d = webDriverService.buildFireFoxWebDriver();
+		try {
+			d.get(mainUrl);
+			Thread.sleep(10000L);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (TimeoutException e) {
+			jsUtil.windowStop(d);
+		}
+		d.quit();
+	}
+	
+	@Override
 	public void clawing() {
 		if(existsRuningEvent()) {
 			return;
@@ -127,13 +142,18 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 	}
 	
 	private void partHandle(WebDriver d, int clawPageCount, List<String> postLinks, String url) throws InterruptedException {
-		d.get(url);
-		Thread.sleep(1200L);
+		try {
+			d.get(url);
+			Thread.sleep(1200L);
+		} catch (TimeoutException e) {
+			jsUtil.windowStop(d);
+		}
+		
 		boolean hasNextPage = true;
-		for (int i = 0; i < clawPageCount && hasNextPage == true; i++) {
+		for (int i = 0; i < clawPageCount - 1 && hasNextPage == true; i++) {
 			postLinks.addAll(pageHandle(d, i));
 			Thread.sleep(1200L);
-			if (i < clawPageCount - 1 && hasNextPage) {
+			if (i < clawPageCount - 1) {
 				hasNextPage = nextPage(d);
 			}
 		}
@@ -266,6 +286,7 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 				isMagnetLink = true; 
 			}
 		}
+		
 		
 		/* 
 		 * 部分非资源主题(公告, 通知等), 仅记录, 避免下次爬取 

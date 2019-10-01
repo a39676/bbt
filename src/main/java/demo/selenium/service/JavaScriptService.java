@@ -12,4 +12,6 @@ public interface JavaScriptService {
 
 	void scrollToButton(WebDriver driver);
 
+	void windowStop(WebDriver driver);
+
 }

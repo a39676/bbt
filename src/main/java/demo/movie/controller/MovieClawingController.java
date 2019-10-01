@@ -31,4 +31,11 @@ public class MovieClawingController {
 		homeFei.clawing();
 		return "done";
 	}
+	
+	@GetMapping(value = "/test")
+	@ResponseBody
+	public String test() {
+		homeFei.test();
+		return "done";
+	}
 }

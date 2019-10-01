@@ -4,4 +4,6 @@ public interface HomeFeiClawingService {
 
 	void clawing();
 
+	void test();
+
 }
