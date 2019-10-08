@@ -4,7 +4,6 @@
   <resultMap id="BaseResultMap" type="demo.movie.pojo.po.MovieMagnetUrl">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="movie_id" jdbcType="BIGINT" property="movieId" />
-    <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="url" jdbcType="VARCHAR" property="url" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
@@ -68,7 +67,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, movie_id, title, url, create_time, is_delete
+    id, movie_id, url, create_time, is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.movie.pojo.po.MovieMagnetUrlExample" resultMap="BaseResultMap">
     select
@@ -101,10 +100,10 @@
     </if>
   </delete>
   <insert id="insert" parameterType="demo.movie.pojo.po.MovieMagnetUrl">
-    insert into movie_magnet_url (id, movie_id, title, 
+    insert into movie_magnet_url (id, movie_id, 
       url, create_time, is_delete
       )
-    values (#{id,jdbcType=BIGINT}, #{movieId,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=BIGINT}, #{movieId,jdbcType=BIGINT}, 
       #{url,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}
       )
   </insert>
@@ -116,9 +115,6 @@
       </if>
       <if test="movieId != null">
         movie_id,
-      </if>
-      <if test="title != null">
-        title,
       </if>
       <if test="url != null">
         url,
@@ -136,9 +132,6 @@
       </if>
       <if test="movieId != null">
         #{movieId,jdbcType=BIGINT},
-      </if>
-      <if test="title != null">
-        #{title,jdbcType=VARCHAR},
       </if>
       <if test="url != null">
         #{url,jdbcType=VARCHAR},
@@ -166,9 +159,6 @@
       <if test="record.movieId != null">
         movie_id = #{record.movieId,jdbcType=BIGINT},
       </if>
-      <if test="record.title != null">
-        title = #{record.title,jdbcType=VARCHAR},
-      </if>
       <if test="record.url != null">
         url = #{record.url,jdbcType=VARCHAR},
       </if>
@@ -187,7 +177,6 @@
     update movie_magnet_url
     set id = #{record.id,jdbcType=BIGINT},
       movie_id = #{record.movieId,jdbcType=BIGINT},
-      title = #{record.title,jdbcType=VARCHAR},
       url = #{record.url,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       is_delete = #{record.isDelete,jdbcType=BIT}
@@ -200,9 +189,6 @@
     <set>
       <if test="movieId != null">
         movie_id = #{movieId,jdbcType=BIGINT},
-      </if>
-      <if test="title != null">
-        title = #{title,jdbcType=VARCHAR},
       </if>
       <if test="url != null">
         url = #{url,jdbcType=VARCHAR},
@@ -219,7 +205,6 @@
   <update id="updateByPrimaryKey" parameterType="demo.movie.pojo.po.MovieMagnetUrl">
     update movie_magnet_url
     set movie_id = #{movieId,jdbcType=BIGINT},
-      title = #{title,jdbcType=VARCHAR},
       url = #{url,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       is_delete = #{isDelete,jdbcType=BIT}

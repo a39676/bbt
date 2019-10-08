@@ -7,8 +7,6 @@ public class MovieMagnetUrl {
 
     private Long movieId;
 
-    private String title;
-
     private String url;
 
     private LocalDateTime createTime;
@@ -29,14 +27,6 @@ public class MovieMagnetUrl {
 
     public void setMovieId(Long movieId) {
         this.movieId = movieId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title == null ? null : title.trim();
     }
 
     public String getUrl() {

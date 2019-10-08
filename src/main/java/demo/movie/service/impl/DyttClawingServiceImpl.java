@@ -15,12 +15,11 @@ import org.springframework.stereotype.Service;
 
 import demo.movie.mapper.MovieInfoMapper;
 import demo.movie.mapper.MovieIntroductionMapper;
-import demo.movie.mapper.MovieMagnetUrlMapper;
 import demo.movie.mapper.MovieRecordMapper;
+import demo.movie.pojo.constant.MovieClawingConstant;
 import demo.movie.pojo.dto.MovieRecordFindByConditionDTO;
 import demo.movie.pojo.po.MovieInfo;
 import demo.movie.pojo.po.MovieIntroduction;
-import demo.movie.pojo.po.MovieMagnetUrl;
 import demo.movie.pojo.po.MovieRecord;
 import demo.movie.service.DyttClawingService;
 import demo.selenium.pojo.bo.ByXpathConditionBO;
@@ -46,8 +45,6 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 	
 	@Autowired
 	private MovieInfoMapper infoMapper;
-	@Autowired
-	private MovieMagnetUrlMapper movieMangetUrlMapper;
 	@Autowired
 	private MovieRecordMapper recordMapper;
 	@Autowired
@@ -188,7 +185,7 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 			saveMovieImg(imgs, newMovieId);
 
 			List<WebElement> aTags = divZoom.findElements(ByTagName.tagName("a"));
-			saveMovieMagnetUrl(aTags, newMovieId);
+			handleMovieMagnetUrl(aTags, newMovieId);
 
 			List<WebElement> pTags = divZoom.findElements(ByTagName.tagName("p"));
 			saveMovieInfo(pTags, newMovieId);
@@ -211,17 +208,12 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 		}
 	}
 
-	private void saveMovieMagnetUrl(List<WebElement> aTags, Long movieId) {
+	private void handleMovieMagnetUrl(List<WebElement> aTags, Long movieId) {
 		String href = null;
 		for (WebElement ele : aTags) {
 			href = ele.getAttribute("href");
-			if (href.startsWith("magnet:?xt")) {
-				Long newMovieMagnetUrlId = snowFlake.getNextId();
-				MovieMagnetUrl po = new MovieMagnetUrl();
-				po.setId(newMovieMagnetUrlId);
-				po.setMovieId(movieId);
-				po.setUrl(href);
-				movieMangetUrlMapper.insertSelective(po);
+			if (href.startsWith(MovieClawingConstant.magnetPrefix)) {
+				saveMovieMagnetUrl(href, movieId);
 			}
 		}
 	}
