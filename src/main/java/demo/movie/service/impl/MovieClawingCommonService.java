@@ -16,7 +16,10 @@ import demo.image.mapper.ImageStoreMapper;
 import demo.image.pojo.po.ImageStore;
 import demo.image.pojo.type.ImageType;
 import demo.movie.mapper.MovieImageMapper;
+import demo.movie.mapper.MovieMagnetUrlMapper;
+import demo.movie.pojo.constant.MovieClawingConstant;
 import demo.movie.pojo.po.MovieImage;
+import demo.movie.pojo.po.MovieMagnetUrl;
 import demo.testCase.mapper.TestEventMapper;
 import demo.testCase.pojo.po.TestEvent;
 import movie.pojo.type.MovieRegionType;
@@ -32,21 +35,38 @@ public abstract class MovieClawingCommonService extends CommonService {
 	protected MovieImageMapper movieImageMapper;
 	@Autowired
 	protected TestEventMapper eventMapper;
+	@Autowired
+	private MovieMagnetUrlMapper magnetUrlMapper;
 	
 	protected abstract TestEvent buildTesetEvent();
 	
-	public String getMangetUrlFromTorrent(String path) {
+	protected String getMangetUrlFromTorrent(String path) {
 		File t = new File(path);
 		if(!t.exists()) {
 			return null;
 		}
 		try {
 			TorrentFile f = new TorrentFile(t);
-			return "magnet:?xt=urn:btih:" + f.getHexHash();
+			return MovieClawingConstant.magnetPrefix + f.getHexHash();
 		} catch (IllegalArgumentException | IOException e) {
 			log.error("read torrent error path {}", path);
 			return null;
 		}
+	}
+	
+	protected void saveMovieMagnetUrl(List<String> magnetUrls, Long movieId) {
+		for(String url : magnetUrls) {
+			saveMovieMagnetUrl(url, movieId);
+		}
+	}
+	
+	protected void saveMovieMagnetUrl(String magnetUrl, Long movieId) {
+		Long newMovieMagnetUrlId = snowFlake.getNextId();
+		MovieMagnetUrl po = new MovieMagnetUrl();
+		po.setId(newMovieMagnetUrlId);
+		po.setMovieId(movieId);
+		po.setUrl(magnetUrl);
+		magnetUrlMapper.insertSelective(po);
 	}
 	
 	protected void saveMovieImg(List<WebElement> imgs, Long movieId) {

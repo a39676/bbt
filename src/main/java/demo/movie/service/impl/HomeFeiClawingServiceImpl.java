@@ -19,6 +19,7 @@ import demo.base.system.service.impl.SystemConstantService;
 import demo.movie.mapper.MovieInfoMapper;
 import demo.movie.mapper.MovieIntroductionMapper;
 import demo.movie.mapper.MovieRecordMapper;
+import demo.movie.pojo.constant.MovieClawingConstant;
 import demo.movie.pojo.dto.MovieRecordFindByConditionDTO;
 import demo.movie.pojo.po.MovieInfo;
 import demo.movie.pojo.po.MovieIntroduction;
@@ -273,7 +274,7 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 			if (StringUtils.isNotBlank(tmpA.getAttribute("id")) && StringUtils.isNotBlank(tmpA.getAttribute("onclick"))
 					&& tmpA.getAttribute("href") != null && tmpA.getAttribute("href").contains("action=download")) {
 				targetA = tmpA;
-			} else if (tmpA.getAttribute("href") != null && tmpA.getAttribute("href").startsWith("magnet:?xt")) {
+			} else if (tmpA.getAttribute("href") != null && tmpA.getAttribute("href").startsWith(MovieClawingConstant.magnetPrefix)) {
 				targetA = tmpA;
 				isMagnetLink = true; 
 			}
