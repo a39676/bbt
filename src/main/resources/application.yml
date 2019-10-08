@@ -38,6 +38,7 @@ logging:
     # demo.mapper: DEBUG
     # demo.base.system.mapper: DEBUG
     demo.base.user.mapper: DEBUG
+    demo.movie.mapper: DEBUG
     # demo.organizations.mapper: DEBUG
     # demo.mobile.mapper: DEBUG
   pattern:

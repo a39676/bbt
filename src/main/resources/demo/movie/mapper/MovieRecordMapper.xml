@@ -3,8 +3,11 @@
 <mapper namespace="demo.movie.mapper.MovieRecordMapper">
   <resultMap id="BaseResultMap" type="demo.movie.pojo.po.MovieRecord">
     <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="case_id" jdbcType="BIGINT" property="caseId" />
+    <result column="movie_id" jdbcType="BIGINT" property="movieId" />
     <result column="url" jdbcType="VARCHAR" property="url" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="was_claw" jdbcType="BIT" property="wasClaw" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -66,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, url, create_time, is_delete
+    id, case_id, movie_id, url, create_time, was_claw, is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.movie.pojo.po.MovieRecordExample" resultMap="BaseResultMap">
     select
@@ -99,9 +102,11 @@
     </if>
   </delete>
   <insert id="insert" parameterType="demo.movie.pojo.po.MovieRecord">
-    insert into movie_record (id, url, create_time, 
+    insert into movie_record (id, case_id, movie_id, 
+      url, create_time, was_claw, 
       is_delete)
-    values (#{id,jdbcType=BIGINT}, #{url,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+    values (#{id,jdbcType=BIGINT}, #{caseId,jdbcType=BIGINT}, #{movieId,jdbcType=BIGINT}, 
+      #{url,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{wasClaw,jdbcType=BIT}, 
       #{isDelete,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="demo.movie.pojo.po.MovieRecord">
@@ -110,11 +115,20 @@
       <if test="id != null">
         id,
       </if>
+      <if test="caseId != null">
+        case_id,
+      </if>
+      <if test="movieId != null">
+        movie_id,
+      </if>
       <if test="url != null">
         url,
       </if>
       <if test="createTime != null">
         create_time,
+      </if>
+      <if test="wasClaw != null">
+        was_claw,
       </if>
       <if test="isDelete != null">
         is_delete,
@@ -124,11 +138,20 @@
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
+      <if test="caseId != null">
+        #{caseId,jdbcType=BIGINT},
+      </if>
+      <if test="movieId != null">
+        #{movieId,jdbcType=BIGINT},
+      </if>
       <if test="url != null">
         #{url,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wasClaw != null">
+        #{wasClaw,jdbcType=BIT},
       </if>
       <if test="isDelete != null">
         #{isDelete,jdbcType=BIT},
@@ -147,11 +170,20 @@
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
+      <if test="record.caseId != null">
+        case_id = #{record.caseId,jdbcType=BIGINT},
+      </if>
+      <if test="record.movieId != null">
+        movie_id = #{record.movieId,jdbcType=BIGINT},
+      </if>
       <if test="record.url != null">
         url = #{record.url,jdbcType=VARCHAR},
       </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.wasClaw != null">
+        was_claw = #{record.wasClaw,jdbcType=BIT},
       </if>
       <if test="record.isDelete != null">
         is_delete = #{record.isDelete,jdbcType=BIT},
@@ -164,8 +196,11 @@
   <update id="updateByExample" parameterType="map">
     update movie_record
     set id = #{record.id,jdbcType=BIGINT},
+      case_id = #{record.caseId,jdbcType=BIGINT},
+      movie_id = #{record.movieId,jdbcType=BIGINT},
       url = #{record.url,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      was_claw = #{record.wasClaw,jdbcType=BIT},
       is_delete = #{record.isDelete,jdbcType=BIT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -174,11 +209,20 @@
   <update id="updateByPrimaryKeySelective" parameterType="demo.movie.pojo.po.MovieRecord">
     update movie_record
     <set>
+      <if test="caseId != null">
+        case_id = #{caseId,jdbcType=BIGINT},
+      </if>
+      <if test="movieId != null">
+        movie_id = #{movieId,jdbcType=BIGINT},
+      </if>
       <if test="url != null">
         url = #{url,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wasClaw != null">
+        was_claw = #{wasClaw,jdbcType=BIT},
       </if>
       <if test="isDelete != null">
         is_delete = #{isDelete,jdbcType=BIT},
@@ -188,8 +232,11 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="demo.movie.pojo.po.MovieRecord">
     update movie_record
-    set url = #{url,jdbcType=VARCHAR},
+    set case_id = #{caseId,jdbcType=BIGINT},
+      movie_id = #{movieId,jdbcType=BIGINT},
+      url = #{url,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
+      was_claw = #{wasClaw,jdbcType=BIT},
       is_delete = #{isDelete,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -202,6 +249,12 @@
     <where>
       <if test="isDelete != null">
         and is_delete = #{isDelete}
+      </if>
+      <if test="wasClaw != null">
+        and was_claw = #{wasClaw}
+      </if>
+      <if test="caseId != null">
+        and case_id = #{caseId}
       </if>
       <if test="createTimeStart != null">
         and create_time &gt;= #{createTimeStart}

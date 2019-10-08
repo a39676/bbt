@@ -10,6 +10,24 @@ public class MovieRecordFindByConditionDTO {
 	private List<String> urlList;
 	private LocalDateTime createTimeStart = LocalDateTime.now().minusMonths(3L);
 	private LocalDateTime createTimeEnd;
+	private boolean wasClaw;
+	private Long caseId;
+
+	public Long getCaseId() {
+		return caseId;
+	}
+
+	public void setCaseId(Long caseId) {
+		this.caseId = caseId;
+	}
+
+	public boolean getWasClaw() {
+		return wasClaw;
+	}
+
+	public void setWasClaw(boolean wasClaw) {
+		this.wasClaw = wasClaw;
+	}
 
 	public List<String> getUrlList() {
 		return urlList;
@@ -53,8 +71,9 @@ public class MovieRecordFindByConditionDTO {
 
 	@Override
 	public String toString() {
-		return "MovieRecordFindByConditionDTO [isDelete=" + isDelete + ", url=" + url + ", createTimeStart="
-				+ createTimeStart + ", createTimeEnd=" + createTimeEnd + "]";
+		return "MovieRecordFindByConditionDTO [isDelete=" + isDelete + ", url=" + url + ", urlList=" + urlList
+				+ ", createTimeStart=" + createTimeStart + ", createTimeEnd=" + createTimeEnd + ", wasClaw=" + wasClaw
+				+ ", caseId=" + caseId + "]";
 	}
 
 }

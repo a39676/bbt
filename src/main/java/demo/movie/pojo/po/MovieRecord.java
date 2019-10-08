@@ -5,9 +5,15 @@ import java.time.LocalDateTime;
 public class MovieRecord {
     private Long id;
 
+    private Long caseId;
+
+    private Long movieId;
+
     private String url;
 
     private LocalDateTime createTime;
+
+    private Boolean wasClaw;
 
     private Boolean isDelete;
 
@@ -17,6 +23,22 @@ public class MovieRecord {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getCaseId() {
+        return caseId;
+    }
+
+    public void setCaseId(Long caseId) {
+        this.caseId = caseId;
+    }
+
+    public Long getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(Long movieId) {
+        this.movieId = movieId;
     }
 
     public String getUrl() {
@@ -33,6 +55,14 @@ public class MovieRecord {
 
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
+    }
+
+    public Boolean getWasClaw() {
+        return wasClaw;
+    }
+
+    public void setWasClaw(Boolean wasClaw) {
+        this.wasClaw = wasClaw;
     }
 
     public Boolean getIsDelete() {

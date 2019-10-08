@@ -254,5 +254,6 @@ public class SeleniumAuxiliaryToolServiceImpl extends CommonService implements S
 	public static void main(String[] args) throws IOException {
 //		SeleniumAuxiliaryToolServiceImpl t = new SeleniumAuxiliaryToolServiceImpl();
 //		Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36
+//		t.byXpathBuilder("a", "class", "value");
 	}
 }

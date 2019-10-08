@@ -3,6 +3,7 @@ package demo.selenium.service.impl;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -71,6 +72,7 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 		}
 
 		FirefoxDriver driver = new FirefoxDriver(options);
+		driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS);
 		if ("dev".equals(envName) ) {
 //			Point p = new Point(0, 0);
 //			driver.manage().window().setPosition(p);

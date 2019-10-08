@@ -9,27 +9,27 @@ import demo.movie.pojo.po.MovieRecord;
 import demo.movie.pojo.po.MovieRecordExample;
 
 public interface MovieRecordMapper {
-    long countByExample(MovieRecordExample example);
+	int deleteByExample(MovieRecordExample example);
 
-    int deleteByExample(MovieRecordExample example);
+	int deleteByPrimaryKey(Long id);
 
-    int deleteByPrimaryKey(Long id);
+	int insert(MovieRecord record);
 
-    int insert(MovieRecord record);
+	int insertSelective(MovieRecord record);
 
-    int insertSelective(MovieRecord record);
+	List<MovieRecord> selectByExample(MovieRecordExample example);
 
-    List<MovieRecord> selectByExample(MovieRecordExample example);
+	MovieRecord selectByPrimaryKey(Long id);
 
-    MovieRecord selectByPrimaryKey(Long id);
+	int updateByExampleSelective(@Param("record") MovieRecord record, @Param("example") MovieRecordExample example);
 
-    int updateByExampleSelective(@Param("record") MovieRecord record, @Param("example") MovieRecordExample example);
+	int updateByExample(@Param("record") MovieRecord record, @Param("example") MovieRecordExample example);
 
-    int updateByExample(@Param("record") MovieRecord record, @Param("example") MovieRecordExample example);
+	int updateByPrimaryKeySelective(MovieRecord record);
 
-    int updateByPrimaryKeySelective(MovieRecord record);
+	int updateByPrimaryKey(MovieRecord record);
 
-    int updateByPrimaryKey(MovieRecord record);
-    
+	long countByExample(MovieRecordExample example);
+
     List<MovieRecord> findByCondition(MovieRecordFindByConditionDTO dto);
 }

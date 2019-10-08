@@ -27,6 +27,7 @@ import demo.selenium.pojo.bo.ByXpathConditionBO;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.WebDriverService;
 import demo.testCase.pojo.po.TestEvent;
+import demo.testCase.pojo.type.MovieTestCaseType;
 import ioHandle.FileUtilCustom;
 
 @Service
@@ -55,12 +56,11 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 	private String mainUrl = "https://www.dytt8.net";
 	private String newMovie = mainUrl + "/html/gndy/dyzz/index.html";
 
-	@Override
-	protected TestEvent buildTesetEvent() {
+	private TestEvent buildTestEvent() {
 		TestEvent te = new TestEvent();
-		te.setCaseId(5L);
+		te.setCaseId(MovieTestCaseType.dytt.getId());
 		te.setId(snowFlake.getNextId());
-		te.setEventName("dyttTest");
+		te.setEventName(MovieTestCaseType.dytt.getEventName());
 		return te;
 	}
 	
@@ -69,7 +69,7 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 		if(existsRuningEvent()) {
 			return;
 		}
-		TestEvent te = buildTesetEvent();
+		TestEvent te = buildTestEvent();
 		startEvent(te);
 		
 		WebDriver d = webDriverService.buildFireFoxWebDriver();
@@ -140,6 +140,8 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 		String subUrl = ele.getAttribute("href");
 		MovieRecordFindByConditionDTO findMovieRecordDTO = new MovieRecordFindByConditionDTO();
 		findMovieRecordDTO.setUrl(subUrl);
+		findMovieRecordDTO.setWasClaw(true);
+		findMovieRecordDTO.setCaseId(MovieTestCaseType.dytt.getId());
 		List<MovieRecord> records = recordMapper.findByCondition(findMovieRecordDTO);
 		if (records != null && records.size() > 0) {
 			log.info(subUrl + " was clawed");
@@ -195,6 +197,9 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 			MovieRecord record = new MovieRecord();
 			record.setUrl(currentUrl);
 			record.setId(snowFlake.getNextId());
+			record.setWasClaw(true);
+			record.setMovieId(newMovieId);
+			record.setCaseId(MovieTestCaseType.dytt.getId());
 			recordMapper.insertSelective(record);
 
 		} catch (Exception e) {

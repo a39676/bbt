@@ -32,10 +32,17 @@ public class MovieClawingController {
 		return "done";
 	}
 	
-	@GetMapping(value = "/homeFei")
+	@GetMapping(value = "/homeFeiCollection")
 	@ResponseBody
-	public String homeFei() {
-		homeFei.clawing();
+	public String homeFeiCollection() {
+		homeFei.collection();
+		return "done";
+	}
+	
+	@GetMapping(value = "/homeFeiDownload")
+	@ResponseBody
+	public String homeFeiDownload() {
+		homeFei.download();
 		return "done";
 	}
 	

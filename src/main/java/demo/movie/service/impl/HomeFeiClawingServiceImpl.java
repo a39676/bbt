@@ -3,6 +3,7 @@ package demo.movie.service.impl;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -31,6 +32,7 @@ import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.WebDriverService;
 import demo.selenium.service.impl.JavaScriptServiceImpl;
 import demo.testCase.pojo.po.TestEvent;
+import demo.testCase.pojo.type.MovieTestCaseType;
 import ioHandle.FileUtilCustom;
 
 @Service
@@ -69,30 +71,34 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 		return eventMapper.fixMovieClawingTestEventStatus();
 	}
 	
-	@Override
-	protected TestEvent buildTesetEvent() {
+	private TestEvent collectionTestEvent() {
 		TestEvent te = new TestEvent();
-		te.setCaseId(6L);
+		te.setCaseId(MovieTestCaseType.homeFeiCollection.getId());
 		te.setId(snowFlake.getNextId());
-		te.setEventName("homeFei");
+		te.setEventName(MovieTestCaseType.homeFeiCollection.getEventName());
 		return te;
 	}
 	
+	private TestEvent downloadTestEvent() {
+		TestEvent te = new TestEvent();
+		te.setCaseId(MovieTestCaseType.homeFeiDownload.getId());
+		te.setId(snowFlake.getNextId());
+		te.setEventName(MovieTestCaseType.homeFeiDownload.getEventName());
+		return te;
+	}
 	
 	@Override
-	public void clawing() {
+	public void collection() {
 		if(existsRuningEvent()) {
 			return;
 		}
-		TestEvent te = buildTesetEvent();
+		TestEvent te = collectionTestEvent();
 		startEvent(te);
 		String envName = constantService.getValByName("envName");
 		int clawPageCount = 2;
 		WebDriver d = webDriverService.buildFireFoxWebDriver();
 
 		try {
-			d.get(mainUrl);
-
 			String mainWindowHandler = d.getWindowHandle();
 
 			login(d, te);
@@ -101,25 +107,58 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 				dailyCheckIn(d, mainWindowHandler, te);
 			}
 
-			List<String> postLinks = new ArrayList<String>();
+			Set<String> postLinks = new HashSet<String>();
 
 			partHandle(d, clawPageCount, postLinks, part1);
 			partHandle(d, clawPageCount, postLinks, part2);
 			partHandle(d, clawPageCount, postLinks, part3);
-			
+			List<String> linksList = new ArrayList<String>(postLinks);
 			
 			MovieRecordFindByConditionDTO dto = new MovieRecordFindByConditionDTO();
-			dto.setUrlList(postLinks);
+			dto.setUrlList(linksList);
+			dto.setCaseId(te.getCaseId());
 			List<MovieRecord> records = recordMapper.findByCondition(dto);
 
 			for (MovieRecord i : records) {
 				postLinks.remove(i.getUrl());
 			}
+			linksList = new ArrayList<String>(postLinks);
+			topicLinksSave(linksList, te);
 			
-			for (String url : postLinks) {
-				subLinkHandle(d, url);
+			endEvent(te, true);
+		} catch (Exception e) {
+			log.error("error: {}, url: {}" + e.getMessage() + d.getCurrentUrl());
+			endEvent(te, false);
+			auxTool.takeScreenshot(d, te);
+		} finally {
+			if (d != null) {
+				d.quit();
 			}
+		}
+	}
+	
+	@Override
+	public void download() {
+		if(existsRuningEvent()) {
+			return;
+		}
+		TestEvent te = downloadTestEvent();
+		startEvent(te);
+		WebDriver d = webDriverService.buildFireFoxWebDriver();
+
+		try {
+			login(d, te);
+
+			Thread.sleep(2500L);
+
+			MovieRecordFindByConditionDTO dto = new MovieRecordFindByConditionDTO();
+			dto.setCaseId(MovieTestCaseType.homeFeiCollection.getId());
+			dto.setWasClaw(false);
+			List<MovieRecord> records = recordMapper.findByCondition(dto);
 			
+			for(MovieRecord r : records) {
+				subLinkHandle(d, r);
+			}
 			
 			endEvent(te, true);
 		} catch (Exception e) {
@@ -131,9 +170,10 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 				d.quit();
 			}
 		}
+		
 	}
 	
-	private void partHandle(WebDriver d, int clawPageCount, List<String> postLinks, String url) throws InterruptedException {
+	private void partHandle(WebDriver d, int clawPageCount, Set<String> postLinks, String url) throws InterruptedException {
 		try {
 			d.get(url);
 			Thread.sleep(1200L);
@@ -152,6 +192,13 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 	}
 
 	private void login(WebDriver d, TestEvent te) {
+		
+		try {
+			d.get(mainUrl);
+		} catch (TimeoutException e) {
+			jsUtil.windowStop(d);
+		}
+		
 		ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("input", "id", "nav_pwuser");
 		By usernameInputBy = auxTool.byXpathBuilder(byXpathConditionBo);
 
@@ -255,18 +302,31 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 		}
 	}
 
-	private void subLinkHandle(WebDriver d, String url) throws InterruptedException {
-		d.get(url);
+	private void subLinkHandle(WebDriver d, MovieRecord record) throws InterruptedException {
+		
+		try {
+			d.get(record.getUrl());
+		} catch (TimeoutException e) {
+			jsUtil.windowStop(d);
+		}
 		Thread.sleep(800L);
 		jsUtil.scrollToButton(d);
 		
-		Long newMovieId = snowFlake.getNextId();
+		Long movieId = record.getMovieId();
 
+		/*
+		 * TODO 
+		 * 太多a标签, 必须增加条件
+		 * 未处理单帖多资源的情况
+		 * 包括 既有种子 又有 磁力链接, 并且内容重复...
+		 */
 		List<WebElement> aTagList = d.findElements(By.tagName("a"));
+		List<String> magnetList = new ArrayList<String>();
+		
 		WebElement targetA = null;
 		WebElement tmpA = null;
 		
-		boolean isMagnetLink = false;
+		boolean hasMagnetLink = false;
 		
 		for (int i = 0; i < aTagList.size() && targetA == null; i++) {
 			tmpA = aTagList.get(i);
@@ -275,7 +335,7 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 				targetA = tmpA;
 			} else if (tmpA.getAttribute("href") != null && tmpA.getAttribute("href").startsWith("magnet:?xt")) {
 				targetA = tmpA;
-				isMagnetLink = true; 
+				hasMagnetLink = true; 
 			}
 		}
 		
@@ -287,16 +347,14 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 		 * 因帖子回复前无直接展示下载链接
 		 * 此方法会暂时回避此类资源
 		 * */
-		MovieRecord record = new MovieRecord();
-		record.setUrl(url);
-		record.setId(snowFlake.getNextId());
 		if(targetA == null) {
-			recordMapper.insertSelective(record);
+			record.setWasClaw(true);
+			recordMapper.updateByPrimaryKeySelective(record);
 			return;
 		}
 
 		String magnetUrl = null;
-		if(isMagnetLink) {
+		if(hasMagnetLink) {
 			magnetUrl = targetA.getAttribute("href");
 		} else {
 			WebElement font = targetA.findElement(By.tagName("font"));
@@ -312,11 +370,12 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 		
 		WebElement tpcDiv = d.findElement(By.id("read_tpc"));
 		List<WebElement> imgs = tpcDiv.findElements(ByTagName.tagName("img"));
-		saveMovieImg(imgs, newMovieId);
+		saveMovieImg(imgs, movieId);
 		
-		saveMovieInfo(tpcDiv, newMovieId);
+		saveMovieInfo(tpcDiv, movieId);
 		
-		recordMapper.insertSelective(record);
+		record.setWasClaw(true);
+		recordMapper.updateByPrimaryKeySelective(record);
 	}
 	
 	private void saveMovieInfo(WebElement tpcDiv, Long newMovieId) {
@@ -370,6 +429,18 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 		return magnetUrl;
 	}
 
-	
+	private int topicLinksSave(List<String> topicLinks, TestEvent te) {
+		MovieRecord po = null;
+		int count = 0;
+		for(String u : topicLinks) {
+			po = new MovieRecord();
+			po.setCaseId(te.getCaseId());
+			po.setId(snowFlake.getNextId());
+			po.setMovieId(snowFlake.getNextId());
+			po.setUrl(u);
+			count += recordMapper.insertSelective(po);
+		}
+		return count;
+	}
 
 }

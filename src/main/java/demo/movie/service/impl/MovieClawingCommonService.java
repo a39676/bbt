@@ -33,8 +33,6 @@ public abstract class MovieClawingCommonService extends CommonService {
 	@Autowired
 	protected TestEventMapper eventMapper;
 	
-	protected abstract TestEvent buildTesetEvent();
-	
 	public String getMangetUrlFromTorrent(String path) {
 		File t = new File(path);
 		if(!t.exists()) {

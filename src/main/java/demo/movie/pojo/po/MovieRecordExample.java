@@ -165,6 +165,126 @@ public class MovieRecordExample {
             return (Criteria) this;
         }
 
+        public Criteria andCaseIdIsNull() {
+            addCriterion("case_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseIdIsNotNull() {
+            addCriterion("case_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseIdEqualTo(Long value) {
+            addCriterion("case_id =", value, "caseId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseIdNotEqualTo(Long value) {
+            addCriterion("case_id <>", value, "caseId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseIdGreaterThan(Long value) {
+            addCriterion("case_id >", value, "caseId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("case_id >=", value, "caseId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseIdLessThan(Long value) {
+            addCriterion("case_id <", value, "caseId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseIdLessThanOrEqualTo(Long value) {
+            addCriterion("case_id <=", value, "caseId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseIdIn(List<Long> values) {
+            addCriterion("case_id in", values, "caseId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseIdNotIn(List<Long> values) {
+            addCriterion("case_id not in", values, "caseId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseIdBetween(Long value1, Long value2) {
+            addCriterion("case_id between", value1, value2, "caseId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseIdNotBetween(Long value1, Long value2) {
+            addCriterion("case_id not between", value1, value2, "caseId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMovieIdIsNull() {
+            addCriterion("movie_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMovieIdIsNotNull() {
+            addCriterion("movie_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMovieIdEqualTo(Long value) {
+            addCriterion("movie_id =", value, "movieId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMovieIdNotEqualTo(Long value) {
+            addCriterion("movie_id <>", value, "movieId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMovieIdGreaterThan(Long value) {
+            addCriterion("movie_id >", value, "movieId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMovieIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("movie_id >=", value, "movieId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMovieIdLessThan(Long value) {
+            addCriterion("movie_id <", value, "movieId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMovieIdLessThanOrEqualTo(Long value) {
+            addCriterion("movie_id <=", value, "movieId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMovieIdIn(List<Long> values) {
+            addCriterion("movie_id in", values, "movieId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMovieIdNotIn(List<Long> values) {
+            addCriterion("movie_id not in", values, "movieId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMovieIdBetween(Long value1, Long value2) {
+            addCriterion("movie_id between", value1, value2, "movieId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMovieIdNotBetween(Long value1, Long value2) {
+            addCriterion("movie_id not between", value1, value2, "movieId");
+            return (Criteria) this;
+        }
+
         public Criteria andUrlIsNull() {
             addCriterion("url is null");
             return (Criteria) this;
@@ -292,6 +412,66 @@ public class MovieRecordExample {
 
         public Criteria andCreateTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
             addCriterion("create_time not between", value1, value2, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andWasClawIsNull() {
+            addCriterion("was_claw is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWasClawIsNotNull() {
+            addCriterion("was_claw is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWasClawEqualTo(Boolean value) {
+            addCriterion("was_claw =", value, "wasClaw");
+            return (Criteria) this;
+        }
+
+        public Criteria andWasClawNotEqualTo(Boolean value) {
+            addCriterion("was_claw <>", value, "wasClaw");
+            return (Criteria) this;
+        }
+
+        public Criteria andWasClawGreaterThan(Boolean value) {
+            addCriterion("was_claw >", value, "wasClaw");
+            return (Criteria) this;
+        }
+
+        public Criteria andWasClawGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("was_claw >=", value, "wasClaw");
+            return (Criteria) this;
+        }
+
+        public Criteria andWasClawLessThan(Boolean value) {
+            addCriterion("was_claw <", value, "wasClaw");
+            return (Criteria) this;
+        }
+
+        public Criteria andWasClawLessThanOrEqualTo(Boolean value) {
+            addCriterion("was_claw <=", value, "wasClaw");
+            return (Criteria) this;
+        }
+
+        public Criteria andWasClawIn(List<Boolean> values) {
+            addCriterion("was_claw in", values, "wasClaw");
+            return (Criteria) this;
+        }
+
+        public Criteria andWasClawNotIn(List<Boolean> values) {
+            addCriterion("was_claw not in", values, "wasClaw");
+            return (Criteria) this;
+        }
+
+        public Criteria andWasClawBetween(Boolean value1, Boolean value2) {
+            addCriterion("was_claw between", value1, value2, "wasClaw");
+            return (Criteria) this;
+        }
+
+        public Criteria andWasClawNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("was_claw not between", value1, value2, "wasClaw");
             return (Criteria) this;
         }
 
