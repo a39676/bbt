@@ -2,7 +2,6 @@ package demo.movie.service.impl;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -11,7 +10,7 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import demo.baseCommon.service.CommonService;
+import demo.clawing.service.impl.ClawingCommonService;
 import demo.image.mapper.ImageStoreMapper;
 import demo.image.pojo.po.ImageStore;
 import demo.image.pojo.type.ImageType;
@@ -20,11 +19,10 @@ import demo.movie.mapper.MovieMagnetUrlMapper;
 import demo.movie.pojo.constant.MovieClawingConstant;
 import demo.movie.pojo.po.MovieImage;
 import demo.movie.pojo.po.MovieMagnetUrl;
-import demo.testCase.mapper.TestEventMapper;
 import demo.testCase.pojo.po.TestEvent;
 import movie.pojo.type.MovieRegionType;
 
-public abstract class MovieClawingCommonService extends CommonService {
+public abstract class MovieClawingCommonService extends ClawingCommonService {
 
 	protected final String mainSavePath = "/home/u2/movieClawing";
 	protected final String introductionSavePath = mainSavePath + "/introduction";
@@ -33,8 +31,6 @@ public abstract class MovieClawingCommonService extends CommonService {
 	protected ImageStoreMapper imageStoreMapper;
 	@Autowired
 	protected MovieImageMapper movieImageMapper;
-	@Autowired
-	protected TestEventMapper eventMapper;
 	@Autowired
 	private MovieMagnetUrlMapper magnetUrlMapper;
 	
@@ -109,23 +105,6 @@ public abstract class MovieClawingCommonService extends CommonService {
 		} 
 		
 		return MovieRegionType.otherMovie.getCode();
-	}
-
-	protected void startEvent(TestEvent te) {
-		eventMapper.insertSelective(te);
-	}
-	
-	protected void endEvent(TestEvent te, boolean success) {
-		te.setEndTime(LocalDateTime.now());
-		te.setIsPass(success);
-		eventMapper.updateByPrimaryKeySelective(te);
-	}
-	
-	protected boolean existsRuningEvent() {
-		if(eventMapper.existsRuningEvent() == 0) {
-			return false;
-		} 
-		return true;
 	}
 
 }
