@@ -89,10 +89,11 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 	}
 	
 	@Override
-	public void collection() {
+	public String collection() {
 		if(existsRuningEvent()) {
-			return;
+			return "existsRuningEvent";
 		}
+		boolean exceptionFlag = false;
 		TestEvent te = collectionTestEvent();
 		startEvent(te);
 		String envName = constantService.getValByName("envName");
@@ -126,23 +127,26 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 			linksList = new ArrayList<String>(postLinks);
 			topicLinksSave(linksList, te);
 			
-			endEvent(te, true);
+			endEventSuccess(te);
 		} catch (Exception e) {
+			exceptionFlag = true;
 			log.error("error: {}, url: {}" + e.getMessage() + d.getCurrentUrl());
-			endEvent(te, false);
+			endEventFail(te);
 			auxTool.takeScreenshot(d, te);
 		} finally {
 			if (d != null) {
 				d.quit();
 			}
 		}
+		return "exceptionFlag: " + exceptionFlag;
 	}
 	
 	@Override
-	public void download() {
+	public String download() {
 		if(existsRuningEvent()) {
-			return;
+			return "existsRuningEvent";
 		}
+		boolean exceptionFlag = false;
 		TestEvent te = downloadTestEvent();
 		startEvent(te);
 		WebDriver d = webDriverService.buildFireFoxWebDriver();
@@ -161,16 +165,18 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 				subLinkHandle(d, r);
 			}
 			
-			endEvent(te, true);
+			endEventSuccess(te);
 		} catch (Exception e) {
+			exceptionFlag = true;
 			log.error("error:{}, url: {}" + e.getMessage() + d.getCurrentUrl());
-			endEvent(te, false);
+			endEventFail(te);
 			auxTool.takeScreenshot(d, te);
 		} finally {
 			if (d != null) {
 				d.quit();
 			}
 		}
+		return "exceptionFlag: " + exceptionFlag;
 		
 	}
 	

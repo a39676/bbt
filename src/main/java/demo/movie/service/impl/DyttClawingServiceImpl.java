@@ -62,10 +62,11 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 	}
 	
 	@Override
-	public void clawing() {
+	public String clawing() {
 		if(existsRuningEvent()) {
-			return;
+			return "existsRuningEvent";
 		}
+		boolean exceptionFlag = false;
 		TestEvent te = buildTestEvent();
 		startEvent(te);
 		
@@ -81,16 +82,18 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 				swithToNextPage(d);
 				maxClawPageCount--;
 			}
-			endEvent(te, true);
+			endEventSuccess(te);
 		} catch (Exception e) {
+			exceptionFlag = true;
 			e.printStackTrace();
-			endEvent(te, false);
+			endEventFail(te);
 			auxTool.takeScreenshot(d, te);
 		} finally {
 			if (d != null) {
 				d.quit();
 			}
 		}
+		return "exceptionFlag: " + exceptionFlag;
 	}
 	
 	private void pageHandler(WebDriver d, TestEvent te) throws Exception {

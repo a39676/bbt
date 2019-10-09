@@ -8,8 +8,8 @@ public interface HomeFeiClawingService {
 	 */
 	int fixMovieClawingTestEventStatus();
 
-	void collection();
+	String collection();
 
-	void download();
+	String download();
 
 }

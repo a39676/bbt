@@ -13,14 +13,22 @@ public abstract class ClawingCommonService extends CommonService {
 	@Autowired
 	protected TestEventMapper eventMapper;
 	
-	protected void startEvent(TestEvent te) {
-		eventMapper.insertSelective(te);
+	protected int startEvent(TestEvent te) {
+		return eventMapper.insertSelective(te);
 	}
 	
-	protected void endEvent(TestEvent te, boolean success) {
+	protected int endEventSuccess(TestEvent te) {
+		return endEvent(te, true);
+	}
+	
+	protected int endEventFail(TestEvent te) {
+		return endEvent(te, false);
+	}
+	
+	private int endEvent(TestEvent te, boolean success) {
 		te.setEndTime(LocalDateTime.now());
 		te.setIsPass(success);
-		eventMapper.updateByPrimaryKeySelective(te);
+		return eventMapper.updateByPrimaryKeySelective(te);
 	}
 	
 	protected boolean existsRuningEvent() {

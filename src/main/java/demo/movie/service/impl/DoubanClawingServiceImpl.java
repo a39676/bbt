@@ -49,10 +49,11 @@ public final class DoubanClawingServiceImpl extends MovieClawingCommonService im
 	}
 	
 
-	public void clawing() {
+	public String clawing() {
 		if(existsRuningEvent()) {
-			return;
+			return "existsRuningEvent";
 		}
+		boolean exceptionFlag = false;
 		TestEvent te = buildTestEvent();
 		startEvent(te);
 		
@@ -66,14 +67,16 @@ public final class DoubanClawingServiceImpl extends MovieClawingCommonService im
 			System.out.println(mainWindowHandler);
 			
 		} catch (Exception e) {
+			exceptionFlag = true;
 			log.error("error:{}, url: {}" + e.getMessage() + d.getCurrentUrl());
-			endEvent(te, false);
+			endEventFail(te);
 			auxTool.takeScreenshot(d, te);
 		} finally {
 			if (d != null) {
 				d.quit();
 			}
 		}
+		return "exceptionFlag: " + exceptionFlag;
 	}
 	
 

@@ -5,6 +5,6 @@ package demo.movie.service;
  */
 public interface DyttClawingService {
 
-	void clawing();
+	String clawing();
 
 }
