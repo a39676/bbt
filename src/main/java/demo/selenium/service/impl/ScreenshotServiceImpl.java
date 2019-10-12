@@ -42,7 +42,7 @@ public class ScreenshotServiceImpl extends CommonService implements ScreenshotSe
 			}
 			String targetFileName = 
 					String.format(
-							WebDriverConstant.screenSHotFilenameFormat, 
+							WebDriverConstant.screenShotFilenameFormat, 
 							dto.getFileName(), 
 							DateTimeHandle.dateToStr(LocalDateTime.now(), DateTimeConstant.datetimeCompactFormat), 
 							FileSuffixNameConstant.png);
