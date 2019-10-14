@@ -1,6 +1,6 @@
 package demo.base.user.pojo.vo;
 
-import demo.baseCommon.pojo.result.CommonResult;
+import auxiliaryCommon.pojo.result.CommonResult;
 
 public class __baseSuperAdminRegistVO extends CommonResult {
 

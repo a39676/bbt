@@ -5,13 +5,13 @@ import java.io.File;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import auxiliaryCommon.pojo.type.BaseResultType;
 import demo.base.admin.service.AdminService;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.base.user.mapper.UserIpMapper;
 import demo.base.user.pojo.dto.UserIpDeleteDTO;
-import demo.baseCommon.pojo.result.CommonResult;
-import demo.baseCommon.pojo.type.ResultType;
+import demo.baseCommon.pojo.result.CommonResultBBT;
 import ioHandle.FileUtilCustom;
 
 @Service
@@ -25,15 +25,15 @@ public class AdminServiceImpl implements AdminService {
 	private FileUtilCustom ioUtil;
 	
 	@Override
-	public CommonResult deleteUserIpRecord(UserIpDeleteDTO param) {
-		CommonResult result = new CommonResult();
+	public CommonResultBBT deleteUserIpRecord(UserIpDeleteDTO param) {
+		CommonResultBBT result = new CommonResultBBT();
 		if(param.getStartDate() == null || param.getEndDate() == null) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(BaseResultType.errorParam);
 			return result;
 		}
 		
 		int deleteCount = userIpMapper.deleteRecord(param);
-		result.fillWithResult(ResultType.success);
+		result.fillWithResult(BaseResultType.success);
 		result.setMessage(String.valueOf(deleteCount));
 		return result;
 	}

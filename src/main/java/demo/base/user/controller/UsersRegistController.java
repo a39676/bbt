@@ -17,14 +17,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import auxiliaryCommon.pojo.result.CommonResult;
+import auxiliaryCommon.pojo.type.BaseResultType;
 import demo.base.system.pojo.constant.BaseStatusCode;
 import demo.base.user.UserViewConstants;
 import demo.base.user.pojo.constant.UsersUrlConstant;
 import demo.base.user.pojo.dto.UserRegistDTO;
 import demo.base.user.service.UserRegistService;
 import demo.baseCommon.controller.CommonController;
-import demo.baseCommon.pojo.result.CommonResult;
-import demo.baseCommon.pojo.type.ResultType;
 import demo.util.BaseUtilCustom;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -71,7 +71,7 @@ public class UsersRegistController extends CommonController {
 		CommonResult result = new CommonResult();
 		JSONObject jsonOutput;
 		if(!baseUtilCustom.isLoginUser() || !jsonInput.containsKey("modifyRegistMail")) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(BaseResultType.errorParam);
 			jsonOutput = JSONObject.fromObject(result);
 			outputJson(response, jsonOutput);
 			return;
@@ -137,7 +137,7 @@ public class UsersRegistController extends CommonController {
 //		if(!baseUtilCustom.isLoginUser() 
 //				|| baseUtilCustom.getRoles().contains(RolesType.ROLE_USER_ACTIVE.getRoleName())
 //				) {
-//			result.fillWithResult(ResultType.notLoginUser);
+//			result.fillWithResult(BaseResultType.notLoginUser);
 //			outputJson(response, JSONObject.fromObject(result));
 //			return;
 //		}
@@ -146,9 +146,9 @@ public class UsersRegistController extends CommonController {
 //		
 //		result = usersService.resendRegistMail(userId);
 //		
-//		if(!result.getResult().equals(ResultType.success.getCode())) {
+//		if(!result.getResult().equals(BaseResultType.success.getCode())) {
 //			logger.debug(result.message + "userId : " + userId + " Time: " + LocalDateTime.now());
-//			result.fillWithResult(ResultType.errorParam);
+//			result.fillWithResult(BaseResultType.errorParam);
 //			outputJson(response, JSONObject.fromObject(result));
 //			return;
 //		}
@@ -172,7 +172,7 @@ public class UsersRegistController extends CommonController {
 		JSONObject jsonInput = getJson(data);
 
 		if(!jsonInput.containsKey("email")) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(BaseResultType.errorParam);
 			outputJson(response, JSONObject.fromObject(result));
 			return;
 		}
@@ -196,7 +196,7 @@ public class UsersRegistController extends CommonController {
 		JSONObject jsonInput = getJson(data);
 
 		if(!jsonInput.containsKey("email")) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(BaseResultType.errorParam);
 			outputJson(response, JSONObject.fromObject(result));
 			return;
 		}
@@ -222,7 +222,7 @@ public class UsersRegistController extends CommonController {
 		ModelAndView view = new ModelAndView("userJSP/resetPassword");
 		
 		if(StringUtils.isBlank(mailKey)) {
-			view.addObject("errorMessage", ResultType.errorParam.getName());
+			view.addObject("errorMessage", BaseResultType.errorParam.getName());
 			return view;
 		} 
 		
@@ -237,7 +237,7 @@ public class UsersRegistController extends CommonController {
 		CommonResult result = new CommonResult();
 		
 		if(!jsonInput.containsKey("newPassword") || !jsonInput.containsKey("newPasswordRepeat")) {
-			result.fillWithResult(ResultType.nullParam);
+			result.fillWithResult(BaseResultType.nullParam);
 			outputJson(response, JSONObject.fromObject(result));
 			return;
 		}
@@ -246,7 +246,7 @@ public class UsersRegistController extends CommonController {
 			result = userRegistService.resetPasswordByMailKey(jsonInput.getString("mailKey"), jsonInput.getString("newPassword"), jsonInput.getString("newPasswordRepeat"));
 		} else if (baseUtilCustom.isLoginUser()) {
 			if(!jsonInput.containsKey("oldPassword")) {
-				result.fillWithResult(ResultType.nullParam);
+				result.fillWithResult(BaseResultType.nullParam);
 				outputJson(response, JSONObject.fromObject(result));
 				return;
 			}

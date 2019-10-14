@@ -19,6 +19,8 @@ import demo.movie.mapper.MovieMagnetUrlMapper;
 import demo.movie.pojo.constant.MovieClawingConstant;
 import demo.movie.pojo.po.MovieImage;
 import demo.movie.pojo.po.MovieMagnetUrl;
+import demo.testCase.pojo.po.TestEvent;
+import demo.testCase.pojo.type.MovieTestCaseType;
 import movie.pojo.type.MovieRegionType;
 
 public abstract class MovieClawingCommonService extends ClawingCommonService {
@@ -32,6 +34,14 @@ public abstract class MovieClawingCommonService extends ClawingCommonService {
 	protected MovieImageMapper movieImageMapper;
 	@Autowired
 	private MovieMagnetUrlMapper magnetUrlMapper;
+	
+	protected TestEvent buildTestEvent(MovieTestCaseType t) {
+		TestEvent te = new TestEvent();
+		te.setCaseId(t.getId());
+		te.setId(snowFlake.getNextId());
+		te.setEventName(t.getEventName());
+		return te;
+	}
 	
 	protected String getMangetUrlFromTorrent(String path) {
 		File t = new File(path);

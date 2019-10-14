@@ -9,8 +9,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import demo.baseCommon.pojo.result.CommonResult;
-import demo.baseCommon.pojo.type.ResultType;
+import auxiliaryCommon.pojo.result.CommonResult;
+import auxiliaryCommon.pojo.type.BaseResultType;
 import demo.tool.pojo.constant.ToolPathConstant;
 import demo.tool.service.ComplexToolService;
 import net.sf.json.JSONObject;
@@ -52,11 +52,11 @@ public class ComplexToolServiceImpl implements ComplexToolService {
 		}
 		
 		if(failFile.size() > 0) {
-			result.setResult(ResultType.fail.getCode());
+			result.setResult(BaseResultType.fail.getCode());
 			messageBuffer.append("fail on :" + failFile.toString());
 			messageBuffer.append("\n");
 		} else {
-			result.setResult(ResultType.success.getCode());
+			result.setResult(BaseResultType.success.getCode());
 		}
 		messageBuffer.append("deleted :" + successFile.toString());
 		result.setMessage(messageBuffer.toString());

@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import auxiliaryCommon.pojo.result.CommonResult;
+import auxiliaryCommon.pojo.type.BaseResultType;
 import demo.baseCommon.pojo.param.PageParam;
-import demo.baseCommon.pojo.result.CommonResult;
-import demo.baseCommon.pojo.type.ResultType;
 import demo.config.costom_component.SnowFlake;
 
 public abstract class CommonService {
@@ -80,19 +80,19 @@ public abstract class CommonService {
 
 	protected CommonResult nullParam() {
 		CommonResult result = new CommonResult();
-		result.fillWithResult(ResultType.nullParam);
+		result.fillWithResult(BaseResultType.nullParam);
 		return result;
 	}
 	
 	protected CommonResult errorParam() {
 		CommonResult result = new CommonResult();
-		result.fillWithResult(ResultType.errorParam);
+		result.fillWithResult(BaseResultType.errorParam);
 		return result;
 	}
 	
 	protected CommonResult serviceError() {
 		CommonResult result = new CommonResult();
-		result.fillWithResult(ResultType.serviceError);
+		result.fillWithResult(BaseResultType.serviceError);
 		return result;
 	}
 	

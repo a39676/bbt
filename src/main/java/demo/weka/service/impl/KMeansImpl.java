@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import org.springframework.stereotype.Service;
 
-import demo.baseCommon.pojo.type.ResultType;
+import auxiliaryCommon.pojo.type.BaseResultType;
 import demo.weka.pojo.result.WekaCommonResult;
 import demo.weka.service.KMeans;
 import weka.clusterers.SimpleKMeans;
@@ -20,13 +20,13 @@ public class KMeansImpl implements KMeans {
 		WekaCommonResult result = new WekaCommonResult();
 		int maxK = 1000;
 		if (k < 0 || k > maxK) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(BaseResultType.errorParam);
 			return result;
 		}
 
 		File inFile = new File(filePath);
 		if (!inFile.exists()) {
-			result.fillWithResult(ResultType.serviceError);
+			result.fillWithResult(BaseResultType.serviceError);
 			return result;
 		}
 
@@ -37,7 +37,7 @@ public class KMeansImpl implements KMeans {
 			loader.setSource(inFile);
 		} catch (IOException e) {
 			e.printStackTrace();
-			result.fillWithResult(ResultType.serviceError);
+			result.fillWithResult(BaseResultType.serviceError);
 			return result;
 		}
 		Instances data;
@@ -45,7 +45,7 @@ public class KMeansImpl implements KMeans {
 			data = loader.getDataSet();
 		} catch (IOException e) {
 			e.printStackTrace();
-			result.fillWithResult(ResultType.serviceError);
+			result.fillWithResult(BaseResultType.serviceError);
 			return result;
 		}
 
@@ -56,7 +56,7 @@ public class KMeansImpl implements KMeans {
 			kmeans.setMaxIterations(maxIteration);
 		} catch (Exception e) {
 			e.printStackTrace();
-			result.fillWithResult(ResultType.serviceError);
+			result.fillWithResult(BaseResultType.serviceError);
 			return result;
 		}
 		kmeans.setPreserveInstancesOrder(true);
@@ -66,7 +66,7 @@ public class KMeansImpl implements KMeans {
 			kmeans.buildClusterer(data);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			result.fillWithResult(ResultType.serviceError);
+			result.fillWithResult(BaseResultType.serviceError);
 			return result;
 		}
 

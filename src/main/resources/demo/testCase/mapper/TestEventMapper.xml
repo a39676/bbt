@@ -5,10 +5,12 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="project_id" jdbcType="BIGINT" property="projectId" />
     <result column="case_id" jdbcType="BIGINT" property="caseId" />
+    <result column="process_id" jdbcType="BIGINT" property="processId" />
     <result column="event_name" jdbcType="VARCHAR" property="eventName" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
     <result column="report_path" jdbcType="VARCHAR" property="reportPath" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
     <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
     <result column="is_pass" jdbcType="BIT" property="isPass" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
@@ -72,8 +74,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, project_id, case_id, event_name, remark, report_path, create_time, end_time, 
-    is_pass, is_delete
+    id, project_id, case_id, process_id, event_name, remark, report_path, create_time, 
+    start_time, end_time, is_pass, is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.testCase.pojo.po.TestEventExample" resultMap="BaseResultMap">
     select
@@ -107,13 +109,15 @@
   </delete>
   <insert id="insert" parameterType="demo.testCase.pojo.po.TestEvent">
     insert into test_event (id, project_id, case_id, 
-      event_name, remark, report_path, 
-      create_time, end_time, is_pass, 
-      is_delete)
+      process_id, event_name, remark, 
+      report_path, create_time, start_time, 
+      end_time, is_pass, is_delete
+      )
     values (#{id,jdbcType=BIGINT}, #{projectId,jdbcType=BIGINT}, #{caseId,jdbcType=BIGINT}, 
-      #{eventName,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{reportPath,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{isPass,jdbcType=BIT}, 
-      #{isDelete,jdbcType=BIT})
+      #{processId,jdbcType=BIGINT}, #{eventName,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{reportPath,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{startTime,jdbcType=TIMESTAMP}, 
+      #{endTime,jdbcType=TIMESTAMP}, #{isPass,jdbcType=BIT}, #{isDelete,jdbcType=BIT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="demo.testCase.pojo.po.TestEvent">
     insert into test_event
@@ -127,6 +131,9 @@
       <if test="caseId != null">
         case_id,
       </if>
+      <if test="processId != null">
+        process_id,
+      </if>
       <if test="eventName != null">
         event_name,
       </if>
@@ -138,6 +145,9 @@
       </if>
       <if test="createTime != null">
         create_time,
+      </if>
+      <if test="startTime != null">
+        start_time,
       </if>
       <if test="endTime != null">
         end_time,
@@ -159,6 +169,9 @@
       <if test="caseId != null">
         #{caseId,jdbcType=BIGINT},
       </if>
+      <if test="processId != null">
+        #{processId,jdbcType=BIGINT},
+      </if>
       <if test="eventName != null">
         #{eventName,jdbcType=VARCHAR},
       </if>
@@ -170,6 +183,9 @@
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startTime != null">
+        #{startTime,jdbcType=TIMESTAMP},
       </if>
       <if test="endTime != null">
         #{endTime,jdbcType=TIMESTAMP},
@@ -200,6 +216,9 @@
       <if test="record.caseId != null">
         case_id = #{record.caseId,jdbcType=BIGINT},
       </if>
+      <if test="record.processId != null">
+        process_id = #{record.processId,jdbcType=BIGINT},
+      </if>
       <if test="record.eventName != null">
         event_name = #{record.eventName,jdbcType=VARCHAR},
       </if>
@@ -211,6 +230,9 @@
       </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.startTime != null">
+        start_time = #{record.startTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.endTime != null">
         end_time = #{record.endTime,jdbcType=TIMESTAMP},
@@ -231,10 +253,12 @@
     set id = #{record.id,jdbcType=BIGINT},
       project_id = #{record.projectId,jdbcType=BIGINT},
       case_id = #{record.caseId,jdbcType=BIGINT},
+      process_id = #{record.processId,jdbcType=BIGINT},
       event_name = #{record.eventName,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
       report_path = #{record.reportPath,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      start_time = #{record.startTime,jdbcType=TIMESTAMP},
       end_time = #{record.endTime,jdbcType=TIMESTAMP},
       is_pass = #{record.isPass,jdbcType=BIT},
       is_delete = #{record.isDelete,jdbcType=BIT}
@@ -251,6 +275,9 @@
       <if test="caseId != null">
         case_id = #{caseId,jdbcType=BIGINT},
       </if>
+      <if test="processId != null">
+        process_id = #{processId,jdbcType=BIGINT},
+      </if>
       <if test="eventName != null">
         event_name = #{eventName,jdbcType=VARCHAR},
       </if>
@@ -262,6 +289,9 @@
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startTime != null">
+        start_time = #{startTime,jdbcType=TIMESTAMP},
       </if>
       <if test="endTime != null">
         end_time = #{endTime,jdbcType=TIMESTAMP},
@@ -279,16 +309,18 @@
     update test_event
     set project_id = #{projectId,jdbcType=BIGINT},
       case_id = #{caseId,jdbcType=BIGINT},
+      process_id = #{processId,jdbcType=BIGINT},
       event_name = #{eventName,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
       report_path = #{reportPath,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
       end_time = #{endTime,jdbcType=TIMESTAMP},
       is_pass = #{isPass,jdbcType=BIT},
       is_delete = #{isDelete,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
-
+  
   <select id="existsRuningEvent" resultType="int">
     select exists(select 1 from test_event where is_delete = false and end_time is null)
   </select>
@@ -296,4 +328,14 @@
   <update id="fixMovieClawingTestEventStatus">
     update test_event set end_time = now(), is_pass = false where end_time is null and is_delete = false
   </update>
+
+  <select id="findTestEventNotRunYet" resultMap="BaseResultMap">
+    select 
+      * 
+    from 
+      test_event
+    where 
+      is_delete = false
+      and start_time is null
+  </select>
 </mapper>

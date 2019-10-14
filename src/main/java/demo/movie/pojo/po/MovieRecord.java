@@ -13,6 +13,10 @@ public class MovieRecord {
 
     private LocalDateTime createTime;
 
+    private LocalDateTime updateTime;
+
+    private Integer failCount;
+
     private Boolean wasClaw;
 
     private Boolean isDelete;
@@ -55,6 +59,22 @@ public class MovieRecord {
 
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
+    }
+
+    public LocalDateTime getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(LocalDateTime updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Integer getFailCount() {
+        return failCount;
+    }
+
+    public void setFailCount(Integer failCount) {
+        this.failCount = failCount;
     }
 
     public Boolean getWasClaw() {

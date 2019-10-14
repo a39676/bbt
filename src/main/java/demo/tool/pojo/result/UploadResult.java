@@ -3,7 +3,7 @@ package demo.tool.pojo.result;
 import java.util.Date;
 import java.util.List;
 
-import demo.baseCommon.pojo.result.CommonResult;
+import auxiliaryCommon.pojo.result.CommonResult;
 
 public class UploadResult extends CommonResult {
 

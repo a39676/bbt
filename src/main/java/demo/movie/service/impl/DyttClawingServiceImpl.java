@@ -13,6 +13,7 @@ import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.movie.mapper.MovieInfoMapper;
 import demo.movie.mapper.MovieIntroductionMapper;
 import demo.movie.mapper.MovieRecordMapper;
@@ -27,6 +28,7 @@ import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.WebDriverService;
 import demo.testCase.pojo.po.TestEvent;
 import demo.testCase.pojo.type.MovieTestCaseType;
+import demo.testCase.service.TestEventService;
 import ioHandle.FileUtilCustom;
 
 @Service
@@ -34,6 +36,9 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 
 	@Autowired
 	private FileUtilCustom iou;
+
+	@Autowired
+	private TestEventService testEventService;
 
 	@Autowired
 	private WebDriverService webDriverService;
@@ -54,21 +59,19 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 	private String newMovie = mainUrl + "/html/gndy/dyzz/index.html";
 
 	private TestEvent buildTestEvent() {
-		TestEvent te = new TestEvent();
-		te.setCaseId(MovieTestCaseType.dytt.getId());
-		te.setId(snowFlake.getNextId());
-		te.setEventName(MovieTestCaseType.dytt.getEventName());
-		return te;
+		return buildTestEvent(MovieTestCaseType.dytt);
 	}
 	
 	@Override
-	public String clawing() {
-		if(existsRuningEvent()) {
-			return "existsRuningEvent";
-		}
-		boolean exceptionFlag = false;
+	public Integer insertclawingEvent() {
 		TestEvent te = buildTestEvent();
-		startEvent(te);
+		return testEventService.insertSelective(te);
+	}
+	
+	@Override
+	public CommonResultBBT clawing(TestEvent te) {
+		CommonResultBBT r = new CommonResultBBT();
+		StringBuffer report = new StringBuffer();
 		
 		WebDriver d = webDriverService.buildFireFoxWebDriver();
 
@@ -82,18 +85,20 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 				swithToNextPage(d);
 				maxClawPageCount--;
 			}
-			endEventSuccess(te);
+			
+			r.setIsSuccess();
 		} catch (Exception e) {
-			exceptionFlag = true;
-			e.printStackTrace();
-			endEventFail(te);
+			report.append(e.getMessage() + "\n");
 			auxTool.takeScreenshot(d, te);
+			
 		} finally {
+			r.setMessage(report.toString());
 			if (d != null) {
 				d.quit();
 			}
 		}
-		return "exceptionFlag: " + exceptionFlag;
+		
+		return r;
 	}
 	
 	private void pageHandler(WebDriver d, TestEvent te) throws Exception {

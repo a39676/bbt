@@ -1,15 +1,16 @@
 package demo.movie.service;
 
+import demo.baseCommon.pojo.result.CommonResultBBT;
+import demo.testCase.pojo.po.TestEvent;
+
 public interface HomeFeiClawingService {
 
-	/**
-	 * 个别异常情况下, testEvent 数据表未记录正常结束, 会导致其他 event 无法进行, 需要手动修正状态
-	 * @return 
-	 */
-	int fixMovieClawingTestEventStatus();
+	CommonResultBBT collection(TestEvent te);
 
-	String collection();
+	CommonResultBBT download(TestEvent te);
 
-	String download();
+	Integer insertCollectionEvent();
+
+	Integer insertDownloadEvent();
 
 }

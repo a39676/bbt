@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.admin.pojo.constant.AdminUrlConstant;
 import demo.base.admin.pojo.constant.AdminViewConstants;
 import demo.base.admin.service.AdminService;
@@ -26,7 +27,6 @@ import demo.base.user.pojo.dto.UserIpDeleteDTO;
 import demo.base.user.pojo.po.Users;
 import demo.base.user.service.UsersService;
 import demo.baseCommon.controller.CommonController;
-import demo.baseCommon.pojo.result.CommonResult;
 import net.sf.json.JSONObject;
 
 /**

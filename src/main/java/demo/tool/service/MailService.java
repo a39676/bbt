@@ -9,7 +9,7 @@ import javax.mail.Message;
 import javax.mail.search.SearchTerm;
 
 import demo.base.user.pojo.bo.UserMailAndMailKeyBO;
-import demo.baseCommon.pojo.result.CommonResult;
+import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.tool.pojo.MailRecord;
 import demo.tool.pojo.type.MailType;
 
@@ -30,9 +30,9 @@ public interface MailService {
 
 	int updateWasUsed(Integer mailId);
 
-	CommonResult sendForgotPasswordMail(Long userId, String email, String hostName);
+	CommonResultBBT sendForgotPasswordMail(Long userId, String email, String hostName);
 	
-	CommonResult sendForgotUsernameMail(String userName, String email, String hostName);
+	CommonResultBBT sendForgotUsernameMail(String userName, String email, String hostName);
 
 	MailRecord findRegistActivationUnusedByUserId(Long userId);
 

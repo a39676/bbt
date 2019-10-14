@@ -415,6 +415,126 @@ public class MovieRecordExample {
             return (Criteria) this;
         }
 
+        public Criteria andUpdateTimeIsNull() {
+            addCriterion("update_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeIsNotNull() {
+            addCriterion("update_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeEqualTo(LocalDateTime value) {
+            addCriterion("update_time =", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeNotEqualTo(LocalDateTime value) {
+            addCriterion("update_time <>", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeGreaterThan(LocalDateTime value) {
+            addCriterion("update_time >", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("update_time >=", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeLessThan(LocalDateTime value) {
+            addCriterion("update_time <", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("update_time <=", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeIn(List<LocalDateTime> values) {
+            addCriterion("update_time in", values, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeNotIn(List<LocalDateTime> values) {
+            addCriterion("update_time not in", values, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("update_time between", value1, value2, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("update_time not between", value1, value2, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailCountIsNull() {
+            addCriterion("fail_count is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailCountIsNotNull() {
+            addCriterion("fail_count is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailCountEqualTo(Integer value) {
+            addCriterion("fail_count =", value, "failCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailCountNotEqualTo(Integer value) {
+            addCriterion("fail_count <>", value, "failCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailCountGreaterThan(Integer value) {
+            addCriterion("fail_count >", value, "failCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailCountGreaterThanOrEqualTo(Integer value) {
+            addCriterion("fail_count >=", value, "failCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailCountLessThan(Integer value) {
+            addCriterion("fail_count <", value, "failCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailCountLessThanOrEqualTo(Integer value) {
+            addCriterion("fail_count <=", value, "failCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailCountIn(List<Integer> values) {
+            addCriterion("fail_count in", values, "failCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailCountNotIn(List<Integer> values) {
+            addCriterion("fail_count not in", values, "failCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailCountBetween(Integer value1, Integer value2) {
+            addCriterion("fail_count between", value1, value2, "failCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andFailCountNotBetween(Integer value1, Integer value2) {
+            addCriterion("fail_count not between", value1, value2, "failCount");
+            return (Criteria) this;
+        }
+
         public Criteria andWasClawIsNull() {
             addCriterion("was_claw is null");
             return (Criteria) this;

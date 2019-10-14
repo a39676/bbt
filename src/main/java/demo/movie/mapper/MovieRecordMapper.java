@@ -1,35 +1,33 @@
 package demo.movie.mapper;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import demo.movie.pojo.dto.MovieRecordFindByConditionDTO;
 import demo.movie.pojo.po.MovieRecord;
 import demo.movie.pojo.po.MovieRecordExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface MovieRecordMapper {
-	int deleteByExample(MovieRecordExample example);
+    long countByExample(MovieRecordExample example);
 
-	int deleteByPrimaryKey(Long id);
+    int deleteByExample(MovieRecordExample example);
 
-	int insert(MovieRecord record);
+    int deleteByPrimaryKey(Long id);
 
-	int insertSelective(MovieRecord record);
+    int insert(MovieRecord record);
 
-	List<MovieRecord> selectByExample(MovieRecordExample example);
+    int insertSelective(MovieRecord record);
 
-	MovieRecord selectByPrimaryKey(Long id);
+    List<MovieRecord> selectByExample(MovieRecordExample example);
 
-	int updateByExampleSelective(@Param("record") MovieRecord record, @Param("example") MovieRecordExample example);
+    MovieRecord selectByPrimaryKey(Long id);
 
-	int updateByExample(@Param("record") MovieRecord record, @Param("example") MovieRecordExample example);
+    int updateByExampleSelective(@Param("record") MovieRecord record, @Param("example") MovieRecordExample example);
 
-	int updateByPrimaryKeySelective(MovieRecord record);
+    int updateByExample(@Param("record") MovieRecord record, @Param("example") MovieRecordExample example);
 
-	int updateByPrimaryKey(MovieRecord record);
+    int updateByPrimaryKeySelective(MovieRecord record);
 
-	long countByExample(MovieRecordExample example);
+    int updateByPrimaryKey(MovieRecord record);
 
-    List<MovieRecord> findByCondition(MovieRecordFindByConditionDTO dto);
+	List<MovieRecord> findByCondition(MovieRecordFindByConditionDTO dto);
 }

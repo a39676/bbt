@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.system.pojo.constant.BaseUrl;
 import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.user.pojo.constant.LoginUrlConstant;
 import demo.baseCommon.controller.CommonController;
-import demo.baseCommon.pojo.result.CommonResult;
 import net.sf.json.JSONObject;
 
 

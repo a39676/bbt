@@ -7,6 +7,8 @@
     <result column="movie_id" jdbcType="BIGINT" property="movieId" />
     <result column="url" jdbcType="VARCHAR" property="url" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="fail_count" jdbcType="INTEGER" property="failCount" />
     <result column="was_claw" jdbcType="BIT" property="wasClaw" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
   </resultMap>
@@ -69,7 +71,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, case_id, movie_id, url, create_time, was_claw, is_delete
+    id, case_id, movie_id, url, create_time, update_time, fail_count, was_claw, is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.movie.pojo.po.MovieRecordExample" resultMap="BaseResultMap">
     select
@@ -103,11 +105,13 @@
   </delete>
   <insert id="insert" parameterType="demo.movie.pojo.po.MovieRecord">
     insert into movie_record (id, case_id, movie_id, 
-      url, create_time, was_claw, 
-      is_delete)
+      url, create_time, update_time, 
+      fail_count, was_claw, is_delete
+      )
     values (#{id,jdbcType=BIGINT}, #{caseId,jdbcType=BIGINT}, #{movieId,jdbcType=BIGINT}, 
-      #{url,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{wasClaw,jdbcType=BIT}, 
-      #{isDelete,jdbcType=BIT})
+      #{url,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{failCount,jdbcType=INTEGER}, #{wasClaw,jdbcType=BIT}, #{isDelete,jdbcType=BIT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="demo.movie.pojo.po.MovieRecord">
     insert into movie_record
@@ -126,6 +130,12 @@
       </if>
       <if test="createTime != null">
         create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="failCount != null">
+        fail_count,
       </if>
       <if test="wasClaw != null">
         was_claw,
@@ -149,6 +159,12 @@
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="failCount != null">
+        #{failCount,jdbcType=INTEGER},
       </if>
       <if test="wasClaw != null">
         #{wasClaw,jdbcType=BIT},
@@ -182,6 +198,12 @@
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.failCount != null">
+        fail_count = #{record.failCount,jdbcType=INTEGER},
+      </if>
       <if test="record.wasClaw != null">
         was_claw = #{record.wasClaw,jdbcType=BIT},
       </if>
@@ -200,6 +222,8 @@
       movie_id = #{record.movieId,jdbcType=BIGINT},
       url = #{record.url,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      fail_count = #{record.failCount,jdbcType=INTEGER},
       was_claw = #{record.wasClaw,jdbcType=BIT},
       is_delete = #{record.isDelete,jdbcType=BIT}
     <if test="_parameter != null">
@@ -221,6 +245,12 @@
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="failCount != null">
+        fail_count = #{failCount,jdbcType=INTEGER},
+      </if>
       <if test="wasClaw != null">
         was_claw = #{wasClaw,jdbcType=BIT},
       </if>
@@ -236,6 +266,8 @@
       movie_id = #{movieId,jdbcType=BIGINT},
       url = #{url,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      fail_count = #{failCount,jdbcType=INTEGER},
       was_claw = #{wasClaw,jdbcType=BIT},
       is_delete = #{isDelete,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
@@ -273,4 +305,5 @@
       </if>
     </where>
   </select>
+  
 </mapper>

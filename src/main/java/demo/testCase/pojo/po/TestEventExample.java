@@ -285,6 +285,66 @@ public class TestEventExample {
             return (Criteria) this;
         }
 
+        public Criteria andProcessIdIsNull() {
+            addCriterion("process_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProcessIdIsNotNull() {
+            addCriterion("process_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProcessIdEqualTo(Long value) {
+            addCriterion("process_id =", value, "processId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProcessIdNotEqualTo(Long value) {
+            addCriterion("process_id <>", value, "processId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProcessIdGreaterThan(Long value) {
+            addCriterion("process_id >", value, "processId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProcessIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("process_id >=", value, "processId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProcessIdLessThan(Long value) {
+            addCriterion("process_id <", value, "processId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProcessIdLessThanOrEqualTo(Long value) {
+            addCriterion("process_id <=", value, "processId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProcessIdIn(List<Long> values) {
+            addCriterion("process_id in", values, "processId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProcessIdNotIn(List<Long> values) {
+            addCriterion("process_id not in", values, "processId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProcessIdBetween(Long value1, Long value2) {
+            addCriterion("process_id between", value1, value2, "processId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProcessIdNotBetween(Long value1, Long value2) {
+            addCriterion("process_id not between", value1, value2, "processId");
+            return (Criteria) this;
+        }
+
         public Criteria andEventNameIsNull() {
             addCriterion("event_name is null");
             return (Criteria) this;
@@ -552,6 +612,66 @@ public class TestEventExample {
 
         public Criteria andCreateTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
             addCriterion("create_time not between", value1, value2, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andStartTimeIsNull() {
+            addCriterion("start_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStartTimeIsNotNull() {
+            addCriterion("start_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStartTimeEqualTo(LocalDateTime value) {
+            addCriterion("start_time =", value, "startTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andStartTimeNotEqualTo(LocalDateTime value) {
+            addCriterion("start_time <>", value, "startTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andStartTimeGreaterThan(LocalDateTime value) {
+            addCriterion("start_time >", value, "startTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andStartTimeGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("start_time >=", value, "startTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andStartTimeLessThan(LocalDateTime value) {
+            addCriterion("start_time <", value, "startTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andStartTimeLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("start_time <=", value, "startTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andStartTimeIn(List<LocalDateTime> values) {
+            addCriterion("start_time in", values, "startTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andStartTimeNotIn(List<LocalDateTime> values) {
+            addCriterion("start_time not in", values, "startTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andStartTimeBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("start_time between", value1, value2, "startTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andStartTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("start_time not between", value1, value2, "startTime");
             return (Criteria) this;
         }
 

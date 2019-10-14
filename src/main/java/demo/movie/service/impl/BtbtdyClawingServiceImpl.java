@@ -3,7 +3,6 @@ package demo.movie.service.impl;
 import org.springframework.stereotype.Service;
 
 import demo.movie.service.BtbtdyClawingService;
-import demo.testCase.pojo.po.TestEvent;
 
 @Service
 public final class BtbtdyClawingServiceImpl extends MovieClawingCommonService implements BtbtdyClawingService {
@@ -33,18 +32,5 @@ public final class BtbtdyClawingServiceImpl extends MovieClawingCommonService im
 //	
 //	private String mainUrl = "http://www.btbtdy.com";
 //
-	public TestEvent buildTestEvent() {
-		/*
-		 * TODO
-		 */
-		TestEvent te = new TestEvent();
-		te.setCaseId(6L);
-		te.setId(snowFlake.getNextId());
-		te.setEventName("homeFei");
-		return te;
-	}
-	
-
-	
 
 }

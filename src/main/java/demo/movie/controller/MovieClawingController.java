@@ -18,32 +18,23 @@ public class MovieClawingController {
 	@Autowired
 	private HomeFeiClawingService homeFei;
 	
-	@GetMapping(value = "/fixMovieClawingTestEventStatus")
-	@ResponseBody
-	public String fixMovieClawingTestEventStatus() {
-		int c = homeFei.fixMovieClawingTestEventStatus();
-		return String.valueOf(c);
-	}
-	
-	@GetMapping(value = "/dytt")
-	@ResponseBody
-	public String dytt() {
-		dytt.clawing();
-		return "done";
-	}
-	
-	@GetMapping(value = "/homeFeiCollection")
-	@ResponseBody
-	public String homeFeiCollection() {
-		homeFei.collection();
-		return "done";
-	}
-	
-	@GetMapping(value = "/homeFeiDownload")
-	@ResponseBody
-	public String homeFeiDownload() {
-		homeFei.download();
-		return "done";
-	}
+//	@GetMapping(value = "/dytt")
+//	@ResponseBody
+//	public String dytt() {
+//		dytt.clawing();
+//		return "done";
+//	}
+//	
+//	@GetMapping(value = "/homeFeiCollection")
+//	@ResponseBody
+//	public String homeFeiCollection() {
+//		return homeFei.collection();
+//	}
+//	
+//	@GetMapping(value = "/homeFeiDownload")
+//	@ResponseBody
+//	public String homeFeiDownload() {
+//		return homeFei.download();
+//	}
 	
 }

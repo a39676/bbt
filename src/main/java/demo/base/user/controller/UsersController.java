@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.base.user.pojo.constant.LoginUrlConstant;
@@ -20,7 +21,6 @@ import demo.base.user.pojo.type.RolesType;
 import demo.base.user.pojo.vo.UsersDetailVO;
 import demo.base.user.service.UsersService;
 import demo.baseCommon.controller.CommonController;
-import demo.baseCommon.pojo.result.CommonResult;
 import demo.tool.pojo.MailRecord;
 import demo.tool.service.MailService;
 import demo.util.BaseUtilCustom;

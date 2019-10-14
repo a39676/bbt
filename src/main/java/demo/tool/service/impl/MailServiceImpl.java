@@ -26,6 +26,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
+import auxiliaryCommon.pojo.result.CommonResult;
+import auxiliaryCommon.pojo.type.BaseResultType;
 import dateTimeHandle.DateUtilCustom;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
@@ -33,7 +35,7 @@ import demo.base.user.pojo.bo.UserMailAndMailKeyBO;
 import demo.base.user.pojo.constant.UsersUrlConstant;
 import demo.base.user.service.UsersService;
 import demo.baseCommon.pojo.constant.ResourceConstant;
-import demo.baseCommon.pojo.result.CommonResult;
+import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.baseCommon.pojo.type.ResultType;
 import demo.baseCommon.service.CommonService;
 import demo.tool.mapper.MailRecordMapper;
@@ -78,7 +80,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 	public CommonResult sendSimpleMail(Long userId, String sendTo, String title, String content, String mailKey, MailType mailType) {
 		CommonResult result = new CommonResult();
 		if(userId == null || mailType == null || mailType.getCode() == null) {
-			result.failWithMessage(ResultType.nullParam.getName());
+			result.failWithMessage(BaseResultType.nullParam.getName());
 			return result;
 		}
 		if(!isMailReady()) {
@@ -303,10 +305,10 @@ public class MailServiceImpl extends CommonService implements MailService {
 	}
 	
 	@Override
-	public CommonResult sendForgotPasswordMail(Long userId, String email, String hostName) {
-		CommonResult result = new CommonResult();
+	public CommonResultBBT sendForgotPasswordMail(Long userId, String email, String hostName) {
+		CommonResultBBT result = new CommonResultBBT();
 		if(userId == null || StringUtils.isBlank(email)) {
-			result.fillWithResult(ResultType.nullParam);
+			result.fillWithResult(BaseResultType.nullParam);
 			return result;
 		}
 		if(!isMailReady()) {
@@ -350,10 +352,10 @@ public class MailServiceImpl extends CommonService implements MailService {
 	}
 	
 	@Override
-	public CommonResult sendForgotUsernameMail(String userName, String email, String hostName) {
-		CommonResult result = new CommonResult();
+	public CommonResultBBT sendForgotUsernameMail(String userName, String email, String hostName) {
+		CommonResultBBT result = new CommonResultBBT();
 		if(StringUtils.isBlank(userName) || StringUtils.isBlank(email)) {
-			result.fillWithResult(ResultType.nullParam);
+			result.fillWithResult(BaseResultType.nullParam);
 			return result;
 		}
 		if(!isMailReady()) {
@@ -363,7 +365,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 		
 		Long userId = userService.getUserIdByUserName(userName);
 		if(userId == null) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(BaseResultType.errorParam);
 			return result;
 		}
 		

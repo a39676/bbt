@@ -9,6 +9,8 @@ public class TestEvent {
 
     private Long caseId;
 
+    private Long processId;
+
     private String eventName;
 
     private String remark;
@@ -16,6 +18,8 @@ public class TestEvent {
     private String reportPath;
 
     private LocalDateTime createTime;
+
+    private LocalDateTime startTime;
 
     private LocalDateTime endTime;
 
@@ -45,6 +49,14 @@ public class TestEvent {
 
     public void setCaseId(Long caseId) {
         this.caseId = caseId;
+    }
+
+    public Long getProcessId() {
+        return processId;
+    }
+
+    public void setProcessId(Long processId) {
+        this.processId = processId;
     }
 
     public String getEventName() {
@@ -77,6 +89,14 @@ public class TestEvent {
 
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 
     public LocalDateTime getEndTime() {

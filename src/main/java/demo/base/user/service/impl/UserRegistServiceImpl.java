@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import auxiliaryCommon.pojo.result.CommonResult;
+import auxiliaryCommon.pojo.type.BaseResultType;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.base.user.mapper.UserRegistMapper;
@@ -34,7 +36,7 @@ import demo.base.user.pojo.vo.__baseSuperAdminRegistVO;
 import demo.base.user.service.RoleService;
 import demo.base.user.service.UserAuthService;
 import demo.base.user.service.UserRegistService;
-import demo.baseCommon.pojo.result.CommonResult;
+import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.baseCommon.pojo.type.GenderType;
 import demo.baseCommon.pojo.type.ResultType;
 import demo.baseCommon.service.CommonService;
@@ -73,8 +75,8 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	
 	@Override
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
-	public CommonResult newUserRegist(UserRegistDTO param, String ip) {
-		CommonResult result = new CommonResult();
+	public CommonResultBBT newUserRegist(UserRegistDTO param, String ip) {
+		CommonResultBBT result = new CommonResultBBT();
 		UsersDetail userDetail = new UsersDetail();
 		JSONObject outputJson = new JSONObject();
 		boolean exceptionFlag = false;
@@ -191,7 +193,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		
 		String mailKey = mailService.insertNewRegistMailKey(newUserId);
 		if(StringUtils.isBlank(mailKey)) {
-			result.fillWithResult(ResultType.serviceError);
+			result.fillWithResult(BaseResultType.serviceError);
 			return result;
 		}
 		
@@ -204,7 +206,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		 * 暂时停止主动发送激活邮件,改为用户发送激活邮件 2018-06-28
 		 */
 //		CommonResult serviceResult = sendRegistMail(user.getUserId(), userDetail.getEmail(), userDetail.getNickName());
-//		if(!serviceResult.getResult().equals(ResultType.success.getCode())) {
+//		if(!serviceResult.getResult().equals(BaseResultType.success.getCode())) {
 //			logger.debug(LocalDateTime.now() + " : " + serviceResult.message + " : " + user.getUserId());
 //		}
 		return result;
@@ -378,28 +380,28 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	}
 
 	@Override
-	public CommonResult modifyRegistEmail(Long userId, String email) {
+	public CommonResultBBT modifyRegistEmail(Long userId, String email) {
 		/*
 		 * 暂时不再主动发送激活邮件,改由用户发回激活邮件  2018-06-28
 		 */
 //		CommonResult result = new CommonResult();
 //		if(userId == null || !validEmail(email)) {
-//			result.fillWithResult(ResultType.errorParam);
+//			result.fillWithResult(BaseResultType.errorParam);
 //			return result;
 //		}
 //		
 //		int updateCount = usersDetailMapper.modifyRegistEmail(email, userId);
 //		if(updateCount < 1) {
-//			result.fillWithResult(ResultType.mailExists);
+//			result.fillWithResult(BaseResultType.mailExists);
 //			return result;
 //		}
 //		
 //		result = resendRegistMail(userId);
 //		return result;
 		
-		CommonResult result = new CommonResult();
+		CommonResultBBT result = new CommonResultBBT();
 		if(userId == null || !validEmail(email)) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(BaseResultType.errorParam);
 			return result;
 		}
 		
@@ -407,7 +409,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		p.setEmail(email);
 		Roles r = roleService.getRoleByNameFromRedis(RolesType.ROLE_USER_ACTIVE.getName());
 		if(r == null) {
-			result.fillWithResult(ResultType.serviceError);
+			result.fillWithResult(BaseResultType.serviceError);
 			return result;
 		}
 		p.setRoleId(r.getRoleId());
@@ -418,7 +420,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		
 		int updateCount = usersDetailMapper.modifyRegistEmail(email, userId);
 		if(updateCount < 1) {
-			result.fillWithResult(ResultType.serviceError);
+			result.fillWithResult(BaseResultType.serviceError);
 			return result;
 		}
 		
@@ -426,8 +428,8 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	}
 	
 	@Override
-	public CommonResult registActivation(String mailKey, String activeEMail) {
-		CommonResult result = new CommonResult();
+	public CommonResultBBT registActivation(String mailKey, String activeEMail) {
+		CommonResultBBT result = new CommonResultBBT();
 		if(StringUtils.isBlank(mailKey)) {
 			result.fillWithResult(ResultType.linkExpired);
 			return result;
@@ -548,10 +550,10 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
  */
 	
 	@Override
-	public CommonResult sendForgotPasswordMail(String email, String hostName) {
-		CommonResult result = new CommonResult();
+	public CommonResultBBT sendForgotPasswordMail(String email, String hostName) {
+		CommonResultBBT result = new CommonResultBBT();
 		if(StringUtils.isBlank(email)) {
-			result.fillWithResult(ResultType.serviceError);
+			result.fillWithResult(BaseResultType.serviceError);
 			return result;
 		}
 		
@@ -563,7 +565,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		findActiveEmailParam.setEmail(email);
 		Roles r = roleService.getRoleByNameFromRedis(RolesType.ROLE_USER_ACTIVE.getName());
 		if(r == null) {
-			result.fillWithResult(ResultType.serviceError);
+			result.fillWithResult(BaseResultType.serviceError);
 			return result;
 		}
 		findActiveEmailParam.setRoleId(r.getRoleId());
@@ -576,7 +578,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		result = mailService.sendForgotPasswordMail(userId, email, hostName);
 		
 		if(!result.isSuccess()) {
-			result.fillWithResult(ResultType.serviceError);
+			result.fillWithResult(BaseResultType.serviceError);
 			return result;
 		}
 		
@@ -584,10 +586,10 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	}
 	
 	@Override
-	public CommonResult sendForgotUsernameMail(String email, String hostName) {
-		CommonResult result = new CommonResult();
+	public CommonResultBBT sendForgotUsernameMail(String email, String hostName) {
+		CommonResultBBT result = new CommonResultBBT();
 		if(StringUtils.isBlank(email)) {
-			result.fillWithResult(ResultType.serviceError);
+			result.fillWithResult(BaseResultType.serviceError);
 			return result;
 		}
 
@@ -600,7 +602,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		findActiveEmailParam.setEmail(email.replaceAll("\\s", ""));
 		Roles r = roleService.getRoleByNameFromRedis(RolesType.ROLE_USER_ACTIVE.getName());
 		if(r == null) {
-			result.fillWithResult(ResultType.serviceError);
+			result.fillWithResult(BaseResultType.serviceError);
 			return result;
 		}
 		findActiveEmailParam.setRoleId(r.getRoleId());
@@ -613,15 +615,15 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		result = mailService.sendForgotUsernameMail(userName, email, hostName);
 		
 		if(!result.isSuccess()) {
-			result.fillWithResult(ResultType.serviceError);
+			result.fillWithResult(BaseResultType.serviceError);
 			return result;
 		}
 		
 		return result;
 	}
 	
-	private CommonResult resetPassword(Long userId, String newPassword, String newPasswordRepeat) {
-		CommonResult result = new CommonResult();
+	private CommonResultBBT resetPassword(Long userId, String newPassword, String newPasswordRepeat) {
+		CommonResultBBT result = new CommonResultBBT();
 		if (!validPassword(newPassword)) {
 			result.fillWithResult(ResultType.invalidPassword);
 			return result;
@@ -643,14 +645,14 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 			result.fillWithResult(ResultType.resetPassword);
 			return result;
 		} else {
-			result.fillWithResult(ResultType.serviceError);
+			result.fillWithResult(BaseResultType.serviceError);
 			return result;
 		}
 	}
 	
 	@Override
-	public CommonResult resetPasswordByMailKey(String mailKey, String newPassword, String newPasswordRepeat) {
-		CommonResult result  = new CommonResult();
+	public CommonResultBBT resetPasswordByMailKey(String mailKey, String newPassword, String newPasswordRepeat) {
+		CommonResultBBT result  = new CommonResultBBT();
 		if(StringUtils.isBlank(mailKey)) {
 			result.fillWithResult(ResultType.linkExpired);
 			return result;
@@ -682,8 +684,8 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	}
 
 	@Override
-	public CommonResult resetPasswordByLoginUser(Long userId, String oldPassword, String newPassword, String newPasswordRepeat) {
-		CommonResult result = new CommonResult();
+	public CommonResultBBT resetPasswordByLoginUser(Long userId, String oldPassword, String newPassword, String newPasswordRepeat) {
+		CommonResultBBT result = new CommonResultBBT();
 		String encodePassword = passwordEncoder.encode(oldPassword);
 		if(usersMapper.matchUserPassword(userId, encodePassword) < 1) {
 			result.fillWithResult(ResultType.wrongOldPassword);

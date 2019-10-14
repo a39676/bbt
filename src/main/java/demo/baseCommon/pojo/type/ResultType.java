@@ -3,7 +3,6 @@ package demo.baseCommon.pojo.type;
 public enum ResultType {
 	
 	// controller层可以返回给外部的结果.
-	success	("success", "0"),
 	resetPassword("已成功重置密码", "0"),
 	createArticleLongSuccess("已成功发送,可能稍后就会出现...", "0"),
 	evaluationVoteSuccess("已评~", "0"),
@@ -12,10 +11,6 @@ public enum ResultType {
 	articleCommentDeleteSuccess("评论已删除", "0"),
 	articleCommentPassSuccess("评论已通过", "0"),
 	
-	fail ("fail", "-1"),
-	nullParam ("参数为空", "-2"),
-	errorParam ("参数异常", "-3"),
-	serviceError("内部异常", "-4"),
 	notLoginUser("请登录后操作~", "-5"),
 	loginFail("账户或密码错,请重新登录", "-6"),
 //	logicError("逻辑错误限制", "-7"),

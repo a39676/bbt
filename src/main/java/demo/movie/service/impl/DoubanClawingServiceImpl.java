@@ -4,10 +4,12 @@ import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.movie.service.DoubanClawingService;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.WebDriverService;
 import demo.testCase.pojo.po.TestEvent;
+import demo.testCase.pojo.type.MovieTestCaseType;
 
 @Service
 public final class DoubanClawingServiceImpl extends MovieClawingCommonService implements DoubanClawingService {
@@ -36,26 +38,16 @@ public final class DoubanClawingServiceImpl extends MovieClawingCommonService im
 //	private MovieIntroductionMapper introduectionMapper;
 //	
 	private String mainUrl = "https://www.douban.com/";
-//
-	private TestEvent buildTestEvent() {
-		/*
-		 * TODO
-		 */
-		TestEvent te = new TestEvent();
-		te.setCaseId(6L);
-		te.setId(snowFlake.getNextId());
-		te.setEventName("douban");
-		return te;
-	}
-	
 
-	public String clawing() {
-		if(existsRuningEvent()) {
-			return "existsRuningEvent";
-		}
-		boolean exceptionFlag = false;
+	private TestEvent buildTestEvent() {
+		return buildTestEvent(MovieTestCaseType.doubanMovieInfoClaw);
+	}
+
+	public CommonResultBBT clawing() {
+		CommonResultBBT r = new CommonResultBBT();
+		StringBuffer report = new StringBuffer();
+		
 		TestEvent te = buildTestEvent();
-		startEvent(te);
 		
 		WebDriver d = webDriverService.buildFireFoxWebDriver();
 		
@@ -67,16 +59,17 @@ public final class DoubanClawingServiceImpl extends MovieClawingCommonService im
 			System.out.println(mainWindowHandler);
 			
 		} catch (Exception e) {
-			exceptionFlag = true;
 			log.error("error:{}, url: {}" + e.getMessage() + d.getCurrentUrl());
-			endEventFail(te);
 			auxTool.takeScreenshot(d, te);
+			
 		} finally {
+			r.setMessage(report.toString());
 			if (d != null) {
 				d.quit();
 			}
 		}
-		return "exceptionFlag: " + exceptionFlag;
+		
+		return r;
 	}
 	
 

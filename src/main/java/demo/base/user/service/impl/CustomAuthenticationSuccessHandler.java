@@ -18,9 +18,9 @@ import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.pojo.po.UsersDetail;
-import demo.baseCommon.pojo.result.CommonResult;
 import demo.util.BaseUtilCustom;
 import net.sf.json.JSONObject;
 

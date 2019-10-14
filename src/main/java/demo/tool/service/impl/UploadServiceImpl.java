@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import demo.baseCommon.pojo.type.ResultType;
+import auxiliaryCommon.pojo.type.BaseResultType;
 import demo.tool.pojo.constant.ToolPathConstant;
 import demo.tool.pojo.result.UploadResult;
 import demo.tool.service.UploadService;
@@ -85,7 +85,7 @@ public class UploadServiceImpl implements UploadService {
 		Map<String, MultipartFile> fileMap = getFiles(request);
 		String savePath = request.getParameter("savePath");
 		if(StringUtils.isBlank(savePath) || fileMap.size() < 1) {
-			result.fillWithResult(ResultType.errorParam);
+			result.fillWithResult(BaseResultType.errorParam);
 			return result;
 		}
 		
