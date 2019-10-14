@@ -35,6 +35,7 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		return eventMapper.insertSelective(po);
 	}
 	
+	@Override
 	public void findTestEventAndRun() {
 		List<TestEvent> events = findTestEventNotRunYet();
 		if(events == null || events.size() < 1) {
@@ -57,9 +58,7 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		if(caseId == null) {
 			return null;
 		} else if (MovieTestCaseType.dytt.getId().equals(caseId)) {
-//			TODO
-			dyttService.toString();
-//			return dyttService.clawing(te);
+			return dyttService.clawing(te);
 		} else if (MovieTestCaseType.homeFeiCollection.getId().equals(caseId)) {
 			return homeFeiService.collection(te);
 		} else if (MovieTestCaseType.homeFeiDownload.getId().equals(caseId)) {
