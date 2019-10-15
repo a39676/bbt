@@ -73,6 +73,7 @@ public class MovieInteractionServiceImpl extends CommonService implements MovieI
 		}
 		
 		MovieInfo movieInfo = infoMapper.selectByPrimaryKey(dto.getMovieId());
+		r.setMovieId(dto.getMovieId());
 		r.setCnTitle(movieInfo.getCnTitle());
 		r.setOriginalTitle(movieInfo.getOriginalTitle());
 		
