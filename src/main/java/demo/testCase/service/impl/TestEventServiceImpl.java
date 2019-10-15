@@ -73,12 +73,14 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		if(caseId == null) {
 			return null;
 		}  
-		startEvent(te);
 		if (MovieTestCaseType.dytt.getId().equals(caseId)) {
+			startEvent(te);
 			return dyttService.clawing(te);
 		} else if (MovieTestCaseType.homeFeiCollection.getId().equals(caseId)) {
+			startEvent(te);
 			return homeFeiService.collection(te);
 		} else if (MovieTestCaseType.homeFeiDownload.getId().equals(caseId)) {
+			startEvent(te);
 			return homeFeiService.download(te);
 		}
 		return null;
