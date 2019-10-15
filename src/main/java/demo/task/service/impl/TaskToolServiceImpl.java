@@ -23,20 +23,8 @@ public class TaskToolServiceImpl implements TaskToolService {
 	@Autowired
 	private MailRecordMapper mailRecordMapper;
 	
-//	@Scheduled(cron="0 */60 * * * ?")   //每30分钟执行一次  
-//	public void sendTomcatOut() {
-//		mailService.sendTomcatOut();
-//	}
-	
-//	@Scheduled(cron="0 */60 * * * ?")
-//	public void sendTomcatLogFolder() {
-//		mailService.sendTomcatLogFolder();
-//	}
-	
-//	@Scheduled(cron="0 */32 * * * ?")
-//	public void imageShowReload() {
-//		imageService.imageShowReload();
-//	}
+//	@Scheduled(cron="0 */30 * * * ?")   //每30分钟执行一次
+//	@Scheduled(cron="40 49 23 * * *") // 每天23:49:40执行
 	
 	/** 清理无效的错误登录记录. */
 	@Scheduled(cron="0 */63 * * * ?")
