@@ -11,6 +11,7 @@ import demo.movie.service.DyttClawingService;
 import demo.movie.service.HomeFeiClawingService;
 import demo.testCase.mapper.TestEventMapper;
 import demo.testCase.pojo.bo.TestEventBO;
+import demo.testCase.pojo.constant.TestEventOptionConstant;
 import demo.testCase.pojo.po.TestCase;
 import demo.testCase.pojo.po.TestEvent;
 import demo.testCase.pojo.type.MovieTestCaseType;
@@ -42,10 +43,24 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 			return;
 		}
 		
+		if(TestEventOptionConstant.enableMultipleTestEvent) {
+			int runingEventCount = eventMapper.countRuningEvent();
+			if(runingEventCount >= TestEventOptionConstant.multipleRunTestEventCount) {
+				return;
+			}
+		} else {
+			if(eventMapper.existsRuningEvent() > 0) {
+				return;
+			}
+		}
 		runEventQueue(events);
 	}
 	
 	private void runEventQueue(List<TestEvent> events) {
+		/*
+		 * 2019/10/15
+		 * 未处理 如果允许多个 testEvent 同时运行的情况
+		 */
 		CommonResultBBT r = null;
 		for(TestEvent te : events) {
 			r = runSubEvent(te);

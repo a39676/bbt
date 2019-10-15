@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import demo.baseCommon.service.CommonService;
 import demo.testCase.mapper.TestEventMapper;
+import demo.testCase.pojo.constant.TestEventOptionConstant;
 import demo.testCase.pojo.po.TestEvent;
 import ioHandle.FileUtilCustom;
 
@@ -20,12 +21,9 @@ public abstract class TestEventCommonService extends CommonService {
 	@Autowired
 	protected FileUtilCustom fileUtil;
 	
-	protected boolean enableMultipleTestEvent = false;
-	protected int multipleRunTestEventCount = 1;
-	
 	protected String findTestEventReportFolder() {
-		String windowFolder = "d:\\auxiliary\\testEventReport";
-		String linuxFolder = "/home/u2/testEventReport";
+		String windowFolder = TestEventOptionConstant.windowFolder;
+		String linuxFolder = TestEventOptionConstant.linuxFolder;
 		File f = null;
 		try {
 			if(isWindows()) {

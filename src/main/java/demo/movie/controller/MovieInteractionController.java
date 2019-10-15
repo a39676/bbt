@@ -7,9 +7,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import demo.movie.pojo.result.FindMovieDetailResult;
 import demo.movie.pojo.result.FindMovieSummaryListResult;
 import demo.movie.service.MovieInteractionService;
 import movie.pojo.constant.MovieInteractionUrl;
+import movie.pojo.dto.FindMovieDetailDTO;
 import movie.pojo.dto.FindMovieSummaryListDTO;
 
 @Controller
@@ -23,6 +25,12 @@ public class MovieInteractionController {
 	@ResponseBody
 	public FindMovieSummaryListResult findMovieSummaryList(@RequestBody FindMovieSummaryListDTO dto) {
 		return service.findMovieSummaryList(dto);
+	}
+	
+	@PostMapping(value = MovieInteractionUrl.movieDetail)
+	@ResponseBody
+	public FindMovieDetailResult findMovieDetail(@RequestBody FindMovieDetailDTO dto) {
+		return service.findMovieDetail(dto);
 	}
 	
 }
