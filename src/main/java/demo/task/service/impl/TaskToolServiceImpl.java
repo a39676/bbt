@@ -1,5 +1,6 @@
 package demo.task.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,14 +9,21 @@ import org.springframework.stereotype.Component;
 
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.service.UserRegistService;
+import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.task.service.TaskToolService;
 import demo.tool.mapper.MailRecordMapper;
+import demo.tool.service.ComplexToolService;
 
 @Component
 public class TaskToolServiceImpl implements TaskToolService {
 
 	@Autowired
+	private SeleniumGlobalOptionService seleniumGlobalOptionService;
+	
+	@Autowired
 	private UserRegistService userRegistService;
+	@Autowired
+	private ComplexToolService complexToolService;
 	
 	@Autowired
 	private UsersMapper usersMapper;
@@ -46,4 +54,8 @@ public class TaskToolServiceImpl implements TaskToolService {
 		}
 	}
 	
+	@Scheduled(cron="05 03 23 * * *") 
+	public void cleanTmpFile() {
+		complexToolService.cleanTmpFiles(seleniumGlobalOptionService.getDownloadDir(), null, LocalDateTime.now().minusMonths(1));
+	}
 }
