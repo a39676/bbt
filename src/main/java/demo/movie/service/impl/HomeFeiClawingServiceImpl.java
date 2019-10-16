@@ -165,6 +165,8 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 	public CommonResultBBT download(TestEvent te) {
 		CommonResultBBT r = new CommonResultBBT();
 		StringBuffer report = new StringBuffer();
+		// 实际运行时, 爬取一定页面后, 运行效率低下, 估需要重新启动浏览器
+		int timeToReOpenBrowser = 5;
 		MovieRecordFindByConditionDTO dto = new MovieRecordFindByConditionDTO();
 		dto.setCaseId(MovieTestCaseType.homeFeiCollection.getId());
 		dto.setWasClaw(false);
@@ -177,17 +179,24 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 			return r;
 		}
 		
-		WebDriver d = webDriverService.buildFireFoxWebDriver();
-		
 		int clawCount = 0;
+		WebDriver d = null;
+		MovieRecord tmpR = null;
 		
 		try {
-			login(d, te);
 
 			Thread.sleep(2500L);
 			
-			for(MovieRecord record : records) {
-				if(subLinkHandle(d, record)) {
+			for(int i = 0; i < records.size(); i++) {
+				tmpR = records.get(i);
+				if(i % timeToReOpenBrowser == 0) {
+					if(d != null) {
+						d.quit();
+					}
+					d = webDriverService.buildFireFoxWebDriver();
+					login(d, te);
+				}
+				if(subLinkHandle(d, tmpR)) {
 					clawCount++;
 				}
 			}
@@ -195,9 +204,11 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 			r.setIsSuccess();
 			
 		} catch (Exception e) {
-			log.error("error:{}, url: {}" + e.getMessage() + d.getCurrentUrl());
+			if(d != null) {
+				log.error("error:{}, url: {}" + e.getMessage() + d.getCurrentUrl());
+				auxTool.takeScreenshot(d, te);
+			}
 			report.append(e.getMessage() + "\n");
-			auxTool.takeScreenshot(d, te);
 			
 		} finally {
 			report.append("recordCount: " + records.size() + " clawCount: " + clawCount + " \n");

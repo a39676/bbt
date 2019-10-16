@@ -1,6 +1,5 @@
 package demo.testCase.service.impl;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,14 +101,5 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		
 		return testEvent;
 	}
-	
-	@Override
-	public Integer endTestEvent(TestEvent po, boolean success, String remark) {
-		po.setIsPass(success);
-		po.setEndTime(LocalDateTime.now());
-		po.setRemark(remark);
-		return eventMapper.updateByPrimaryKeySelective(po);
-	}
-	
 	
 }
