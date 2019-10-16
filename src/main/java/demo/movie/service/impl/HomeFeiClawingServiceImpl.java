@@ -40,6 +40,7 @@ import demo.selenium.service.impl.JavaScriptServiceImpl;
 import demo.testCase.pojo.po.TestEvent;
 import demo.testCase.pojo.type.MovieTestCaseType;
 import demo.testCase.service.TestEventService;
+import demo.tool.service.ComplexToolService;
 import ioHandle.FileUtilCustom;
 
 @Service
@@ -47,6 +48,8 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 
 	@Autowired
 	private FileUtilCustom iou;
+	@Autowired
+	private ComplexToolService complexToolService;
 	
 	@Autowired
 	private TestEventService testEventService;
@@ -166,9 +169,11 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 	
 	@Override
 	public CommonResultBBT download(TestEvent te) {
+		complexToolService.cleanTmpFiles(globalOptionService.getDownloadDir(), "torrent", LocalDateTime.now());
+		
 		CommonResultBBT r = new CommonResultBBT();
 		StringBuffer report = new StringBuffer();
-		// 实际运行时, 爬取一定页面后, 运行效率低下, 估需要重新启动浏览器
+		// 实际运行时, 爬取一定页面后, 运行效率低下, 故需要重新启动浏览器
 		int timeToReOpenBrowser = 5;
 		MovieRecordFindByConditionDTO dto = new MovieRecordFindByConditionDTO();
 		dto.setCaseId(MovieTestCaseType.homeFeiCollection.getId());
