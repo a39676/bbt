@@ -1,62 +1,55 @@
 package demo.movie.service.impl;
 
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import demo.baseCommon.pojo.result.CommonResultBBT;
+import demo.movie.pojo.result.DoubanSubClawingResult;
 import demo.movie.service.DoubanClawingService;
+import demo.selenium.pojo.bo.ByXpathConditionBO;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
-import demo.selenium.service.WebDriverService;
+import demo.selenium.service.impl.JavaScriptServiceImpl;
 import demo.testCase.pojo.po.TestEvent;
-import demo.testCase.pojo.type.MovieTestCaseType;
 
 @Service
 public final class DoubanClawingServiceImpl extends MovieClawingCommonService implements DoubanClawingService {
 
-//	@Autowired
-//	private FileUtilCustom iou;
-//	
-//	@Autowired
-//	private SystemConstantService constantService;
-//	@Autowired
-//	private SeleniumGlobalOptionService globalOptionService;
-	@Autowired
-	private WebDriverService webDriverService;
 	@Autowired
 	private SeleniumAuxiliaryToolService auxTool;
-//	@Autowired
-//	private MovieClawingOptionService optionService;
-//	@Autowired
-//	private JavaScriptServiceImpl jsUtil;
-//
-//	@Autowired
-//	private MovieRecordMapper recordMapper;
-//	@Autowired
-//	private MovieInfoMapper infoMapper;
-//	@Autowired
-//	private MovieIntroductionMapper introduectionMapper;
-//	
+	@Autowired
+	private JavaScriptServiceImpl jsUtil;
+
 	private String mainUrl = "https://www.douban.com/";
 
-	private TestEvent buildTestEvent() {
-		return buildTestEvent(MovieTestCaseType.doubanMovieInfoClaw);
-	}
-
-	public CommonResultBBT clawing() {
-		CommonResultBBT r = new CommonResultBBT();
+	@Override
+	public DoubanSubClawingResult clawing(WebDriver d, String cnTitle, TestEvent te) {
+		/*
+		 * TODO
+		 * 未处理
+		 * 匹配导演/演员/电影类型
+		 * 图片/海报
+		 * 等信息
+		 * 
+		 */
+		DoubanSubClawingResult r = new DoubanSubClawingResult();
 		StringBuffer report = new StringBuffer();
 		
-		TestEvent te = buildTestEvent();
-		
-		WebDriver d = webDriverService.buildFireFoxWebDriver();
-		
 		try {
-			d.get(mainUrl);
-
-			String mainWindowHandler = d.getWindowHandle();
-			// TODO
-			System.out.println(mainWindowHandler);
+			
+			search(d, cnTitle);
+			
+			String targetLink = findTargetLink(d);
+			
+			if(targetLink == null) {
+				throw new Exception("can not find target link for: " + cnTitle + " at: " + d.getCurrentUrl() + System.lineSeparator());
+			}
+			
+			handleInfo(d, targetLink, r);
 			
 		} catch (Exception e) {
 			log.error("error:{}, url: {}" + e.getMessage() + d.getCurrentUrl());
@@ -72,5 +65,105 @@ public final class DoubanClawingServiceImpl extends MovieClawingCommonService im
 		return r;
 	}
 	
+	private void search(WebDriver d, String keyWord) {
+		d.get(mainUrl);
 
+		ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("input", "type", "text").addCondition("name", "q");
+		By movieNameInputBy = auxTool.byXpathBuilder(byXpathConditionBo);
+		
+		WebElement movieNameInput = d.findElement(movieNameInputBy);
+		movieNameInput.clear();
+		movieNameInput.sendKeys(keyWord);
+		
+		byXpathConditionBo = ByXpathConditionBO.build("input", "type", "submit").addCondition("value", "搜索");
+		By homePageSearchButtonBy = auxTool.byXpathBuilder(byXpathConditionBo);
+		WebElement homePageSearchButton = d.findElement(homePageSearchButtonBy);
+		homePageSearchButton.click();
+	}
+
+	private String findTargetLink(WebDriver d) {
+		String targetLink = null;
+		ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("a", "target", "_blank");
+		By aLinkBy = auxTool.byXpathBuilder(byXpathConditionBo);
+		List<WebElement> aLinkList = d.findElements(aLinkBy);
+		WebElement tmpA = null;
+		String tmpHref = null;
+		String tmpAttr = null;
+		for(int i = 0; targetLink == null && i < aLinkList.size(); i++) {
+			tmpA = aLinkList.get(i);
+			tmpHref = tmpA.getAttribute("href");
+			if(tmpHref != null && tmpHref.startsWith("https://www.douban.com/")) {
+				tmpAttr = tmpA.getAttribute("onclick");
+				if(tmpAttr != null && tmpAttr.startsWith("moreurl")) {
+					targetLink = tmpHref;
+				}
+			}
+		}
+		return targetLink;
+	}
+
+	private void handleInfo(WebDriver d, String targetLink, DoubanSubClawingResult r) {
+		try {
+			d.get(targetLink);
+		} catch (TimeoutException e) {
+			jsUtil.windowStop(d);
+		}
+		
+		By titleSpanBy = auxTool.byXpathBuilder("span", "property", "v:itemreviewed");
+		WebElement titleSpan = d.findElement(titleSpanBy);
+		String sourceTitle = titleSpan.getText();
+		
+		int firstSpaceIndex = sourceTitle.indexOf(" ");
+		String cnTitle = null;
+		String originalTitle = null;
+		if(firstSpaceIndex == -1) {
+			cnTitle = sourceTitle;
+			originalTitle = sourceTitle;
+		} else {
+			cnTitle = sourceTitle.substring(0, firstSpaceIndex);
+			originalTitle = sourceTitle.substring(firstSpaceIndex + 1, sourceTitle.length());
+		}
+		r.setCnTitle(cnTitle);
+		r.setOriginalTitle(originalTitle);
+		
+		By moreActorBy = auxTool.byXpathBuilder("a", "class", "more-actor");
+		WebElement moreActorA = null;
+		try {
+			moreActorA = d.findElement(moreActorBy);
+		} catch (Exception e) {
+		}
+		if(moreActorA != null) {
+			moreActorA.click();
+		}
+		
+		
+		WebElement infoDiv = d.findElement(By.id("info"));
+		String info = infoDiv.getText();
+		r.setInfo(info);
+		
+		String RegionInfo = null;
+		String crewsInfo = null;
+		String[] lines = info.split(System.lineSeparator());
+		if(lines.length <= 1) {
+			lines = info.split("\n");
+		}
+		for(String l : lines) {
+			if(l.startsWith("制片国家/地区")) {
+				RegionInfo = l.replaceAll("制片国家/地区: ", "");
+			} else if(l.startsWith("主演")) {
+				crewsInfo = l.replaceAll("主演: ", "");
+			}
+		}
+		r.setRegion(RegionInfo);
+		r.setCrewInfo(crewsInfo);
+		
+		By summaryBy = auxTool.byXpathBuilder("span", "property", "v:summary");
+		WebElement summarySpan = d.findElement(summaryBy);
+		String summary = summarySpan.getText();
+		r.setIntroduction(summary);
+		
+//		By initialReleaseDateBy = auxTool.byXpathBuilder("span", "property", "v:initialReleaseDate");
+//		WebElement releaseDateSpan = d.findElement(initialReleaseDateBy);
+//		String releaseDateStr = releaseDateSpan.getText();
+	}
 }

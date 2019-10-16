@@ -3,7 +3,6 @@ package demo.movie.service.impl;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,6 +28,8 @@ import demo.movie.pojo.po.MovieInfo;
 import demo.movie.pojo.po.MovieIntroduction;
 import demo.movie.pojo.po.MovieMagnetUrl;
 import demo.movie.pojo.po.MovieRecord;
+import demo.movie.pojo.result.DoubanSubClawingResult;
+import demo.movie.service.DoubanClawingService;
 import demo.movie.service.HomeFeiClawingService;
 import demo.movie.service.MovieClawingOptionService;
 import demo.selenium.pojo.bo.ByXpathConditionBO;
@@ -49,6 +50,8 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 	
 	@Autowired
 	private TestEventService testEventService;
+	@Autowired
+	private DoubanClawingService doubanService;
 	
 	@Autowired
 	private SystemConstantService constantService;
@@ -196,7 +199,7 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 					d = webDriverService.buildFireFoxWebDriver();
 					login(d, te);
 				}
-				if(subLinkHandle(d, tmpR)) {
+				if(subLinkHandle(d, tmpR, te)) {
 					clawCount++;
 				}
 			}
@@ -360,10 +363,11 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 	}
 
 	/**
+	 * @param te 
 	 * 
 	 * 
 	 */
-	private boolean subLinkHandle(WebDriver d, MovieRecord record) throws InterruptedException {
+	private boolean subLinkHandle(WebDriver d, MovieRecord record, TestEvent te) throws InterruptedException {
 		
 		try {
 			d.get(record.getUrl());
@@ -454,7 +458,7 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 		List<WebElement> imgs = tpcDiv.findElements(ByTagName.tagName("img"));
 		saveMovieImg(imgs, movieId);
 		
-		saveMovieInfo(tpcDiv, movieId);
+		saveMovieInfo(d, movieId, te);
 		
 		record.setWasClaw(true);
 		record.setUpdateTime(LocalDateTime.now());
@@ -462,25 +466,26 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 		return true;
 	}
 	
-	private void saveMovieInfo(WebElement tpcDiv, Long newMovieId) {
-		String content = tpcDiv.getText();
+	private void saveMovieInfo(WebDriver d, Long newMovieId, TestEvent te) {
 		MovieInfo info = new MovieInfo();
 		info.setId(newMovieId);
+
+		String webTitle = d.getTitle();
+		webTitle = webTitle.split("|")[0];
 		
-		List<String> lines = Arrays.asList(content.split("◎"));
-		for(String line : lines) {
-			if(line.startsWith("片") && line.contains("名")) {
-				info.setOriginalTitle(line.replaceAll("片　　名　", ""));
-			} else if(line.startsWith("译") && line.contains("名")) {
-				info.setCnTitle(line.replaceAll("译　　名　", ""));
-			} else if(line.startsWith("产") && line.contains("地")) {
-				info.setNationId(detectMovieRegion(line).longValue());
-			} 
-		}
+		String[] elements = webTitle.substring(1, webTitle.length() - 1).split("\\]\\[");
+		String longMovieTitle = elements[2];
+		String cnTitle = longMovieTitle.substring(0, longMovieTitle.indexOf(" "));
+		
+		DoubanSubClawingResult doubanResult = doubanService.clawing(d, cnTitle, te);
+		info.setCnTitle(doubanResult.getCnTitle());
+		info.setOriginalTitle(doubanResult.getOriginalTitle());
+		info.setNationId(detectMovieRegion(doubanResult.getRegion()).longValue());
+		
 		infoMapper.insertSelective(info);
 
 		String savePath = introductionSavePath + File.separator + newMovieId + ".txt";
-		iou.byteToFile(content.getBytes(), savePath);
+		iou.byteToFile(doubanResult.getIntroduction().getBytes(), savePath);
 
 		MovieIntroduction po = new MovieIntroduction();
 		po.setMovieId(newMovieId);
