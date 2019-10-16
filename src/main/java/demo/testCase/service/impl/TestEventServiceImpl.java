@@ -63,6 +63,7 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		 */
 		CommonResultBBT r = null;
 		for(TestEvent te : events) {
+			startEvent(te);
 			r = runSubEvent(te);
 			endEvent(te, r.isSuccess(), r.getMessage());
 		}
@@ -74,13 +75,10 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 			return null;
 		}  
 		if (MovieTestCaseType.dytt.getId().equals(caseId)) {
-			startEvent(te);
 			return dyttService.clawing(te);
 		} else if (MovieTestCaseType.homeFeiCollection.getId().equals(caseId)) {
-			startEvent(te);
 			return homeFeiService.collection(te);
 		} else if (MovieTestCaseType.homeFeiDownload.getId().equals(caseId)) {
-			startEvent(te);
 			return homeFeiService.download(te);
 		}
 		return null;
