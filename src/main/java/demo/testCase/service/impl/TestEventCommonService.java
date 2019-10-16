@@ -59,7 +59,7 @@ public abstract class TestEventCommonService extends CommonService {
 	
 	protected int startEvent(TestEvent te) {
 		te.setStartTime(LocalDateTime.now());
-		return eventMapper.insertSelective(te);
+		return eventMapper.updateByPrimaryKeySelective(te);
 	}
 	
 //	protected int endEventSuccess(TestEvent te, String report) {

@@ -1,4 +1,4 @@
-package demo.testCase;
+package demo.testCase.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
