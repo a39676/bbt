@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.baseCommon.service.CommonService;
-import demo.selenium.pojo.bo.ByXpathConditionBO;
+import demo.selenium.pojo.bo.XpathBuilderBO;
 import demo.selenium.service.SeForJoke;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.WebDriverService;
@@ -77,45 +77,46 @@ public class SeForJokeImpl extends CommonService implements SeForJoke {
 			WebElement xueyuanSelectorEle = auxTool.fluentWait(d, xueyuanSelectorBy);
 			xueyuanSelectorEle.click();
 			
-			ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("option", "value", "11");
-			By xueyuanOptionBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			XpathBuilderBO xpathBuilder = new XpathBuilderBO();
+			xpathBuilder.start("option").addAttribute("value", "11");
+			By xueyuanOptionBy = By.xpath(xpathBuilder.getXpath());
 			WebElement xueyuanOption = d.findElement(xueyuanOptionBy);
 			xueyuanOption.click();
 			
 			WebElement zhuanyeSelector = d.findElement(By.id("zhuanye"));
 			zhuanyeSelector.click();
-			byXpathConditionBo = ByXpathConditionBO.build("option", "value", "12");
-			By zhuanyeOptionBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			xpathBuilder.start("option").addAttribute("value", "12");
+			By zhuanyeOptionBy = By.xpath(xpathBuilder.getXpath());
 			WebElement zhuanyeOption = d.findElement(zhuanyeOptionBy);
 			zhuanyeOption.click();
 			
-			byXpathConditionBo = ByXpathConditionBO.build("input", "name", "name").addCondition("type", "text");
-			By nameInputBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			xpathBuilder.start("input").addAttribute("name", "name").addAttribute("type", "text");
+			By nameInputBy = By.xpath(xpathBuilder.getXpath());
 			WebElement nameInput = d.findElement(nameInputBy);
 			nameInput.sendKeys(jokerName);
 			
-			byXpathConditionBo = ByXpathConditionBO.build("input", "type", "radio").addCondition("name", "sex");
-			By genderBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			xpathBuilder.start("input").addAttribute("type", "radio").addAttribute("name", "sex");
+			By genderBy = By.xpath(xpathBuilder.getXpath());
 			WebElement genderMaleRadio = d.findElement(genderBy);
 			genderMaleRadio.click();
 			
-			byXpathConditionBo = ByXpathConditionBO.build("input", "name", "age");
-			By ageBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			xpathBuilder.start("input").addAttribute("name", "age");
+			By ageBy = By.xpath(xpathBuilder.getXpath());
 			WebElement ageInput = d.findElement(ageBy);
 			ageInput.sendKeys(jokerAge.toString());
 			
 			WebElement phoneInput = d.findElement(By.id("phone"));
 			phoneInput.sendKeys(jokerPhone);
 			
-			byXpathConditionBo = ByXpathConditionBO.build("input", "name", "address");
-			By addressBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			xpathBuilder.start("input").addAttribute("name", "address");
+			By addressBy = By.xpath(xpathBuilder.getXpath());
 			WebElement addressInput = d.findElement(addressBy);
 			addressInput.sendKeys(jokerAddress);
 			
 			auxTool.takeScreenshot(d, te);
 			
-			byXpathConditionBo = ByXpathConditionBO.build("input", "type", "submit").addCondition("value", "报名");
-			By submitBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			xpathBuilder.start("input").addAttribute("type", "submit").addAttribute("value", "报名");
+			By submitBy = By.xpath(xpathBuilder.getXpath());
 			WebElement submitButton = d.findElement(submitBy);
 			submitButton.click();
 			
@@ -134,58 +135,66 @@ public class SeForJokeImpl extends CommonService implements SeForJoke {
 		te.setId(1L);
 		te.setEventName("liuXue");
 		WebDriver d = webDriverService.buildFireFoxWebDriver();
+		XpathBuilderBO xpathBuilder = new XpathBuilderBO();
 		
 		try {
 			String url = "https://liuxue.xdf.cn/blog/ExpertBlog/";
 			d.get(url);
 			
 			// driver等待
-			ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("form", "id", "myform");
-			By regFormWrapBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			By regFormWrapBy = By.xpath(xpathBuilder.getXpath());
 			
 			WebElement regFormWrap = auxTool.fluentWait(d, regFormWrapBy);
 			regFormWrap.click();
 			
-			byXpathConditionBo = ByXpathConditionBO.build("input", "id", "stu_Name");
-			By nameBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			
+			xpathBuilder.start("input").addAttribute("id", "stu_Name");
+			By nameBy = By.xpath(xpathBuilder.getXpath());
 			WebElement nameInput = d.findElement(nameBy);
 			nameInput.sendKeys(jokerName);
 			
 			WebElement phoneInput = d.findElement(By.id("stu_Phone"));
 			phoneInput.sendKeys(jokerPhone);
 			
-			byXpathConditionBo = ByXpathConditionBO.build("select", "id", "stu_Country");
-			By countrySelectBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			
+			xpathBuilder.start("select").addAttribute("id", "stu_Country");
+			By countrySelectBy = By.xpath(xpathBuilder.getXpath());
 			WebElement countrySelect = d.findElement(countrySelectBy);
 			countrySelect.click();
 			
-			byXpathConditionBo = ByXpathConditionBO.build("option", "value", "亚洲");
-			By countryOptionBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			
+			xpathBuilder.start("option").addAttribute("value", "亚洲");
+			By countryOptionBy = By.xpath(xpathBuilder.getXpath());
 			WebElement countryOption = d.findElement(countryOptionBy);
 			countryOption.click();
 			
-			byXpathConditionBo = ByXpathConditionBO.build("select", "id", "stu_Degree");
-			By degreeSelectBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			
+			xpathBuilder.start("select").addAttribute("id", "stu_Degree");
+			By degreeSelectBy = By.xpath(xpathBuilder.getXpath());
 			WebElement degreeSelect = d.findElement(degreeSelectBy);
 			degreeSelect.click();
 			
-			byXpathConditionBo = ByXpathConditionBO.build("option", "value", "本科");
-			By degreeOptionBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			
+			xpathBuilder.start("option").addAttribute("value", "本科");
+			By degreeOptionBy = By.xpath(xpathBuilder.getXpath());
 			WebElement degreeOption = d.findElement(degreeOptionBy);
 			degreeOption.click();
 			
-			byXpathConditionBo = ByXpathConditionBO.build("select", "id", "stu_City");
-			By stuCitySelectBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			
+			xpathBuilder.start("select").addAttribute("id", "stu_City");
+			By stuCitySelectBy = By.xpath(xpathBuilder.getXpath());
 			WebElement stuCitySelect = d.findElement(stuCitySelectBy);
 			stuCitySelect.click();
 			
-			byXpathConditionBo = ByXpathConditionBO.build("option", "value", "广州");
-			By stuCityOptionBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			
+			xpathBuilder.start("option").addAttribute("value", "广州");
+			By stuCityOptionBy = By.xpath(xpathBuilder.getXpath());
 			WebElement stuCityOption = d.findElement(stuCityOptionBy);
 			stuCityOption.click();
 			
-			byXpathConditionBo = ByXpathConditionBO.build("input", "type", "button").addCondition("id", "dosubmit");
-			By submitBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			
+			xpathBuilder.start("input").addAttribute("type", "button").addAttribute("id", "dosubmit");
+			By submitBy = By.xpath(xpathBuilder.getXpath());
 			WebElement submitButton = d.findElement(submitBy);
 			submitButton.click();
 			

@@ -6,7 +6,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import demo.selenium.pojo.bo.ByXpathConditionBO;
 import demo.selenium.pojo.result.ScreenshotSaveResult;
 import demo.testCase.pojo.po.TestEvent;
 
@@ -37,10 +36,6 @@ public interface SeleniumAuxiliaryToolService {
 			throws IOException;
 
 	ScreenshotSaveResult takeElementScreenshot(WebDriver driver, TestEvent testEvent, By by) throws IOException;
-
-	By byXpathBuilder(ByXpathConditionBO bo);
-
-	By byXpathBuilder(String tagName, String attributeName, String attributeValue);
 
 	String saveImg(WebElement ele, String folderPath) throws IOException;
 

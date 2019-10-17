@@ -29,8 +29,6 @@ import org.springframework.stereotype.Service;
 
 import constant.FileSuffixNameConstant;
 import demo.baseCommon.service.CommonService;
-import demo.selenium.pojo.bo.ByXpathConditionBO;
-import demo.selenium.pojo.bo.ByXpathConditionSubBO;
 import demo.selenium.pojo.constant.RegexConstant;
 import demo.selenium.pojo.constant.WebDriverConstant;
 import demo.selenium.pojo.dto.ScreenshotSaveDTO;
@@ -44,6 +42,11 @@ public class SeleniumAuxiliaryToolServiceImpl extends CommonService implements S
 
 	@Autowired
 	private ScreenshotService screenshotService;
+	
+	/*
+	 * about xpath 
+	 * https://www.swtestacademy.com/xpath-selenium/
+	 */
 
 	@Override
 	public WebElement fluentWait(WebDriver driver, final By by) {
@@ -203,31 +206,6 @@ public class SeleniumAuxiliaryToolServiceImpl extends CommonService implements S
 	@Override
 	public ScreenshotSaveResult takeElementScreenshot(WebDriver driver, TestEvent testEvent, By by) throws IOException {
 		return takeElementScreenshot(driver, testEvent, by, null);
-	}
-
-	@Override
-	public By byXpathBuilder(ByXpathConditionBO bo) {
-		StringBuffer s = new StringBuffer("//" + bo.getTagName() + "[");
-		if (bo.getKvList() == null || bo.getKvList().size() < 1) {
-			s.append("]");
-			return By.xpath(s.toString());
-		}
-		ByXpathConditionSubBO b = null;
-		for (int i = 0; i < bo.getKvList().size(); i++) {
-			b = bo.getKvList().get(i);
-			s.append("(@" + b.getKey() + "='" + b.getValue() + "')");
-			if (i < bo.getKvList().size() - 1) {
-				s.append(" and ");
-			}
-		}
-		s.append("]");
-		return By.xpath(s.toString());
-	}
-	
-	@Override
-	public By byXpathBuilder(String tagName, String attributeName, String attributeValue) {
-		ByXpathConditionBO bo = ByXpathConditionBO.build(tagName, attributeName, attributeValue);
-		return byXpathBuilder(bo);
 	}
 
 	@Override

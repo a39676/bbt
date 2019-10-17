@@ -117,7 +117,7 @@ public class NeobuxServiceImpl extends CommonService implements NeobuxService {
 		
 		loginButton.click();
 		
-		ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("input", "id", "Kf1");
+		byXpathConditionBo = ByXpathConditionBO.build("input", "id", "Kf1");
 		By usernameInputBy = auxTool.byXpathBuilder(byXpathConditionBo);
 		WebElement usernameInput = auxTool.fluentWait(d, usernameInputBy);
 		usernameInput.sendKeys(optionService.getNeobuxUsername());
