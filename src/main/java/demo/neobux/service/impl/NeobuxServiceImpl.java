@@ -13,7 +13,7 @@ import demo.baseCommon.service.CommonService;
 import demo.captcha.service.CaptchaService;
 import demo.neobux.service.NeobuxOptionService;
 import demo.neobux.service.NeobuxService;
-import demo.selenium.pojo.bo.ByXpathConditionBO;
+import demo.selenium.pojo.bo.XpathBuilderBO;
 import demo.selenium.pojo.result.ScreenshotSaveResult;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.WebDriverService;
@@ -108,6 +108,7 @@ public class NeobuxServiceImpl extends CommonService implements NeobuxService {
 	}
 	
 	private boolean login(WebDriver d) {
+		XpathBuilderBO xpathBuilder = new XpathBuilderBO();
 		List<WebElement> spans = d.findElements(By.tagName("span"));
 		WebElement loginButton = findLoginButton(d);
 		if(loginButton == null) {
@@ -117,18 +118,18 @@ public class NeobuxServiceImpl extends CommonService implements NeobuxService {
 		
 		loginButton.click();
 		
-		byXpathConditionBo = ByXpathConditionBO.build("input", "id", "Kf1");
-		By usernameInputBy = auxTool.byXpathBuilder(byXpathConditionBo);
+		xpathBuilder.start("input").addAttribute("id", "Kf1");
+		By usernameInputBy = By.xpath(xpathBuilder.getXpath());
 		WebElement usernameInput = auxTool.fluentWait(d, usernameInputBy);
 		usernameInput.sendKeys(optionService.getNeobuxUsername());
 		
-		byXpathConditionBo = ByXpathConditionBO.build("input", "id", "Kf2");
-		By pwdInputBy = auxTool.byXpathBuilder(byXpathConditionBo);
+		xpathBuilder.start("input").addAttribute("id", "Kf2");
+		By pwdInputBy = By.xpath(xpathBuilder.getXpath());
 		WebElement pwdInput = auxTool.fluentWait(d, pwdInputBy);
 		pwdInput.sendKeys(optionService.getNeobuxPwd());
 		
-		byXpathConditionBo = ByXpathConditionBO.build("input", "id", "Kf4");
-		By secondPwdInputBy = auxTool.byXpathBuilder(byXpathConditionBo);
+		xpathBuilder.start("input").addAttribute("id", "Kf4");
+		By secondPwdInputBy = By.xpath(xpathBuilder.getXpath());
 		WebElement secondPwdInput = auxTool.fluentWait(d, secondPwdInputBy);
 		secondPwdInput.sendKeys(optionService.getNeobuxPwd());
 		
@@ -190,8 +191,9 @@ public class NeobuxServiceImpl extends CommonService implements NeobuxService {
 
 	private void tryFillVcode(WebDriver d) {
 		WebElement vcodeInputElement = null;
-		ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("input", "id", "Kf3");
-		By vcodeInputBy = auxTool.byXpathBuilder(byXpathConditionBo);
+		XpathBuilderBO xpathBuilder = new XpathBuilderBO();
+		xpathBuilder.start("input").addAttribute("id", "Kf3");
+		By vcodeInputBy = By.xpath(xpathBuilder.getXpath());
 		try {
 			vcodeInputElement = d.findElement(vcodeInputBy);
 			if(vcodeInputElement != null) {
@@ -217,8 +219,9 @@ public class NeobuxServiceImpl extends CommonService implements NeobuxService {
 	}
 
 	private List<WebElement> findADList(WebDriver d) {
-		ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("i", "class", "ic-star-1");
-		By adNotClickedBy = auxTool.byXpathBuilder(byXpathConditionBo);
+		XpathBuilderBO xpathBuilder = new XpathBuilderBO();
+		xpathBuilder.start("i").addAttribute("class", "ic-star-1");
+		By adNotClickedBy = By.xpath(xpathBuilder.getXpath());
 		List<WebElement> adList = null;
 		try {
 			adList = d.findElements(adNotClickedBy);
