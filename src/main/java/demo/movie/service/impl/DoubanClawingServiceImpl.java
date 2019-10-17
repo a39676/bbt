@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import demo.movie.pojo.result.DoubanSubClawingResult;
 import demo.movie.service.DoubanClawingService;
-import demo.selenium.pojo.bo.ByXpathConditionBO;
+import demo.selenium.pojo.bo.XpathBuilderBO;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.impl.JavaScriptServiceImpl;
 import demo.testCase.pojo.po.TestEvent;
@@ -68,23 +68,25 @@ public final class DoubanClawingServiceImpl extends MovieClawingCommonService im
 	private void search(WebDriver d, String keyWord) {
 		d.get(mainUrl);
 
-		ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("input", "type", "text").addCondition("name", "q");
-		By movieNameInputBy = auxTool.byXpathBuilder(byXpathConditionBo);
+		XpathBuilderBO xpathBuilder = new XpathBuilderBO();
+		xpathBuilder.start("input").addAttribute("type", "text").addAttribute("name", "q");
+		By movieNameInputBy = By.xpath(xpathBuilder.getXpath());
 		
 		WebElement movieNameInput = d.findElement(movieNameInputBy);
 		movieNameInput.clear();
 		movieNameInput.sendKeys(keyWord);
 		
-		byXpathConditionBo = ByXpathConditionBO.build("input", "type", "submit").addCondition("value", "搜索");
-		By homePageSearchButtonBy = auxTool.byXpathBuilder(byXpathConditionBo);
+		xpathBuilder.start("input").addAttribute("type", "submit").addAttribute("value", "搜索");
+		By homePageSearchButtonBy = By.xpath(xpathBuilder.getXpath());
 		WebElement homePageSearchButton = d.findElement(homePageSearchButtonBy);
 		homePageSearchButton.click();
 	}
 
 	private String findTargetLink(WebDriver d) {
 		String targetLink = null;
-		ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("a", "target", "_blank");
-		By aLinkBy = auxTool.byXpathBuilder(byXpathConditionBo);
+		XpathBuilderBO xpathBuilder = new XpathBuilderBO();
+		xpathBuilder.start("a").addAttribute("target", "_blank");
+		By aLinkBy = By.xpath(xpathBuilder.getXpath());
 		List<WebElement> aLinkList = d.findElements(aLinkBy);
 		WebElement tmpA = null;
 		String tmpHref = null;
@@ -108,8 +110,10 @@ public final class DoubanClawingServiceImpl extends MovieClawingCommonService im
 		} catch (TimeoutException e) {
 			jsUtil.windowStop(d);
 		}
+		XpathBuilderBO xpathBuilder = new XpathBuilderBO();
 		
-		By titleSpanBy = auxTool.byXpathBuilder("span", "property", "v:itemreviewed");
+		xpathBuilder.start("span").addAttribute("property", "v:itemreviewed");
+		By titleSpanBy = By.xpath(xpathBuilder.getXpath());
 		WebElement titleSpan = d.findElement(titleSpanBy);
 		String sourceTitle = titleSpan.getText();
 		
@@ -126,7 +130,8 @@ public final class DoubanClawingServiceImpl extends MovieClawingCommonService im
 		r.setCnTitle(cnTitle);
 		r.setOriginalTitle(originalTitle);
 		
-		By moreActorBy = auxTool.byXpathBuilder("a", "class", "more-actor");
+		xpathBuilder.start("a").addAttribute("class", "more-actor");
+		By moreActorBy = By.xpath(xpathBuilder.getXpath());
 		WebElement moreActorA = null;
 		try {
 			moreActorA = d.findElement(moreActorBy);
@@ -157,7 +162,8 @@ public final class DoubanClawingServiceImpl extends MovieClawingCommonService im
 		r.setRegion(RegionInfo);
 		r.setCrewInfo(crewsInfo);
 		
-		By summaryBy = auxTool.byXpathBuilder("span", "property", "v:summary");
+		xpathBuilder.start("span").addAttribute("property", "v:summary");
+		By summaryBy = By.xpath(xpathBuilder.getXpath());
 		WebElement summarySpan = d.findElement(summaryBy);
 		String summary = summarySpan.getText();
 		r.setIntroduction(summary);

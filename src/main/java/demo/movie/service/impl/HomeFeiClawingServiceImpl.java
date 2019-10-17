@@ -32,7 +32,7 @@ import demo.movie.pojo.result.DoubanSubClawingResult;
 import demo.movie.service.DoubanClawingService;
 import demo.movie.service.HomeFeiClawingService;
 import demo.movie.service.MovieClawingOptionService;
-import demo.selenium.pojo.bo.ByXpathConditionBO;
+import demo.selenium.pojo.bo.XpathBuilderBO;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.WebDriverService;
@@ -258,14 +258,16 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 			jsUtil.windowStop(d);
 		}
 		
-		ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("input", "id", "nav_pwuser");
-		By usernameInputBy = auxTool.byXpathBuilder(byXpathConditionBo);
+		XpathBuilderBO xpathBuilder = new XpathBuilderBO();
 
-		byXpathConditionBo = ByXpathConditionBO.build("input", "id", "showpwd");
-		By pwdInputBy = auxTool.byXpathBuilder(byXpathConditionBo);
+		xpathBuilder.start("input").addAttribute("id", "nav_pwuser");
+		By usernameInputBy = By.xpath(xpathBuilder.getXpath());
 
-		byXpathConditionBo = ByXpathConditionBO.build("button", "type", "submit").addCondition("name", "head_login");
-		By loginButtonBy = auxTool.byXpathBuilder(byXpathConditionBo);
+		xpathBuilder.start("input").addAttribute("id", "showpwd");
+		By pwdInputBy = By.xpath(xpathBuilder.getXpath());
+
+		xpathBuilder.start("button").addAttribute("type", "submit").addAttribute("name", "head_login");
+		By loginButtonBy = By.xpath(xpathBuilder.getXpath());
 
 		try {
 			WebElement usernameInput = d.findElement(usernameInputBy);
@@ -317,8 +319,9 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 				}
 			}
 
-			ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("div", "id", "punch");
-			By checkInButtonBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			XpathBuilderBO xpathBuilder = new XpathBuilderBO();
+			xpathBuilder.start("div").addAttribute("id", "punch");
+			By checkInButtonBy = By.xpath(xpathBuilder.getXpath());
 			WebElement checkInButton = d.findElement(checkInButtonBy);
 			checkInButton.click();
 			d.close();
@@ -342,8 +345,9 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 	}
 
 	private List<String> pageHandle(WebDriver d, int page) {
-		ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("a", "name", "readlink");
-		By subLinkBy = auxTool.byXpathBuilder(byXpathConditionBo);
+		XpathBuilderBO xpathBuilder = new XpathBuilderBO();
+		xpathBuilder.start("a").addAttribute("name", "readlink");
+		By subLinkBy = By.xpath(xpathBuilder.getXpath());
 		
 		List<WebElement> linkEleList = d.findElements(subLinkBy);
 		List<String> subLinks = new ArrayList<String>();
@@ -356,7 +360,9 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 	}
 	
 	private boolean nextPage(WebDriver d) {
-		By nextPageButtonBy = auxTool.byXpathBuilder("a", "class", "pages_next");
+		XpathBuilderBO xpathBuilder = new XpathBuilderBO();
+		xpathBuilder.start("a").addAttribute("class", "pages_next");
+		By nextPageButtonBy = By.xpath(xpathBuilder.getXpath());
 		WebElement nextPageButton = null;
 		try {
 			nextPageButton = d.findElement(nextPageButtonBy);

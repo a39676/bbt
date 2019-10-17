@@ -28,7 +28,7 @@ import demo.clawing.service.ClawingMeiZiTuService;
 import demo.image.mapper.ImageStoreMapper;
 import demo.image.pojo.po.ImageStore;
 import demo.image.pojo.type.ImageType;
-import demo.selenium.pojo.bo.ByXpathConditionBO;
+import demo.selenium.pojo.bo.XpathBuilderBO;
 import demo.selenium.service.JavaScriptService;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.WebDriverService;
@@ -107,11 +107,12 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 	}
 
 	private List<WebElement> meiZiTuGroupFinder(WebDriver d) {
-		ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("a", "target", "_blank");
-		By groupFindBy = auxTool.byXpathBuilder(byXpathConditionBo);
+		XpathBuilderBO xb = new XpathBuilderBO();
+		xb.start("a").addAttribute("target", "_blank");
+		By groupFindBy = By.xpath(xb.getXpath());
 
-		byXpathConditionBo = ByXpathConditionBO.build("img", "class", "lazy");
-		By groupImgBy = auxTool.byXpathBuilder(byXpathConditionBo);
+		xb.start("img").addAttribute("class", "lazy");
+		By groupImgBy = By.xpath(xb.getXpath());
 
 		List<WebElement> sourceA = d.findElements(groupFindBy);
 		List<WebElement> targetA = new ArrayList<WebElement>();
@@ -146,8 +147,10 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 		String title = null;
 		WebElement titleEle = null;
 
-		ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("h2", "class", "main-title");
-		By titleBy = auxTool.byXpathBuilder(byXpathConditionBo);
+		XpathBuilderBO xb = new XpathBuilderBO();
+		xb.start("h2").addAttribute("class", "main-title");
+		By titleBy = By.xpath(xb.getXpath());
+		
 		String tmpWindowHandle = null;
 		for (int i = 0; title == null; i++) {
 			tmpWindowHandle = windowHandles.get(i % windowHandles.size());

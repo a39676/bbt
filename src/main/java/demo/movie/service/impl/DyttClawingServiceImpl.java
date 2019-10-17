@@ -23,7 +23,7 @@ import demo.movie.pojo.po.MovieInfo;
 import demo.movie.pojo.po.MovieIntroduction;
 import demo.movie.pojo.po.MovieRecord;
 import demo.movie.service.DyttClawingService;
-import demo.selenium.pojo.bo.ByXpathConditionBO;
+import demo.selenium.pojo.bo.XpathBuilderBO;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.WebDriverService;
 import demo.testCase.pojo.po.TestEvent;
@@ -106,8 +106,9 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 		Set<String> windowHandles = null;
 		d.switchTo().window(mainWindowHandle);
 
-		ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("a", "class", "ulink");
-		By targetAListBy = auxTool.byXpathBuilder(byXpathConditionBo);
+		XpathBuilderBO xpathBuilder = new XpathBuilderBO();
+		xpathBuilder.start("a").addAttribute("class", "ulink");
+		By targetAListBy = By.xpath(xpathBuilder.getXpath());
 
 		List<WebElement> targetAList = d.findElements(targetAListBy);
 		WebElement ele = null;
@@ -180,8 +181,9 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 		}
 		currentUrl = d.getCurrentUrl();
 
-		ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("div", "id", "Zoom");
-		By divZoomBy = auxTool.byXpathBuilder(byXpathConditionBo);
+		XpathBuilderBO xpathBuilder = new XpathBuilderBO();
+		xpathBuilder.start("div").addAttribute("id", "Zoom");
+		By divZoomBy = By.xpath(xpathBuilder.getXpath());
 		Thread.sleep(300L);
 		WebElement divZoom = null;
 
