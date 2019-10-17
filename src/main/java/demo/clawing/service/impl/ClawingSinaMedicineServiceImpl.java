@@ -21,7 +21,7 @@ import demo.clawing.pojo.result.SinaMedicineDetailHeadHandleResult;
 import demo.clawing.pojo.result.SinaMedicineDetailMainHandleResult;
 import demo.clawing.service.ClawingSinaMedicineFactoryService;
 import demo.clawing.service.ClawingSinaMedicineService;
-import demo.selenium.pojo.bo.ByXpathConditionBO;
+import demo.selenium.pojo.bo.XpathBuilderBO;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.WebDriverService;
 import demo.testCase.pojo.po.TestEvent;
@@ -58,8 +58,9 @@ public class ClawingSinaMedicineServiceImpl extends CommonService implements Cla
 			String url = "https://med.sina.com/drug/leeDetail_A_15036.html";
 			d.get(url);
 
-			ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("div", "class", "xx2");
-			By medicineDetailBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			XpathBuilderBO xb = new XpathBuilderBO();
+			xb.start("div").addAttribute("class", "xx2");
+			By medicineDetailBy = By.xpath(xb.getXpath());
 			WebElement medicineDetail = d.findElement(medicineDetailBy);
 			System.out.println(medicineDetail.getText());
 
@@ -78,8 +79,9 @@ public class ClawingSinaMedicineServiceImpl extends CommonService implements Cla
 		/*
 		 * TODO
 		 */
-		ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("div", "class", "xx1_text");
-		By medicineDetailHeadBy = auxTool.byXpathBuilder(byXpathConditionBo);
+		XpathBuilderBO xb = new XpathBuilderBO();
+			xb.start("div").addAttribute("class", "xx1_text");
+		By medicineDetailHeadBy = By.xpath(xb.getXpath());
 		WebElement medicineDetailHead = d.findElement(medicineDetailHeadBy);
 		MedicineInfoError medicineInfoError = null;
 		SinaMedicineDetailHeadHandleResult detailHeadResult = sinaMedicineDetailHeadHandle(medicineDetailHead);
@@ -91,8 +93,8 @@ public class ClawingSinaMedicineServiceImpl extends CommonService implements Cla
 		}
 		Long factoryId = factoryService.findFactoryId(detailHeadResult.getFactoryName());
 		
-		byXpathConditionBo = ByXpathConditionBO.build("div", "class", "xx2");
-		By medicineDetailMainBy = auxTool.byXpathBuilder(byXpathConditionBo);
+		xb.start("div").addAttribute("class", "xx2");
+		By medicineDetailMainBy = By.xpath(xb.getXpath());
 		WebElement medicineDetailMain = d.findElement(medicineDetailMainBy);
 		SinaMedicineDetailMainHandleResult detailMainResult = sinaMedicineDetailMainHandle(medicineDetailMain);
 		if (!detailMainResult.isSuccess()) {
@@ -266,8 +268,9 @@ public class ClawingSinaMedicineServiceImpl extends CommonService implements Cla
 		 */
 		for(WebElement ele : targetEleList) {
 			ele.click();
-			ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("div", "class", "Yp_xx_text");
-			By textDivBy = auxTool.byXpathBuilder(byXpathConditionBo);
+			XpathBuilderBO xb = new XpathBuilderBO();
+			xb.start("div").addAttribute("class", "Yp_xx_text");
+			By textDivBy = By.xpath(xb.getXpath());
 			WebElement textDiv = d.findElement(textDivBy);
 			String text = textDiv.getText();
 			System.out.println(text);
