@@ -114,4 +114,11 @@ public abstract class MovieClawingCommonService extends ClawingCommonService {
 		return MovieRegionType.otherMovie.getCode();
 	}
 
+	protected String getIntroductionSavePath() {
+		if(isWindows()) {
+			return pathChangeByDetectOS("d:/" + introductionSavePath);
+		} else {
+			return pathChangeByDetectOS(introductionSavePath);
+		}
+	}
 }

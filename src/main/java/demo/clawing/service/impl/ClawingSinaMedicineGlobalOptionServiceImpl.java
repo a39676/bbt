@@ -30,7 +30,7 @@ public class ClawingSinaMedicineGlobalOptionServiceImpl extends CommonService im
 
 		if (StringUtils.isNotBlank(medicineDocumentFolderPath)) {
 			globalOptionService.checkFolderExists(medicineDocumentFolderPath);
-			return globalOptionService.pathChangeByDetectOS(medicineDocumentFolderPath);
+			return pathChangeByDetectOS(medicineDocumentFolderPath);
 		}
 
 		if (isWindows()) {
@@ -38,7 +38,7 @@ public class ClawingSinaMedicineGlobalOptionServiceImpl extends CommonService im
 		} else {
 			medicineDocumentFolderPath = mainSavingFolder_linx + medicineDocumentFolder;
 		}
-		medicineDocumentFolderPath = globalOptionService.pathChangeByDetectOS(medicineDocumentFolderPath);
+		medicineDocumentFolderPath = pathChangeByDetectOS(medicineDocumentFolderPath);
 
 		SystemConstant constant = new SystemConstant();
 		constant.setConstantName(medicineDocumentFolder);

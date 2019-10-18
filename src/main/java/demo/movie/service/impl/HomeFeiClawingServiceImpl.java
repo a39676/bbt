@@ -212,6 +212,9 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 			r.setIsSuccess();
 			
 		} catch (Exception e) {
+			if("dev".equals(constantService.getValByName("envName"))) {
+				e.printStackTrace();
+			}
 			if(d != null) {
 				log.error("error:{}, url: {}" + e.getMessage() + d.getCurrentUrl());
 				auxTool.takeScreenshot(d, te);
@@ -478,24 +481,34 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 	}
 	
 	private void saveMovieInfo(WebDriver d, Long newMovieId, TestEvent te) {
+		/*
+		 * TODO
+		 * 部分正则表达式有问题
+		 */
 		MovieInfo info = new MovieInfo();
 		info.setId(newMovieId);
 
 		String webTitle = d.getTitle();
-		webTitle = webTitle.split("|")[0];
+		webTitle = webTitle.split("\\|")[0];
 		
 		String[] elements = webTitle.substring(1, webTitle.length() - 1).split("\\]\\[");
 		String longMovieTitle = elements[2];
-		String cnTitle = longMovieTitle.substring(0, longMovieTitle.indexOf(" "));
+		String sourceTitle = null;
+		int spaceIndex = longMovieTitle.indexOf(" ");
+		if(spaceIndex > -1) {
+			sourceTitle = longMovieTitle.substring(0, longMovieTitle.indexOf(" "));
+		} else {
+			sourceTitle = longMovieTitle;
+		}
 		
-		DoubanSubClawingResult doubanResult = doubanService.clawing(d, cnTitle, te);
+		DoubanSubClawingResult doubanResult = doubanService.clawing(d, sourceTitle, te);
 		info.setCnTitle(doubanResult.getCnTitle());
 		info.setOriginalTitle(doubanResult.getOriginalTitle());
 		info.setNationId(detectMovieRegion(doubanResult.getRegion()).longValue());
 		
 		infoMapper.insertSelective(info);
 
-		String savePath = introductionSavePath + File.separator + newMovieId + ".txt";
+		String savePath = getIntroductionSavePath() + File.separator + newMovieId + ".txt";
 		iou.byteToFile(doubanResult.getIntroduction().getBytes(), savePath);
 
 		MovieIntroduction po = new MovieIntroduction();

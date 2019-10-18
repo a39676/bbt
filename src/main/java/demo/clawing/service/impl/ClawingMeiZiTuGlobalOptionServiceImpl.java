@@ -30,7 +30,7 @@ public class ClawingMeiZiTuGlobalOptionServiceImpl extends CommonService impleme
 
 		if (StringUtils.isNotBlank(medicineDocumentFolderPath)) {
 			globalOptionService.checkFolderExists(medicineDocumentFolderPath);
-			return globalOptionService.pathChangeByDetectOS(medicineDocumentFolderPath);
+			return pathChangeByDetectOS(medicineDocumentFolderPath);
 		}
 
 		if (isWindows()) {
@@ -38,7 +38,7 @@ public class ClawingMeiZiTuGlobalOptionServiceImpl extends CommonService impleme
 		} else {
 			medicineDocumentFolderPath = mainSavingFolder_linx + meiZiTuFolder;
 		}
-		medicineDocumentFolderPath = globalOptionService.pathChangeByDetectOS(medicineDocumentFolderPath);
+		medicineDocumentFolderPath = pathChangeByDetectOS(medicineDocumentFolderPath);
 
 		SystemConstant constant = new SystemConstant();
 		constant.setConstantName(meiZiTuFolder);

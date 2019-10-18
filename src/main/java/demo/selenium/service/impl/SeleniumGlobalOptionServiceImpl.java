@@ -167,12 +167,4 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 		return pathChangeByDetectOS(iePath);
 	}
 
-	@Override
-	public String pathChangeByDetectOS(String oldPath) {
-		if(isWindows()) {
-			return oldPath.replaceAll("/", "\\\\");
-		} else {
-			return oldPath.replaceAll("\\\\", "/");
-		}
-	}
 }

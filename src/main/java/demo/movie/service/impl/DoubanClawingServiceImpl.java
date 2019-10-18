@@ -57,9 +57,12 @@ public final class DoubanClawingServiceImpl extends MovieClawingCommonService im
 			
 		} finally {
 			r.setMessage(report.toString());
-			if (d != null) {
-				d.quit();
-			}
+			/*
+			 * 非本方法创建的 web driver  不在本方法结束!!!
+			 */
+//			if (d != null) {
+//				d.quit();
+//			}
 		}
 		
 		return r;
