@@ -46,7 +46,7 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 			if (!"dev".equals(envName) || !isWindows()) {
 				options.addArguments(WebDriverConstant.headLess);
 			}
-//			options.addArguments(WebDriverConstant.headLess);
+			options.addArguments(WebDriverConstant.headLess);
 		}
 		
 

@@ -54,20 +54,20 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 	private MeizituGroupRecordMapper groupRecordMapper;
 
 	private String mainUrl = "https://www.mzitu.com";
-	private static TestEvent t = new TestEvent();
 	private RandomDataGenerator randomDateGenerator = new RandomDataGenerator();
 	
-	static {
+	
+	private TestEvent buildTestEvent() {
+		TestEvent t = new TestEvent();
 		t.setEventName("mzt");
 		t.setId(1L);
+		return t;
 	}
 
 	@Override
 	public void meiZiTuMain() {
-		TestEvent te = new TestEvent();
-		te.setId(1L);
-		te.setEventName("clawingMedicineTest");
-		WebDriver d = webDriverService.buildFireFoxWebDriver();
+		TestEvent te = buildTestEvent();
+		WebDriver d = webDriverService.buildChrome76WebDriver();
 
 		String mainWindow = d.getWindowHandle();
 
@@ -98,7 +98,7 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			auxTool.takeScreenshot(d, t);
+			auxTool.takeScreenshot(d, te);
 		} finally {
 			if (d != null) {
 				d.quit();
@@ -198,8 +198,7 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 	}
 
 	private void subImgHandler(WebDriver d, String title, File folder) {
-//		ByXpathConditionBO byXpathConditionBo = ByXpathConditionBO.build("img", "alt", title);
-//		By imgBy = auxTool.byXpathBuilder(byXpathConditionBo);
+		TestEvent t = buildTestEvent();
 		By imgBy = ByTagName.tagName("img");
 		List<WebElement> imgs = null;
 		try {
