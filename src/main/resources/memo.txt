@@ -1,6 +1,8 @@
 需要增加 删除垃圾数据的定时任务
 爬取movie时  因各种原因, movie_* 各个表下的垃圾数据,  记得先清理 introduction 底下的各个文件
 
+movie_record 较多垃圾数据,  url 资源众多重复, 收集环节出错
+
 HomeFeiClawingServiceImpl.saveMovieInfo()
 底下部分正则表达式有问题
 从页面title 选取电影名 可能有问题
