@@ -3,8 +3,4 @@
 
 movie_record 较多垃圾数据,  url 资源众多重复, 收集环节出错
 
-HomeFeiClawingServiceImpl.saveMovieInfo()
-底下部分正则表达式有问题
-从页面title 选取电影名 可能有问题
-
 从豆瓣取回简介后, introduectionMapper 考虑使用 insert or update??
