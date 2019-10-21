@@ -43,11 +43,6 @@ public class SeleniumAuxiliaryToolServiceImpl extends CommonService implements S
 	@Autowired
 	private ScreenshotService screenshotService;
 	
-	/*
-	 * about xpath 
-	 * https://www.swtestacademy.com/xpath-selenium/
-	 */
-
 	@Override
 	public WebElement fluentWait(WebDriver driver, final By by) {
 		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)

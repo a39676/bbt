@@ -6,6 +6,10 @@ package demo.selenium.pojo.bo;
  * 未规范, 暂以bo存放
  * 
  */
+/*
+ * about xpath 
+ * https://www.swtestacademy.com/xpath-selenium/
+ */
 public class XpathBuilderBO {
 
 	private String xpath;
@@ -14,8 +18,9 @@ public class XpathBuilderBO {
 		return xpath;
 	}
 
-	public void setXpath(String xpath) {
+	public XpathBuilderBO setXpath(String xpath) {
 		this.xpath = xpath;
+		return this;
 	}
 
 	public XpathBuilderBO start(String tagName) {
