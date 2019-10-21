@@ -124,32 +124,32 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 				dailyCheckIn(d, mainWindowHandler, te);
 			}
 
-			Set<String> postLinks = new HashSet<String>();
+			Set<String> collectLinkSet = new HashSet<String>();
 
 			int clawPageCount = 0;
-			clawPageCount = partHandle(d, clawPageMax, postLinks, part1);
+			clawPageCount = partHandle(d, clawPageMax, collectLinkSet, part1);
 			report.append("part1 handled, claw " + clawPageCount + " pages \n");
-			clawPageCount = partHandle(d, clawPageMax, postLinks, part2);
+			clawPageCount = partHandle(d, clawPageMax, collectLinkSet, part2);
 			report.append("part2 handled, claw " + clawPageCount + " pages \n");
-			clawPageCount = partHandle(d, clawPageMax, postLinks, part3);
+			clawPageCount = partHandle(d, clawPageMax, collectLinkSet, part3);
 			report.append("part3 handled, claw " + clawPageCount + " pages \n");
 			
-			List<String> linksList = new ArrayList<String>(postLinks);
-			report.append("found " + postLinks.size() + " links \n");
+			List<String> linkListDTO = new ArrayList<String>(collectLinkSet);
+			report.append("found " + collectLinkSet.size() + " links \n");
 			
 			MovieRecordFindByConditionDTO dto = new MovieRecordFindByConditionDTO();
-			dto.setUrlList(linksList);
+			dto.setUrlList(linkListDTO);
 			dto.setCaseId(te.getCaseId());
 			List<MovieRecord> records = recordMapper.findByCondition(dto);
 
 			for (MovieRecord i : records) {
-				postLinks.remove(i.getUrl());
+				collectLinkSet.remove(i.getUrl());
 			}
-			report.append("after filter, found " + postLinks.size() + " links \n");
+			report.append("after filter, found " + collectLinkSet.size() + " links \n");
 			
-			linksList = new ArrayList<String>(postLinks);
-			topicLinksSave(linksList, te);
-			report.append("save " + linksList.size() + " links \n");
+			linkListDTO = new ArrayList<String>(collectLinkSet);
+			topicLinksSave(linkListDTO, te);
+			report.append("save " + linkListDTO.size() + " links \n");
 			
 			r.setIsSuccess();
 			
@@ -233,7 +233,7 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 		
 	}
 	
-	private int partHandle(WebDriver d, int clawPageMax, Set<String> postLinks, String url) throws InterruptedException {
+	private int partHandle(WebDriver d, int clawPageMax, Set<String> collectLinkSet, String url) throws InterruptedException {
 		try {
 			d.get(url);
 			Thread.sleep(1200L);
@@ -244,7 +244,7 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 		boolean hasNextPage = true;
 		int clawPageCount = 0;
 		for (; clawPageCount < clawPageMax - 1 && hasNextPage == true; clawPageCount++) {
-			postLinks.addAll(pageHandle(d, clawPageCount));
+			collectLinkSet.addAll(pageHandle(d, clawPageCount));
 			Thread.sleep(1200L);
 			if (clawPageCount < clawPageMax - 1) {
 				hasNextPage = nextPage(d);
