@@ -27,25 +27,21 @@ public class MovieTaskServiceImpl  {
 	@Scheduled(cron="43 32 02 * * *") 
 	public void insertHomeFeiEvent1() {
 		homeFeiClawingService.insertCollectionEvent();
-		homeFeiClawingService.insertDownloadEvent();
 		dyttClawingService.insertclawingEvent();
 	}
 	@Scheduled(cron="34 12 08 * * *") 
 	public void insertHomeFeiEvent2() {
 		homeFeiClawingService.insertCollectionEvent();
-		homeFeiClawingService.insertDownloadEvent();
 		dyttClawingService.insertclawingEvent();
 	}
 	@Scheduled(cron="40 39 14 * * *") 
 	public void insertHomeFeiEvent3() {
 		homeFeiClawingService.insertCollectionEvent();
-		homeFeiClawingService.insertDownloadEvent();
 		dyttClawingService.insertclawingEvent();
 	}
 	@Scheduled(cron="40 49 20 * * *") 
 	public void insertHomeFeiEvent4() {
 		homeFeiClawingService.insertCollectionEvent();
-		homeFeiClawingService.insertDownloadEvent();
 		dyttClawingService.insertclawingEvent();
 	}
 }
