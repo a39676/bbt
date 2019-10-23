@@ -1,4 +1,4 @@
-package demo.movie.controller;
+package demo.movieInteraction.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.movie.pojo.result.FindMovieDetailResult;
 import demo.movie.pojo.result.FindMovieSummaryListResult;
-import demo.movie.service.MovieInteractionService;
+import demo.movieInteraction.service.MovieInteractionService;
 import movie.pojo.constant.MovieInteractionUrl;
 import movie.pojo.dto.FindMovieDetailDTO;
 import movie.pojo.dto.FindMovieSummaryListDTO;

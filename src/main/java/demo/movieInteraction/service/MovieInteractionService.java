@@ -1,4 +1,4 @@
-package demo.movie.service;
+package demo.movieInteraction.service;
 
 import demo.movie.pojo.result.FindMovieDetailResult;
 import demo.movie.pojo.result.FindMovieSummaryListResult;

@@ -1,4 +1,4 @@
-package demo.movie.service.impl;
+package demo.movieInteraction.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,7 +26,7 @@ import demo.movie.pojo.po.MovieMagnetUrl;
 import demo.movie.pojo.po.MovieMagnetUrlExample;
 import demo.movie.pojo.result.FindMovieDetailResult;
 import demo.movie.pojo.result.FindMovieSummaryListResult;
-import demo.movie.service.MovieInteractionService;
+import demo.movieInteraction.service.MovieInteractionService;
 import ioHandle.FileUtilCustom;
 import movie.pojo.dto.FindMovieDetailDTO;
 import movie.pojo.dto.FindMovieSummaryListDTO;

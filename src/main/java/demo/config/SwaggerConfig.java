@@ -21,11 +21,13 @@ public class SwaggerConfig {
 	@Autowired
 	private SystemConstantService constantService;
 	
+	
     @Bean
     public Docket api() {
 		Docket d = null;
-		String envName = constantService.getValByName("envName");
-		if ("dev".contentEquals(envName)) {
+		String envName = constantService.getValByName("envName", true);
+		System.err.println("envName: " + envName);
+		if ("dev".equals(envName)) {
 			d = new Docket(DocumentationType.SWAGGER_2)
 					.apiInfo(apiInfo())
 					.select()
@@ -35,7 +37,7 @@ public class SwaggerConfig {
 			d = new Docket(DocumentationType.SWAGGER_2)
 					.apiInfo(apiInfo())
 					.select()
-					.apis(RequestHandlerSelectors.basePackage(""))
+					.apis(RequestHandlerSelectors.basePackage("demo.movieInteraction.controller"))
 					.paths(PathSelectors.any())
 					.build();
 		}
