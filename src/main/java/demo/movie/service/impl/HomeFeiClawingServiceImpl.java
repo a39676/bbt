@@ -1,6 +1,7 @@
 package demo.movie.service.impl;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,6 +24,7 @@ import demo.movie.mapper.MovieIntroductionMapper;
 import demo.movie.mapper.MovieMagnetUrlMapper;
 import demo.movie.mapper.MovieRecordMapper;
 import demo.movie.pojo.constant.MovieClawingConstant;
+import demo.movie.pojo.dto.MovieIntroductionDTO;
 import demo.movie.pojo.dto.MovieRecordFindByConditionDTO;
 import demo.movie.pojo.po.MovieInfo;
 import demo.movie.pojo.po.MovieIntroduction;
@@ -169,6 +171,11 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 	
 	@Override
 	public CommonResultBBT download(TestEvent te) {
+		/*
+		 * TODO
+		 * linux 上运行 出现多处不稳定, 暂时改为window下运行, 资料上传至服务器
+		 * 需要处理电影简介的文档传输
+		 */
 		complexToolService.cleanTmpFiles(globalOptionService.getDownloadDir(), "torrent", LocalDateTime.now());
 		
 		CommonResultBBT r = new CommonResultBBT();
@@ -483,6 +490,7 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 	private void saveMovieInfo(WebDriver d, Long newMovieId, TestEvent te) {
 		/*
 		 * TODO
+		 * 2019-10-20
 		 * 部分正则表达式有问题
 		 */
 		MovieInfo info = new MovieInfo();
@@ -501,20 +509,20 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 			sourceTitle = longMovieTitle;
 		}
 		
+		
 		DoubanSubClawingResult doubanResult = doubanService.clawing(d, sourceTitle, te);
 		info.setCnTitle(doubanResult.getCnTitle());
 		info.setOriginalTitle(doubanResult.getOriginalTitle());
 		info.setNationId(detectMovieRegion(doubanResult.getRegion()).longValue());
-		
 		infoMapper.insertSelective(info);
-
-		String savePath = getIntroductionSavePath() + File.separator + newMovieId + ".txt";
-		iou.byteToFile(doubanResult.getIntroduction().getBytes(), savePath);
-
-		MovieIntroduction po = new MovieIntroduction();
-		po.setMovieId(newMovieId);
-		po.setIntroPath(savePath);
-		introduectionMapper.insertSelective(po);
+		
+		/*
+		 * TODO
+		 * 2019-10-23
+		 * 因改在win下运行, 简介上传回服务器, 此处需要改动
+		 */
+		
+		
 	}
 	
 	private String handleTorrentDownload(WebDriver d, WebElement targetA, String torrentFileName) {
@@ -560,4 +568,24 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 		return count;
 	}
 
+	public void handleMovieIntroductionRecive(MovieIntroductionDTO dto) {
+		/*
+		 * TODO
+		 * 2019-10-23
+		 * 处理回传的爬取的电影简介
+		 * 需一个类似秘钥的校验
+		 */
+		
+		String savePath = getIntroductionSavePath() + File.separator + dto.getMovieId() + ".txt";
+		iou.byteToFile(dto.getIntroduction().getBytes(StandardCharsets.UTF_8), savePath);
+
+		MovieIntroduction po = new MovieIntroduction();
+		po.setMovieId(dto.getMovieId());
+		po.setIntroPath(savePath);
+		introduectionMapper.insertSelective(po);
+	}
+	
+	public void handleMovieIntroductionSend(MovieIntroductionDTO dto) {
+		
+	}
 }
