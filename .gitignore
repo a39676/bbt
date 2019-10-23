@@ -109,7 +109,7 @@ mySqlDnfRecorder.properties
 mySqlFinancer.properties
 mySqlTestDB.properties
 bbt.properties
-users.properties
+bbt_backup.properties
 
 .DS_Store
 .AppleDouble
