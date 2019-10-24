@@ -27,7 +27,7 @@ import demo.selenium.pojo.bo.XpathBuilderBO;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.WebDriverService;
 import demo.testCase.pojo.po.TestEvent;
-import demo.testCase.pojo.type.MovieTestCaseType;
+import demo.testCase.pojo.type.TestCaseType;
 import demo.testCase.service.TestEventService;
 import ioHandle.FileUtilCustom;
 
@@ -59,7 +59,7 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 	private String newMovie = mainUrl + "/html/gndy/dyzz/index.html";
 
 	private TestEvent buildTestEvent() {
-		return buildTestEvent(MovieTestCaseType.dytt);
+		return buildTestEvent(TestCaseType.dytt);
 	}
 	
 	@Override
@@ -147,7 +147,7 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 		MovieRecordFindByConditionDTO findMovieRecordDTO = new MovieRecordFindByConditionDTO();
 		findMovieRecordDTO.setUrl(subUrl);
 		findMovieRecordDTO.setWasClaw(true);
-		findMovieRecordDTO.setCaseId(MovieTestCaseType.dytt.getId());
+		findMovieRecordDTO.setCaseId(TestCaseType.dytt.getId());
 		List<MovieRecord> records = recordMapper.findByCondition(findMovieRecordDTO);
 		if (records != null && records.size() > 0) {
 			log.info(subUrl + " was clawed");
@@ -206,7 +206,7 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 			record.setId(snowFlake.getNextId());
 			record.setWasClaw(true);
 			record.setMovieId(newMovieId);
-			record.setCaseId(MovieTestCaseType.dytt.getId());
+			record.setCaseId(TestCaseType.dytt.getId());
 			recordMapper.insertSelective(record);
 
 		} catch (Exception e) {

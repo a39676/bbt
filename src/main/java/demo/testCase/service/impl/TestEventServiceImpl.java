@@ -13,7 +13,7 @@ import demo.testCase.pojo.bo.TestEventBO;
 import demo.testCase.pojo.constant.TestEventOptionConstant;
 import demo.testCase.pojo.po.TestCase;
 import demo.testCase.pojo.po.TestEvent;
-import demo.testCase.pojo.type.MovieTestCaseType;
+import demo.testCase.pojo.type.TestCaseType;
 import demo.testCase.service.TestCaseService;
 import demo.testCase.service.TestEventService;
 
@@ -73,11 +73,11 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		if(caseId == null) {
 			return null;
 		}  
-		if (MovieTestCaseType.dytt.getId().equals(caseId)) {
+		if (TestCaseType.dytt.getId().equals(caseId)) {
 			return dyttService.clawing(te);
-		} else if (MovieTestCaseType.homeFeiCollection.getId().equals(caseId)) {
+		} else if (TestCaseType.homeFeiCollection.getId().equals(caseId)) {
 			return homeFeiService.collection(te);
-		} else if (MovieTestCaseType.homeFeiDownload.getId().equals(caseId)) {
+		} else if (TestCaseType.homeFeiDownload.getId().equals(caseId)) {
 			return homeFeiService.download(te);
 		}
 		return null;

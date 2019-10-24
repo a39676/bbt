@@ -41,7 +41,7 @@ import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.WebDriverService;
 import demo.selenium.service.impl.JavaScriptServiceImpl;
 import demo.testCase.pojo.po.TestEvent;
-import demo.testCase.pojo.type.MovieTestCaseType;
+import demo.testCase.pojo.type.TestCaseType;
 import demo.testCase.service.TestEventService;
 import demo.tool.service.ComplexToolService;
 import httpHandel.HttpUtil;
@@ -93,11 +93,11 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 
 	
 	private TestEvent collectionTestEvent() {
-		return buildTestEvent(MovieTestCaseType.homeFeiCollection);
+		return buildTestEvent(TestCaseType.homeFeiCollection);
 	}
 	
 	private TestEvent downloadTestEvent() {
-		return buildTestEvent(MovieTestCaseType.homeFeiDownload);
+		return buildTestEvent(TestCaseType.homeFeiDownload);
 	}
 	
 	@Override
@@ -189,7 +189,7 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 		// 实际运行时, 爬取一定页面后, 运行效率低下, 故需要重新启动浏览器
 		int timeToReOpenBrowser = 5;
 		MovieRecordFindByConditionDTO dto = new MovieRecordFindByConditionDTO();
-		dto.setCaseId(MovieTestCaseType.homeFeiCollection.getId());
+		dto.setCaseId(TestCaseType.homeFeiCollection.getId());
 		dto.setWasClaw(false);
 		List<MovieRecord> records = recordMapper.findByCondition(dto);
 		

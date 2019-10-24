@@ -1,7 +1,8 @@
 package demo.testCase.pojo.type;
 
-public enum MovieTestCaseType {
-	
+public enum TestCaseType {
+
+	// movie case start
 	/** dytt */
 	dytt(5L, "dytt"),
 	/** homeFei 搜集新帖链接 */
@@ -14,12 +15,18 @@ public enum MovieTestCaseType {
 	btbtdyCollection(9L, "btbtdyCollection"),
 	/** bt电影天堂 按帖链接下载 */
 	btbtdyDownload(10L, "btbtdyDownload"),
+//	movie case end
+
+	// bad joke sms start
+	/** 91wenwen */
+	_91wenwen(11L, "91wenwen"),
+//	bad joke sms end
 	;
-	
+
 	private Long id;
 	private String eventName;
-	
-	MovieTestCaseType(Long id, String eventName) {
+
+	TestCaseType(Long id, String eventName) {
 		this.id = id;
 		this.eventName = eventName;
 	}
@@ -27,6 +34,7 @@ public enum MovieTestCaseType {
 	public Long getId() {
 		return id;
 	}
+
 	public String getEventName() {
 		return eventName;
 	}

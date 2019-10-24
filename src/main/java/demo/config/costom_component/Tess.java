@@ -49,8 +49,8 @@ public class Tess {
 		}
 	}
 
-	public String buildFilePath(String name, String fileFormat) {
-		return String.format("D:\\auxiliary\\captcha/%s.%s", name, fileFormat);
+	private String buildFilePath(String name, String fileFormat) {
+		return String.format("D:\\auxiliary\\tmp\\tess\\/%s.%s", name, fileFormat);
 	}
 
 	public void batchRename(String oldSuffixName, String newSuffixName, int start, int end) {
@@ -67,9 +67,10 @@ public class Tess {
 
 	public static void main(String[] args) {
 		Tess ob = new Tess();
-		String fileSourceFormat = "gif";
+		String fileSourceFormat = "jpg";
 //		String fileTargetFormat = "png";
 //		t.batchRename(fileSourceFormat, fileTargetFormat, 43, 49);
-		ob.batchOcr(fileSourceFormat, 10, 23);
+//		ob.batchOcr(fileSourceFormat, 10, 23);
+		ob.batchOcr(fileSourceFormat, 23, 29);
 	}
 }
