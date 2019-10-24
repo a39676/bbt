@@ -14,6 +14,7 @@ import org.springframework.web.servlet.view.JstlView;
 
 import demo.config.costom_component.SnowFlake;
 import demo.util.BaseUtilCustom;
+import httpHandel.HttpUtil;
 import ioHandle.FileUtilCustom;
 import stringHandle.StringUtilCustom;
 
@@ -70,5 +71,10 @@ public class SpringMvcConfig implements WebMvcConfigurer {
 	@Bean
 	public FileUtilCustom getFileUtilCustom() {
 		return new FileUtilCustom();
+	}
+	
+	@Bean
+	public HttpUtil getHttpUtil() {
+		return new HttpUtil();
 	}
 }

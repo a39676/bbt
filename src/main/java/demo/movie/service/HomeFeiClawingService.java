@@ -1,6 +1,7 @@
 package demo.movie.service;
 
 import demo.baseCommon.pojo.result.CommonResultBBT;
+import demo.movie.pojo.dto.MovieIntroductionDTO;
 import demo.testCase.pojo.po.TestEvent;
 
 public interface HomeFeiClawingService {
@@ -12,5 +13,7 @@ public interface HomeFeiClawingService {
 	Integer insertCollectionEvent();
 
 	Integer insertDownloadEvent();
+
+	void handleMovieIntroductionRecive(MovieIntroductionDTO dto);
 
 }

@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import auxiliaryCommon.pojo.result.CommonResult;
+import demo.movie.pojo.dto.MovieIntroductionDTO;
 import demo.movie.pojo.result.FindMovieDetailResult;
 import demo.movie.pojo.result.FindMovieSummaryListResult;
+import demo.movie.service.HomeFeiClawingService;
 import demo.movieInteraction.service.MovieInteractionService;
 import movie.pojo.constant.MovieInteractionUrl;
 import movie.pojo.dto.FindMovieDetailDTO;
@@ -24,21 +27,23 @@ import movie.pojo.type.MovieRegionType;
 public class MovieInteractionController {
 
 	@Autowired
-	private MovieInteractionService service;
+	private MovieInteractionService movieInteractionService;
+	@Autowired
+	private HomeFeiClawingService homeFeiClawingService;
 	
 	@PostMapping(value = MovieInteractionUrl.simpleList)
 	@ResponseBody
 	public FindMovieSummaryListResult findMovieSummaryList(@RequestBody FindMovieSummaryListDTO dto) {
-		return service.findMovieSummaryList(dto);
+		return movieInteractionService.findMovieSummaryList(dto);
 	}
 	
 	@PostMapping(value = MovieInteractionUrl.movieDetail)
 	@ResponseBody
 	public FindMovieDetailResult findMovieDetail(@RequestBody FindMovieDetailDTO dto) {
-		return service.findMovieDetail(dto);
+		return movieInteractionService.findMovieDetail(dto);
 	}
 	
-	@GetMapping(value = "/movieRegionType")
+	@GetMapping(value = MovieInteractionUrl.movieRegionType)
 	@ResponseBody
 	public String movieRegionType() {
 		Map<String, String> l = new HashMap<String, String>();
@@ -46,5 +51,14 @@ public class MovieInteractionController {
 			l.put(i.getCode().toString(), i.getName());
 		}
 		return l.toString();
+	}
+	
+	@PostMapping(value = MovieInteractionUrl.handleMovieIntroductionRecive)
+	@ResponseBody
+	public CommonResult handleMovieIntroductionRecive(@RequestBody MovieIntroductionDTO dto) {
+		homeFeiClawingService.handleMovieIntroductionRecive(dto);
+		CommonResult r = new CommonResult();
+		r.setIsSuccess();
+		return r;
 	}
 }

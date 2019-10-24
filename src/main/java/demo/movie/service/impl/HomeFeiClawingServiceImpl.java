@@ -17,6 +17,7 @@ import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.movie.mapper.MovieInfoMapper;
@@ -43,13 +44,18 @@ import demo.testCase.pojo.po.TestEvent;
 import demo.testCase.pojo.type.MovieTestCaseType;
 import demo.testCase.service.TestEventService;
 import demo.tool.service.ComplexToolService;
+import httpHandel.HttpUtil;
 import ioHandle.FileUtilCustom;
+import movie.pojo.constant.MovieInteractionUrl;
+import net.sf.json.JSONObject;
 
 @Service
 public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService implements HomeFeiClawingService {
 
 	@Autowired
 	private FileUtilCustom iou;
+	@Autowired
+	private HttpUtil httpUtil;
 	@Autowired
 	private ComplexToolService complexToolService;
 	
@@ -516,12 +522,7 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 		info.setNationId(detectMovieRegion(doubanResult.getRegion()).longValue());
 		infoMapper.insertSelective(info);
 		
-		/*
-		 * TODO
-		 * 2019-10-23
-		 * 因改在win下运行, 简介上传回服务器, 此处需要改动
-		 */
-		
+		handleMovieIntroductionSend(newMovieId, doubanResult.getIntroduction());
 		
 	}
 	
@@ -568,13 +569,16 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 		return count;
 	}
 
+	@Override
 	public void handleMovieIntroductionRecive(MovieIntroductionDTO dto) {
-		/*
-		 * TODO
-		 * 2019-10-23
-		 * 处理回传的爬取的电影简介
-		 * 需一个类似秘钥的校验
-		 */
+		if(StringUtils.isBlank(dto.getSk())) {
+			return;
+		}
+		
+		String sk = constantService.getValByName(SystemConstantStore.superAdminKey, true);
+		if(!dto.getSk().equals(sk)) {
+			return;
+		}
 		
 		String savePath = getIntroductionSavePath() + File.separator + dto.getMovieId() + ".txt";
 		iou.byteToFile(dto.getIntroduction().getBytes(StandardCharsets.UTF_8), savePath);
@@ -585,7 +589,21 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 		introduectionMapper.insertSelective(po);
 	}
 	
-	public void handleMovieIntroductionSend(MovieIntroductionDTO dto) {
+	private void handleMovieIntroductionSend(Long movieId, String introduction) {
+		MovieIntroductionDTO dto = new MovieIntroductionDTO();
+		dto.setSk(constantService.getValByName(SystemConstantStore.superAdminKey));
+		dto.setMovieId(movieId);
+		dto.setIntroduction(introduction);
+		
+//		String url = constantService.getValByName(SystemConstantStore.hostName1) + MovieInteractionUrl.root + MovieInteractionUrl.handleMovieIntroductionRecive;
+		String url = "http://127.0.0.1:10002" + MovieInteractionUrl.root + MovieInteractionUrl.handleMovieIntroductionRecive;
+		
+		try {
+			JSONObject j = JSONObject.fromObject(dto);
+			httpUtil.sendPostRestful(url, j.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
 }

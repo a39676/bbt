@@ -4,6 +4,7 @@ public class MovieIntroductionDTO {
 
 	private String introduction;
 	private Long movieId;
+	private String sk;
 
 	public String getIntroduction() {
 		return introduction;
@@ -21,9 +22,17 @@ public class MovieIntroductionDTO {
 		this.movieId = movieId;
 	}
 
+	public String getSk() {
+		return sk;
+	}
+
+	public void setSk(String sk) {
+		this.sk = sk;
+	}
+
 	@Override
 	public String toString() {
-		return "MovieIntroductionDTO [introduction=" + introduction + ", movieId=" + movieId + "]";
+		return "MovieIntroductionDTO [introduction=" + introduction + ", movieId=" + movieId + ", sk=" + sk + "]";
 	}
 
 }
