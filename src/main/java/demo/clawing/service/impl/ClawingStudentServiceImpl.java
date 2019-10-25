@@ -14,9 +14,7 @@ import org.springframework.stereotype.Service;
 
 import demo.baseCommon.service.CommonService;
 import demo.clawing.service.ClawingStudentService;
-import demo.config.costom_component.Tess;
 import demo.selenium.pojo.bo.XpathBuilderBO;
-import demo.selenium.pojo.result.ScreenshotSaveResult;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.WebDriverService;
 import demo.testCase.pojo.po.TestEvent;
@@ -33,8 +31,6 @@ public class ClawingStudentServiceImpl extends CommonService implements ClawingS
 	private SeleniumAuxiliaryToolService auxTool;
 //	@Autowired
 //	private JavaScriptService jsUtil;
-	@Autowired
-	private Tess tess;
 	
 	private String mainUrl = "https://www.eeagd.edu.cn";
 	private String loginUrl = mainUrl + "/cr/cgbm/login.jsp";
@@ -171,9 +167,7 @@ public class ClawingStudentServiceImpl extends CommonService implements ClawingS
 		String vcode = null;
 
 		try {
-			ScreenshotSaveResult vcodeImgSaveResult = auxTool.takeElementScreenshot(d, te, verifyCodeImg,
-					String.valueOf(snowFlake.getNextId()));
-			vcode = tess.ocr(vcodeImgSaveResult.getSavingPath(), true);
+			vcode = auxTool.captchaHandle(d, verifyCodeImg, te);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

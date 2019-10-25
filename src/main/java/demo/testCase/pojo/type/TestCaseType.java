@@ -18,8 +18,8 @@ public enum TestCaseType {
 //	movie case end
 
 	// bad joke sms start
-	/** 91wenwen */
-	_91wenwen(11L, "91wenwen"),
+	/** bad joke sms */
+	badJokeSms(11L, "badJokeSms"),
 //	bad joke sms end
 	;
 

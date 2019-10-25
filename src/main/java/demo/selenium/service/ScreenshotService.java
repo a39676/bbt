@@ -11,4 +11,6 @@ public interface ScreenshotService {
 	 * @return
 	 */
 	ScreenshotSaveResult screenshotSave(ScreenshotSaveDTO dto);
+
+	ScreenshotSaveResult captchaScreenshotSave(ScreenshotSaveDTO dto);
 }

@@ -5,17 +5,15 @@ import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.badJoke.sms.pojo.dto.BadJokeSMSDTO;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.service.impl.ClawingCommonService;
-import demo.config.costom_component.Tess;
 import demo.selenium.pojo.bo.XpathBuilderBO;
-import demo.selenium.pojo.result.ScreenshotSaveResult;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
-import demo.selenium.service.WebDriverService;
 import demo.testCase.pojo.po.TestEvent;
 import demo.testCase.pojo.type.TestCaseType;
 import demo.testCase.service.TestEventService;
@@ -28,17 +26,16 @@ public class BadJokeSMSService extends ClawingCommonService {
 	
 	@Autowired
 	private TestEventService testEventService;
-	@Autowired
-	private WebDriverService webDriverService;
+//	@Autowired
+//	private WebDriverService webDriverService;
 	@Autowired
 	private SeleniumAuxiliaryToolService auxTool;
-	@Autowired
-	private Tess tess;
 	
 	private String normalPwd = "398Apk_Lor";
+	private String normalUsername = "testing";
 	
 	private TestEvent buildTestEvent() {
-		return buildTestEvent(TestCaseType._91wenwen);
+		return buildTestEvent(TestCaseType.badJokeSms);
 	}
 	
 	public Integer insertBadJokeSMSEvent() {
@@ -54,6 +51,8 @@ public class BadJokeSMSService extends ClawingCommonService {
 	 * 是否加入定时任务?...
 	 * 根据参数, 优先查找久远号码N个, 执行N条URL行动
 	 * 最外围 try catch 需要包括 finally {d.quit();}
+	 * 预留一个 break 条件, 每次执行前, 检查需要终止的号码, 
+	 * 预留一个万用终止条件(包括通过一个万用号码终止当前号码, 通过一个号码终止所有队列中等待的号码) 
 	 * 
 	 */
 	
@@ -141,17 +140,16 @@ public class BadJokeSMSService extends ClawingCommonService {
 			pwdInput.sendKeys(normalPwd);
 			
 			WebElement vcodeImg = d.findElement(By.id("phoneCheckCode"));
-			ScreenshotSaveResult vcodeImgSaveResult = auxTool.takeElementScreenshot(d, te, vcodeImg, String.valueOf(snowFlake.getNextId()));
 			
 			WebElement sendSmsButton = d.findElement(By.id("smsbtn"));
 			
 			String vcode = null;
-			WebElement vcodeIsCorrect = d.findElement(By.id("trphone_code"));;
+			WebElement vcodeIsCorrect = d.findElement(By.id("trphone_code"));
 			
 			int vcodeCount = 0;
 			while(vcodeIsCorrect.isDisplayed() && vcodeCount < 15) {
 				try {
-					vcode = tess.ocr(vcodeImgSaveResult.getSavingPath(), true);
+					vcode = auxTool.captchaHandle(d, vcodeImg, te);
 					vcodeInput.sendKeys(vcode);
 					vcodeCount++;
 				} catch (Exception e) {
@@ -201,7 +199,6 @@ public class BadJokeSMSService extends ClawingCommonService {
 			pwdInput.sendKeys(normalPwd);
 			
 			WebElement vcodeImg = d.findElement(By.id("phoneCheckCode"));
-			ScreenshotSaveResult vcodeImgSaveResult = auxTool.takeElementScreenshot(d, te, vcodeImg, String.valueOf(snowFlake.getNextId()));
 			
 			WebElement sendSmsButton = d.findElement(By.id("smsbtn"));
 			
@@ -211,7 +208,7 @@ public class BadJokeSMSService extends ClawingCommonService {
 			int vcodeCount = 0;
 			while(vcodeIsCorrect.isDisplayed() && vcodeCount < 15) {
 				try {
-					vcode = tess.ocr(vcodeImgSaveResult.getSavingPath(), true);
+					vcode = auxTool.captchaHandle(d, vcodeImg, te);
 					vcodeInput.sendKeys(vcode);
 					sendSmsButton.click();
 					vcodeCount++;
@@ -366,6 +363,111 @@ public class BadJokeSMSService extends ClawingCommonService {
 		return r;
 	}
 	
+	public CommonResultBBT chunQiu(WebDriver d, TestEvent te, BadJokeSMSDTO dto) {
+		String url = "https://account.ch.com/NonRegistrations-Regist";
+		CommonResultBBT r = new CommonResultBBT();
+		StringBuffer report = new StringBuffer();
+
+		try {
+			d.get(url);
+			
+			XpathBuilderBO x = new XpathBuilderBO();
+			x.start("input").addAttribute("placeholder", "请输入手机号");
+			WebElement mobileInput = d.findElement(By.xpath(x.getXpath()));
+			mobileInput.clear();
+			mobileInput.sendKeys(dto.getMobileNum());
+			
+			WebElement sendSmsButton = d.findElement(By.id("getDynamicPwd"));
+			sendSmsButton.click();
+			
+			r.setIsSuccess();
+			
+		} catch (Exception e) {
+			log.error("error: {}, url: {}" + e.getMessage() + d.getCurrentUrl());
+			report.append(e.getMessage() + "\n");
+			auxTool.takeScreenshot(d, te);
+			
+		} finally {
+			r.setMessage(report.toString());
+		}
+		return r;
+	}
+	
+	public CommonResultBBT flyme(WebDriver d, TestEvent te, BadJokeSMSDTO dto) {
+		String url = "https://i.flyme.cn/mregister.html";
+		CommonResultBBT r = new CommonResultBBT();
+		StringBuffer report = new StringBuffer();
+
+		try {
+			d.get(url);
+			
+			WebElement mobileInput = d.findElement(By.id("phone"));
+			mobileInput.click();
+			mobileInput.sendKeys(dto.getMobileNum());
+			
+			XpathBuilderBO x = new XpathBuilderBO();
+			x.start("span").addAttribute("class", "geetest_wait_dot geetest_dot_1");
+			WebElement vaildClickSpan = d.findElement(By.xpath(x.getXpath()));
+			Actions a = new Actions(d);
+			a.moveToElement(vaildClickSpan).build().perform();
+			Thread.sleep(300L);
+			vaildClickSpan.click();
+			
+			Thread.sleep(2000L);
+			
+			x.start("div").addAttribute("id", "flymeService")
+			.findChild("span").addAttribute("class", "mzchkbox")
+			.findChild("span").addAttribute("class", "checkboxPic mzchkbox check_chk");
+			
+			WebElement agreeCheckbox = d.findElement(By.xpath(x.getXpath()));
+			agreeCheckbox.click();
+			
+			WebElement nextStep = d.findElement(By.id("nextStep"));
+			nextStep.click();
+			
+			r.setIsSuccess();
+			
+		} catch (Exception e) {
+			log.error("error: {}, url: {}" + e.getMessage() + d.getCurrentUrl());
+			report.append(e.getMessage() + "\n");
+			auxTool.takeScreenshot(d, te);
+			
+		} finally {
+			r.setMessage(report.toString());
+		}
+		return r;
+	}
+	
+	public CommonResultBBT demo(WebDriver d, TestEvent te, BadJokeSMSDTO dto) {
+		String url = "https://puser.zjzwfw.gov.cn/sso/usp.do?action=register";
+		CommonResultBBT r = new CommonResultBBT();
+		StringBuffer report = new StringBuffer();
+
+		try {
+			d.get(url);
+			
+			WebElement usernameInput = d.findElement(By.id("loginName"));
+			usernameInput.clear();
+			usernameInput.sendKeys(normalUsername);
+			
+			/*
+			 * TODO
+			 */
+			
+			r.setIsSuccess();
+			
+		} catch (Exception e) {
+			log.error("error: {}, url: {}" + e.getMessage() + d.getCurrentUrl());
+			report.append(e.getMessage() + "\n");
+			auxTool.takeScreenshot(d, te);
+			
+		} finally {
+			r.setMessage(report.toString());
+		}
+		return r;
+	}
+	
+	/*
 	public CommonResultBBT demo(WebDriver d, TestEvent te, BadJokeSMSDTO dto) {
 		String url = "https://passport.jumpw.com/views/register.jsp";
 		CommonResultBBT r = new CommonResultBBT();
@@ -386,13 +488,10 @@ public class BadJokeSMSService extends ClawingCommonService {
 		}
 		return r;
 	}
+	 */
 	
 	
 	/*
-	 * 
-	 * https://www.nike.com/cn/register
-	 * https://account.ch.com/NonRegistrations-Regist
-	 * https://i.flyme.cn/mregister.html
 	 * https://puser.zjzwfw.gov.cn/sso/usp.do?action=register
 	 * http://www.surong360.com/SR360/application/user/emailRegisterPage.do
 	 * https://www.rexxglobal.com/register_phone.html#

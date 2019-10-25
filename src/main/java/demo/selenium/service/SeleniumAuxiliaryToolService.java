@@ -32,14 +32,18 @@ public interface SeleniumAuxiliaryToolService {
 
 	ScreenshotSaveResult takeScreenshot(WebDriver driver, TestEvent testEvent);
 
-	ScreenshotSaveResult takeElementScreenshot(WebDriver driver, TestEvent testEvent, By by, String fileName)
+	ScreenshotSaveResult takeElementScreenshot(WebDriver driver, WebElement ele, TestEvent testEvent, String fileName)
 			throws IOException;
 
-	ScreenshotSaveResult takeElementScreenshot(WebDriver driver, TestEvent testEvent, By by) throws IOException;
+	ScreenshotSaveResult takeElementScreenshot(WebDriver driver, WebElement targetElement, TestEvent testEvent) throws IOException;
+
+	ScreenshotSaveResult takeCaptchaElementScreenshot(WebDriver driver, TestEvent testEvent, WebElement ele,
+			String fileName) throws IOException;
 
 	String saveImg(WebElement ele, String folderPath) throws IOException;
 
-	ScreenshotSaveResult takeElementScreenshot(WebDriver driver, TestEvent testEvent, WebElement ele, String fileName)
+	String captchaHandle(WebDriver d, WebElement vcodeElement, TestEvent te, boolean numberAndLetterOnly)
 			throws IOException;
 
+	String captchaHandle(WebDriver d, WebElement vcodeElement, TestEvent te) throws IOException;
 }

@@ -2,7 +2,6 @@ package demo.selenium.service.impl;
 
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -13,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.baseCommon.service.CommonService;
-import demo.config.costom_component.Tess;
-import demo.selenium.pojo.result.ScreenshotSaveResult;
 import demo.selenium.pojo.result.TestEventResult;
 import demo.selenium.service.JavaScriptService;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
@@ -33,8 +30,8 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 	private SeleniumAuxiliaryToolService auxiliaryToolService;
 	@Autowired
 	private JavaScriptService jsUtil;
-	@Autowired
-	private Tess tess;
+//	@Autowired
+//	private Tess tess;
 	@Autowired
 	private TestEventService eventService;
 	
@@ -94,11 +91,7 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 			radioElement.click();
 			
 			auxiliaryToolService.takeScreenshot(driver, testEvent);
-			ScreenshotSaveResult elementImageSaveResult = auxiliaryToolService.takeElementScreenshot(driver, testEvent, By.id("demoId"));
-			String ocrResult = null;
-			if(elementImageSaveResult.isSuccess() && StringUtils.isNotBlank(elementImageSaveResult.getSavingPath())) {
-				 ocrResult = tess.ocr(elementImageSaveResult.getSavingPath());
-			}
+			String ocrResult = auxiliaryToolService.captchaHandle(driver, recaptcha, testEvent);
 			System.out.println(ocrResult);
 			
 			r.setIsSuccess();

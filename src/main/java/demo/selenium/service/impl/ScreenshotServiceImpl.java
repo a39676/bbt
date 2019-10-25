@@ -27,7 +27,19 @@ public class ScreenshotServiceImpl extends CommonService implements ScreenshotSe
 	@Autowired
 	private ScreenshotMapper screenshotMapper;
 	
+	@Override
 	public ScreenshotSaveResult screenshotSave(ScreenshotSaveDTO dto) {
+		String targetFolderPath = globalOptionService.getScreenshotSavingFolder() + "/" + dto.getEventName() + "/" + dto.getEventId();
+		return screenshotSave(dto, targetFolderPath);
+	}
+	
+	@Override
+	public ScreenshotSaveResult captchaScreenshotSave(ScreenshotSaveDTO dto) {
+		String targetFolderPath = globalOptionService.getCaptchaScreenshotSavingFolder() + "/" + dto.getEventName() + "/" + dto.getEventId();
+		return screenshotSave(dto, targetFolderPath);
+	}
+	
+	private ScreenshotSaveResult screenshotSave(ScreenshotSaveDTO dto, String targetFolderPath) {
 //		TODO
 		/*
 		 *.需要将截图上传至云?
@@ -35,7 +47,6 @@ public class ScreenshotServiceImpl extends CommonService implements ScreenshotSe
 		 */
 		ScreenshotSaveResult result = new ScreenshotSaveResult();
 		try {
-			String targetFolderPath = globalOptionService.getScreenshotSavingFolder() + "/" + dto.getEventName() + "/" + dto.getEventId();
 			File targetFolder = new File(targetFolderPath);
 			if(!targetFolder.exists()) {
 				targetFolder.mkdirs();

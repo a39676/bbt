@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import constant.FileSuffixNameConstant;
 import demo.baseCommon.service.CommonService;
+import demo.captcha.service.CaptchaService;
 import demo.selenium.pojo.constant.RegexConstant;
 import demo.selenium.pojo.constant.WebDriverConstant;
 import demo.selenium.pojo.dto.ScreenshotSaveDTO;
@@ -42,7 +43,10 @@ public class SeleniumAuxiliaryToolServiceImpl extends CommonService implements S
 
 	@Autowired
 	private ScreenshotService screenshotService;
-	
+
+	@Autowired
+	private CaptchaService captchaService;
+
 	@Override
 	public WebElement fluentWait(WebDriver driver, final By by) {
 		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
@@ -137,40 +141,30 @@ public class SeleniumAuxiliaryToolServiceImpl extends CommonService implements S
 	}
 
 	@Override
-	public ScreenshotSaveResult takeElementScreenshot(WebDriver driver, TestEvent testEvent, By by, String fileName)
+	public ScreenshotSaveResult takeElementScreenshot(WebDriver driver, WebElement ele, TestEvent testEvent, String fileName)
 			throws IOException {
-		// Get entire page screenshot
-		File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-		BufferedImage fullImg = ImageIO.read(screenshot);
-
-		WebElement recaptcha = driver.findElement(by);
-
-		Point point = recaptcha.getLocation();
-
-		// Get width and height of the element
-		int eleWidth = recaptcha.getSize().getWidth();
-		int eleHeight = recaptcha.getSize().getHeight();
-
-		// Crop the entire page screenshot to get only element screenshot
-		BufferedImage eleScreenshot = fullImg.getSubimage(point.getX(), point.getY(), eleWidth, eleHeight);
-		ImageIO.write(eleScreenshot, FileSuffixNameConstant.png, screenshot);
-
-		ScreenshotSaveDTO screenshotSaveDto = new ScreenshotSaveDTO();
-		screenshotSaveDto.setScreenShotFile(screenshot);
-		screenshotSaveDto.setEventId(testEvent.getId());
-		screenshotSaveDto.setEventName(testEvent.getEventName());
-		if (StringUtils.isBlank(fileName)) {
-			screenshotSaveDto.setFileName(testEvent.getEventName());
-		} else {
-			screenshotSaveDto.setFileName(fileName);
-		}
+		ScreenshotSaveDTO screenshotSaveDto = buildScreenshotSaveDTO(driver, testEvent, ele, fileName);
 		ScreenshotSaveResult r = screenshotService.screenshotSave(screenshotSaveDto);
 		return r;
 	}
-	
+
 	@Override
-	public ScreenshotSaveResult takeElementScreenshot(WebDriver driver, TestEvent testEvent, WebElement ele, String fileName)
-			throws IOException {
+	public ScreenshotSaveResult takeElementScreenshot(WebDriver driver, WebElement ele, TestEvent testEvent) throws IOException {
+		ScreenshotSaveDTO screenshotSaveDto = buildScreenshotSaveDTO(driver, testEvent, ele, null);
+		ScreenshotSaveResult r = screenshotService.screenshotSave(screenshotSaveDto);
+		return r;
+	}
+
+	@Override
+	public ScreenshotSaveResult takeCaptchaElementScreenshot(WebDriver driver, TestEvent testEvent, WebElement ele,
+			String fileName) throws IOException {
+
+		ScreenshotSaveDTO screenshotSaveDto = buildScreenshotSaveDTO(driver, testEvent, ele, fileName);
+		ScreenshotSaveResult r = screenshotService.captchaScreenshotSave(screenshotSaveDto);
+		return r;
+	}
+
+	private ScreenshotSaveDTO buildScreenshotSaveDTO(WebDriver driver, TestEvent testEvent, WebElement ele, String fileName) throws IOException {
 		// Get entire page screenshot
 		File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 		BufferedImage fullImg = ImageIO.read(screenshot);
@@ -194,13 +188,8 @@ public class SeleniumAuxiliaryToolServiceImpl extends CommonService implements S
 		} else {
 			screenshotSaveDto.setFileName(fileName);
 		}
-		ScreenshotSaveResult r = screenshotService.screenshotSave(screenshotSaveDto);
-		return r;
-	}
-
-	@Override
-	public ScreenshotSaveResult takeElementScreenshot(WebDriver driver, TestEvent testEvent, By by) throws IOException {
-		return takeElementScreenshot(driver, testEvent, by, null);
+		
+		return screenshotSaveDto;
 	}
 
 	@Override
@@ -222,6 +211,19 @@ public class SeleniumAuxiliaryToolServiceImpl extends CommonService implements S
 		ImageIO.write(saveImage, suffix, new File(filePath));
 
 		return filePath;
+	}
+
+	@Override
+	public String captchaHandle(WebDriver d, WebElement vcodeElement, TestEvent te, boolean numberAndLetterOnly)
+			throws IOException {
+		ScreenshotSaveResult vcodeImgSaveResult = takeElementScreenshot(d, vcodeElement, te, 
+				String.valueOf(snowFlake.getNextId()));
+		return captchaService.ocr(vcodeImgSaveResult.getSavingPath(), numberAndLetterOnly);
+	}
+
+	@Override
+	public String captchaHandle(WebDriver d, WebElement vcodeElement, TestEvent te) throws IOException {
+		return captchaHandle(d, vcodeElement, te, true);
 	}
 
 	public static void main(String[] args) throws IOException {

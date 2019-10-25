@@ -22,10 +22,12 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 	private String downloadFolder = "/tmp";
 	private String tmpFolder = "/tmp";
 	private String screenshotSavingFolder = "/screenshot";
+	private String captchaScreenshotSavingFolder = "/captchaScreenshotSavingFolder";
 
 	private String downloadDirRedisKey = "seleniumDownloadDir";
 	private String tmpFolderRedisKey = "tmpFolder";
-	private String screenshotSavingFloderRedisKey = "seleniumScreenshotSavingDir";
+	private String screenshotSavingFolderRedisKey = "seleniumScreenshotSavingDir";
+	private String captchaScreenshotSavingFolderRedisKey = "captchaScreenshotSavingFolderRedisKey";
 
 	private String winSeleniumWebDriverFolder = "d:/auxiliary/seleniumWebDriver";
 	private String linuxSeleniumWebDriverFolder = "/home/u2/seleniumWebDriver";
@@ -100,7 +102,7 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 
 	@Override
 	public String getScreenshotSavingFolder() {
-		String screenshotSavingDir = constantService.getValByName(screenshotSavingFloderRedisKey);
+		String screenshotSavingDir = constantService.getValByName(screenshotSavingFolderRedisKey);
 
 		if (StringUtils.isNotBlank(screenshotSavingDir)) {
 			checkFolderExists(screenshotSavingDir);
@@ -115,12 +117,37 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 		screenshotSavingDir = pathChangeByDetectOS(screenshotSavingDir);
 
 		SystemConstant systemConstant = new SystemConstant();
-		systemConstant.setConstantName(screenshotSavingFloderRedisKey);
+		systemConstant.setConstantName(screenshotSavingFolderRedisKey);
 		systemConstant.setConstantValue(screenshotSavingDir);
 		constantService.setValByName(systemConstant);
 
 		checkFolderExists(screenshotSavingDir);
 		return screenshotSavingDir;
+	}
+	
+	@Override
+	public String getCaptchaScreenshotSavingFolder() {
+		String captchaScreenshotSavingDir = constantService.getValByName(captchaScreenshotSavingFolderRedisKey);
+
+		if (StringUtils.isNotBlank(captchaScreenshotSavingDir)) {
+			checkFolderExists(captchaScreenshotSavingDir);
+			return pathChangeByDetectOS(captchaScreenshotSavingDir);
+		}
+
+		if (isWindows()) {
+			captchaScreenshotSavingDir = mainSavingFolder_win + captchaScreenshotSavingFolder;
+		} else {
+			captchaScreenshotSavingDir = mainSavingFolder_linx + captchaScreenshotSavingFolder;
+		}
+		captchaScreenshotSavingDir = pathChangeByDetectOS(captchaScreenshotSavingDir);
+
+		SystemConstant systemConstant = new SystemConstant();
+		systemConstant.setConstantName(captchaScreenshotSavingFolderRedisKey);
+		systemConstant.setConstantValue(captchaScreenshotSavingDir);
+		constantService.setValByName(systemConstant);
+
+		checkFolderExists(captchaScreenshotSavingDir);
+		return captchaScreenshotSavingDir;
 	}
 
 	@Override

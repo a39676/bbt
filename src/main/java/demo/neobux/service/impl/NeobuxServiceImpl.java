@@ -10,11 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.baseCommon.service.CommonService;
-import demo.captcha.service.CaptchaService;
 import demo.neobux.service.NeobuxOptionService;
 import demo.neobux.service.NeobuxService;
 import demo.selenium.pojo.bo.XpathBuilderBO;
-import demo.selenium.pojo.result.ScreenshotSaveResult;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.WebDriverService;
 import demo.testCase.pojo.po.TestEvent;
@@ -26,8 +24,6 @@ public class NeobuxServiceImpl extends CommonService implements NeobuxService {
 	private WebDriverService webDriverService;
 	@Autowired
 	private SeleniumAuxiliaryToolService auxTool;
-	@Autowired
-	private CaptchaService captchaService;
 	@Autowired
 	private NeobuxOptionService optionService;
 //	@Autowired
@@ -173,20 +169,10 @@ public class NeobuxServiceImpl extends CommonService implements NeobuxService {
 		return img;
 	}
 	
-	private String tryReadVcode(WebDriver d, WebElement ele) {
-		ScreenshotSaveResult r;
-		try {
-			r = auxTool.takeElementScreenshot(d, t, ele, String.valueOf(snowFlake.getNextId()));
-		} catch (IOException e) {
-			log.info(e.getMessage());
-			return null;
-		}
-		if(!r.isSuccess()) {
-			return null;
-		}
-		String ocrResult = captchaService.ocr(r.getSavingPath(), true);
-		log.info(ocrResult);
-		return ocrResult;
+	private String tryReadVcode(WebDriver d, WebElement ele) throws IOException {
+		
+		String captchaCode = auxTool.captchaHandle(d, ele, t);
+		return captchaCode;
 	}
 
 	private void tryFillVcode(WebDriver d) {
