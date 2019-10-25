@@ -23,7 +23,7 @@ public class CaptchaServiceImpl extends CommonService implements CaptchaService 
 	@Autowired
 	private Tess tess;
 
-	private final String captchaFolder = "/tmp/captchas";
+	private final String captchaFolder = "/home/u2/tmp/captchas";
 	
 	@Override
 	public String ocr(String imgPath, boolean numberAndLetterOnly) {
@@ -35,6 +35,13 @@ public class CaptchaServiceImpl extends CommonService implements CaptchaService 
 		String outputFolderPath = captchaFolder;
 		if(isWindows()) {
 			outputFolderPath = "d:" + outputFolderPath;
+		}
+		
+		File folder = new File(outputFolderPath);
+		if(!folder.exists() || !folder.isDirectory()) {
+			if(!folder.mkdirs()) {
+				return null;
+			}
 		}
 		
 		if(!cleanImage(img, outputFolderPath)) {
@@ -55,8 +62,10 @@ public class CaptchaServiceImpl extends CommonService implements CaptchaService 
 	@Override
 	public boolean cleanImage(File sfile, String outputFolerPath) {
 		File destF = new File(outputFolerPath);
-		if (!destF.exists()) {
-			destF.mkdirs();
+		if(!destF.exists() || !destF.isDirectory()) {
+			if(!destF.mkdirs()) {
+				return false;
+			}
 		}
 
 		BufferedImage bufferedImage;
