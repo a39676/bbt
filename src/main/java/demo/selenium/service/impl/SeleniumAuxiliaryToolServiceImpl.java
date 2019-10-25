@@ -214,16 +214,16 @@ public class SeleniumAuxiliaryToolServiceImpl extends CommonService implements S
 	}
 
 	@Override
-	public String captchaHandle(WebDriver d, WebElement vcodeElement, TestEvent te, boolean numberAndLetterOnly)
+	public String captchaHandle(WebDriver d, WebElement captchaCodeElement, TestEvent te, boolean numberAndLetterOnly)
 			throws IOException {
-		ScreenshotSaveResult vcodeImgSaveResult = takeElementScreenshot(d, vcodeElement, te, 
+		ScreenshotSaveResult vcodeImgSaveResult = takeElementScreenshot(d, captchaCodeElement, te, 
 				String.valueOf(snowFlake.getNextId()));
 		return captchaService.ocr(vcodeImgSaveResult.getSavingPath(), numberAndLetterOnly);
 	}
 
 	@Override
-	public String captchaHandle(WebDriver d, WebElement vcodeElement, TestEvent te) throws IOException {
-		return captchaHandle(d, vcodeElement, te, true);
+	public String captchaHandle(WebDriver d, WebElement captchaCodeElement, TestEvent te) throws IOException {
+		return captchaHandle(d, captchaCodeElement, te, true);
 	}
 
 	public static void main(String[] args) throws IOException {

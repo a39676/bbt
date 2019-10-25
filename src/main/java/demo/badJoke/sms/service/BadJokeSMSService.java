@@ -2,6 +2,7 @@ package demo.badJoke.sms.service;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -127,9 +128,9 @@ public class BadJokeSMSService extends ClawingCommonService {
 				phoneRegButton.click();
 			}
 
-			WebElement vcodeInput = d.findElement(By.id("phoneTxtCheckCode"));
-			vcodeInput.clear();
-			vcodeInput.click();
+			WebElement captchaInput = d.findElement(By.id("phoneTxtCheckCode"));
+			captchaInput.clear();
+			captchaInput.click();
 			
 			WebElement mobileInput = d.findElement(By.id("txtMobile"));
 			mobileInput.clear();
@@ -139,24 +140,28 @@ public class BadJokeSMSService extends ClawingCommonService {
 			pwdInput.clear();
 			pwdInput.sendKeys(normalPwd);
 			
-			WebElement vcodeImg = d.findElement(By.id("phoneCheckCode"));
+			WebElement captchaImg = d.findElement(By.id("phoneCheckCode"));
 			
 			WebElement sendSmsButton = d.findElement(By.id("smsbtn"));
 			
-			String vcode = null;
-			WebElement vcodeIsCorrect = d.findElement(By.id("trphone_code"));
+			String captchaCode = null;
+			WebElement captchaIsCorrect = d.findElement(By.id("trphone_code"));
 			
-			int vcodeCount = 0;
-			while(vcodeIsCorrect.isDisplayed() && vcodeCount < 15) {
+			int captchaCount = 0;
+			while(captchaIsCorrect.isDisplayed() && captchaCount < 15) {
+				captchaImg.click();
 				try {
-					vcode = auxTool.captchaHandle(d, vcodeImg, te);
-					vcodeInput.sendKeys(vcode);
-					vcodeCount++;
+					captchaCode = auxTool.captchaHandle(d, captchaImg, te);
+					captchaInput.clear();
+					captchaInput.sendKeys(captchaCode);
+					pwdInput.click();
+					captchaIsCorrect = d.findElement(By.id("trphone_code"));
+					captchaCount++;
 				} catch (Exception e) {
 				}
 			}
 			
-			if(!vcodeIsCorrect.isDisplayed()) {
+			if(!captchaIsCorrect.isDisplayed()) {
 				sendSmsButton.click();
 				r.setIsSuccess();
 			}
@@ -180,42 +185,9 @@ public class BadJokeSMSService extends ClawingCommonService {
 		try {
 			d.get(url);
 			
-			// 选择手机注册
-			WebElement phoneRegButton = d.findElement(By.id("phoneRe"));
-			if(phoneRegButton.isDisplayed()) {
-				phoneRegButton.click();
-			}
-
-			WebElement vcodeInput = d.findElement(By.id("phoneTxtCheckCode"));
-			vcodeInput.clear();
-			vcodeInput.click();
+//			TODO
 			
-			WebElement mobileInput = d.findElement(By.id("txtMobile"));
-			mobileInput.clear();
-			mobileInput.sendKeys(dto.getMobileNum());
-			
-			WebElement pwdInput = d.findElement(By.id("phonePsd"));
-			pwdInput.clear();
-			pwdInput.sendKeys(normalPwd);
-			
-			WebElement vcodeImg = d.findElement(By.id("phoneCheckCode"));
-			
-			WebElement sendSmsButton = d.findElement(By.id("smsbtn"));
-			
-			String vcode = null;
-			WebElement vcodeIsCorrect = d.findElement(By.id("trphone_code"));;
-			
-			int vcodeCount = 0;
-			while(vcodeIsCorrect.isDisplayed() && vcodeCount < 15) {
-				try {
-					vcode = auxTool.captchaHandle(d, vcodeImg, te);
-					vcodeInput.sendKeys(vcode);
-					sendSmsButton.click();
-					vcodeCount++;
-				} catch (Exception e) {
-				}
-			}
-			
+			r.setIsSuccess();
 			
 		} catch (Exception e) {
 			log.error("error: {}, url: {}" + e.getMessage() + d.getCurrentUrl());
@@ -438,7 +410,7 @@ public class BadJokeSMSService extends ClawingCommonService {
 		return r;
 	}
 	
-	public CommonResultBBT demo(WebDriver d, TestEvent te, BadJokeSMSDTO dto) {
+	public CommonResultBBT zjzwfw(WebDriver d, TestEvent te, BadJokeSMSDTO dto) {
 		String url = "https://puser.zjzwfw.gov.cn/sso/usp.do?action=register";
 		CommonResultBBT r = new CommonResultBBT();
 		StringBuffer report = new StringBuffer();
@@ -446,14 +418,44 @@ public class BadJokeSMSService extends ClawingCommonService {
 		try {
 			d.get(url);
 			
+			WebElement captchaCodeInput = d.findElement(By.id("imgcode"));
+			captchaCodeInput.clear();
+			captchaCodeInput.click();
+			
 			WebElement usernameInput = d.findElement(By.id("loginName"));
 			usernameInput.clear();
 			usernameInput.sendKeys(normalUsername);
 			
-			/*
-			 * TODO
-			 */
+			WebElement mobileInput = d.findElement(By.id("mobilePhone"));
+			mobileInput.clear();
+			mobileInput.sendKeys(dto.getMobileNum());
 			
+			WebElement capchatCodeElement = d.findElement(By.id("captcha_img"));
+					
+			XpathBuilderBO x = new XpathBuilderBO();
+			x.start("div").addAttribute("class", "parentFormformID formError imgcodeErrorDir");
+			WebElement captchaValidDiv = d.findElement(By.xpath(x.getXpath()));
+			
+			
+			String captchCode = null;
+			int cpatchaCount = 0;
+			while(StringUtils.isNotBlank(captchaValidDiv.getText()) && cpatchaCount < 15) {
+				capchatCodeElement.click();
+				captchCode = auxTool.captchaHandle(d, capchatCodeElement, te);
+				captchaCodeInput.clear();
+				captchaCodeInput.sendKeys(captchCode);
+				mobileInput.click();
+				captchaValidDiv = d.findElement(By.xpath(x.getXpath()));
+				cpatchaCount++;
+			}
+			
+			if(StringUtils.isNotBlank(captchaValidDiv.getText())) {
+				return r;
+			}
+			
+			WebElement sendSmsButton = d.findElement(By.id("getsmscode"));
+			sendSmsButton.click();
+
 			r.setIsSuccess();
 			
 		} catch (Exception e) {

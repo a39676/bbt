@@ -42,8 +42,8 @@ public interface SeleniumAuxiliaryToolService {
 
 	String saveImg(WebElement ele, String folderPath) throws IOException;
 
-	String captchaHandle(WebDriver d, WebElement vcodeElement, TestEvent te, boolean numberAndLetterOnly)
+	String captchaHandle(WebDriver d, WebElement captchaCodeElement, TestEvent te, boolean numberAndLetterOnly)
 			throws IOException;
 
-	String captchaHandle(WebDriver d, WebElement vcodeElement, TestEvent te) throws IOException;
+	String captchaHandle(WebDriver d, WebElement captchaCodeElement, TestEvent te) throws IOException;
 }
