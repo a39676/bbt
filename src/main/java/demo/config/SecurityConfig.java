@@ -17,7 +17,12 @@ import org.springframework.security.web.authentication.rememberme.JdbcTokenRepos
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CharacterEncodingFilter;
+
+import com.google.common.collect.ImmutableList;
 
 import demo.base.admin.pojo.constant.AdminUrlConstant;
 import demo.base.system.service.impl.SystemConstantService;
@@ -36,7 +41,7 @@ import demo.web.handler.LimitLoginAuthenticationProvider;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	
+
 	@Autowired
 	private DataSource dataSource;
 	@Autowired
@@ -44,104 +49,89 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
-	
+
 	@Autowired
 	private CustomAuthenticationFailHandler customAuthenticationFailHandler;
 
 	@Autowired
-    private CustomAuthenticationProvider authProvider;
-	
+	private CustomAuthenticationProvider authProvider;
+
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(authProvider);
 	}
-	
+
 	@Autowired
 	private CustomUserDetailsService customUserDetailsService;
-	
+
 	@Bean
 	public DaoAuthenticationProvider authProvider() {
-	    DaoAuthenticationProvider authProvider = new LimitLoginAuthenticationProvider();
-	    authProvider.setUserDetailsService(customUserDetailsService);
-	    authProvider.setPasswordEncoder(passwordEncoder());
-	    return authProvider;
+		DaoAuthenticationProvider authProvider = new LimitLoginAuthenticationProvider();
+		authProvider.setUserDetailsService(customUserDetailsService);
+		authProvider.setPasswordEncoder(passwordEncoder());
+		return authProvider;
 	}
-	
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		String envName = constantService.getValByName("envName");
-        http.authorizeRequests()
-            .antMatchers("/welcome**").permitAll()
-            .antMatchers(LoginUrlConstant.login + "/**").permitAll()
-            .antMatchers(UsersUrlConstant.root + "/**").permitAll()
-            .antMatchers("/static_resources/**").permitAll()
-            .antMatchers("/tHome/**").permitAll()
-//            .anyRequest().authenticated() 
-            // used to allow anonymous access 
-            // .antMatchers("/welcome**").access("IS_AUTHENTICATED_ANONYMOUSLY")
-//            .antMatchers(ArticleUrlConstant.root + "/**").access("hasAnyRole('" + RolesType.ROLE_ADMIN.getRoleName() + "','" + RolesType.ROLE_USER.getRoleName() + "')")
-            .antMatchers("/holder/**")
-            	.access(hasAnyRole(RolesType.ROLE_SUPER_ADMIN, RolesType.ROLE_USER))
-            .antMatchers("/accountInfo/**")
-            	.access(hasAnyRole(RolesType.ROLE_ADMIN, RolesType.ROLE_USER))
-            .antMatchers(AdminUrlConstant.root + "/**")
-            	.access(hasAnyRole(RolesType.ROLE_SUPER_ADMIN))
-            .antMatchers("/dba/**")
-            	.access(hasAnyRole(RolesType.ROLE_SUPER_ADMIN, RolesType.ROLE_DBA)) 
-            .antMatchers(ToolUrlConstant.root + "/**")
-            	.access(hasRole(RolesType.ROLE_SUPER_ADMIN))
-            .antMatchers(UploadUrlConstant.uploadPriRoot + "/**")
-            	.access(hasAnyRole(RolesType.ROLE_SUPER_ADMIN, RolesType.ROLE_DEV))
-            .and()
-				.formLogin().loginPage("/login/login").failureUrl("/login/login?error")
-				.loginProcessingUrl("/auth/login_check")
-				.successHandler(customAuthenticationSuccessHandler)
-				.failureHandler(customAuthenticationFailHandler)
-				.usernameParameter("user_name").passwordParameter("pwd")
-			.and()
-		    	.logout().logoutRequestMatcher(new AntPathRequestMatcher("/login/logout"))
-		    .and()
-		    	.exceptionHandling().accessDeniedPage("/403")
-		    .and()
-		    	.rememberMe().tokenRepository(persistentTokenRepository())
-		    	.tokenValiditySeconds(3600)
-		    .and()
-		    	.authorizeRequests()
-		    .and()
-		    	.csrf()
-		    	.disable()
+		http.authorizeRequests().antMatchers("/welcome**").permitAll().antMatchers(LoginUrlConstant.login + "/**")
+				.permitAll().antMatchers(UsersUrlConstant.root + "/**").permitAll().antMatchers("/static_resources/**")
+				.permitAll().antMatchers(AdminUrlConstant.root + "/**").access(hasAnyRole(RolesType.ROLE_SUPER_ADMIN))
+				.antMatchers(ToolUrlConstant.root + "/**").access(hasRole(RolesType.ROLE_SUPER_ADMIN))
+				.antMatchers(UploadUrlConstant.uploadPriRoot + "/**")
+				.access(hasAnyRole(RolesType.ROLE_SUPER_ADMIN, RolesType.ROLE_DEV)).and().formLogin()
+				.loginPage("/login/login").failureUrl("/login/login?error").loginProcessingUrl("/auth/login_check")
+				.successHandler(customAuthenticationSuccessHandler).failureHandler(customAuthenticationFailHandler)
+				.usernameParameter("user_name").passwordParameter("pwd").and().logout()
+				.logoutRequestMatcher(new AntPathRequestMatcher("/login/logout")).and().exceptionHandling()
+				.accessDeniedPage("/403").and().rememberMe().tokenRepository(persistentTokenRepository())
+				.tokenValiditySeconds(3600).and().authorizeRequests()
 //		    尝试搭建 web socket, 修改同源策略
-//		    .and()
-//		        .headers().frameOptions().sameOrigin()
-		    ;
-        if(!"dev".equals(envName)) {
-        	http.authorizeRequests()
-        	.antMatchers("/test/**")
-        	.access(hasRole(RolesType.ROLE_SUPER_ADMIN));
-        }
-	  
-        /*
-         * 增加filter在此  同样操作 但建议使用
-         * http.addFilterAfter(newFilter,CsrfFilter.class); 
-         */
-        CharacterEncodingFilter encodingFilter = new CharacterEncodingFilter();
-        encodingFilter.setEncoding(StandardCharsets.UTF_8.displayName());
-        encodingFilter.setForceEncoding(true);
-        http.addFilterBefore(encodingFilter, CsrfFilter.class);
-        
+				.and().headers().frameOptions().sameOrigin().and()
+//		    	.csrf()
+//		    	.disable()
+				.cors();
+		if (!"dev".equals(envName)) {
+			http.authorizeRequests().antMatchers("/test/**").access(hasRole(RolesType.ROLE_SUPER_ADMIN));
+		}
+
+		/*
+		 * 增加filter在此 同样操作 但建议使用 http.addFilterAfter(newFilter,CsrfFilter.class);
+		 */
+		CharacterEncodingFilter encodingFilter = new CharacterEncodingFilter();
+		encodingFilter.setEncoding(StandardCharsets.UTF_8.displayName());
+		encodingFilter.setForceEncoding(true);
+		http.addFilterBefore(encodingFilter, CsrfFilter.class);
+
 	}
-	
+
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
+		final CorsConfiguration configuration = new CorsConfiguration();
+		configuration.setAllowedOrigins(ImmutableList.of("*"));
+		configuration.setAllowedMethods(ImmutableList.of("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));
+		// setAllowCredentials(true) is important, otherwise:
+		// The value of the 'Access-Control-Allow-Origin' header in the response must
+		// not be the wildcard '*' when the request's credentials mode is 'include'.
+		configuration.setAllowCredentials(true);
+		// setAllowedHeaders is important! Without it, OPTIONS preflight request
+		// will fail with 403 Invalid CORS request
+		configuration.setAllowedHeaders(ImmutableList.of("Authorization", "Cache-Control", "Content-Type"));
+		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
+	}
+
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-	    web.ignoring()
-	    .antMatchers("/test/testIgnoring")
-	    ;
+		web.ignoring().antMatchers("/test/testIgnoring");
 	}
-	
+
 	@Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authProvider());
-    }
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.authenticationProvider(authProvider());
+	}
 
 	@Bean
 	public PersistentTokenRepository persistentTokenRepository() {
@@ -151,34 +141,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
-	public CustomPasswordEncoder passwordEncoder(){
+	public CustomPasswordEncoder passwordEncoder() {
 		return new CustomPasswordEncoder();
 	}
-	
+
 	private String hasRole(RolesType roleType) {
-		if(roleType == null) {
+		if (roleType == null) {
 			return "hasRole('')";
 		}
-		
-		return "hasRole('"+ roleType.getName() +"')";
+
+		return "hasRole('" + roleType.getName() + "')";
 	}
-	
+
 	private String hasAnyRole(RolesType... roleTypes) {
-		if(roleTypes == null) {
+		if (roleTypes == null) {
 			return "hasRole('')";
 		}
-		
+
 		StringBuffer roleExpressionBuilder = new StringBuffer("hasAnyRole(");
-		
-		for(RolesType roleType : roleTypes) {
-			if(roleType != null) {
+
+		for (RolesType roleType : roleTypes) {
+			if (roleType != null) {
 				roleExpressionBuilder.append("'" + roleType.getName() + "',");
 			}
 		}
-		roleExpressionBuilder.replace(
-				roleExpressionBuilder.length()-1, 
-				roleExpressionBuilder.length(), 
-				"");
+		roleExpressionBuilder.replace(roleExpressionBuilder.length() - 1, roleExpressionBuilder.length(), "");
 		roleExpressionBuilder.append(")");
 		return roleExpressionBuilder.toString();
 	}
