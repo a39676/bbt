@@ -46,4 +46,6 @@ public interface SeleniumAuxiliaryToolService {
 			throws IOException;
 
 	String captchaHandle(WebDriver d, WebElement captchaCodeElement, TestEvent te) throws IOException;
+
+	void swipeCaptchaHadle(WebDriver d, WebElement swipeButton, WebElement chuteElement);
 }

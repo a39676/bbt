@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -226,6 +227,43 @@ public class SeleniumAuxiliaryToolServiceImpl extends CommonService implements S
 		return captchaHandle(d, captchaCodeElement, te, true);
 	}
 
+	@Override
+	public void swipeCaptchaHadle(WebDriver d, WebElement swipeButton, WebElement chuteElement) { 
+		Random r = new Random();
+		Integer dragPix = chuteElement.getSize().getWidth();
+		Integer subDragPix = dragPix / 10;
+		Actions builder = new Actions(d);
+		Action dragAndDrop = builder.clickAndHold(swipeButton)
+				.moveByOffset(subDragPix, r.nextInt(50) + 1)
+				.pause(r.nextInt(220))
+				.moveByOffset(subDragPix, r.nextInt(50) + 1)
+				.pause(r.nextInt(220))
+				.moveByOffset(subDragPix, r.nextInt(50) + 1)
+				.pause(r.nextInt(220))
+				.moveByOffset(subDragPix, r.nextInt(50) + 1)
+				.pause(r.nextInt(220))
+				.moveByOffset(subDragPix, r.nextInt(50) + 1)
+				.pause(r.nextInt(220))
+				.moveByOffset(subDragPix, r.nextInt(50) + 1)
+				.pause(r.nextInt(220))
+				.moveByOffset(subDragPix, r.nextInt(50) + 1)
+				.pause(r.nextInt(220))
+				.moveByOffset(subDragPix, r.nextInt(50) + 1)
+				.pause(r.nextInt(220))
+				.moveByOffset(subDragPix, r.nextInt(50) + 1)
+				.pause(r.nextInt(220))
+				.moveByOffset(subDragPix, r.nextInt(50) + 1)
+				.pause(r.nextInt(220))
+				.moveByOffset(subDragPix, r.nextInt(50) + 1)
+				.pause(r.nextInt(220))
+				.moveByOffset(subDragPix, r.nextInt(50) + 1)
+				.pause(r.nextInt(220))
+				.release()
+				.build();
+		dragAndDrop.perform();
+		
+	}
+	
 	public static void main(String[] args) throws IOException {
 //		SeleniumAuxiliaryToolServiceImpl t = new SeleniumAuxiliaryToolServiceImpl();
 //		Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36

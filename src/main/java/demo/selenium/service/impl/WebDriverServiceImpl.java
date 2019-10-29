@@ -37,7 +37,7 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 
 	@Override
 	public WebDriver buildFireFoxWebDriver(FirefoxOptions options) {
-		String envName = constantService.getValByName("envName");
+		String envName = constantService.getValByName("envName", true);
 		String path = globalOptionService.getGeckoPath();
 		String driverType = WebDriverConstant.geckoDriver;
 		System.setProperty(driverType, path);

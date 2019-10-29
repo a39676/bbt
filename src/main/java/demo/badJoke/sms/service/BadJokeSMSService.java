@@ -32,7 +32,7 @@ public class BadJokeSMSService extends ClawingCommonService {
 	@Autowired
 	private SeleniumAuxiliaryToolService auxTool;
 	
-	private String normalPwd = "398Apk_Lor";
+	private String normalPwd = "398ApkLor";
 	private String normalUsername = "testing";
 	
 	private TestEvent buildTestEvent() {
@@ -469,12 +469,79 @@ public class BadJokeSMSService extends ClawingCommonService {
 		return r;
 	}
 	
+	public CommonResultBBT ctrip(WebDriver d, TestEvent te, BadJokeSMSDTO dto) {
+		String url = "https://www.ctrip.com/";
+		CommonResultBBT r = new CommonResultBBT();
+		StringBuffer report = new StringBuffer();
+		XpathBuilderBO x = new XpathBuilderBO();
+		
+		try {
+			d.get(url);
+			
+			try {
+				WebElement languageChoose = d.findElement(By.id("divChooseLanguage"));
+				if(languageChoose.isDisplayed()) {
+					x.start("a").addAttribute("class", "language-flag-zh-cn");
+					WebElement languageCNA = d.findElement(By.xpath(x.getXpath()));
+					languageCNA.click();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			x.start("span").addAttribute("class", "set-text");
+			
+			List<WebElement> spans = d.findElements(By.xpath(x.getXpath()));
+			WebElement regSpan = null;
+			for(int i = 0; i < spans.size() && regSpan == null; i++) {
+				if(spans.get(i).getText() != null && spans.get(i).getText().contains("免费注册")) {
+					regSpan = spans.get(i);
+				}
+			}
+			
+			if(regSpan == null) {
+				return r;
+			}
+			
+			regSpan.click();
+			
+			x.start("a").addAttribute("class", "reg_btn reg_agree");
+			WebElement regAgree = d.findElement(By.xpath(x.getXpath()));
+			regAgree.click();
+			
+			x.start("div").addAttribute("class", "cpt-drop-btn");
+			WebElement swipeButton = d.findElement(By.xpath(x.getXpath()));
+			
+			WebElement chuteDiv = d.findElement(By.id("slideCode"));
+			
+			auxTool.swipeCaptchaHadle(d, swipeButton, chuteDiv);
+			/*
+			 * TODO
+			 */
+			
+			
+			r.setIsSuccess();
+			
+		} catch (Exception e) {
+			log.error("error: {}, url: {}" + e.getMessage() + d.getCurrentUrl());
+			report.append(e.getMessage() + "\n");
+			auxTool.takeScreenshot(d, te);
+			
+		} finally {
+			r.setMessage(report.toString());
+		}
+		return r;
+	}
+	
+	
 	/*
 	public CommonResultBBT demo(WebDriver d, TestEvent te, BadJokeSMSDTO dto) {
 		String url = "https://passport.jumpw.com/views/register.jsp";
 		CommonResultBBT r = new CommonResultBBT();
 		StringBuffer report = new StringBuffer();
 
+		XpathBuilderBO x = new XpathBuilderBO();
+		
 		try {
 			d.get(url);
 			
@@ -514,8 +581,22 @@ public class BadJokeSMSService extends ClawingCommonService {
 	 * https://hotel.bestwehotel.com/NewRegister/NewWebRegister/
 	 * https://www.962222.net/pages/user/register.html
 	 * https://aq.99.com/NDUser_Register_New.aspx
+	 * https://www.zoho.com.cn/mail/signup.html
+	 * https://www.iflyrec.com/html/reg.html
+	 * https://www.pgyer.com/user/register
+	 * https://i.360.cn/reg#
+	 * https://account.youku.com/register.htm
+	 * https://upass.10jqka.com.cn/register
 	 * 
 	 */
 	
+	/*
+	 * 需要简单滑动
+	 */
+	
+	/*
+	 * 需要拼图滑动
+	 * https://user.48.cn/login/index.html
+	 */
 	
 }
