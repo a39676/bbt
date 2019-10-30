@@ -1,7 +1,7 @@
 package demo.movieInteraction.controller;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +21,8 @@ import movie.pojo.constant.MovieInteractionUrl;
 import movie.pojo.dto.FindMovieDetailDTO;
 import movie.pojo.dto.FindMovieSummaryListDTO;
 import movie.pojo.type.MovieRegionType;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping(value = MovieInteractionUrl.root)
@@ -45,12 +47,18 @@ public class MovieInteractionController {
 	
 	@GetMapping(value = MovieInteractionUrl.movieRegionType)
 	@ResponseBody
-	public String movieRegionType() {
-		Map<String, String> l = new HashMap<String, String>();
+	public JSONArray movieRegionType() {
+		JSONObject j = null;
+		JSONArray ja = new JSONArray();
 		for(MovieRegionType i : MovieRegionType.values()) {
-			l.put(i.getCode().toString(), i.getName());
+			j = new JSONObject();
+			j.put("code", i.getCode());
+			j.put("name", i.getName());
+			j.put("remark", i.getRemark());
+			ja.add(j);
 		}
-		return l.toString();
+		
+		return ja;
 	}
 	
 	@PostMapping(value = MovieInteractionUrl.handleMovieIntroductionRecive)
