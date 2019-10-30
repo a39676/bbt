@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.badJoke.sms.pojo.dto.BadJokeSMSDTO;
+import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.service.impl.ClawingCommonService;
 import demo.selenium.pojo.bo.XpathBuilderBO;
@@ -31,9 +32,14 @@ public class BadJokeSMSService extends ClawingCommonService {
 //	private WebDriverService webDriverService;
 	@Autowired
 	private SeleniumAuxiliaryToolService auxTool;
+	@Autowired
+	private SystemConstantService constantService;
 	
 	private String normalPwd = "398ApkLor";
 	private String normalUsername = "testing";
+	
+	private String breakWordRedisKey = "badJokeBreakWord";
+	private String safeWord = "safeWord";
 	
 	private TestEvent buildTestEvent() {
 		return buildTestEvent(TestCaseType.badJokeSms);
@@ -45,27 +51,36 @@ public class BadJokeSMSService extends ClawingCommonService {
 	}
 	
 	/*
-	 * 
 	 * TODO
 	 * 是否统计最近10次的成功率? 根据网站?
 	 * 申请插入任务队列, 此处必须附加目标号码(并校验), 可附带执行的号码数量, 执行url数量
 	 * 是否加入定时任务?...
 	 * 根据参数, 优先查找久远号码N个, 执行N条URL行动
 	 * 最外围 try catch 需要包括 finally {d.quit();}
-	 * 预留一个 break 条件, 每次执行前, 检查需要终止的号码, 
-	 * 预留一个万用终止条件(包括通过一个万用号码终止当前号码, 通过一个号码终止所有队列中等待的号码) 
 	 * 
 	 */
 	
+	private String findBreakWord() {
+		return constantService.getValByName(breakWordRedisKey);
+	}
+	
 	public void random(Integer i, WebDriver d, TestEvent te, BadJokeSMSDTO dto) {
 		/*
-		 * TODO
 		 * 应该有更好的方法
 		 */
+		
+		String breakWord = findBreakWord();
+		if(StringUtils.isNotBlank(breakWord)) {
+			if(breakWord.equals(safeWord) || breakWord.equals(dto.getMobileNum())) {
+				return;
+			}
+		}
+		
+		CommonResultBBT result = null;
 		if(i == 1) {
-			_91wenwen(d, te, dto);
+			result = _91wenwen(d, te, dto);
 		} else if(i == 2) {
-			zhiWang(d, te, dto);
+			result = zhiWang(d, te, dto);
 		} else if(i == 3) {
 		} else if(i == 4) {
 		} else if(i == 5) {
@@ -84,6 +99,10 @@ public class BadJokeSMSService extends ClawingCommonService {
 		} else if(i == 18) {
 		} else if(i == 19) {
 		} else if(i == 20) {
+		}
+		
+		if(!result.isSuccess()) {
+//			TODO
 		}
 	}
 	
@@ -259,10 +278,21 @@ public class BadJokeSMSService extends ClawingCommonService {
 			WebElement regButton = d.findElement(By.xpath(x.getXpath()));
 			regButton.click();
 			
-			/*
-			 * TODO
-			 * 滑块拖动需要一个通用工具
-			 */
+			WebElement swipeButton = d.findElement(By.id("nc_3_n1z"));
+			WebElement chuteEle = d.findElement(By.id("nc_3_n1t"));
+			
+			auxTool.swipeCaptchaHadle(d, swipeButton, chuteEle);
+			
+			x.start("div").addAttribute("type", "tel").addAttribute("name", "phone");
+			WebElement mobileInput = d.findElement(By.xpath(x.getXpath()));
+			mobileInput.clear();
+			mobileInput.sendKeys(dto.getMobileNum());
+			
+			x.start("button").addAttribute("data-url", "/wapi/zppassport/send/smsCode");
+			WebElement smsSendButton = d.findElement(By.xpath(x.getXpath()));
+			smsSendButton.click();
+			
+			r.setIsSuccess();
 			
 		} catch (Exception e) {
 			log.error("error: {}, url: {}" + e.getMessage() + d.getCurrentUrl());
@@ -533,6 +563,45 @@ public class BadJokeSMSService extends ClawingCommonService {
 		return r;
 	}
 	
+	public CommonResultBBT wondercv(WebDriver d, TestEvent te, BadJokeSMSDTO dto) {
+		String url = "https://www.wondercv.com/signin";
+		CommonResultBBT r = new CommonResultBBT();
+		StringBuffer report = new StringBuffer();
+
+		XpathBuilderBO x = new XpathBuilderBO();
+		
+		
+		try {
+			d.get(url);
+			
+			x.start("a").addAttribute("class", "to-other phone");
+			d.findElement(By.xpath(x.getXpath())).click();
+			
+			x.start("input").addAttribute("type", "tel");
+			WebElement mobileInput = d.findElement(By.xpath(x.getXpath()));
+			mobileInput.clear();
+			mobileInput.sendKeys(dto.getMobileNum());
+			
+			x.start("input").addAttribute("data-url", "/verify_tokens/phone");
+			d.findElement(By.xpath(x.getXpath())).click();
+			
+			/*
+			 * TODO
+			 * 考虑补充极验拖动验证
+			 */
+			
+			r.setIsSuccess();
+			
+		} catch (Exception e) {
+			log.error("error: {}, url: {}" + e.getMessage() + d.getCurrentUrl());
+			report.append(e.getMessage() + "\n");
+			auxTool.takeScreenshot(d, te);
+			
+		} finally {
+			r.setMessage(report.toString());
+		}
+		return r;
+	}
 	
 	/*
 	public CommonResultBBT demo(WebDriver d, TestEvent te, BadJokeSMSDTO dto) {
@@ -575,7 +644,6 @@ public class BadJokeSMSService extends ClawingCommonService {
 	 * https://leancloud.cn/dashboard/login.html#/signup
 	 * https://reg.huaweicloud.com/registerui/cn/register.html#/register
 	 * https://passport.jumei.com/i/account/signup
-	 * https://www.wondercv.com/signin###
 	 * https://account.glodon.com/register
 	 * https://user.mihoyo.com/#/register/mobile?cb_route=%2Faccount%2Fhome
 	 * https://hotel.bestwehotel.com/NewRegister/NewWebRegister/
