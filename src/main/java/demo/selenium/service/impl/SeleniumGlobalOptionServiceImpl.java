@@ -35,8 +35,8 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 	private String chrome45Path_win = winSeleniumWebDriverFolder + "/chrome45Driver.exe";
 	private String chrome76Path_linux = linuxSeleniumWebDriverFolder + "/chrome76Driver";
 	private String chrome45Path_linux = linuxSeleniumWebDriverFolder + "/chrome45Driver";
-	private String geckoPath_win = winSeleniumWebDriverFolder + "/geckodriver-v0.24.0-win64.exe";
-	private String geckoPath_linux = linuxSeleniumWebDriverFolder + "/geckodriver-v0.24.0-linux";
+	private String geckoPath_win = winSeleniumWebDriverFolder + "/geckodriver-v0.26.0-win64.exe";
+	private String geckoPath_linux = linuxSeleniumWebDriverFolder + "/geckodriver-v0.26.0-linux";
 	private String edgePath = winSeleniumWebDriverFolder + "/MicrosoftWebDriver.exe";
 	private String iePath = winSeleniumWebDriverFolder + "/IEDriverServer.exe";
 

@@ -87,11 +87,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.logoutRequestMatcher(new AntPathRequestMatcher("/login/logout")).and().exceptionHandling()
 				.accessDeniedPage("/403").and().rememberMe().tokenRepository(persistentTokenRepository())
 				.tokenValiditySeconds(3600).and().authorizeRequests()
-//		    尝试搭建 web socket, 修改同源策略
-				.and().headers().frameOptions().sameOrigin().and()
-		    	.csrf()
-		    	.disable()
-				.cors();
+				.and()
+		    		.csrf().disable()
+					.cors();
 		if (!"dev".equals(envName)) {
 			http.authorizeRequests().antMatchers("/test/**").access(hasRole(RolesType.ROLE_SUPER_ADMIN));
 		}
