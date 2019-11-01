@@ -2,3 +2,4 @@
 爬取movie时  因各种原因, movie_* 各个表下的垃圾数据,  记得先清理 introduction 底下的各个文件
 
 更新 selenium driver
+https://github.com/mozilla/geckodriver/releases
