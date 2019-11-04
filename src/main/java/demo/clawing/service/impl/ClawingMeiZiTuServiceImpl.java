@@ -34,7 +34,6 @@ import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.WebDriverService;
 import demo.testCase.pojo.po.TestEvent;
 import httpHandel.HttpUtil;
-import numericHandel.NumericUtilCustom;
 
 @Service
 public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingMeiZiTuService {
@@ -226,7 +225,7 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 			src = ele.getAttribute("src");
 			if(src != null && src.startsWith("https://i5.meizitu") 
 					&& ele.getAttribute("alt") != null && ele.getAttribute("alt").startsWith(subTitle)) {
-				if(NumericUtilCustom.matchInteger(ele.getAttribute("width")) && NumericUtilCustom.matchInteger(ele.getAttribute("height"))) {
+				if(numericUtil.matchInteger(ele.getAttribute("width")) && numericUtil.matchInteger(ele.getAttribute("height"))) {
 					width = Integer.parseInt(ele.getAttribute("width"));
 					height = Integer.parseInt(ele.getAttribute("height"));
 					if(width > 300 && height > 300) {

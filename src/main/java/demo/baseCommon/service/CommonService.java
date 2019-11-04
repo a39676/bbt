@@ -12,6 +12,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.BaseResultType;
 import demo.baseCommon.pojo.param.PageParam;
 import demo.config.costom_component.SnowFlake;
+import numericHandel.NumericUtilCustom;
 
 public abstract class CommonService {
 	
@@ -22,6 +23,9 @@ public abstract class CommonService {
 	
 	@Autowired
 	protected RedisTemplate<String, String> redisTemplate;
+	
+	@Autowired
+	protected NumericUtilCustom numericUtil;
 
 	private static final int normalPageSize = 10;
 	private static final int maxPageSize = 300;

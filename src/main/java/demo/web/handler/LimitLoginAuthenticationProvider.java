@@ -30,6 +30,8 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
 
 	@Autowired
 	private SystemConstantService systemConstantService;
+	@Autowired
+	private NumericUtilCustom numberUtil;
 	
 	@Autowired
 	@Qualifier("userDetailsService")
@@ -42,8 +44,9 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
+		
 		String error = "";
-		if(!NumericUtilCustom.matchInteger(systemConstantService.getValByName(SystemConstantStore.maxAttempts))) {
+		if(!numberUtil.matchInteger(systemConstantService.getValByName(SystemConstantStore.maxAttempts))) {
 			throw new BadCredentialsException(BaseResultType.serviceError.getName());
 		}
 		maxAttempts = Integer.parseInt(systemConstantService.getValByName(SystemConstantStore.maxAttempts));

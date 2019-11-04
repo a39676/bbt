@@ -72,11 +72,10 @@ public class UsersController extends CommonController {
 	}
 	
 	@PostMapping(value = UsersUrlConstant.otherUserInfo)
-	public ModelAndView otherUserInfo(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView otherUserInfo(@RequestBody OtherUserInfoDTO param, HttpServletRequest request, HttpServletResponse response) {
 //		TODO
 		ModelAndView view = new ModelAndView("userJSP/otherUserInfo");
 		
-		OtherUserInfoDTO param = new OtherUserInfoDTO().fromJson(getJson(data));
 		UsersDetailVO ud = usersService.findOtherUserDetail(param);
 		
 		view.addObject("userDetail", ud);

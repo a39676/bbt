@@ -24,6 +24,7 @@ import demo.config.costom_component.SnowFlake;
 import demo.util.BaseUtilCustom;
 import httpHandel.HttpUtil;
 import ioHandle.FileUtilCustom;
+import numericHandel.NumericUtilCustom;
 import stringHandle.StringUtilCustom;
 
 @EnableWebMvc // <mvc:annotation-driven />
@@ -93,6 +94,11 @@ public class SpringMvcConfig implements WebMvcConfigurer {
 	@Bean
 	public FileUtilCustom getFileUtilCustom() {
 		return new FileUtilCustom();
+	}
+	
+	@Bean
+	public NumericUtilCustom getNumericUtilCustom() {
+		return new NumericUtilCustom();
 	}
 	
 	@Bean
