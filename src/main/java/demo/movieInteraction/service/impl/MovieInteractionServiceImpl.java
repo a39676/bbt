@@ -1,8 +1,11 @@
 package demo.movieInteraction.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,13 +27,16 @@ import demo.movie.pojo.constant.MovieInteractionConstant;
 import demo.movie.pojo.dto.FindMovieListByConditionDTO;
 import demo.movie.pojo.dto.InsertOrUpdateMovieClickCountDTO;
 import demo.movie.pojo.po.MovieClickCount;
+import demo.movie.pojo.po.MovieClickCountExample;
 import demo.movie.pojo.po.MovieImage;
 import demo.movie.pojo.po.MovieImageExample;
 import demo.movie.pojo.po.MovieInfo;
 import demo.movie.pojo.po.MovieIntroduction;
+import demo.movie.pojo.po.MovieIntroductionExample;
 import demo.movie.pojo.po.MovieMagnetUrl;
 import demo.movie.pojo.po.MovieMagnetUrlExample;
 import demo.movie.pojo.result.FindMovieDetailResult;
+import demo.movie.pojo.result.FindMovieSummaryElementResult;
 import demo.movie.pojo.result.FindMovieSummaryListResult;
 import demo.movieInteraction.MovieInteractionRedisKey;
 import demo.movieInteraction.service.MovieInteractionService;
@@ -77,7 +83,42 @@ public class MovieInteractionServiceImpl extends CommonService implements MovieI
 		mapperDTO.setCreateTimeStart(earliestHistoryTime);
 		
 		List<MovieInfo> movieInfoList = infoMapper.findListByCondition(mapperDTO);
-		r.setMovieInfoList(movieInfoList);
+		if(movieInfoList.size() < 1) {
+			r.setIsSuccess();
+			return r;
+		}
+		
+		List<Long> movieIdList = movieInfoList.stream().map(p -> p.getId()).collect(Collectors.toList());
+		
+		MovieClickCountExample findMovieClickCountExample = new MovieClickCountExample();
+		findMovieClickCountExample.createCriteria().andMovieIdIn(movieIdList);
+		List<MovieClickCount> movieClickCountList = movieClickCountMapper.selectByExample(findMovieClickCountExample);
+		Map<Long, MovieClickCount> clickCountMap = movieClickCountList.stream().collect(Collectors.toMap(MovieClickCount::getMovieId, Function.identity()));
+		
+		MovieIntroductionExample findIntroductionExample = new MovieIntroductionExample();
+		findIntroductionExample.createCriteria().andMovieIdIn(movieIdList);
+		List<MovieIntroduction> movieIntroductionList = introductionMapper.selectByExample(findIntroductionExample);
+		Map<Long, MovieIntroduction> introductionMap = movieIntroductionList.stream().collect(Collectors.toMap(MovieIntroduction::getMovieId, Function.identity()));
+		
+		FindMovieSummaryElementResult subR = null;
+		String introPath = null;
+		List<FindMovieSummaryElementResult> list = new ArrayList<FindMovieSummaryElementResult>();
+		for(MovieInfo info : movieInfoList) {
+			subR = new FindMovieSummaryElementResult();
+			subR.setReleaseTime(info.getReleaseTime());
+			if(clickCountMap.get(info.getId()) != null) {
+				subR.setClickCounting(clickCountMap.get(info.getId()).getCounting());
+			}
+			if(introductionMap.get(info.getId()) != null) {
+				introPath = introductionMap.get(info.getId()).getIntroPath();
+				subR.setIntroduction(fileUtil.getStringFromFile(introPath));
+			}
+			subR.setReleaseTime(info.getReleaseTime());
+			list.add(subR);
+		}
+		
+		r.setMovieInfoList(list);
+		
 		r.setIsSuccess();
 		return r;
 	}
@@ -126,7 +167,6 @@ public class MovieInteractionServiceImpl extends CommonService implements MovieI
 		r.setIsSuccess();
 		return r;
 	}
-	
 
 	private void insertMovieClickCounting(HttpServletRequest request, Long movieId) {
 		IpRecordBO record = visitDataService.getIp(request);
@@ -145,7 +185,6 @@ public class MovieInteractionServiceImpl extends CommonService implements MovieI
 			subMovieClickCountingRedisToOrm(key);
 		}
 	}
-	
 	
 	private void subMovieClickCountingRedisToOrm(String key) {
 		Long movieId = null;
