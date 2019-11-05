@@ -1,4 +1,4 @@
-package demo.movie.po.bo;
+package demo.movie.pojo.bo;
 
 import java.time.LocalDate;
 import java.util.List;

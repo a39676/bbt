@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,15 +29,22 @@ import demo.movie.pojo.po.MovieMagnetUrlExample;
 import demo.movie.pojo.result.FindMovieDetailResult;
 import demo.movie.pojo.result.FindMovieSummaryListResult;
 import demo.movieInteraction.service.MovieInteractionService;
+import demo.tool.service.VisitDataService;
 import ioHandle.FileUtilCustom;
 import movie.pojo.dto.FindMovieDetailDTO;
 import movie.pojo.dto.FindMovieSummaryListDTO;
+import numericHandel.NumericUtilCustom;
+import tool.pojo.bo.IpRecordBO;
 
 @Service
 public class MovieInteractionServiceImpl extends CommonService implements MovieInteractionService {
 
 	@Autowired
 	private FileUtilCustom fileUtil;
+	@Autowired
+	private VisitDataService visitDataService;
+	@Autowired
+	private NumericUtilCustom numberUtil;
 	
 	@Autowired
 	private MovieInfoMapper infoMapper;
@@ -103,5 +112,21 @@ public class MovieInteractionServiceImpl extends CommonService implements MovieI
 		
 		r.setIsSuccess();
 		return r;
+	}
+
+	public void insertMovieClickCounting(HttpServletRequest request) {
+		/*
+		 * TODO
+		 */
+//		Set<String> keys = redisTemplate.keys(MovieInteractionRedisKey.MOVIE_CLICK_COUNTING_REDIS_KEY_PREFIX);
+//		
+//		Long movieId = null;
+		
+		IpRecordBO record = visitDataService.getIp(request);
+		Long l = numberUtil.ipToLong(record.getRemoteAddr());
+		if(l == 0) {
+			l = numberUtil.ipToLong(record.getForwardAddr());
+		}
+		redisTemplate.opsForSet().add(String.valueOf(l));
 	}
 }

@@ -30,7 +30,7 @@
         </javaTypeResolver>  
           
         <!-- 生成模型的包名和位置-->    
-        <javaModelGenerator targetPackage="demo.testCase.pojo.po" targetProject="bbt">
+        <javaModelGenerator targetPackage="demo.movie.pojo.po" targetProject="bbt">
             <property name="enableSubPackages" value="true"/>    
             <property name="trimStrings" value="true"/> 
             <!-- for MyBatis3 / MyBatis3Simple
@@ -41,18 +41,18 @@
         </javaModelGenerator>    
         
         <!-- 生成映射文件的包名和位置-->    
-        <sqlMapGenerator targetPackage="demo.testCase.mapper" targetProject="bbt">
+        <sqlMapGenerator targetPackage="demo.movie.mapper" targetProject="bbt">
             <property name="enableSubPackages" value="true"/>    
         </sqlMapGenerator>    
         
         <!-- 生成DAO的包名和位置-->    
-        <javaClientGenerator type="XMLMAPPER" targetPackage="demo.testCase.mapper" targetProject="bbt">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="demo.movie.mapper" targetProject="bbt">
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="test_event">
-        	<property name="tableName" value="test_event"></property>
-        	<property name="domainObjectName" value="test_event" ></property>
+        <table tableName="movie_click_count">
+        	<property name="tableName" value="movie_click_count"></property>
+        	<property name="domainObjectName" value="movie_click_count" ></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>
