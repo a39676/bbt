@@ -494,11 +494,6 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 	}
 	
 	private void saveMovieInfo(WebDriver d, Long newMovieId, TestEvent te) {
-		/*
-		 * TODO
-		 * 2019-10-20
-		 * 部分正则表达式有问题
-		 */
 		MovieInfo info = new MovieInfo();
 		info.setId(newMovieId);
 
@@ -520,6 +515,7 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 		info.setCnTitle(doubanResult.getCnTitle());
 		info.setOriginalTitle(doubanResult.getOriginalTitle());
 		info.setNationId(detectMovieRegion(doubanResult.getRegion()).longValue());
+		info.setReleaseTime(doubanResult.getReleaseTime());
 		infoMapper.insertSelective(info);
 		
 		handleMovieIntroductionSend(newMovieId, doubanResult.getIntroduction());

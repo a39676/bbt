@@ -1,5 +1,7 @@
 package demo.movie.service.impl;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -9,6 +11,8 @@ import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dateTimeHandle.DateTimeHandle;
+import dateTimeHandle.DateUtilCustom;
 import demo.movie.pojo.result.DoubanSubClawingResult;
 import demo.movie.service.DoubanClawingService;
 import demo.selenium.pojo.bo.XpathBuilderBO;
@@ -113,10 +117,10 @@ public final class DoubanClawingServiceImpl extends MovieClawingCommonService im
 		} catch (TimeoutException e) {
 			jsUtil.windowStop(d);
 		}
-		XpathBuilderBO xpathBuilder = new XpathBuilderBO();
+		XpathBuilderBO x = new XpathBuilderBO();
 		
-		xpathBuilder.start("span").addAttribute("property", "v:itemreviewed");
-		By titleSpanBy = By.xpath(xpathBuilder.getXpath());
+		x.start("span").addAttribute("property", "v:itemreviewed");
+		By titleSpanBy = By.xpath(x.getXpath());
 		WebElement titleSpan = d.findElement(titleSpanBy);
 		String sourceTitle = titleSpan.getText();
 		
@@ -133,8 +137,8 @@ public final class DoubanClawingServiceImpl extends MovieClawingCommonService im
 		r.setCnTitle(cnTitle);
 		r.setOriginalTitle(originalTitle);
 		
-		xpathBuilder.start("a").addAttribute("class", "more-actor");
-		By moreActorBy = By.xpath(xpathBuilder.getXpath());
+		x.start("a").addAttribute("class", "more-actor");
+		By moreActorBy = By.xpath(x.getXpath());
 		WebElement moreActorA = null;
 		try {
 			moreActorA = d.findElement(moreActorBy);
@@ -165,14 +169,27 @@ public final class DoubanClawingServiceImpl extends MovieClawingCommonService im
 		r.setRegion(RegionInfo);
 		r.setCrewInfo(crewsInfo);
 		
-		xpathBuilder.start("span").addAttribute("property", "v:summary");
-		By summaryBy = By.xpath(xpathBuilder.getXpath());
+		x.start("span").addAttribute("property", "v:summary");
+		By summaryBy = By.xpath(x.getXpath());
 		WebElement summarySpan = d.findElement(summaryBy);
 		String summary = summarySpan.getText();
 		r.setIntroduction(summary);
+		
+		x.start("span").addAttribute("property", "v:initialReleaseDate");
+		WebElement releaseDateSpan = d.findElement(By.xpath(x.getXpath()));
+		String releaseDateStr = releaseDateSpan.getText();
+		releaseDateStr = releaseDateStr.replaceAll("[^\\d-/\\\\]", "");
+		
+		Date releaseDate = DateUtilCustom.stringToDateUnkonwFormat(releaseDateStr);
+		if(releaseDate == null) {
+			return;
+		}
+		LocalDateTime releaseDateTime = DateTimeHandle.dateToLocalDateTime(releaseDate);
+		r.setReleaseTime(releaseDateTime);
 		
 //		By initialReleaseDateBy = auxTool.byXpathBuilder("span", "property", "v:initialReleaseDate");
 //		WebElement releaseDateSpan = d.findElement(initialReleaseDateBy);
 //		String releaseDateStr = releaseDateSpan.getText();
 	}
+	
 }

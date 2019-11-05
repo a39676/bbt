@@ -1,5 +1,7 @@
 package demo.movie.pojo.result;
 
+import java.time.LocalDateTime;
+
 import demo.baseCommon.pojo.result.CommonResultBBT;
 
 public class DoubanSubClawingResult extends CommonResultBBT {
@@ -10,6 +12,7 @@ public class DoubanSubClawingResult extends CommonResultBBT {
 	private String introduction;
 	private String region;
 	private String crewInfo;
+	private LocalDateTime releaseTime;
 
 	public String getCnTitle() {
 		return cnTitle;
@@ -59,10 +62,19 @@ public class DoubanSubClawingResult extends CommonResultBBT {
 		this.crewInfo = crewInfo;
 	}
 
+	public LocalDateTime getReleaseTime() {
+		return releaseTime;
+	}
+
+	public void setReleaseTime(LocalDateTime releaseTime) {
+		this.releaseTime = releaseTime;
+	}
+
 	@Override
 	public String toString() {
 		return "DoubanSubClawingResult [cnTitle=" + cnTitle + ", originalTitle=" + originalTitle + ", info=" + info
-				+ ", introduction=" + introduction + ", region=" + region + ", crewInfo=" + crewInfo + "]";
+				+ ", introduction=" + introduction + ", region=" + region + ", crewInfo=" + crewInfo + ", releaseTime="
+				+ releaseTime + "]";
 	}
 
 }

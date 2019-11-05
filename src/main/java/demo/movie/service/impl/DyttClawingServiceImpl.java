@@ -1,6 +1,7 @@
 package demo.movie.service.impl;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -22,6 +23,8 @@ import demo.movie.pojo.dto.MovieRecordFindByConditionDTO;
 import demo.movie.pojo.po.MovieInfo;
 import demo.movie.pojo.po.MovieIntroduction;
 import demo.movie.pojo.po.MovieRecord;
+import demo.movie.pojo.result.DoubanSubClawingResult;
+import demo.movie.service.DoubanClawingService;
 import demo.movie.service.DyttClawingService;
 import demo.selenium.pojo.bo.XpathBuilderBO;
 import demo.selenium.service.SeleniumAuxiliaryToolService;
@@ -44,6 +47,8 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 	private WebDriverService webDriverService;
 	@Autowired
 	private SeleniumAuxiliaryToolService auxTool;
+	@Autowired
+	private DoubanClawingService doubanService;
 //	@Autowired
 //	private JavaScriptService jsUtil;
 
@@ -114,7 +119,7 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 		WebElement ele = null;
 		for (int i = 0; i < targetAList.size(); i++) {
 			ele = targetAList.get(i);
-			singleMovieHandle(d, ele, mainWindowHandle);
+			singleMovieHandle(d, ele, mainWindowHandle, te);
 			windowHandles = d.getWindowHandles();
 			if (windowHandles.size() > 5) {
 				throw new Exception();
@@ -138,7 +143,7 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 		}
 	}
 	
-	private void singleMovieHandle(WebDriver d, WebElement ele, String mainWindowHandler) throws Exception {
+	private void singleMovieHandle(WebDriver d, WebElement ele, String mainWindowHandler, TestEvent te) throws Exception {
 		if (ele == null || StringUtils.isBlank(ele.getAttribute("href"))) {
 			return;
 		}
@@ -198,7 +203,7 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 			handleMovieMagnetUrl(aTags, newMovieId);
 
 			List<WebElement> pTags = divZoom.findElements(ByTagName.tagName("p"));
-			saveMovieInfo(pTags, newMovieId);
+			saveMovieInfo(d, pTags, newMovieId, te);
 
 
 			MovieRecord record = new MovieRecord();
@@ -228,7 +233,7 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 		}
 	}
 
-	private void saveMovieInfo(List<WebElement> pTags, Long movieId) {
+	private void saveMovieInfo(WebDriver d, List<WebElement> pTags, Long movieId, TestEvent te) {
 		WebElement targetP = null;
 		WebElement tmpEle = null;
 		for (int i = 0; i < pTags.size() && targetP == null; i++) {
@@ -239,7 +244,6 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 		}
 
 		String content = targetP.getText();
-		content = content.replaceAll("【下载地址】", "").replaceAll("磁力链下载点击这里", "");
 		
 		MovieInfo info = new MovieInfo();
 		info.setId(movieId);
@@ -250,14 +254,23 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 				info.setOriginalTitle(line.replaceAll("片　　名　", ""));
 			} else if(line.startsWith("译") && line.contains("名")) {
 				info.setCnTitle(line.replaceAll("译　　名　", ""));
-			} else if(line.startsWith("产") && line.contains("地")) {
-				info.setNationId(detectMovieRegion(line).longValue());
-			} 
+			}
 		}
+		
+		DoubanSubClawingResult doubanResult = null;
+		if(StringUtils.isNotBlank(info.getCnTitle())) {
+			doubanResult = doubanService.clawing(d, info.getCnTitle(), te);
+		} else {
+			doubanResult = doubanService.clawing(d, info.getOriginalTitle(), te);
+		}
+		info.setCnTitle(doubanResult.getCnTitle());
+		info.setOriginalTitle(doubanResult.getOriginalTitle());
+		info.setNationId(detectMovieRegion(doubanResult.getRegion()).longValue());
+		
 		infoMapper.insertSelective(info);
 
 		String savePath = introductionSavePath + File.separator + movieId + ".txt";
-		iou.byteToFile(content.getBytes(), savePath);
+		iou.byteToFile(doubanResult.getIntroduction().getBytes(StandardCharsets.UTF_8), savePath);
 
 		MovieIntroduction po = new MovieIntroduction();
 		po.setMovieId(movieId);
