@@ -2,12 +2,18 @@ package demo.movie.pojo.result;
 
 import java.time.LocalDateTime;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class FindMovieSummaryElementResult {
 
 	private Long id;
+	@ApiModelProperty("译名/中文名")
 	private String cnTitle;
+	@ApiModelProperty("点击量 每ip/日 算一个")
 	private Long clickCounting;
+	@ApiModelProperty("简介")
 	private String introduction;
+	@ApiModelProperty("上映时间")
 	private LocalDateTime releaseTime;
 
 	public Long getId() {
