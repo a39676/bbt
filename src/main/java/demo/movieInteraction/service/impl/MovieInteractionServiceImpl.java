@@ -108,12 +108,15 @@ public class MovieInteractionServiceImpl extends CommonService implements MovieI
 			subR.setReleaseTime(info.getReleaseTime());
 			if(clickCountMap.get(info.getId()) != null) {
 				subR.setClickCounting(clickCountMap.get(info.getId()).getCounting());
+			} else {
+				subR.setClickCounting(0L);
 			}
 			if(introductionMap.get(info.getId()) != null) {
 				introPath = introductionMap.get(info.getId()).getIntroPath();
 				subR.setIntroduction(fileUtil.getStringFromFile(introPath));
 			}
-			subR.setReleaseTime(info.getReleaseTime());
+			subR.setId(info.getId());
+			subR.setCnTitle(info.getCnTitle());
 			list.add(subR);
 		}
 		
