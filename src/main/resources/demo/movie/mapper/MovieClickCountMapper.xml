@@ -193,4 +193,10 @@
       is_delete = #{isDelete,jdbcType=BIT}
     where movie_id = #{movieId,jdbcType=BIGINT}
   </update>
+
+  <insert id="insertOrUpdateClickCount">
+    insert into movie_click_count(movie_id, counting) values
+    (#{movieId}, #{counting})
+    on duplicate key update update_time = now(), counting = counting + #{counting};
+  </insert>
 </mapper>

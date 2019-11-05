@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.service.UserRegistService;
+import demo.movieInteraction.service.MovieInteractionService;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.task.service.TaskToolService;
 import demo.tool.mapper.MailRecordMapper;
@@ -24,6 +25,8 @@ public class TaskToolServiceImpl implements TaskToolService {
 	private UserRegistService userRegistService;
 	@Autowired
 	private ComplexToolService complexToolService;
+	@Autowired
+	private MovieInteractionService movieInteractionService;
 	
 	@Autowired
 	private UsersMapper usersMapper;
@@ -57,5 +60,10 @@ public class TaskToolServiceImpl implements TaskToolService {
 	@Scheduled(cron="05 03 23 * * *") 
 	public void cleanTmpFile() {
 		complexToolService.cleanTmpFiles(seleniumGlobalOptionService.getDownloadDir(), null, LocalDateTime.now().minusMonths(1));
+	}
+	
+	@Scheduled(cron="01 03 00 * * *")
+	public void movieClickCountingRedisToOrm() {
+		movieInteractionService.movieClickCountingRedisToOrm();
 	}
 }

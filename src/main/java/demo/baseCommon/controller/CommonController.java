@@ -12,13 +12,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import demo.base.system.pojo.bo.IpRecordBO;
 import demo.base.user.mapper.UserIpMapper;
 import demo.base.user.pojo.po.UserIp;
 import demo.util.BaseUtilCustom;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import numericHandel.NumericUtilCustom;
+import tool.pojo.bo.IpRecordBO;
 
 public abstract class CommonController {
 	

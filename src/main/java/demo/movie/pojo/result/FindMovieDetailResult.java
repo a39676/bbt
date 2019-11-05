@@ -12,6 +12,7 @@ public class FindMovieDetailResult extends CommonResult {
 	private List<String> imgList;
 	private String introduction;
 	private List<String> magnetUrlList;
+	private Long clickCounting;
 
 	public Long getMovieId() {
 		return movieId;
@@ -61,10 +62,19 @@ public class FindMovieDetailResult extends CommonResult {
 		this.magnetUrlList = magnetUrlList;
 	}
 
+	public Long getClickCounting() {
+		return clickCounting;
+	}
+
+	public void setClickCounting(Long clickCounting) {
+		this.clickCounting = clickCounting;
+	}
+
 	@Override
 	public String toString() {
 		return "FindMovieDetailResult [movieId=" + movieId + ", originalTitle=" + originalTitle + ", cnTitle=" + cnTitle
-				+ ", imgList=" + imgList + ", introduction=" + introduction + ", magnetUrlList=" + magnetUrlList + "]";
+				+ ", imgList=" + imgList + ", introduction=" + introduction + ", magnetUrlList=" + magnetUrlList
+				+ ", clickCounting=" + clickCounting + "]";
 	}
 
 }

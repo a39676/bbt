@@ -1,5 +1,7 @@
 package demo.movieInteraction.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,8 +40,8 @@ public class MovieInteractionController {
 	
 	@PostMapping(value = MovieInteractionUrl.movieDetail)
 	@ResponseBody
-	public FindMovieDetailResult findMovieDetail(@RequestBody FindMovieDetailDTO dto) {
-		return movieInteractionService.findMovieDetail(dto);
+	public FindMovieDetailResult findMovieDetail(@RequestBody FindMovieDetailDTO dto, HttpServletRequest request) {
+		return movieInteractionService.findMovieDetail(request, dto);
 	}
 	
 	@GetMapping(value = MovieInteractionUrl.movieRegionType)

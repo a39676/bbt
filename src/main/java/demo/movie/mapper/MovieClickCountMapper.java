@@ -1,9 +1,12 @@
 package demo.movie.mapper;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import demo.movie.pojo.dto.InsertOrUpdateMovieClickCountDTO;
 import demo.movie.pojo.po.MovieClickCount;
 import demo.movie.pojo.po.MovieClickCountExample;
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
 public interface MovieClickCountMapper {
     long countByExample(MovieClickCountExample example);
@@ -27,4 +30,6 @@ public interface MovieClickCountMapper {
     int updateByPrimaryKeySelective(MovieClickCount record);
 
     int updateByPrimaryKey(MovieClickCount record);
+    
+    int insertOrUpdateClickCount(InsertOrUpdateMovieClickCountDTO dto);
 }
