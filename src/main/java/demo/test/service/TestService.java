@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import demo.base.user.pojo.po.Users;
 import demo.baseCommon.service.CommonService;
-import demo.config.costom_component.Tess;
 import demo.util.BaseUtilCustom;
 import net.sf.json.JSONObject;
 
@@ -14,9 +13,6 @@ public class TestService extends CommonService {
 	
 	@Autowired
 	private BaseUtilCustom baseUtilCustom;
-	
-	@Autowired
-	private Tess tess;
 
 	private static String testKey = "testKey";
 	private static String testValue = "testValue";
@@ -37,14 +33,6 @@ public class TestService extends CommonService {
 	public void roleGetTest() {
 		System.out.println(baseUtilCustom.getRoles());
 		System.out.println(baseUtilCustom.getCurrentUserName());
-	}
-	
-	public void tessTest1() {
-		tess.ocr("");
-	}
-	
-	public void tessTest2() {
-		tess.ocr("");
 	}
 	
 }

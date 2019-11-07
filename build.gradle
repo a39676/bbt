@@ -1,3 +1,4 @@
+// bbt 
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
@@ -50,6 +51,7 @@ dependencies {
 	// tools
 	compile project(':toolPacksG') 
 	compile project(':auxiliaryCommon')
+	compile project(':ATTool')
 
 	// spring boot
     compile group: 'org.springframework.boot', name: 'spring-boot-starter', version: '2.1.5.RELEASE'
@@ -123,12 +125,8 @@ dependencies {
 	// selenium
 	compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
 	compile group: 'io.github.seleniumquery', name: 'seleniumquery', version: '0.20.0'
-	// appium
-	compile group: 'io.appium', name: 'java-client', version: '7.1.0'
 	
-	// tess4j
-	compile group: 'net.sourceforge.tess4j', name: 'tess4j', version: '4.4.0'
-	compile group: 'net.java.dev.jna', name: 'jna', version: '5.4.0'
+	
 	
 	// bit torrent
 	compile group: 'org.eclipse', name: 'bittorrent', version: '0.3.0-v20070627-1030'

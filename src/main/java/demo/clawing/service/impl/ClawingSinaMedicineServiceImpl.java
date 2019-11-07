@@ -22,7 +22,6 @@ import demo.clawing.pojo.result.SinaMedicineDetailMainHandleResult;
 import demo.clawing.service.ClawingSinaMedicineFactoryService;
 import demo.clawing.service.ClawingSinaMedicineService;
 import demo.selenium.pojo.bo.XpathBuilderBO;
-import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.WebDriverService;
 import demo.testCase.pojo.po.TestEvent;
 
@@ -31,8 +30,6 @@ public class ClawingSinaMedicineServiceImpl extends CommonService implements Cla
 
 	@Autowired
 	private WebDriverService webDriverService;
-	@Autowired
-	private SeleniumAuxiliaryToolService auxTool;
 //	@Autowired
 //	private JavaScriptCommonUtil jsUtil;
 	
@@ -63,8 +60,6 @@ public class ClawingSinaMedicineServiceImpl extends CommonService implements Cla
 			By medicineDetailBy = By.xpath(xb.getXpath());
 			WebElement medicineDetail = d.findElement(medicineDetailBy);
 			System.out.println(medicineDetail.getText());
-
-			auxTool.takeScreenshot(d, te);
 
 		} catch (Exception e) {
 			e.printStackTrace();

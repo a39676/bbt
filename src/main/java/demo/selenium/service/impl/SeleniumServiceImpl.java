@@ -11,10 +11,11 @@ import org.openqa.selenium.support.ui.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import at.pojo.dto.TakeScreenshotSaveDTO;
+import at.service.ScreenshotService;
 import demo.baseCommon.service.CommonService;
 import demo.selenium.pojo.result.TestEventResult;
 import demo.selenium.service.JavaScriptService;
-import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.SeleniumService;
 import demo.selenium.service.WebDriverService;
 import demo.testCase.pojo.bo.TestEventDemoBO;
@@ -27,7 +28,9 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 	@Autowired
 	private WebDriverService webDriverService;
 	@Autowired
-	private SeleniumAuxiliaryToolService auxiliaryToolService;
+	private WebATToolServiceImpl webATToolService;
+	@Autowired
+	private ScreenshotService screenshotService;
 	@Autowired
 	private JavaScriptService jsUtil;
 //	@Autowired
@@ -54,7 +57,7 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 			By keywordBy = By.id("kw");
 			
 			// 等待, 直至页面出现指定元素
-			auxiliaryToolService.fluentWait(driver, keywordBy);
+			webATToolService.fluentWait(driver, keywordBy);
 			
 //			检出页面上的搜索框
 			WebElement searchBox = driver.findElement(By.id("kw"));
@@ -72,7 +75,7 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 			String src = recaptcha.getAttribute("src");
 			System.out.println(src);
 			
-			auxiliaryToolService.fluentWait(driver, b);
+			webATToolService.fluentWait(driver, b);
 			Actions clickWithCtrl = new Actions(driver);
 			clickWithCtrl
 			.keyDown(Keys.CONTROL).click(imageButton).keyUp(Keys.CONTROL).build()
@@ -80,7 +83,7 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 			
 			jsUtil.openNewTab(driver);
 			
-			auxiliaryToolService.tabSwitch(driver, 0);
+			webATToolService.tabSwitch(driver, 0);
 			
 //			auxiliaryToolService.dragAndDrop(driver, sourceElement, targetElement);
 			
@@ -90,8 +93,10 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 			WebElement radioElement = driver.findElement(By.id("demoRadioId"));
 			radioElement.click();
 			
-			auxiliaryToolService.takeScreenshot(driver, testEvent);
-			String ocrResult = auxiliaryToolService.captchaHandle(driver, recaptcha, testEvent);
+			TakeScreenshotSaveDTO dto = new TakeScreenshotSaveDTO();
+			dto.setDriver(driver);
+			screenshotService.screenshotSave(dto, "/scrSavingFolder", null);
+			String ocrResult = webATToolService.captchaHandle(driver, recaptcha, testEvent);
 			System.out.println(ocrResult);
 			
 			r.setIsSuccess();

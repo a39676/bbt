@@ -95,16 +95,6 @@ public class TestController extends CommonController {
 		log.info("something {}", str);
 	}
 	
-	@GetMapping(value = "tess1")
-	public void tess1() {
-		testService.tessTest1();
-	}
-	
-	@GetMapping(value = "tess2")
-	public void tess2() {
-		testService.tessTest2();
-	}
-	
 	@GetMapping(value = "sjlanxiang")
 	public void sjlanxiang() {
 		seForJoke.lanXiang();

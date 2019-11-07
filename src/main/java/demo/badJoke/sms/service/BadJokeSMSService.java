@@ -15,7 +15,7 @@ import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.service.impl.ClawingCommonService;
 import demo.selenium.pojo.bo.XpathBuilderBO;
-import demo.selenium.service.SeleniumAuxiliaryToolService;
+import demo.selenium.service.impl.WebATToolServiceImpl;
 import demo.testCase.pojo.po.TestEvent;
 import demo.testCase.pojo.type.TestCaseType;
 import demo.testCase.service.TestEventService;
@@ -31,7 +31,7 @@ public class BadJokeSMSService extends ClawingCommonService {
 //	@Autowired
 //	private WebDriverService webDriverService;
 	@Autowired
-	private SeleniumAuxiliaryToolService auxTool;
+	private WebATToolServiceImpl auxTool;
 	@Autowired
 	private SystemConstantService constantService;
 	
@@ -125,7 +125,7 @@ public class BadJokeSMSService extends ClawingCommonService {
 		} catch (Exception e) {
 			log.error("error: {}, url: {}" + e.getMessage() + d.getCurrentUrl());
 			report.append(e.getMessage() + "\n");
-			auxTool.takeScreenshot(d, te);
+			
 			
 		} finally {
 			r.setMessage(report.toString());
@@ -188,7 +188,7 @@ public class BadJokeSMSService extends ClawingCommonService {
 		} catch (Exception e) {
 			log.error("error: {}, url: {}" + e.getMessage() + d.getCurrentUrl());
 			report.append(e.getMessage() + "\n");
-			auxTool.takeScreenshot(d, te);
+			
 			
 		} finally {
 			r.setMessage(report.toString());
@@ -211,7 +211,7 @@ public class BadJokeSMSService extends ClawingCommonService {
 		} catch (Exception e) {
 			log.error("error: {}, url: {}" + e.getMessage() + d.getCurrentUrl());
 			report.append(e.getMessage() + "\n");
-			auxTool.takeScreenshot(d, te);
+			
 			
 		} finally {
 			r.setMessage(report.toString());
@@ -256,7 +256,7 @@ public class BadJokeSMSService extends ClawingCommonService {
 		} catch (Exception e) {
 			log.error("error: {}, url: {}" + e.getMessage() + d.getCurrentUrl());
 			report.append(e.getMessage() + "\n");
-			auxTool.takeScreenshot(d, te);
+			
 			
 		} finally {
 			r.setMessage(report.toString());
@@ -297,7 +297,7 @@ public class BadJokeSMSService extends ClawingCommonService {
 		} catch (Exception e) {
 			log.error("error: {}, url: {}" + e.getMessage() + d.getCurrentUrl());
 			report.append(e.getMessage() + "\n");
-			auxTool.takeScreenshot(d, te);
+			
 			
 		} finally {
 			r.setMessage(report.toString());
@@ -325,7 +325,7 @@ public class BadJokeSMSService extends ClawingCommonService {
 		} catch (Exception e) {
 			log.error("error: {}, url: {}" + e.getMessage() + d.getCurrentUrl());
 			report.append(e.getMessage() + "\n");
-			auxTool.takeScreenshot(d, te);
+			
 			
 		} finally {
 			r.setMessage(report.toString());
@@ -357,7 +357,7 @@ public class BadJokeSMSService extends ClawingCommonService {
 		} catch (Exception e) {
 			log.error("error: {}, url: {}" + e.getMessage() + d.getCurrentUrl());
 			report.append(e.getMessage() + "\n");
-			auxTool.takeScreenshot(d, te);
+			
 			
 		} finally {
 			r.setMessage(report.toString());
@@ -387,7 +387,7 @@ public class BadJokeSMSService extends ClawingCommonService {
 		} catch (Exception e) {
 			log.error("error: {}, url: {}" + e.getMessage() + d.getCurrentUrl());
 			report.append(e.getMessage() + "\n");
-			auxTool.takeScreenshot(d, te);
+			
 			
 		} finally {
 			r.setMessage(report.toString());
@@ -432,7 +432,7 @@ public class BadJokeSMSService extends ClawingCommonService {
 		} catch (Exception e) {
 			log.error("error: {}, url: {}" + e.getMessage() + d.getCurrentUrl());
 			report.append(e.getMessage() + "\n");
-			auxTool.takeScreenshot(d, te);
+			
 			
 		} finally {
 			r.setMessage(report.toString());
@@ -491,7 +491,7 @@ public class BadJokeSMSService extends ClawingCommonService {
 		} catch (Exception e) {
 			log.error("error: {}, url: {}" + e.getMessage() + d.getCurrentUrl());
 			report.append(e.getMessage() + "\n");
-			auxTool.takeScreenshot(d, te);
+			
 			
 		} finally {
 			r.setMessage(report.toString());
@@ -555,7 +555,7 @@ public class BadJokeSMSService extends ClawingCommonService {
 		} catch (Exception e) {
 			log.error("error: {}, url: {}" + e.getMessage() + d.getCurrentUrl());
 			report.append(e.getMessage() + "\n");
-			auxTool.takeScreenshot(d, te);
+			
 			
 		} finally {
 			r.setMessage(report.toString());
@@ -595,7 +595,7 @@ public class BadJokeSMSService extends ClawingCommonService {
 		} catch (Exception e) {
 			log.error("error: {}, url: {}" + e.getMessage() + d.getCurrentUrl());
 			report.append(e.getMessage() + "\n");
-			auxTool.takeScreenshot(d, te);
+			
 			
 		} finally {
 			r.setMessage(report.toString());
@@ -619,7 +619,7 @@ public class BadJokeSMSService extends ClawingCommonService {
 		} catch (Exception e) {
 			log.error("error: {}, url: {}" + e.getMessage() + d.getCurrentUrl());
 			report.append(e.getMessage() + "\n");
-			auxTool.takeScreenshot(d, te);
+			
 			
 		} finally {
 			r.setMessage(report.toString());

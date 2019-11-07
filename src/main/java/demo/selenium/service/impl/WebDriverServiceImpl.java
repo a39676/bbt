@@ -18,12 +18,12 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import at.pojo.constant.ChromeConstant;
+import at.pojo.constant.FireFoxConstant;
+import at.pojo.constant.WebDriverConstant;
 import constant.HtmlMimeType;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.service.CommonService;
-import demo.selenium.pojo.constant.ChromeConstant;
-import demo.selenium.pojo.constant.FireFoxConstant;
-import demo.selenium.pojo.constant.WebDriverConstant;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.WebDriverService;
 

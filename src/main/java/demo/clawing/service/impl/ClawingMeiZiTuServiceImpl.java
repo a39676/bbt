@@ -30,8 +30,8 @@ import demo.image.pojo.po.ImageStore;
 import demo.image.pojo.type.ImageType;
 import demo.selenium.pojo.bo.XpathBuilderBO;
 import demo.selenium.service.JavaScriptService;
-import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.WebDriverService;
+import demo.selenium.service.impl.WebATToolServiceImpl;
 import demo.testCase.pojo.po.TestEvent;
 import httpHandel.HttpUtil;
 
@@ -41,7 +41,7 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 	@Autowired
 	private WebDriverService webDriverService;
 	@Autowired
-	private SeleniumAuxiliaryToolService auxTool;
+	private WebATToolServiceImpl auxTool;
 	@Autowired
 	private JavaScriptService jsUtil;
 	@Autowired
@@ -66,6 +66,7 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 	@Override
 	public void meiZiTuMain() {
 		TestEvent te = buildTestEvent();
+		te.toString();
 		WebDriver d = webDriverService.buildChrome76WebDriver();
 
 		String mainWindow = d.getWindowHandle();
@@ -97,7 +98,6 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			auxTool.takeScreenshot(d, te);
 		} finally {
 			if (d != null) {
 				d.quit();
@@ -198,12 +198,12 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 
 	private void subImgHandler(WebDriver d, String title, File folder) {
 		TestEvent t = buildTestEvent();
+		t.toString();
 		By imgBy = ByTagName.tagName("img");
 		List<WebElement> imgs = null;
 		try {
 			imgs = d.findElements(imgBy);
 		} catch (Exception e) {
-			auxTool.takeScreenshot(d, t);
 			return;
 		}
 		
@@ -236,7 +236,6 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 		}
 		
 		if(imgEle == null) {
-			auxTool.takeScreenshot(d, t);
 			return;
 		}
 		

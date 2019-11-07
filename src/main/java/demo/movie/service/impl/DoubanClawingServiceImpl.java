@@ -16,15 +16,12 @@ import dateTimeHandle.DateUtilCustom;
 import demo.movie.pojo.result.DoubanSubClawingResult;
 import demo.movie.service.DoubanClawingService;
 import demo.selenium.pojo.bo.XpathBuilderBO;
-import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.impl.JavaScriptServiceImpl;
 import demo.testCase.pojo.po.TestEvent;
 
 @Service
 public final class DoubanClawingServiceImpl extends MovieClawingCommonService implements DoubanClawingService {
 
-	@Autowired
-	private SeleniumAuxiliaryToolService auxTool;
 	@Autowired
 	private JavaScriptServiceImpl jsUtil;
 
@@ -57,7 +54,6 @@ public final class DoubanClawingServiceImpl extends MovieClawingCommonService im
 			
 		} catch (Exception e) {
 			log.error("error:{}, url: {}" + e.getMessage() + d.getCurrentUrl());
-			auxTool.takeScreenshot(d, te);
 			
 		} finally {
 			r.setMessage(report.toString());

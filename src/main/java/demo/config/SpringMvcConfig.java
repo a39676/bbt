@@ -105,4 +105,5 @@ public class SpringMvcConfig implements WebMvcConfigurer {
 	public HttpUtil getHttpUtil() {
 		return new HttpUtil();
 	}
+	
 }

@@ -9,12 +9,15 @@ import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import at.pojo.dto.TakeScreenshotSaveDTO;
+import at.service.ScreenshotService;
 import demo.baseCommon.service.CommonService;
 import demo.neobux.service.NeobuxOptionService;
 import demo.neobux.service.NeobuxService;
 import demo.selenium.pojo.bo.XpathBuilderBO;
-import demo.selenium.service.SeleniumAuxiliaryToolService;
+import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.WebDriverService;
+import demo.selenium.service.impl.WebATToolServiceImpl;
 import demo.testCase.pojo.po.TestEvent;
 
 @Service
@@ -23,11 +26,13 @@ public class NeobuxServiceImpl extends CommonService implements NeobuxService {
 	@Autowired
 	private WebDriverService webDriverService;
 	@Autowired
-	private SeleniumAuxiliaryToolService auxTool;
+	private WebATToolServiceImpl auxTool;
 	@Autowired
 	private NeobuxOptionService optionService;
-//	@Autowired
-//	private SeleniumGlobalOptionService globalOptionService;
+	@Autowired
+	private SeleniumGlobalOptionService globalOptionService;
+	@Autowired
+	private ScreenshotService screenshotService;
 
 	private String mainUrl = "https://www.neobux.com";
 	
@@ -41,14 +46,18 @@ public class NeobuxServiceImpl extends CommonService implements NeobuxService {
 	@Override
 	public void test1() {
 		WebDriver d = webDriverService.buildFireFoxWebDriver();
+		
+		String scrSavePath = globalOptionService.getScreenshotSavingFolder();
 
 		String mainWindow = d.getWindowHandle();
 		
 		System.out.println(mainWindow);
 		
+		TakeScreenshotSaveDTO dto = new TakeScreenshotSaveDTO();
+		dto.setDriver(d);
 		try {
 			d.get(mainUrl);
-			auxTool.takeScreenshot(d, t);
+			screenshotService.screenshotSave(dto, scrSavePath, null);
 			
 			int loginCountdown = 10;
 			while(findLoginButton(d) != null && loginCountdown >= 0 ) {
@@ -56,32 +65,32 @@ public class NeobuxServiceImpl extends CommonService implements NeobuxService {
 				loginCountdown--;
 			}
 			if(loginCountdown < 0) {
-				auxTool.takeScreenshot(d, t);
+				screenshotService.screenshotSave(dto, scrSavePath, null);
 				log.debug("login failed to many");
 				return;
 			}
 			
 			if(!clickViewADList(d)) {
-				auxTool.takeScreenshot(d, t);
+				screenshotService.screenshotSave(dto, scrSavePath, null);
 				log.debug("can not find ad list button");
 				return;
 			}
 			
 			List<WebElement> adList = findADList(d);
 			if(adList == null) {
-				auxTool.takeScreenshot(d, t);
+				screenshotService.screenshotSave(dto, scrSavePath, null);
 				log.debug("can not find ad list not click");
 				return;
 			} else {
-				auxTool.takeScreenshot(d, t);
+				screenshotService.screenshotSave(dto, scrSavePath, null);
 				log.debug("find ad list not click");
 			}
 			
-			auxTool.takeScreenshot(d, t);
+			screenshotService.screenshotSave(dto, scrSavePath, null);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			auxTool.takeScreenshot(d, t);
+			screenshotService.screenshotSave(dto, scrSavePath, null);
 		} finally {
 			if (d != null) {
 				d.quit();
@@ -104,11 +113,14 @@ public class NeobuxServiceImpl extends CommonService implements NeobuxService {
 	}
 	
 	private boolean login(WebDriver d) {
+		String scrSavePath = globalOptionService.getScreenshotSavingFolder();
 		XpathBuilderBO xpathBuilder = new XpathBuilderBO();
 		List<WebElement> spans = d.findElements(By.tagName("span"));
 		WebElement loginButton = findLoginButton(d);
+		TakeScreenshotSaveDTO dto = new TakeScreenshotSaveDTO();
+		dto.setDriver(d);
 		if(loginButton == null) {
-			auxTool.takeScreenshot(d, t);
+			screenshotService.screenshotSave(dto, scrSavePath, null);
 			return false;
 		}
 		
@@ -139,7 +151,7 @@ public class NeobuxServiceImpl extends CommonService implements NeobuxService {
 			}
 		}
 		if(sendButton == null) {
-			auxTool.takeScreenshot(d, t);
+			screenshotService.screenshotSave(dto, scrSavePath, null);
 			return false;
 		}
 		

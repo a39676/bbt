@@ -1,2 +1,2 @@
 rootProject.name = 'bbt'
-includeFlat  'toolPacksG', 'auxiliaryCommon'
+includeFlat  'toolPacksG', 'auxiliaryCommon', 'ATTool'

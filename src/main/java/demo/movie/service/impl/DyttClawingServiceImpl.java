@@ -27,7 +27,6 @@ import demo.movie.pojo.result.DoubanSubClawingResult;
 import demo.movie.service.DoubanClawingService;
 import demo.movie.service.DyttClawingService;
 import demo.selenium.pojo.bo.XpathBuilderBO;
-import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.WebDriverService;
 import demo.testCase.pojo.po.TestEvent;
 import demo.testCase.pojo.type.TestCaseType;
@@ -45,8 +44,6 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 
 	@Autowired
 	private WebDriverService webDriverService;
-	@Autowired
-	private SeleniumAuxiliaryToolService auxTool;
 	@Autowired
 	private DoubanClawingService doubanService;
 //	@Autowired
@@ -94,7 +91,6 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 			r.setIsSuccess();
 		} catch (Exception e) {
 			report.append(e.getMessage() + "\n");
-			auxTool.takeScreenshot(d, te);
 			
 		} finally {
 			r.setMessage(report.toString());

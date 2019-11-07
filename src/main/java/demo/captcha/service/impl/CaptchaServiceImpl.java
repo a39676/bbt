@@ -12,20 +12,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import at.service.Tess;
 import demo.baseCommon.service.CommonService;
-import demo.captcha.service.CaptchaService;
-import demo.config.costom_component.Tess;
 
 @Scope("singleton")
 @Service
-public class CaptchaServiceImpl extends CommonService implements CaptchaService {
+public class CaptchaServiceImpl extends CommonService {
 	
 	@Autowired
 	private Tess tess;
 
 	private final String captchaFolder = "/home/u2/tmp/captchas";
 	
-	@Override
 	public String ocr(String imgPath, boolean numberAndLetterOnly) {
 		File img = new File(imgPath);
 		if(!img.exists()) {
@@ -59,7 +57,6 @@ public class CaptchaServiceImpl extends CommonService implements CaptchaService 
 	 * @return 
 	 * @throws IOException
 	 */
-	@Override
 	public boolean cleanImage(File sfile, String outputFolerPath) {
 		File destF = new File(outputFolerPath);
 		if(!destF.exists() || !destF.isDirectory()) {
@@ -220,7 +217,6 @@ public class CaptchaServiceImpl extends CommonService implements CaptchaService 
 	}
 
 	// 图片灰度，黑白
-	@Override
 	public boolean gray(File srcImageFile, String outputPath) {
 		try {
 			BufferedImage src = ImageIO.read(srcImageFile);

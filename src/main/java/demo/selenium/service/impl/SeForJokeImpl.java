@@ -6,10 +6,12 @@ import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import at.pojo.dto.TakeScreenshotSaveDTO;
+import at.service.ScreenshotService;
 import demo.baseCommon.service.CommonService;
 import demo.selenium.pojo.bo.XpathBuilderBO;
 import demo.selenium.service.SeForJoke;
-import demo.selenium.service.SeleniumAuxiliaryToolService;
+import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.WebDriverService;
 import demo.testCase.pojo.po.TestEvent;
 
@@ -19,9 +21,13 @@ public class SeForJokeImpl extends CommonService implements SeForJoke {
 	@Autowired
 	private WebDriverService webDriverService;
 	@Autowired
-	private SeleniumAuxiliaryToolService auxTool;
+	private WebATToolServiceImpl auxTool;
 //	@Autowired
 //	private JavaScriptCommonUtil jsUtil;
+	@Autowired
+	private ScreenshotService screenshotService;
+	@Autowired
+	private SeleniumGlobalOptionService globalOptionService;
 	
 	private String jokerName = "冯安";
 	private String jokerPhone = "18826485386";
@@ -113,7 +119,9 @@ public class SeForJokeImpl extends CommonService implements SeForJoke {
 			WebElement addressInput = d.findElement(addressBy);
 			addressInput.sendKeys(jokerAddress);
 			
-			auxTool.takeScreenshot(d, te);
+			TakeScreenshotSaveDTO dto = new TakeScreenshotSaveDTO();
+			dto.setDriver(d);
+			screenshotService.screenshotSave(dto, globalOptionService.getScreenshotSavingFolder(), te.getEventName());
 			
 			xpathBuilder.start("input").addAttribute("type", "submit").addAttribute("value", "报名");
 			By submitBy = By.xpath(xpathBuilder.getXpath());

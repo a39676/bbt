@@ -36,7 +36,6 @@ import demo.movie.service.DoubanClawingService;
 import demo.movie.service.HomeFeiClawingService;
 import demo.movie.service.MovieClawingOptionService;
 import demo.selenium.pojo.bo.XpathBuilderBO;
-import demo.selenium.service.SeleniumAuxiliaryToolService;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.WebDriverService;
 import demo.selenium.service.impl.JavaScriptServiceImpl;
@@ -70,8 +69,6 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 	private SeleniumGlobalOptionService globalOptionService;
 	@Autowired
 	private WebDriverService webDriverService;
-	@Autowired
-	private SeleniumAuxiliaryToolService auxTool;
 	@Autowired
 	private MovieClawingOptionService optionService;
 	@Autowired
@@ -164,7 +161,6 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 		} catch (Exception e) {
 			log.error("error: {}, url: {}" + e.getMessage() + d.getCurrentUrl());
 			report.append(e.getMessage() + "\n");
-			auxTool.takeScreenshot(d, te);
 			
 		} finally {
 			r.setMessage(report.toString());
@@ -230,7 +226,6 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 			}
 			if(d != null) {
 				log.error("error:{}, url: {}" + e.getMessage() + d.getCurrentUrl());
-				auxTool.takeScreenshot(d, te);
 			}
 			report.append(e.getMessage() + "\n");
 			
@@ -297,7 +292,6 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 			loginButton.click();
 		} catch (Exception e) {
 			log.error("homeFei login error {} " + e.getMessage());
-			auxTool.takeScreenshot(d, te);
 			
 			return false;
 		}
@@ -320,7 +314,6 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 			}
 			if (checkInInterfaceButton == null) {
 				log.debug("homeFei can not found check in button");
-				auxTool.takeScreenshot(d, te);
 				return checkInFlag;
 			}
 
@@ -346,7 +339,6 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 
 		} catch (Exception e) {
 			log.debug("homeFei daily check in fail {} " + e.getMessage());
-			auxTool.takeScreenshot(d, te);
 		} finally {
 			Set<String> windows = d.getWindowHandles();
 			for (String w : windows) {
