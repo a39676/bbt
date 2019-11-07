@@ -14,10 +14,11 @@ import org.springframework.stereotype.Service;
 
 import at.service.Tess;
 import demo.baseCommon.service.CommonService;
+import demo.captcha.service.CaptchaService;
 
 @Scope("singleton")
 @Service
-public class CaptchaServiceImpl extends CommonService {
+public class CaptchaServiceImpl extends CommonService implements CaptchaService {
 	
 	@Autowired
 	private Tess tess;
