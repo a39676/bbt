@@ -17,7 +17,7 @@ import demo.neobux.service.NeobuxService;
 import demo.selenium.pojo.bo.XpathBuilderBO;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.WebDriverService;
-import demo.selenium.service.impl.WebATToolServiceImpl;
+import demo.selenium.service.impl.AuxiliaryToolServiceImpl;
 import demo.testCase.pojo.po.TestEvent;
 
 @Service
@@ -26,7 +26,7 @@ public class NeobuxServiceImpl extends CommonService implements NeobuxService {
 	@Autowired
 	private WebDriverService webDriverService;
 	@Autowired
-	private WebATToolServiceImpl auxTool;
+	private AuxiliaryToolServiceImpl auxTool;
 	@Autowired
 	private NeobuxOptionService optionService;
 	@Autowired

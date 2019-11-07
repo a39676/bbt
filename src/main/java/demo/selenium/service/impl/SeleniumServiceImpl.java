@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import at.pojo.dto.TakeScreenshotSaveDTO;
 import at.service.ScreenshotService;
+import at.web.WebATToolService;
 import demo.baseCommon.service.CommonService;
 import demo.selenium.pojo.result.TestEventResult;
 import demo.selenium.service.JavaScriptService;
@@ -28,13 +29,13 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 	@Autowired
 	private WebDriverService webDriverService;
 	@Autowired
-	private WebATToolServiceImpl webATToolService;
+	private AuxiliaryToolServiceImpl auxiliaryToolService;
+	@Autowired
+	private WebATToolService webATToolService;
 	@Autowired
 	private ScreenshotService screenshotService;
 	@Autowired
 	private JavaScriptService jsUtil;
-//	@Autowired
-//	private Tess tess;
 	@Autowired
 	private TestEventService eventService;
 	
@@ -57,7 +58,7 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 			By keywordBy = By.id("kw");
 			
 			// 等待, 直至页面出现指定元素
-			webATToolService.fluentWait(driver, keywordBy);
+			auxiliaryToolService.fluentWait(driver, keywordBy);
 			
 //			检出页面上的搜索框
 			WebElement searchBox = driver.findElement(By.id("kw"));
@@ -75,7 +76,7 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 			String src = recaptcha.getAttribute("src");
 			System.out.println(src);
 			
-			webATToolService.fluentWait(driver, b);
+			auxiliaryToolService.fluentWait(driver, b);
 			Actions clickWithCtrl = new Actions(driver);
 			clickWithCtrl
 			.keyDown(Keys.CONTROL).click(imageButton).keyUp(Keys.CONTROL).build()
@@ -96,7 +97,7 @@ public class SeleniumServiceImpl extends CommonService implements SeleniumServic
 			TakeScreenshotSaveDTO dto = new TakeScreenshotSaveDTO();
 			dto.setDriver(driver);
 			screenshotService.screenshotSave(dto, "/scrSavingFolder", null);
-			String ocrResult = webATToolService.captchaHandle(driver, recaptcha, testEvent);
+			String ocrResult = auxiliaryToolService.captchaHandle(driver, recaptcha, testEvent);
 			System.out.println(ocrResult);
 			
 			r.setIsSuccess();

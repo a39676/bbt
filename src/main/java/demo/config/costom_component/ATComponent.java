@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import at.service.ATReportService;
 import at.service.ScreenshotService;
 import at.service.Tess;
+import at.web.WebATToolService;
 
 @Component
 public class ATComponent {
@@ -38,5 +39,10 @@ public class ATComponent {
 	public ScreenshotService getScreenshotService() {
 		ScreenshotService s = new ScreenshotService();
 		return s;
+	}
+	
+	@Bean
+	public WebATToolService getWebATToolService() {
+		return new WebATToolService();
 	}
 }

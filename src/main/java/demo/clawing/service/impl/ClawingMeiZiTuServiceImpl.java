@@ -20,6 +20,7 @@ import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import at.web.WebATToolService;
 import demo.baseCommon.service.CommonService;
 import demo.clawing.mapper.MeizituGroupRecordMapper;
 import demo.clawing.pojo.po.MeizituGroupRecord;
@@ -31,7 +32,7 @@ import demo.image.pojo.type.ImageType;
 import demo.selenium.pojo.bo.XpathBuilderBO;
 import demo.selenium.service.JavaScriptService;
 import demo.selenium.service.WebDriverService;
-import demo.selenium.service.impl.WebATToolServiceImpl;
+import demo.selenium.service.impl.AuxiliaryToolServiceImpl;
 import demo.testCase.pojo.po.TestEvent;
 import httpHandel.HttpUtil;
 
@@ -41,7 +42,9 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 	@Autowired
 	private WebDriverService webDriverService;
 	@Autowired
-	private WebATToolServiceImpl auxTool;
+	private AuxiliaryToolServiceImpl auxTool;
+	@Autowired
+	private WebATToolService webATToolService;
 	@Autowired
 	private JavaScriptService jsUtil;
 	@Autowired
@@ -241,7 +244,7 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 		
 		String currentUrl = d.getCurrentUrl();
 
-		String fileName = auxTool.findFileNameFromUrl(imgEle.getAttribute("src"));
+		String fileName = webATToolService.findFileNameFromUrl(imgEle.getAttribute("src"));
 		String filePath = folder.getAbsolutePath() + File.separator + fileName;
 		File tmpFile = new File(filePath);
 		if (tmpFile.exists()) {

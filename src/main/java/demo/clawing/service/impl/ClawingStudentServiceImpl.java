@@ -16,7 +16,7 @@ import demo.baseCommon.service.CommonService;
 import demo.clawing.service.ClawingStudentService;
 import demo.selenium.pojo.bo.XpathBuilderBO;
 import demo.selenium.service.WebDriverService;
-import demo.selenium.service.impl.WebATToolServiceImpl;
+import demo.selenium.service.impl.AuxiliaryToolServiceImpl;
 import demo.testCase.pojo.po.TestEvent;
 import ioHandle.FileUtilCustom;
 
@@ -28,7 +28,7 @@ public class ClawingStudentServiceImpl extends CommonService implements ClawingS
 	@Autowired
 	private WebDriverService webDriverService;
 	@Autowired
-	private WebATToolServiceImpl auxTool;
+	private AuxiliaryToolServiceImpl auxTool;
 //	@Autowired
 //	private JavaScriptService jsUtil;
 	

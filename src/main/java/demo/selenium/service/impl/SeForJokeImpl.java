@@ -21,7 +21,7 @@ public class SeForJokeImpl extends CommonService implements SeForJoke {
 	@Autowired
 	private WebDriverService webDriverService;
 	@Autowired
-	private WebATToolServiceImpl auxTool;
+	private AuxiliaryToolServiceImpl auxTool;
 //	@Autowired
 //	private JavaScriptCommonUtil jsUtil;
 	@Autowired
