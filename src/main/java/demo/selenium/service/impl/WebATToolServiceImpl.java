@@ -112,7 +112,6 @@ public class WebATToolServiceImpl extends CommonService {
 		dragAndDrop.perform();
 	}
 	
-	
 	public String saveImg(WebElement ele, String folderPath) throws IOException {
 		if (ele == null) {
 			return null;
