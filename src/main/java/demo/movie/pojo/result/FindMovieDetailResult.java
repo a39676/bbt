@@ -3,15 +3,23 @@ package demo.movie.pojo.result;
 import java.util.List;
 
 import auxiliaryCommon.pojo.result.CommonResult;
+import io.swagger.annotations.ApiModelProperty;
 
 public class FindMovieDetailResult extends CommonResult {
 
+	@ApiModelProperty("id")
 	private Long movieId;
+	@ApiModelProperty("原语言电影名")
 	private String originalTitle;
+	@ApiModelProperty("中文电影名")
 	private String cnTitle;
+	@ApiModelProperty("相关图片(包括海报, 一般第一张是海报)")
 	private List<String> imgList;
+	@ApiModelProperty("简介")
 	private String introduction;
+	@ApiModelProperty("磁力链接列表")
 	private List<String> magnetUrlList;
+	@ApiModelProperty("点击统计")
 	private Long clickCounting;
 
 	public Long getMovieId() {

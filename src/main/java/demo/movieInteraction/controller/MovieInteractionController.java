@@ -17,6 +17,7 @@ import demo.movie.pojo.result.FindMovieSummaryListResult;
 import demo.movie.service.HomeFeiClawingService;
 import demo.movieInteraction.pojo.result.FindMovieRecommendResult;
 import demo.movieInteraction.service.MovieInteractionService;
+import io.swagger.annotations.ApiOperation;
 import movie.pojo.constant.MovieInteractionUrl;
 import movie.pojo.dto.FindMovieDetailDTO;
 import movie.pojo.dto.FindMovieSummaryListDTO;
@@ -34,17 +35,20 @@ public class MovieInteractionController {
 	private HomeFeiClawingService homeFeiClawingService;
 	
 	@PostMapping(value = MovieInteractionUrl.simpleList)
+	@ApiOperation(value = "电影子栏目列表")
 	@ResponseBody
 	public FindMovieSummaryListResult findMovieSummaryList(@RequestBody FindMovieSummaryListDTO dto) {
 		return movieInteractionService.findMovieSummaryList(dto);
 	}
 	
+	@ApiOperation(value = "电影详情")
 	@PostMapping(value = MovieInteractionUrl.movieDetail)
 	@ResponseBody
 	public FindMovieDetailResult findMovieDetail(@RequestBody FindMovieDetailDTO dto, HttpServletRequest request) {
 		return movieInteractionService.findMovieDetail(request, dto);
 	}
 	
+	@ApiOperation(value = "电影类型")
 	@GetMapping(value = MovieInteractionUrl.movieRegionType)
 	@ResponseBody
 	public JSONArray movieRegionType() {
@@ -61,6 +65,7 @@ public class MovieInteractionController {
 		return ja;
 	}
 	
+	@ApiOperation(value = "请忽略")
 	@PostMapping(value = MovieInteractionUrl.handleMovieIntroductionRecive)
 	@ResponseBody
 	public CommonResult handleMovieIntroductionRecive(@RequestBody MovieIntroductionDTO dto) {
@@ -70,6 +75,7 @@ public class MovieInteractionController {
 		return r;
 	}
 	
+	@ApiOperation(value = "电影推荐列表")
 	@PostMapping(value = MovieInteractionUrl.recommend)
 	@ResponseBody
 	public FindMovieRecommendResult recommend() {

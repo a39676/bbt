@@ -2,13 +2,21 @@ package demo.movieInteraction.pojo.vo;
 
 import java.time.LocalDateTime;
 
-public class MovieRecommendVO {
+import io.swagger.annotations.ApiModelProperty;
 
+public class MovieRecommendVO {
+	
+	@ApiModelProperty("电影ID")
 	private Long movieId;
+	@ApiModelProperty("电影名")
 	private String movieTitle;
+	@ApiModelProperty("海报图片url")
 	private String imgUrl;
+	@ApiModelProperty("抓取时间")
 	private LocalDateTime createTime;
+	@ApiModelProperty("上映时间")
 	private LocalDateTime releaseTime;
+	@ApiModelProperty("点击数")
 	private Long clickCount;
 
 	public Long getMovieId() {
