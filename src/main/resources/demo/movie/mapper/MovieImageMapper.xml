@@ -234,8 +234,5 @@
         and create_time &gt;= #{startTime}
       </if>
     </where>
-
-    group by movie_id
-
   </select>
 </mapper>
