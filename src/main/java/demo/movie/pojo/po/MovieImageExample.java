@@ -1,5 +1,6 @@
 package demo.movie.pojo.po;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -164,63 +165,123 @@ public class MovieImageExample {
             return (Criteria) this;
         }
 
-        public Criteria andMovidIdIsNull() {
-            addCriterion("movid_id is null");
+        public Criteria andMovieIdIsNull() {
+            addCriterion("movie_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andMovidIdIsNotNull() {
-            addCriterion("movid_id is not null");
+        public Criteria andMovieIdIsNotNull() {
+            addCriterion("movie_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andMovidIdEqualTo(Long value) {
-            addCriterion("movid_id =", value, "movidId");
+        public Criteria andMovieIdEqualTo(Long value) {
+            addCriterion("movie_id =", value, "movieId");
             return (Criteria) this;
         }
 
-        public Criteria andMovidIdNotEqualTo(Long value) {
-            addCriterion("movid_id <>", value, "movidId");
+        public Criteria andMovieIdNotEqualTo(Long value) {
+            addCriterion("movie_id <>", value, "movieId");
             return (Criteria) this;
         }
 
-        public Criteria andMovidIdGreaterThan(Long value) {
-            addCriterion("movid_id >", value, "movidId");
+        public Criteria andMovieIdGreaterThan(Long value) {
+            addCriterion("movie_id >", value, "movieId");
             return (Criteria) this;
         }
 
-        public Criteria andMovidIdGreaterThanOrEqualTo(Long value) {
-            addCriterion("movid_id >=", value, "movidId");
+        public Criteria andMovieIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("movie_id >=", value, "movieId");
             return (Criteria) this;
         }
 
-        public Criteria andMovidIdLessThan(Long value) {
-            addCriterion("movid_id <", value, "movidId");
+        public Criteria andMovieIdLessThan(Long value) {
+            addCriterion("movie_id <", value, "movieId");
             return (Criteria) this;
         }
 
-        public Criteria andMovidIdLessThanOrEqualTo(Long value) {
-            addCriterion("movid_id <=", value, "movidId");
+        public Criteria andMovieIdLessThanOrEqualTo(Long value) {
+            addCriterion("movie_id <=", value, "movieId");
             return (Criteria) this;
         }
 
-        public Criteria andMovidIdIn(List<Long> values) {
-            addCriterion("movid_id in", values, "movidId");
+        public Criteria andMovieIdIn(List<Long> values) {
+            addCriterion("movie_id in", values, "movieId");
             return (Criteria) this;
         }
 
-        public Criteria andMovidIdNotIn(List<Long> values) {
-            addCriterion("movid_id not in", values, "movidId");
+        public Criteria andMovieIdNotIn(List<Long> values) {
+            addCriterion("movie_id not in", values, "movieId");
             return (Criteria) this;
         }
 
-        public Criteria andMovidIdBetween(Long value1, Long value2) {
-            addCriterion("movid_id between", value1, value2, "movidId");
+        public Criteria andMovieIdBetween(Long value1, Long value2) {
+            addCriterion("movie_id between", value1, value2, "movieId");
             return (Criteria) this;
         }
 
-        public Criteria andMovidIdNotBetween(Long value1, Long value2) {
-            addCriterion("movid_id not between", value1, value2, "movidId");
+        public Criteria andMovieIdNotBetween(Long value1, Long value2) {
+            addCriterion("movie_id not between", value1, value2, "movieId");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPosterIsNull() {
+            addCriterion("is_poster is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPosterIsNotNull() {
+            addCriterion("is_poster is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPosterEqualTo(Boolean value) {
+            addCriterion("is_poster =", value, "isPoster");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPosterNotEqualTo(Boolean value) {
+            addCriterion("is_poster <>", value, "isPoster");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPosterGreaterThan(Boolean value) {
+            addCriterion("is_poster >", value, "isPoster");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPosterGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_poster >=", value, "isPoster");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPosterLessThan(Boolean value) {
+            addCriterion("is_poster <", value, "isPoster");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPosterLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_poster <=", value, "isPoster");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPosterIn(List<Boolean> values) {
+            addCriterion("is_poster in", values, "isPoster");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPosterNotIn(List<Boolean> values) {
+            addCriterion("is_poster not in", values, "isPoster");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPosterBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_poster between", value1, value2, "isPoster");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPosterNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_poster not between", value1, value2, "isPoster");
             return (Criteria) this;
         }
 
@@ -281,6 +342,66 @@ public class MovieImageExample {
 
         public Criteria andIsDeleteNotBetween(Boolean value1, Boolean value2) {
             addCriterion("is_delete not between", value1, value2, "isDelete");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeIsNull() {
+            addCriterion("create_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeIsNotNull() {
+            addCriterion("create_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeEqualTo(LocalDateTime value) {
+            addCriterion("create_time =", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeNotEqualTo(LocalDateTime value) {
+            addCriterion("create_time <>", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeGreaterThan(LocalDateTime value) {
+            addCriterion("create_time >", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("create_time >=", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeLessThan(LocalDateTime value) {
+            addCriterion("create_time <", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("create_time <=", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeIn(List<LocalDateTime> values) {
+            addCriterion("create_time in", values, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeNotIn(List<LocalDateTime> values) {
+            addCriterion("create_time not in", values, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("create_time between", value1, value2, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("create_time not between", value1, value2, "createTime");
             return (Criteria) this;
         }
     }

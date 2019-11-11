@@ -50,9 +50,9 @@
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="movie_click_count">
-        	<property name="tableName" value="movie_click_count"></property>
-        	<property name="domainObjectName" value="movie_click_count" ></property>
+        <table tableName="movie_image">
+        	<property name="tableName" value="movie_image"></property>
+        	<property name="domainObjectName" value="movie_image" ></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>

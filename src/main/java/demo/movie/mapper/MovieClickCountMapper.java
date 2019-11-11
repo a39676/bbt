@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import demo.movie.pojo.dto.InsertOrUpdateMovieClickCountDTO;
 import demo.movie.pojo.po.MovieClickCount;
 import demo.movie.pojo.po.MovieClickCountExample;
+import demo.movieInteraction.pojo.dto.FindLastHotClickDTO;
 
 public interface MovieClickCountMapper {
     long countByExample(MovieClickCountExample example);
@@ -32,4 +33,6 @@ public interface MovieClickCountMapper {
     int updateByPrimaryKey(MovieClickCount record);
     
     int insertOrUpdateClickCount(InsertOrUpdateMovieClickCountDTO dto);
+    
+    List<MovieClickCount> findLastHotClick(FindLastHotClickDTO dto);
 }

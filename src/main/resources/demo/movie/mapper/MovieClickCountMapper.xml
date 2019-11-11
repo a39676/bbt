@@ -199,4 +199,30 @@
     (#{movieId}, #{counting})
     on duplicate key update update_time = now(), counting = counting + #{counting};
   </insert>
+
+  <select id="findLastHotClick" resultMap="BaseResultMap">
+    select
+      *
+    from
+      movie_click_count
+    where
+      is_delete = false
+      <if test="movieIdList != null">
+        and movie_id in 
+        <foreach item="movieId" index="index" collection="movieIdList" open="(" separator="," close=")">
+          #{movieId}
+        </foreach>
+      </if>
+      <if test="startTime != null">
+        and create_time &gt;= #{startTime}
+      </if>
+
+    order by counting desc
+    <if test="limit != null">
+    	limit #{limit}
+    </if>
+    <if test="limit == null">
+    	limit 20
+    </if>
+  </select>
 </mapper>

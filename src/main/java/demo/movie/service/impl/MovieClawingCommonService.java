@@ -65,9 +65,11 @@ public abstract class MovieClawingCommonService extends ClawingCommonService {
 	
 	protected void saveMovieImg(List<WebElement> imgs, Long movieId) {
 		String src = null;
-		for (WebElement i : imgs) {
-			src = i.getAttribute("src");
-			Dimension s = i.getSize();
+		WebElement img = null;
+		for (int i = 0; i < imgs.size(); i++) {
+			img = imgs.get(i);
+			src = img.getAttribute("src");
+			Dimension s = img.getSize();
 			if (s.height > 200 && s.width > 200) {
 				Long newImgId = snowFlake.getNextId();
 				ImageStore po = new ImageStore();
@@ -76,10 +78,13 @@ public abstract class MovieClawingCommonService extends ClawingCommonService {
 				po.setImageType(ImageType.moviePoster.getCode().byteValue());
 				imageStoreMapper.insertSelective(po);
 
-				MovieImage record = new MovieImage();
-				record.setMovidId(movieId);
-				record.setImageId(newImgId);
-				movieImageMapper.insertSelective(record);
+				MovieImage imgPO = new MovieImage();
+				if(i == 0) {
+					imgPO.setIsPoster(true);
+				}
+				imgPO.setMovieId(movieId);
+				imgPO.setImageId(newImgId);
+				movieImageMapper.insertSelective(imgPO);
 			}
 		}
 	}

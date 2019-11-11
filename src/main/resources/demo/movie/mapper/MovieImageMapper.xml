@@ -3,8 +3,10 @@
 <mapper namespace="demo.movie.mapper.MovieImageMapper">
   <resultMap id="BaseResultMap" type="demo.movie.pojo.po.MovieImage">
     <id column="image_id" jdbcType="BIGINT" property="imageId" />
-    <result column="movid_id" jdbcType="BIGINT" property="movidId" />
+    <result column="movie_id" jdbcType="BIGINT" property="movieId" />
+    <result column="is_poster" jdbcType="BIT" property="isPoster" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -65,7 +67,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    image_id, movid_id, is_delete
+    image_id, movie_id, is_poster, is_delete, create_time
   </sql>
   <select id="selectByExample" parameterType="demo.movie.pojo.po.MovieImageExample" resultMap="BaseResultMap">
     select
@@ -98,10 +100,10 @@
     </if>
   </delete>
   <insert id="insert" parameterType="demo.movie.pojo.po.MovieImage">
-    insert into movie_image (image_id, movid_id, is_delete
-      )
-    values (#{imageId,jdbcType=BIGINT}, #{movidId,jdbcType=BIGINT}, #{isDelete,jdbcType=BIT}
-      )
+    insert into movie_image (image_id, movie_id, is_poster, 
+      is_delete, create_time)
+    values (#{imageId,jdbcType=BIGINT}, #{movieId,jdbcType=BIGINT}, #{isPoster,jdbcType=BIT}, 
+      #{isDelete,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="demo.movie.pojo.po.MovieImage">
     insert into movie_image
@@ -109,22 +111,34 @@
       <if test="imageId != null">
         image_id,
       </if>
-      <if test="movidId != null">
-        movid_id,
+      <if test="movieId != null">
+        movie_id,
+      </if>
+      <if test="isPoster != null">
+        is_poster,
       </if>
       <if test="isDelete != null">
         is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="imageId != null">
         #{imageId,jdbcType=BIGINT},
       </if>
-      <if test="movidId != null">
-        #{movidId,jdbcType=BIGINT},
+      <if test="movieId != null">
+        #{movieId,jdbcType=BIGINT},
+      </if>
+      <if test="isPoster != null">
+        #{isPoster,jdbcType=BIT},
       </if>
       <if test="isDelete != null">
         #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -140,11 +154,17 @@
       <if test="record.imageId != null">
         image_id = #{record.imageId,jdbcType=BIGINT},
       </if>
-      <if test="record.movidId != null">
-        movid_id = #{record.movidId,jdbcType=BIGINT},
+      <if test="record.movieId != null">
+        movie_id = #{record.movieId,jdbcType=BIGINT},
+      </if>
+      <if test="record.isPoster != null">
+        is_poster = #{record.isPoster,jdbcType=BIT},
       </if>
       <if test="record.isDelete != null">
         is_delete = #{record.isDelete,jdbcType=BIT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null">
@@ -154,8 +174,10 @@
   <update id="updateByExample" parameterType="map">
     update movie_image
     set image_id = #{record.imageId,jdbcType=BIGINT},
-      movid_id = #{record.movidId,jdbcType=BIGINT},
-      is_delete = #{record.isDelete,jdbcType=BIT}
+      movie_id = #{record.movieId,jdbcType=BIGINT},
+      is_poster = #{record.isPoster,jdbcType=BIT},
+      is_delete = #{record.isDelete,jdbcType=BIT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -163,19 +185,57 @@
   <update id="updateByPrimaryKeySelective" parameterType="demo.movie.pojo.po.MovieImage">
     update movie_image
     <set>
-      <if test="movidId != null">
-        movid_id = #{movidId,jdbcType=BIGINT},
+      <if test="movieId != null">
+        movie_id = #{movieId,jdbcType=BIGINT},
+      </if>
+      <if test="isPoster != null">
+        is_poster = #{isPoster,jdbcType=BIT},
       </if>
       <if test="isDelete != null">
         is_delete = #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where image_id = #{imageId,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="demo.movie.pojo.po.MovieImage">
     update movie_image
-    set movid_id = #{movidId,jdbcType=BIGINT},
-      is_delete = #{isDelete,jdbcType=BIT}
+    set movie_id = #{movieId,jdbcType=BIGINT},
+      is_poster = #{isPoster,jdbcType=BIT},
+      is_delete = #{isDelete,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
     where image_id = #{imageId,jdbcType=BIGINT}
   </update>
+
+  <select id="findPosterIdByMovieIdList" resultMap="BaseResultMap">
+    select
+      movie_id,
+      image_id
+    from
+      movie_image
+    <where>
+      1=1
+      and is_poster = true
+      <if test="isDelete != null">
+        and is_delete = #{isDelete,jdbcType=BIT}
+      </if>
+      <if test="isDelete == null">
+        and is_delete = false
+      </if>
+      <if test="movieIdList != null">
+        and movie_id in
+        <foreach item="movieId" index="index" collection="movieIdList" open="(" separator="," close=")">
+          #{movieId}
+        </foreach>
+      </if>
+      <if test="startTime != null">
+        and create_time &gt;= #{startTime}
+      </if>
+    </where>
+
+    group by movie_id
+
+  </select>
 </mapper>

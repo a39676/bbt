@@ -15,6 +15,7 @@ import demo.movie.pojo.dto.MovieIntroductionDTO;
 import demo.movie.pojo.result.FindMovieDetailResult;
 import demo.movie.pojo.result.FindMovieSummaryListResult;
 import demo.movie.service.HomeFeiClawingService;
+import demo.movieInteraction.pojo.result.FindMovieRecommendResult;
 import demo.movieInteraction.service.MovieInteractionService;
 import movie.pojo.constant.MovieInteractionUrl;
 import movie.pojo.dto.FindMovieDetailDTO;
@@ -66,6 +67,13 @@ public class MovieInteractionController {
 		homeFeiClawingService.handleMovieIntroductionRecive(dto);
 		CommonResult r = new CommonResult();
 		r.setIsSuccess();
+		return r;
+	}
+	
+	@PostMapping(value = MovieInteractionUrl.recommend)
+	@ResponseBody
+	public FindMovieRecommendResult recommend() {
+		FindMovieRecommendResult r = movieInteractionService.findMovieRecommend();
 		return r;
 	}
 }

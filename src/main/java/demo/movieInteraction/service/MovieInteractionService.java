@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import demo.movie.pojo.result.FindMovieDetailResult;
 import demo.movie.pojo.result.FindMovieSummaryListResult;
+import demo.movieInteraction.pojo.result.FindMovieRecommendResult;
 import movie.pojo.dto.FindMovieDetailDTO;
 import movie.pojo.dto.FindMovieSummaryListDTO;
 
@@ -16,5 +17,7 @@ public interface MovieInteractionService {
 	void movieClickCountingRedisToOrm();
 
 	Long findMovieClickCount(Long movieId);
+
+	FindMovieRecommendResult findMovieRecommend();
 
 }

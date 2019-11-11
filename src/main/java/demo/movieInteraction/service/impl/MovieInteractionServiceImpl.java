@@ -2,8 +2,10 @@ package demo.movieInteraction.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -31,6 +33,7 @@ import demo.movie.pojo.po.MovieClickCountExample;
 import demo.movie.pojo.po.MovieImage;
 import demo.movie.pojo.po.MovieImageExample;
 import demo.movie.pojo.po.MovieInfo;
+import demo.movie.pojo.po.MovieInfoExample;
 import demo.movie.pojo.po.MovieIntroduction;
 import demo.movie.pojo.po.MovieIntroductionExample;
 import demo.movie.pojo.po.MovieMagnetUrl;
@@ -39,6 +42,10 @@ import demo.movie.pojo.result.FindMovieDetailResult;
 import demo.movie.pojo.result.FindMovieSummaryElementResult;
 import demo.movie.pojo.result.FindMovieSummaryListResult;
 import demo.movieInteraction.MovieInteractionRedisKey;
+import demo.movieInteraction.pojo.dto.FindPosterIdByMovieIdListDTO;
+import demo.movieInteraction.pojo.dto.FindLastHotClickDTO;
+import demo.movieInteraction.pojo.result.FindMovieRecommendResult;
+import demo.movieInteraction.pojo.vo.MovieRecommendVO;
 import demo.movieInteraction.service.MovieInteractionService;
 import demo.tool.service.VisitDataService;
 import ioHandle.FileUtilCustom;
@@ -144,7 +151,7 @@ public class MovieInteractionServiceImpl extends CommonService implements MovieI
 		r.setClickCounting(clickCounting);
 		
 		MovieImageExample movImgExample = new MovieImageExample();
-		movImgExample.createCriteria().andMovidIdEqualTo(dto.getMovieId());
+		movImgExample.createCriteria().andMovieIdEqualTo(dto.getMovieId());
 		List<MovieImage> movieImages = movieImageMapper.selectByExample(movImgExample);
 		List<Long> imgIds = movieImages.stream().map(img -> img.getImageId()).collect(Collectors.toList());
 		ImageStoreExample imgExample = new ImageStoreExample();
@@ -219,5 +226,87 @@ public class MovieInteractionServiceImpl extends CommonService implements MovieI
 		Long size = redisTemplate.opsForSet().size(MovieInteractionRedisKey.MOVIE_CLICK_COUNTING_REDIS_KEY_PREFIX + movieId);
 		
 		return size + po.getCounting();
+	}
+
+	@Override
+	public FindMovieRecommendResult findMovieRecommend() {
+		FindMovieRecommendResult r = new FindMovieRecommendResult();
+		Integer recommendNormalSize = 20;
+
+		MovieInfoExample infoExample = new MovieInfoExample();
+		infoExample.createCriteria().andCreateTimeGreaterThanOrEqualTo(LocalDateTime.now().minusWeeks(2));
+		List<MovieInfo> infos = infoMapper.selectByExample(infoExample);
+		if(infos == null || infos.size() < 1) {
+			r.setIsSuccess();
+			return r;
+		}
+		
+		List<Long> sourceMovieIdList = infos.stream().map(MovieInfo::getId).collect(Collectors.toList());
+		Map<Long, MovieInfo> movieInfoMap = infos.stream().collect(Collectors.toMap(MovieInfo::getId, Function.identity()));
+		
+		FindLastHotClickDTO dto = new FindLastHotClickDTO();
+		dto.setMovieIdList(sourceMovieIdList);
+		dto.setLimit(recommendNormalSize.longValue());
+		List<MovieClickCount> clickList = movieClickCountMapper.findLastHotClick(dto);
+		Map<Long, Long> movieIdMapClickCount = clickList.stream().collect(Collectors.toMap(MovieClickCount::getMovieId, MovieClickCount::getCounting));
+
+		// maybe not every movie had at least one click
+		int index = sourceMovieIdList.size() - 1;
+		List<Long> finalMovieIdList = clickList.stream().map(MovieClickCount::getMovieId).collect(Collectors.toList());
+		while(movieIdMapClickCount.size() < recommendNormalSize && movieIdMapClickCount.size() < sourceMovieIdList.size() && index > 0) {
+			movieIdMapClickCount.put(sourceMovieIdList.get(index), 0L);
+			finalMovieIdList.add(sourceMovieIdList.get(index));
+			index--;
+		}
+		
+		Map<Long, ImageStore> movieIdMapImage = matchInfoAndPosterImage(finalMovieIdList);
+		
+		MovieRecommendVO v = null;
+		MovieInfo tmpMovieInfo = null;
+		ImageStore tmpImg = null;
+		List<MovieRecommendVO> voList = new ArrayList<MovieRecommendVO>();
+		for(Long i : finalMovieIdList) {
+			v = new MovieRecommendVO();
+			v.setMovieId(i);
+			v.setClickCount(movieIdMapClickCount.get(i));
+			tmpMovieInfo = movieInfoMap.get(i);
+			v.setCreateTime(tmpMovieInfo.getCreateTime());
+			v.setMovieTitle(tmpMovieInfo.getCnTitle());
+			v.setReleaseTime(tmpMovieInfo.getReleaseTime());
+			tmpImg = movieIdMapImage.get(i);
+			if(tmpImg != null) {
+				v.setImgUrl(tmpImg.getImagePath());
+			}
+			voList.add(v);
+			tmpImg = null;
+		}
+		
+		r.setVoList(voList);
+		r.setIsSuccess();
+		
+		return r;
+	}
+	
+	private Map<Long, ImageStore> matchInfoAndPosterImage(List<Long> movieIdList) {
+		FindPosterIdByMovieIdListDTO dto = new FindPosterIdByMovieIdListDTO();
+		dto.setMovieIdList(movieIdList);
+		List<MovieImage> moviePosterImage = movieImageMapper.findPosterIdByMovieIdList(dto);
+		
+		Map<Long, Long> movieIdMapImageId = moviePosterImage.stream().collect(Collectors.toMap(MovieImage::getMovieId, MovieImage::getImageId));
+		List<Long> imgIdList = moviePosterImage.stream().map(MovieImage::getImageId).collect(Collectors.toList());
+		
+		ImageStoreExample imageStoreExample = new ImageStoreExample();
+		imageStoreExample.createCriteria().andIsDeleteEqualTo(false).andIdIn(imgIdList);
+		List<ImageStore> imgPOList = imageStoreMapper.selectByExample(imageStoreExample);
+		Map<Long, ImageStore> imgPOMap = imgPOList.stream().collect(Collectors.toMap(ImageStore::getId, Function.identity()));
+		
+		Map<Long, ImageStore> movieIdMapImage = new HashMap<Long, ImageStore>();
+		Long tmpImgId = null;
+		for(Entry<Long, Long> movieIdMapImgIdEntry : movieIdMapImageId.entrySet()) {
+			tmpImgId = movieIdMapImgIdEntry.getValue();
+			movieIdMapImage.put(movieIdMapImgIdEntry.getKey(), imgPOMap.get(tmpImgId));
+		}
+		
+		return movieIdMapImage;
 	}
 }

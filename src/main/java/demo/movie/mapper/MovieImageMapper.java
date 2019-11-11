@@ -2,6 +2,8 @@ package demo.movie.mapper;
 
 import demo.movie.pojo.po.MovieImage;
 import demo.movie.pojo.po.MovieImageExample;
+import demo.movieInteraction.pojo.dto.FindPosterIdByMovieIdListDTO;
+
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
@@ -27,4 +29,6 @@ public interface MovieImageMapper {
     int updateByPrimaryKeySelective(MovieImage record);
 
     int updateByPrimaryKey(MovieImage record);
+
+	List<MovieImage> findPosterIdByMovieIdList(FindPosterIdByMovieIdListDTO dto);
 }
