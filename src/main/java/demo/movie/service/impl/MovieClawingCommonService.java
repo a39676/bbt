@@ -2,6 +2,7 @@ package demo.movie.service.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -82,6 +83,7 @@ public abstract class MovieClawingCommonService extends ClawingCommonService {
 				if(i == 0) {
 					imgPO.setIsPoster(true);
 				}
+				imgPO.setCreateTime(LocalDateTime.now());
 				imgPO.setMovieId(movieId);
 				imgPO.setImageId(newImgId);
 				movieImageMapper.insertSelective(imgPO);
