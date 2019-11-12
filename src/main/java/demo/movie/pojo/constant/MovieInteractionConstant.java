@@ -4,6 +4,9 @@ package demo.movie.pojo.constant;
 public class MovieInteractionConstant {
 	
 	/** 容许查询到的最大历史时间 */
-	public static final int maxHistoryMonth = 24;
-
+	public static final int maxQueryHistoryMonth = 5;
+	
+	/** 最大历史留存时间 */
+	public static final int maxHistoryMonth = maxQueryHistoryMonth + 2;
+	
 }

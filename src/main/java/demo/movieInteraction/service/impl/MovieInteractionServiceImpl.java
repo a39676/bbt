@@ -84,7 +84,7 @@ public class MovieInteractionServiceImpl extends CommonService implements MovieI
 		
 		dto.setPageParam();
 		
-		LocalDateTime earliestHistoryTime = LocalDateTime.now().minusMonths(MovieInteractionConstant.maxHistoryMonth);
+		LocalDateTime earliestHistoryTime = LocalDateTime.now().minusMonths(MovieInteractionConstant.maxQueryHistoryMonth);
 		FindMovieListByConditionDTO mapperDTO = new FindMovieListByConditionDTO();
 		BeanUtils.copyProperties(dto, mapperDTO);
 		mapperDTO.setCreateTimeStart(earliestHistoryTime);
