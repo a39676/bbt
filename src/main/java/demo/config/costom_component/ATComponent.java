@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import at.service.ATReportService;
+import at.service.ATWordReportService;
 import at.service.ScreenshotService;
 import at.service.Tess;
 import at.web.WebATToolService;
@@ -16,8 +16,8 @@ public class ATComponent {
 //	private SeleniumGlobalOptionService globalOptionService;
 	
 	@Bean
-	public ATReportService getReportService() {
-		return new ATReportService();
+	public ATWordReportService getReportService() {
+		return new ATWordReportService();
 	}
 	
 	@Bean
