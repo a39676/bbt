@@ -1,5 +1,7 @@
 package demo.task.service.impl;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -50,7 +52,7 @@ public class MovieTaskServiceImpl  {
 	}
 	
 	@Scheduled(cron="08 12 01 * * *") 
-	public void deleteOldHistory() {
+	public void deleteOldHistory() throws IOException {
 		movieManagerService.deleteOldHistory();
 	}
 }
