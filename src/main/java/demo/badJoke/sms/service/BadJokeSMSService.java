@@ -860,7 +860,7 @@ public class BadJokeSMSService extends ClawingCommonService {
 	 * https://reg.huaweicloud.com/registerui/cn/register.html#/register
 	 * https://passport.jumei.com/i/account/signup
 	 * https://account.glodon.com/register
-	 * https://user.mihoyo.com/#/register/mobile?cb_route=%2Faccount%2Fhome
+	 * https://user.mihoyo.com/#/register/mobile
 	 * https://hotel.bestwehotel.com/NewRegister/NewWebRegister/
 	 * https://www.962222.net/pages/user/register.html
 	 * https://aq.99.com/NDUser_Register_New.aspx
