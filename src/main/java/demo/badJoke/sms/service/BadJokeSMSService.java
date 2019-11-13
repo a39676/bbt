@@ -39,10 +39,16 @@ public class BadJokeSMSService extends ClawingCommonService {
 	private SystemConstantService constantService;
 	
 	private String normalPwd = "398ApkLor";
+	private String normalNumPwd = "126578";
 	private String normalUsername = "Aestingfv";
+	private String normalCnLastName = "史";
+	private String normalCnFirstName = "上飞";
+	private String normalCnIdCardNum = "211481197507197853"; // 张凯泽
 	
 	private String breakWordRedisKey = "badJokeBreakWord";
 	private String safeWord = "safeWord";
+	
+	private int maxCaptchaCount = 15;
 	
 	private TestEvent buildTestEvent() {
 		return buildTestEvent(TestCaseType.badJokeSms);
@@ -170,7 +176,7 @@ public class BadJokeSMSService extends ClawingCommonService {
 			WebElement captchaIsCorrect = d.findElement(By.id("trphone_code"));
 			
 			int captchaCount = 0;
-			while(captchaIsCorrect.isDisplayed() && captchaCount < 15) {
+			while(captchaIsCorrect.isDisplayed() && captchaCount < maxCaptchaCount) {
 				captchaImg.click();
 				try {
 					captchaCode = auxTool.captchaHandle(d, captchaImg, te);
@@ -668,7 +674,7 @@ public class BadJokeSMSService extends ClawingCommonService {
 			int captchaCount = 0;
 			String captchaCode = "";
 			boolean alertFlag = true;
-			while(captchaCount < 15 && (captchaCode.length() != 4 || alertFlag)) {
+			while(captchaCount < maxCaptchaCount && (captchaCode.length() != 4 || alertFlag)) {
 				if(captchaCount == 0) {
 					alertFlag = webATTool.alertExists(d);
 				}
@@ -693,6 +699,9 @@ public class BadJokeSMSService extends ClawingCommonService {
 				captchaCount++;
 			}
 			
+			if(alertFlag) {
+				d.switchTo().alert().accept();
+			}
 			x.start("div").addAttribute("class", "yzmBod");
 			WebElement captchaMask = d.findElement(By.xpath(x.getXpath()));
 			if(!captchaMask.isDisplayed()) {
@@ -710,9 +719,111 @@ public class BadJokeSMSService extends ClawingCommonService {
 		return r;
 	}
 	
+	public CommonResultBBT hnair(WebDriver d, TestEvent te, BadJokeSMSDTO dto) {
+		String url = "https://ffp.hnair.com/FFPClub/member/register";
+		CommonResultBBT r = new CommonResultBBT();
+		StringBuffer report = new StringBuffer();
+
+		XpathBuilderBO x = new XpathBuilderBO();
+		
+		try {
+			d.get(url);
+			
+			x.start("input").addAttribute("id", "s_lastNameZh");
+			WebElement cnLastNameInput = d.findElement(By.xpath(x.getXpath()));
+			cnLastNameInput.click();
+			cnLastNameInput.clear();
+			cnLastNameInput.sendKeys(normalCnLastName);
+			
+			x.start("input").addAttribute("id", "s_firstNameZh");
+			WebElement cnFirstNameInput = d.findElement(By.xpath(x.getXpath()));
+			cnFirstNameInput.click();
+			cnFirstNameInput.clear();
+			cnFirstNameInput.sendKeys(normalCnFirstName);
+			
+			x.start("input").addAttribute("id", "idNumber");
+			WebElement idCardInput = d.findElement(By.xpath(x.getXpath()));
+			idCardInput.click();
+			idCardInput.clear();
+			idCardInput.sendKeys(normalCnIdCardNum);
+			
+			x.start("input").addAttribute("id", "s_password");
+			WebElement pwdInput = d.findElement(By.xpath(x.getXpath()));
+			pwdInput.click();
+			pwdInput.clear();
+			pwdInput.sendKeys(normalNumPwd);
+			
+			x.start("input").addAttribute("id", "s_confirmPass");
+			WebElement pwdConfirmInput = d.findElement(By.xpath(x.getXpath()));
+			pwdConfirmInput.click();
+			pwdConfirmInput.clear();
+			pwdConfirmInput.sendKeys(normalNumPwd);
+			
+			x.start("input").addAttribute("id", "s_mobile");
+			WebElement mobileInput = d.findElement(By.xpath(x.getXpath()));
+			mobileInput.click();
+			mobileInput.clear();
+			mobileInput.sendKeys(dto.getMobileNum());
+			
+			x.start("img").addAttribute("id", "s_valid_img");
+			By captchaImgBy = By.xpath(x.getXpath());
+			WebElement captchaImg = d.findElement(captchaImgBy);
+			
+			x.start("input").addAttribute("id", "s_validateCodeImg");
+			WebElement captchaInput = d.findElement(By.xpath(x.getXpath()));
+			captchaInput.click();
+			captchaInput.clear();
+			
+			x.start("input").addAttribute("id", "s_validateCode");
+			WebElement smsCodeInput = d.findElement(By.xpath(x.getXpath()));
+			smsCodeInput.click();
+			
+			x.start("input").addAttribute("id", "s_aHref");
+			WebElement sendSmsBtn = d.findElement(By.xpath(x.getXpath()));
+			
+			boolean alertFlag = true;
+			int captchaCount = 0;
+			String captchaCode = null;
+			while(captchaCount < maxCaptchaCount && alertFlag) {
+				if(captchaCount == 0) {
+					alertFlag = webATTool.alertExists(d);
+				}
+				
+				if(alertFlag) {
+					d.switchTo().alert().accept();
+				}
+				
+				captchaImg.click();
+				captchaCode = auxTool.captchaHandle(d, captchaImg, te);
+				captchaInput.click();
+				captchaInput.clear();
+				captchaInput.sendKeys(captchaCode);
+				sendSmsBtn.click();
+				
+				alertFlag = webATTool.alertExists(d);
+				captchaCount++;
+			}
+			
+			if(!alertFlag) {
+				r.setIsSuccess();
+			} else {
+				d.switchTo().alert().accept();
+			}
+			
+		} catch (Exception e) {
+			log.error("error: {}, url: {}" + e.getMessage() + d.getCurrentUrl());
+			report.append(e.getMessage() + "\n");
+			
+			
+		} finally {
+			r.setMessage(report.toString());
+		}
+		return r;
+	}
+	
 	/*
 	public CommonResultBBT demo(WebDriver d, TestEvent te, BadJokeSMSDTO dto) {
-		String url = "https://passport.jumpw.com/views/register.jsp";
+		String url = "";
 		CommonResultBBT r = new CommonResultBBT();
 		StringBuffer report = new StringBuffer();
 
@@ -739,8 +850,6 @@ public class BadJokeSMSService extends ClawingCommonService {
 	/*
 	 * 
 	 * https://www.rexxglobal.com/register_phone.html#
-	 * 
-	 * https://ffp.hnair.com/FFPClub/member/register
 	 * https://i.ruanmei.com/
 	 * https://passport.umeng.com/signup
 	 * https://account.weimob.com/register
