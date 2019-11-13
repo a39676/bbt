@@ -603,6 +603,83 @@ public class BadJokeSMSService extends ClawingCommonService {
 		return r;
 	}
 	
+	public CommonResultBBT demo(WebDriver d, TestEvent te, BadJokeSMSDTO dto) {
+		String url = "https://puser.zjzwfw.gov.cn/sso/usp.do?action=register";
+		CommonResultBBT r = new CommonResultBBT();
+		StringBuffer report = new StringBuffer();
+
+		XpathBuilderBO x = new XpathBuilderBO();
+		
+		try {
+			d.get(url);
+			
+			x.start("input").addAttribute("type", "text").addAttribute("id", "loginName");
+			WebElement usernameInput = d.findElement(By.xpath(x.getXpath()));
+			usernameInput.click();
+			usernameInput.clear();
+			usernameInput.sendKeys(normalUsername);
+			
+			x.start("input").addAttribute("type", "text").addAttribute("id", "mobilePhone");
+			WebElement mobileInput = d.findElement(By.xpath(x.getXpath()));
+			mobileInput.click();
+			mobileInput.clear();
+			mobileInput.sendKeys(dto.getMobileNum());
+			
+			x.start("img").addAttribute("id", "captcha_img");
+			WebElement captchaImg = d.findElement(By.xpath(x.getXpath()));
+			captchaImg.click();
+			
+			String captchaCode = auxTool.captchaHandle(d, captchaImg, te);
+			
+			x.start("input").addAttribute("type", "text").addAttribute("id", "imgcode");
+			WebElement captchaCodeInput = d.findElement(By.xpath(x.getXpath()));
+			captchaCodeInput.click();
+			captchaCodeInput.clear();
+			captchaCodeInput.sendKeys(captchaCode);
+			
+			x.start("input").addAttribute("id", "smscode");
+			WebElement smsCodeInput = d.findElement(By.xpath(x.getXpath()));
+			
+			x.start("div").addAttribute("class", "formErrorContent");
+			By captchaErrorWarnBy = By.xpath(x.getXpath());
+			WebElement captchaErrorWarnDiv = null;
+			int captchaCount = 0;
+			try {
+				while((captchaErrorWarnDiv = d.findElement(captchaErrorWarnBy)) != null && captchaCount < 10) {
+					captchaErrorWarnDiv.click();
+					captchaImg.click();
+					captchaCode = auxTool.captchaHandle(d, captchaImg, te);
+					captchaCodeInput.click();
+					captchaCodeInput.clear();
+					captchaCodeInput.sendKeys(captchaCode);
+					smsCodeInput.click();
+					captchaCount++;
+				}
+			} catch (Exception e) {
+			}
+			
+			if(captchaErrorWarnDiv != null) {
+				r.setIsFail();
+			} else {
+				x.start("input").addAttribute("id", "getsmscode");
+				WebElement sendSmsCode = d.findElement(By.xpath(x.getXpath()));
+				sendSmsCode.click();
+				
+				r.setIsSuccess();
+			}
+			
+		} catch (Exception e) {
+			log.error("error: {}, url: {}" + e.getMessage() + d.getCurrentUrl());
+			report.append(e.getMessage() + "\n");
+			
+			
+		} finally {
+			r.setMessage(report.toString());
+		}
+		return r;
+	}
+	
+	
 	/*
 	public CommonResultBBT demo(WebDriver d, TestEvent te, BadJokeSMSDTO dto) {
 		String url = "https://passport.jumpw.com/views/register.jsp";
@@ -630,7 +707,6 @@ public class BadJokeSMSService extends ClawingCommonService {
 	
 	
 	/*
-	 * https://puser.zjzwfw.gov.cn/sso/usp.do?action=register
 	 * http://www.surong360.com/SR360/application/user/emailRegisterPage.do
 	 * https://www.rexxglobal.com/register_phone.html#
 	 * https://passport.9you.com/mobile_regist.php

@@ -126,7 +126,9 @@ dependencies {
 	compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
 	compile group: 'io.github.seleniumquery', name: 'seleniumquery', version: '0.20.0'
 	
-	
+	// tess4j
+	compile group: 'net.sourceforge.tess4j', name: 'tess4j', version: '4.4.0'
+	compile group: 'net.java.dev.jna', name: 'jna', version: '5.4.0'
 	
 	// bit torrent
 	compile group: 'org.eclipse', name: 'bittorrent', version: '0.3.0-v20070627-1030'

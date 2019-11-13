@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import at.service.Tess;
 import demo.baseCommon.service.CommonService;
+import demo.captcha.pojo.dto.CleanImageResult;
 import demo.captcha.service.CaptchaService;
 
 @Scope("singleton")
@@ -43,11 +44,12 @@ public class CaptchaServiceImpl extends CommonService implements CaptchaService 
 			}
 		}
 		
-		if(!cleanImage(img, outputFolderPath)) {
+		CleanImageResult cleanResult = cleanImage(img, outputFolderPath);
+		if(!cleanResult.isSuccess()) {
 			return null;
 		}
 		
-		return tess.ocr(imgPath + File.separator + img.getName(), true);
+		return tess.ocr(cleanResult.getOutputPath(), true);
 		
 	}
 	
@@ -58,11 +60,12 @@ public class CaptchaServiceImpl extends CommonService implements CaptchaService 
 	 * @return 
 	 * @throws IOException
 	 */
-	public boolean cleanImage(File sfile, String outputFolerPath) {
+	public CleanImageResult cleanImage(File sfile, String outputFolerPath) {
+		CleanImageResult result = new CleanImageResult();
 		File destF = new File(outputFolerPath);
 		if(!destF.exists() || !destF.isDirectory()) {
 			if(!destF.mkdirs()) {
-				return false;
+				return result;
 			}
 		}
 
@@ -71,7 +74,7 @@ public class CaptchaServiceImpl extends CommonService implements CaptchaService 
 			bufferedImage = ImageIO.read(sfile);
 		} catch (IOException e) {
 			e.printStackTrace();
-			return false;
+			return result;
 		}
 		int h = bufferedImage.getHeight();
 		int w = bufferedImage.getWidth();
@@ -131,9 +134,12 @@ public class CaptchaServiceImpl extends CommonService implements CaptchaService 
 			ImageIO.write(binaryBufferedImage, suffix, new File(outputPath));
 		} catch (IOException e) {
 			e.printStackTrace();
-			return false;
+			return result;
 		}
-		return true;
+		
+		result.setOutputPath(outputPath);
+		result.setIsSuccess();
+		return result;
 	}
 
 	/*
@@ -233,15 +239,4 @@ public class CaptchaServiceImpl extends CommonService implements CaptchaService 
 		return true;
 	}
 
-	public static void main(String[] args) throws IOException {
-		CaptchaServiceImpl t = new CaptchaServiceImpl();
-		String sourceFolderPath = "D:\\auxiliary\\captchas";
-		File sourceFolder = new File(sourceFolderPath);
-		String destDir ="D:\\auxiliary\\tmp";
-		
-		for(File f : sourceFolder.listFiles()) {
-			t.cleanImage(f, destDir);
-		}
-//		t.cleanImage(testDataDir, destDir);
-	}
 }
