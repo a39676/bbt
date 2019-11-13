@@ -42,10 +42,11 @@ public class TestController2 extends CommonController {
 		te.setCaseId(2L);
 		te.setId(3L);
 		BadJokeSMSDTO dto = new BadJokeSMSDTO();
-		dto.setMobileNum("18826485386");
+//		dto.setMobileNum("18826485386");
+		dto.setMobileNum("18922315552");
 		try {
 			badJoke.toString();
-			badJoke.zjzwfw(d, te, dto);
+			badJoke._9you(d, te, dto);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

@@ -10,6 +10,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import at.web.WebATToolService;
 import demo.badJoke.sms.pojo.dto.BadJokeSMSDTO;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.pojo.result.CommonResultBBT;
@@ -32,6 +33,8 @@ public class BadJokeSMSService extends ClawingCommonService {
 //	private WebDriverService webDriverService;
 	@Autowired
 	private AuxiliaryToolServiceImpl auxTool;
+	@Autowired
+	private WebATToolService webATTool;
 	@Autowired
 	private SystemConstantService constantService;
 	
@@ -623,6 +626,89 @@ public class BadJokeSMSService extends ClawingCommonService {
 		return r;
 	}
 	
+	public CommonResultBBT _9you(WebDriver d, TestEvent te, BadJokeSMSDTO dto) {
+		String url = "https://passport.9you.com/mobile_regist.php";
+		CommonResultBBT r = new CommonResultBBT();
+		StringBuffer report = new StringBuffer();
+
+		XpathBuilderBO x = new XpathBuilderBO();
+		
+		try {
+			d.get(url);
+			
+			x.start("input").addAttribute("id", "username");
+			WebElement mobileInput = d.findElement(By.xpath(x.getXpath()));
+			mobileInput.click();
+			mobileInput.clear();
+			mobileInput.sendKeys(dto.getMobileNum());
+			
+			x.start("input").addAttribute("id", "password");
+			WebElement pwdInput = d.findElement(By.xpath(x.getXpath()));
+			pwdInput.click();
+			pwdInput.clear();
+			pwdInput.sendKeys(normalPwd);
+			
+			x.start("span").addAttribute("id", "sendcode");
+			WebElement getSmsCode = d.findElement(By.xpath(x.getXpath()));
+			getSmsCode.click();
+			
+			x.start("img").addAttribute("id", "phonecheckcode");
+			By imgCaptchaBy = By.xpath(x.getXpath());
+			WebElement captchaImg = d.findElement(imgCaptchaBy);
+			captchaImg.click();
+			
+			x.start("input").addAttribute("class", "yzm");
+			WebElement smsCodeInput = d.findElement(By.xpath(x.getXpath()));
+			
+			Thread.sleep(320L);
+			
+			x.start("a").addAttribute("href", "##").addAttribute("class", "okBtn");
+			WebElement smsCodeBtn = d.findElement(By.xpath(x.getXpath()));
+			
+			int captchaCount = 0;
+			String captchaCode = "";
+			boolean alertFlag = true;
+			while(captchaCount < 15 && (captchaCode.length() != 4 || alertFlag)) {
+				if(captchaCount == 0) {
+					alertFlag = webATTool.alertExists(d);
+				}
+				
+				if(alertFlag) {
+					Thread.sleep(520L);
+					d.switchTo().alert().accept();
+					Thread.sleep(520L);
+				}
+				captchaImg = d.findElement(imgCaptchaBy);
+				captchaImg.click();
+				Thread.sleep(520L);
+				captchaCode = auxTool.captchaHandle(d, captchaImg, te);
+				Thread.sleep(520L);
+				smsCodeInput.click();
+				smsCodeInput.clear();
+				smsCodeInput.sendKeys(captchaCode);
+				Thread.sleep(520L);
+				smsCodeBtn.click();
+				Thread.sleep(520L);
+				alertFlag = webATTool.alertExists(d);
+				captchaCount++;
+			}
+			
+			x.start("div").addAttribute("class", "yzmBod");
+			WebElement captchaMask = d.findElement(By.xpath(x.getXpath()));
+			if(!captchaMask.isDisplayed()) {
+				r.setIsSuccess();
+			}
+			
+		} catch (Exception e) {
+			log.error("error: {}, url: {}" + e.getMessage() + d.getCurrentUrl());
+			report.append(e.getMessage() + "\n");
+			
+			
+		} finally {
+			r.setMessage(report.toString());
+		}
+		return r;
+	}
 	
 	/*
 	public CommonResultBBT demo(WebDriver d, TestEvent te, BadJokeSMSDTO dto) {
@@ -651,9 +737,9 @@ public class BadJokeSMSService extends ClawingCommonService {
 	
 	
 	/*
-	 * http://www.surong360.com/SR360/application/user/emailRegisterPage.do
+	 * 
 	 * https://www.rexxglobal.com/register_phone.html#
-	 * https://passport.9you.com/mobile_regist.php
+	 * 
 	 * https://ffp.hnair.com/FFPClub/member/register
 	 * https://i.ruanmei.com/
 	 * https://passport.umeng.com/signup
