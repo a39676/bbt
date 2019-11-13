@@ -32,10 +32,7 @@ public class CaptchaServiceImpl extends CommonService implements CaptchaService 
 			return null;
 		}
 		
-		String outputFolderPath = captchaFolder;
-		if(isWindows()) {
-			outputFolderPath = "d:" + outputFolderPath;
-		}
+		String outputFolderPath = getCaptchaSaveFolder();
 		
 		File folder = new File(outputFolderPath);
 		if(!folder.exists() || !folder.isDirectory()) {
@@ -239,4 +236,12 @@ public class CaptchaServiceImpl extends CommonService implements CaptchaService 
 		return true;
 	}
 
+	@Override
+	public String getCaptchaSaveFolder() {
+		String outputFolderPath = captchaFolder;
+		if(isWindows()) {
+			outputFolderPath = "d:" + outputFolderPath;
+		}
+		return outputFolderPath;
+	}
 }

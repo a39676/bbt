@@ -12,4 +12,6 @@ public interface CaptchaService {
 
 	String ocr(String imgPath, boolean numberAndLetterOnly);
 
+	String getCaptchaSaveFolder();
+
 }

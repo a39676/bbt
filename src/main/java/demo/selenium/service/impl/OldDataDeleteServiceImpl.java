@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import dateTimeHandle.DateTimeUtilCommon;
 import demo.baseCommon.service.CommonService;
+import demo.captcha.service.CaptchaService;
 import demo.selenium.pojo.constant.SeleniumConstant;
 import demo.selenium.service.OldDataDeleteService;
 import demo.selenium.service.SeleniumGlobalOptionService;
@@ -22,27 +23,14 @@ public class OldDataDeleteServiceImpl extends CommonService implements OldDataDe
 
 	@Autowired
 	private SeleniumGlobalOptionService globalOptionService;
+	@Autowired
+	private CaptchaService captchaService;
 	
 	@Override
 	public void deleteOldDownload() throws IOException {
 		LocalDateTime oldHistoryLimit = LocalDateTime.now().minusMonths(SeleniumConstant.maxHistoryMonth);
 		
-		String downloadDirPath = globalOptionService.getDownloadDir();
-		File downloadDir = new File(downloadDirPath);
-		File[] torrents = downloadDir.listFiles();
-		Path file = null;
-		BasicFileAttributes attr = null;
-		Date createDate = null;
-		LocalDateTime createDateTime = null;
-		for(File f : torrents) {
-			file = f.toPath();
-			attr = Files.readAttributes(file, BasicFileAttributes.class);
-			createDate = new Date(attr.creationTime().toMillis());
-			createDateTime = DateTimeUtilCommon.dateToLocalDateTime(createDate);
-			if(createDateTime.isBefore(oldHistoryLimit)) {
-				f.delete();
-			}
-		}
+		deleting(globalOptionService.getDownloadDir(), oldHistoryLimit);
 		
 	}
 	
@@ -50,23 +38,42 @@ public class OldDataDeleteServiceImpl extends CommonService implements OldDataDe
 	public void deleteOldScreenshot() throws IOException {
 		LocalDateTime oldHistoryLimit = LocalDateTime.now().minusMonths(SeleniumConstant.maxHistoryMonth);
 		
-		String downloadDirPath = globalOptionService.getScreenshotSavingFolder();
-		File downloadDir = new File(downloadDirPath);
-		File[] torrents = downloadDir.listFiles();
+		deleting(globalOptionService.getScreenshotSavingFolder(), oldHistoryLimit);
+		
+	}
+	
+	public void deleteOldCaptchaImg() throws IOException {
+		LocalDateTime oldHistoryLimit = LocalDateTime.now().minusMonths(SeleniumConstant.maxHistoryMonth);
+		
+		deleting(captchaService.getCaptchaSaveFolder(), oldHistoryLimit);
+		
+	}
+	
+	private void deleting(String folderPath, LocalDateTime deadLine) throws IOException {
+		
+		File targetDir = new File(folderPath);
+		if(!targetDir.exists() || !targetDir.isDirectory()) {
+			return;
+		}
+		
+		File[] files = targetDir.listFiles();
 		Path file = null;
 		BasicFileAttributes attr = null;
 		Date createDate = null;
 		LocalDateTime createDateTime = null;
-		for(File f : torrents) {
-			file = f.toPath();
-			attr = Files.readAttributes(file, BasicFileAttributes.class);
-			createDate = new Date(attr.creationTime().toMillis());
-			createDateTime = DateTimeUtilCommon.dateToLocalDateTime(createDate);
-			if(createDateTime.isBefore(oldHistoryLimit)) {
-				f.delete();
+		for(File f : files) {
+			if(f.isDirectory()) {
+				deleting(f.getAbsolutePath(), deadLine);
+			} else {
+				file = f.toPath();
+				attr = Files.readAttributes(file, BasicFileAttributes.class);
+				createDate = new Date(attr.creationTime().toMillis());
+				createDateTime = DateTimeUtilCommon.dateToLocalDateTime(createDate);
+				if(createDateTime.isBefore(deadLine)) {
+					f.delete();
+				}
 			}
 		}
-		
 	}
 	
 }
