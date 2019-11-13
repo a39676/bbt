@@ -22,7 +22,6 @@ import demo.movie.mapper.MovieInfoMapper;
 import demo.movie.mapper.MovieIntroductionMapper;
 import demo.movie.mapper.MovieMagnetUrlMapper;
 import demo.movie.mapper.MovieRecordMapper;
-import demo.movie.pojo.constant.MovieInteractionConstant;
 import demo.movie.pojo.po.MovieClickCountExample;
 import demo.movie.pojo.po.MovieImage;
 import demo.movie.pojo.po.MovieImageExample;
@@ -31,6 +30,7 @@ import demo.movie.pojo.po.MovieIntroductionExample;
 import demo.movie.pojo.po.MovieMagnetUrlExample;
 import demo.movie.pojo.po.MovieRecordExample;
 import demo.movie.service.MovieManagerService;
+import demo.selenium.pojo.constant.SeleniumConstant;
 
 @Service
 public class MovieManagerServiceImpl extends MovieClawingCommonService implements MovieManagerService {
@@ -53,7 +53,7 @@ public class MovieManagerServiceImpl extends MovieClawingCommonService implement
 	
 	@Override
 	public void deleteOldHistory() throws IOException {
-		LocalDateTime oldHistoryLimit = LocalDateTime.now().minusMonths(MovieInteractionConstant.maxHistoryMonth);
+		LocalDateTime oldHistoryLimit = LocalDateTime.now().minusMonths(SeleniumConstant.maxHistoryMonth);
 		
 		MovieInfoExample infoE = new MovieInfoExample();
 		infoE.createCriteria().andCreateTimeLessThanOrEqualTo(oldHistoryLimit);
@@ -101,4 +101,5 @@ public class MovieManagerServiceImpl extends MovieClawingCommonService implement
 		}
 		
 	}
+	
 }
