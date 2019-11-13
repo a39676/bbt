@@ -42,6 +42,7 @@ public class OldDataDeleteServiceImpl extends CommonService implements OldDataDe
 		
 	}
 	
+	@Override
 	public void deleteOldCaptchaImg() throws IOException {
 		LocalDateTime oldHistoryLimit = LocalDateTime.now().minusMonths(SeleniumConstant.maxHistoryMonth);
 		
