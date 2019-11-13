@@ -36,7 +36,7 @@ public class BadJokeSMSService extends ClawingCommonService {
 	private SystemConstantService constantService;
 	
 	private String normalPwd = "398ApkLor";
-	private String normalUsername = "testing";
+	private String normalUsername = "Aestingfv";
 	
 	private String breakWordRedisKey = "badJokeBreakWord";
 	private String safeWord = "safeWord";
@@ -440,65 +440,6 @@ public class BadJokeSMSService extends ClawingCommonService {
 		return r;
 	}
 	
-	public CommonResultBBT zjzwfw(WebDriver d, TestEvent te, BadJokeSMSDTO dto) {
-		String url = "https://puser.zjzwfw.gov.cn/sso/usp.do?action=register";
-		CommonResultBBT r = new CommonResultBBT();
-		StringBuffer report = new StringBuffer();
-
-		try {
-			d.get(url);
-			
-			WebElement captchaCodeInput = d.findElement(By.id("imgcode"));
-			captchaCodeInput.clear();
-			captchaCodeInput.click();
-			
-			WebElement usernameInput = d.findElement(By.id("loginName"));
-			usernameInput.clear();
-			usernameInput.sendKeys(normalUsername);
-			
-			WebElement mobileInput = d.findElement(By.id("mobilePhone"));
-			mobileInput.clear();
-			mobileInput.sendKeys(dto.getMobileNum());
-			
-			WebElement capchatCodeElement = d.findElement(By.id("captcha_img"));
-					
-			XpathBuilderBO x = new XpathBuilderBO();
-			x.start("div").addAttribute("class", "parentFormformID formError imgcodeErrorDir");
-			WebElement captchaValidDiv = d.findElement(By.xpath(x.getXpath()));
-			
-			
-			String captchCode = null;
-			int cpatchaCount = 0;
-			while(StringUtils.isNotBlank(captchaValidDiv.getText()) && cpatchaCount < 15) {
-				capchatCodeElement.click();
-				captchCode = auxTool.captchaHandle(d, capchatCodeElement, te);
-				captchaCodeInput.clear();
-				captchaCodeInput.sendKeys(captchCode);
-				mobileInput.click();
-				captchaValidDiv = d.findElement(By.xpath(x.getXpath()));
-				cpatchaCount++;
-			}
-			
-			if(StringUtils.isNotBlank(captchaValidDiv.getText())) {
-				return r;
-			}
-			
-			WebElement sendSmsButton = d.findElement(By.id("getsmscode"));
-			sendSmsButton.click();
-
-			r.setIsSuccess();
-			
-		} catch (Exception e) {
-			log.error("error: {}, url: {}" + e.getMessage() + d.getCurrentUrl());
-			report.append(e.getMessage() + "\n");
-			
-			
-		} finally {
-			r.setMessage(report.toString());
-		}
-		return r;
-	}
-	
 	public CommonResultBBT ctrip(WebDriver d, TestEvent te, BadJokeSMSDTO dto) {
 		String url = "https://www.ctrip.com/";
 		CommonResultBBT r = new CommonResultBBT();
@@ -603,7 +544,7 @@ public class BadJokeSMSService extends ClawingCommonService {
 		return r;
 	}
 	
-	public CommonResultBBT demo(WebDriver d, TestEvent te, BadJokeSMSDTO dto) {
+	public CommonResultBBT zjzwfw(WebDriver d, TestEvent te, BadJokeSMSDTO dto) {
 		String url = "https://puser.zjzwfw.gov.cn/sso/usp.do?action=register";
 		CommonResultBBT r = new CommonResultBBT();
 		StringBuffer report = new StringBuffer();
@@ -626,7 +567,8 @@ public class BadJokeSMSService extends ClawingCommonService {
 			mobileInput.sendKeys(dto.getMobileNum());
 			
 			x.start("img").addAttribute("id", "captcha_img");
-			WebElement captchaImg = d.findElement(By.xpath(x.getXpath()));
+			By captchaImgBy = By.xpath(x.getXpath());
+			WebElement captchaImg = d.findElement(captchaImgBy);
 			captchaImg.click();
 			
 			String captchaCode = auxTool.captchaHandle(d, captchaImg, te);
@@ -646,7 +588,8 @@ public class BadJokeSMSService extends ClawingCommonService {
 			int captchaCount = 0;
 			try {
 				while((captchaErrorWarnDiv = d.findElement(captchaErrorWarnBy)) != null && captchaCount < 10) {
-					captchaErrorWarnDiv.click();
+					mobileInput.click();
+					captchaImg = d.findElement(captchaImgBy);
 					captchaImg.click();
 					captchaCode = auxTool.captchaHandle(d, captchaImg, te);
 					captchaCodeInput.click();
@@ -656,12 +599,13 @@ public class BadJokeSMSService extends ClawingCommonService {
 					captchaCount++;
 				}
 			} catch (Exception e) {
+				captchaErrorWarnDiv = null;
 			}
 			
 			if(captchaErrorWarnDiv != null) {
 				r.setIsFail();
 			} else {
-				x.start("input").addAttribute("id", "getsmscode");
+				x.start("button").addAttribute("id", "getsmscode");
 				WebElement sendSmsCode = d.findElement(By.xpath(x.getXpath()));
 				sendSmsCode.click();
 				

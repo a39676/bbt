@@ -45,7 +45,7 @@ public class TestController2 extends CommonController {
 		dto.setMobileNum("18826485386");
 		try {
 			badJoke.toString();
-//			badJoke.sdo(d, te, dto);
+			badJoke.demo(d, te, dto);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

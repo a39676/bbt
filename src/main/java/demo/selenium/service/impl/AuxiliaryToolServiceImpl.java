@@ -54,6 +54,7 @@ public class AuxiliaryToolServiceImpl extends CommonService {
 		
 		TakeScreenshotSaveDTO dto = new TakeScreenshotSaveDTO();
 		dto.setDriver(d);
+		dto.setEle(captchaCodeElement);
 		ScreenshotSaveResult vcodeImgSaveResult = screenshotService.screenshotSave(dto, globalOptionService.getScreenshotSavingFolder(), null);
 		return captchaService.ocr(vcodeImgSaveResult.getSavingPath(), numberAndLetterOnly);
 	}
