@@ -849,6 +849,8 @@ public class BadJokeSMSService extends ClawingCommonService {
 	
 	/*
 	 * 
+	 * https://www.seekfunbook.com/osp/gotoRegister
+	 * 
 	 * https://www.rexxglobal.com/register_phone.html#
 	 * https://i.ruanmei.com/
 	 * https://passport.umeng.com/signup
@@ -871,15 +873,21 @@ public class BadJokeSMSService extends ClawingCommonService {
 	 * https://account.youku.com/register.htm
 	 * https://upass.10jqka.com.cn/register
 	 * 
+	 * https://www.dailuobo.com/partner.html
+	 * https://shimo.im/login
+	 * 
 	 */
 	
 	/*
 	 * 需要简单滑动
+	 * https://ibaotu.com/
 	 */
 	
 	/*
 	 * 需要拼图滑动
 	 * https://user.48.cn/login/index.html
+	 * https://www.smzdm.com/
+	 * https://center.huashengdaili.com/zhuce/?channel=huashengdaili
 	 */
 	
 }
