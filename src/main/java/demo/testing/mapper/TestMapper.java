@@ -1,4 +1,4 @@
-package demo.test.mapper;
+package demo.testing.mapper;
 
 public interface TestMapper {
 	

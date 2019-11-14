@@ -1,4 +1,4 @@
-package demo.test.pojo.constant;
+package demo.testing.pojo.constant;
 
 public class TestUrl {
 	

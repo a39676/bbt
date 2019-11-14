@@ -1,4 +1,4 @@
-package demo.test.controller;
+package demo.testing.controller;
 
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +11,8 @@ import demo.badJoke.sms.service.BadJokeSMSService;
 import demo.baseCommon.controller.CommonController;
 import demo.clawing.service.ClawingStudentService;
 import demo.selenium.service.WebDriverService;
-import demo.test.pojo.constant.TestUrl;
 import demo.testCase.pojo.po.TestEvent;
+import demo.testing.pojo.constant.TestUrl;
 
 @Controller
 @RequestMapping(value = { TestUrl.testRoot2 })

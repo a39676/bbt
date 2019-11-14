@@ -1,4 +1,4 @@
-package demo.test.controller;
+package demo.testing.controller;
 
 import java.util.Date;
 
@@ -15,9 +15,9 @@ import demo.clawing.service.ClawingSinaMedicineService;
 import demo.neobux.service.NeobuxService;
 import demo.selenium.service.SeForJoke;
 import demo.selenium.service.SeleniumService;
-import demo.test.pojo.constant.TestUrl;
-import demo.test.pojo.constant.TestViewConstants;
-import demo.test.service.TestService;
+import demo.testing.pojo.constant.TestUrl;
+import demo.testing.pojo.constant.TestViewConstants;
+import demo.testing.service.TestService;
 import demo.weka.pojo.result.WekaCommonResult;
 import demo.weka.service.WekaCluster;
 import io.swagger.annotations.ApiOperation;
