@@ -26,8 +26,6 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping(value = { TestUrl.testRoot })
 public class TestController extends CommonController {
 	
-//	@Autowired
-//	private TestMapper testMapper;
 	@Autowired
 	private TestService testService;
 	@Autowired
@@ -41,6 +39,7 @@ public class TestController extends CommonController {
 	private ClawingSinaMedicineService medicineService;
 	@Autowired
 	private NeobuxService nbService;
+	
 	
 	@ApiOperation(value="测试", notes="测试notes")
 	@GetMapping(value = { "/test" })
