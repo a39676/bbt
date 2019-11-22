@@ -20,6 +20,7 @@ import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import at.pojo.bo.XpathBuilderBO;
 import at.web.WebATToolService;
 import demo.baseCommon.service.CommonService;
 import demo.clawing.mapper.MeizituGroupRecordMapper;
@@ -29,7 +30,6 @@ import demo.clawing.service.ClawingMeiZiTuService;
 import demo.image.mapper.ImageStoreMapper;
 import demo.image.pojo.po.ImageStore;
 import demo.image.pojo.type.ImageType;
-import demo.selenium.pojo.bo.XpathBuilderBO;
 import demo.selenium.service.JavaScriptService;
 import demo.selenium.service.WebDriverService;
 import demo.selenium.service.impl.AuxiliaryToolServiceImpl;

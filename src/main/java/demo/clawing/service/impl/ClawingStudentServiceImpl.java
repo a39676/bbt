@@ -12,9 +12,9 @@ import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import at.pojo.bo.XpathBuilderBO;
 import demo.baseCommon.service.CommonService;
 import demo.clawing.service.ClawingStudentService;
-import demo.selenium.pojo.bo.XpathBuilderBO;
 import demo.selenium.service.WebDriverService;
 import demo.selenium.service.impl.AuxiliaryToolServiceImpl;
 import demo.testCase.pojo.po.TestEvent;

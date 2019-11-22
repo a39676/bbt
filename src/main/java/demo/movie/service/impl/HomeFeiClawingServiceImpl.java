@@ -17,6 +17,7 @@ import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import at.pojo.bo.XpathBuilderBO;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.pojo.result.CommonResultBBT;
@@ -35,7 +36,6 @@ import demo.movie.pojo.result.DoubanSubClawingResult;
 import demo.movie.service.DoubanClawingService;
 import demo.movie.service.HomeFeiClawingService;
 import demo.movie.service.MovieClawingOptionService;
-import demo.selenium.pojo.bo.XpathBuilderBO;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.WebDriverService;
 import demo.selenium.service.impl.JavaScriptServiceImpl;

@@ -10,12 +10,12 @@ import org.openqa.selenium.interactions.Actions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import at.pojo.bo.XpathBuilderBO;
 import at.web.WebATToolService;
 import demo.badJoke.sms.pojo.dto.BadJokeSMSDTO;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.service.impl.ClawingCommonService;
-import demo.selenium.pojo.bo.XpathBuilderBO;
 import demo.selenium.service.impl.AuxiliaryToolServiceImpl;
 import demo.testCase.pojo.po.TestEvent;
 import demo.testCase.pojo.type.TestCaseType;

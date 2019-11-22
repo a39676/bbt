@@ -6,10 +6,10 @@ import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import at.pojo.bo.XpathBuilderBO;
 import at.pojo.dto.TakeScreenshotSaveDTO;
 import at.service.ScreenshotService;
 import demo.baseCommon.service.CommonService;
-import demo.selenium.pojo.bo.XpathBuilderBO;
 import demo.selenium.service.SeForJoke;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.WebDriverService;

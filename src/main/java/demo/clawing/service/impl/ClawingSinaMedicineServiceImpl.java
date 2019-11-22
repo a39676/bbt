@@ -12,6 +12,7 @@ import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import at.pojo.bo.XpathBuilderBO;
 import demo.baseCommon.service.CommonService;
 import demo.clawing.mapper.MedicineInfoErrorMapper;
 import demo.clawing.mapper.MedicineInfoMapper;
@@ -21,7 +22,6 @@ import demo.clawing.pojo.result.SinaMedicineDetailHeadHandleResult;
 import demo.clawing.pojo.result.SinaMedicineDetailMainHandleResult;
 import demo.clawing.service.ClawingSinaMedicineFactoryService;
 import demo.clawing.service.ClawingSinaMedicineService;
-import demo.selenium.pojo.bo.XpathBuilderBO;
 import demo.selenium.service.WebDriverService;
 import demo.testCase.pojo.po.TestEvent;
 
