@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import at.service.ATJsonReportService;
 import at.service.ATWordReportService;
 import at.service.ScreenshotService;
 import at.service.Tess;
@@ -45,5 +46,10 @@ public class ATComponent {
 	@Bean
 	public WebATToolService getWebATToolService() {
 		return new WebATToolService();
+	}
+	
+	@Bean
+	public ATJsonReportService getATJsonReportService() {
+		return new ATJsonReportService();
 	}
 }

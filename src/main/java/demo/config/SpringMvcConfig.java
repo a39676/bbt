@@ -20,13 +20,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
-import demo.config.costom_component.SnowFlake;
-import demo.util.BaseUtilCustom;
-import httpHandel.HttpUtil;
-import ioHandle.FileUtilCustom;
-import numericHandel.NumericUtilCustom;
-import stringHandle.StringUtilCustom;
-
 @EnableWebMvc // <mvc:annotation-driven />
 @Configuration
 @EnableScheduling // 开启定时任务支持
@@ -76,34 +69,4 @@ public class SpringMvcConfig implements WebMvcConfigurer {
 		return viewResolver;
 	}
 
-	@Bean
-	public BaseUtilCustom getBaseUtilCustom() {
-		return new BaseUtilCustom();
-	}
-	
-	@Bean
-	public SnowFlake getSnowFlake() {
-		return new SnowFlake();
-	}
-
-	@Bean
-	public StringUtilCustom getStringUtilCustom() {
-		return new StringUtilCustom();
-	}
-	
-	@Bean
-	public FileUtilCustom getFileUtilCustom() {
-		return new FileUtilCustom();
-	}
-	
-	@Bean
-	public NumericUtilCustom getNumericUtilCustom() {
-		return new NumericUtilCustom();
-	}
-	
-	@Bean
-	public HttpUtil getHttpUtil() {
-		return new HttpUtil();
-	}
-	
 }
