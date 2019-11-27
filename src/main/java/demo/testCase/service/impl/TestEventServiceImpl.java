@@ -37,6 +37,11 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	
 	@Override
 	public void findTestEventAndRun() {
+		/*
+		 * TODO
+		 * 需要改变逻辑
+		 * 各模块的testService 需要一个前置逻辑, 确认指定任务
+		 */
 		List<TestEvent> events = findTestEventNotRunYet();
 		if(events == null || events.size() < 1) {
 			return;

@@ -19,6 +19,7 @@ import demo.clawing.service.impl.ClawingCommonService;
 import demo.selenium.service.impl.AuxiliaryToolServiceImpl;
 import demo.testCase.pojo.po.TestEvent;
 import demo.testCase.pojo.type.TestCaseType;
+import demo.testCase.pojo.type.TestModuleType;
 import demo.testCase.service.TestEventService;
 
 @Service
@@ -51,7 +52,7 @@ public class BadJokeSMSService extends ClawingCommonService {
 	private int maxCaptchaCount = 15;
 	
 	private TestEvent buildTestEvent() {
-		return buildTestEvent(TestCaseType.badJokeSms);
+		return buildTestEvent(TestModuleType.badJoke, TestCaseType.badJokeSms.getId());
 	}
 	
 	public Integer insertBadJokeSMSEvent() {

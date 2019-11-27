@@ -30,6 +30,7 @@ import demo.movie.service.DyttClawingService;
 import demo.selenium.service.WebDriverService;
 import demo.testCase.pojo.po.TestEvent;
 import demo.testCase.pojo.type.TestCaseType;
+import demo.testCase.pojo.type.TestModuleType;
 import demo.testCase.service.TestEventService;
 import ioHandle.FileUtilCustom;
 
@@ -61,7 +62,7 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 	private String newMovie = mainUrl + "/html/gndy/dyzz/index.html";
 
 	private TestEvent buildTestEvent() {
-		return buildTestEvent(TestCaseType.dytt);
+		return buildTestEvent(TestModuleType.movieCloawing, TestCaseType.dytt.getId());
 	}
 	
 	@Override

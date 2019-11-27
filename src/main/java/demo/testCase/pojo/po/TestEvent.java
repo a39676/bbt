@@ -11,6 +11,8 @@ public class TestEvent {
 
     private Long processId;
 
+    private Long moduleId;
+
     private String eventName;
 
     private String remark;
@@ -57,6 +59,14 @@ public class TestEvent {
 
     public void setProcessId(Long processId) {
         this.processId = processId;
+    }
+
+    public Long getModuleId() {
+        return moduleId;
+    }
+
+    public void setModuleId(Long moduleId) {
+        this.moduleId = moduleId;
     }
 
     public String getEventName() {

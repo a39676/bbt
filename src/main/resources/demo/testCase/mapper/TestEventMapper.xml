@@ -6,6 +6,7 @@
     <result column="project_id" jdbcType="BIGINT" property="projectId" />
     <result column="case_id" jdbcType="BIGINT" property="caseId" />
     <result column="process_id" jdbcType="BIGINT" property="processId" />
+    <result column="module_id" jdbcType="BIGINT" property="moduleId" />
     <result column="event_name" jdbcType="VARCHAR" property="eventName" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
     <result column="report_path" jdbcType="VARCHAR" property="reportPath" />
@@ -74,8 +75,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, project_id, case_id, process_id, event_name, remark, report_path, create_time, 
-    start_time, end_time, is_pass, is_delete
+    id, project_id, case_id, process_id, module_id, event_name, remark, report_path, 
+    create_time, start_time, end_time, is_pass, is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.testCase.pojo.po.TestEventExample" resultMap="BaseResultMap">
     select
@@ -109,15 +110,15 @@
   </delete>
   <insert id="insert" parameterType="demo.testCase.pojo.po.TestEvent">
     insert into test_event (id, project_id, case_id, 
-      process_id, event_name, remark, 
-      report_path, create_time, start_time, 
-      end_time, is_pass, is_delete
-      )
+      process_id, module_id, event_name, 
+      remark, report_path, create_time, 
+      start_time, end_time, is_pass, 
+      is_delete)
     values (#{id,jdbcType=BIGINT}, #{projectId,jdbcType=BIGINT}, #{caseId,jdbcType=BIGINT}, 
-      #{processId,jdbcType=BIGINT}, #{eventName,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
-      #{reportPath,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{startTime,jdbcType=TIMESTAMP}, 
-      #{endTime,jdbcType=TIMESTAMP}, #{isPass,jdbcType=BIT}, #{isDelete,jdbcType=BIT}
-      )
+      #{processId,jdbcType=BIGINT}, #{moduleId,jdbcType=BIGINT}, #{eventName,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{reportPath,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{isPass,jdbcType=BIT}, 
+      #{isDelete,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="demo.testCase.pojo.po.TestEvent">
     insert into test_event
@@ -133,6 +134,9 @@
       </if>
       <if test="processId != null">
         process_id,
+      </if>
+      <if test="moduleId != null">
+        module_id,
       </if>
       <if test="eventName != null">
         event_name,
@@ -171,6 +175,9 @@
       </if>
       <if test="processId != null">
         #{processId,jdbcType=BIGINT},
+      </if>
+      <if test="moduleId != null">
+        #{moduleId,jdbcType=BIGINT},
       </if>
       <if test="eventName != null">
         #{eventName,jdbcType=VARCHAR},
@@ -219,6 +226,9 @@
       <if test="record.processId != null">
         process_id = #{record.processId,jdbcType=BIGINT},
       </if>
+      <if test="record.moduleId != null">
+        module_id = #{record.moduleId,jdbcType=BIGINT},
+      </if>
       <if test="record.eventName != null">
         event_name = #{record.eventName,jdbcType=VARCHAR},
       </if>
@@ -254,6 +264,7 @@
       project_id = #{record.projectId,jdbcType=BIGINT},
       case_id = #{record.caseId,jdbcType=BIGINT},
       process_id = #{record.processId,jdbcType=BIGINT},
+      module_id = #{record.moduleId,jdbcType=BIGINT},
       event_name = #{record.eventName,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
       report_path = #{record.reportPath,jdbcType=VARCHAR},
@@ -277,6 +288,9 @@
       </if>
       <if test="processId != null">
         process_id = #{processId,jdbcType=BIGINT},
+      </if>
+      <if test="moduleId != null">
+        module_id = #{moduleId,jdbcType=BIGINT},
       </if>
       <if test="eventName != null">
         event_name = #{eventName,jdbcType=VARCHAR},
@@ -310,6 +324,7 @@
     set project_id = #{projectId,jdbcType=BIGINT},
       case_id = #{caseId,jdbcType=BIGINT},
       process_id = #{processId,jdbcType=BIGINT},
+      module_id = #{moduleId,jdbcType=BIGINT},
       event_name = #{eventName,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
       report_path = #{reportPath,jdbcType=VARCHAR},
@@ -320,7 +335,7 @@
       is_delete = #{isDelete,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  
+
   <select id="existsRuningEvent" resultType="int">
     select exists(
       select 

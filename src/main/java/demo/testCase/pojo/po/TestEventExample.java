@@ -345,6 +345,66 @@ public class TestEventExample {
             return (Criteria) this;
         }
 
+        public Criteria andModuleIdIsNull() {
+            addCriterion("module_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andModuleIdIsNotNull() {
+            addCriterion("module_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andModuleIdEqualTo(Long value) {
+            addCriterion("module_id =", value, "moduleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andModuleIdNotEqualTo(Long value) {
+            addCriterion("module_id <>", value, "moduleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andModuleIdGreaterThan(Long value) {
+            addCriterion("module_id >", value, "moduleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andModuleIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("module_id >=", value, "moduleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andModuleIdLessThan(Long value) {
+            addCriterion("module_id <", value, "moduleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andModuleIdLessThanOrEqualTo(Long value) {
+            addCriterion("module_id <=", value, "moduleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andModuleIdIn(List<Long> values) {
+            addCriterion("module_id in", values, "moduleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andModuleIdNotIn(List<Long> values) {
+            addCriterion("module_id not in", values, "moduleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andModuleIdBetween(Long value1, Long value2) {
+            addCriterion("module_id between", value1, value2, "moduleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andModuleIdNotBetween(Long value1, Long value2) {
+            addCriterion("module_id not between", value1, value2, "moduleId");
+            return (Criteria) this;
+        }
+
         public Criteria andEventNameIsNull() {
             addCriterion("event_name is null");
             return (Criteria) this;

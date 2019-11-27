@@ -41,6 +41,7 @@ import demo.selenium.service.WebDriverService;
 import demo.selenium.service.impl.JavaScriptServiceImpl;
 import demo.testCase.pojo.po.TestEvent;
 import demo.testCase.pojo.type.TestCaseType;
+import demo.testCase.pojo.type.TestModuleType;
 import demo.testCase.service.TestEventService;
 import demo.tool.service.ComplexToolService;
 import httpHandel.HttpUtil;
@@ -90,11 +91,11 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 
 	
 	private TestEvent collectionTestEvent() {
-		return buildTestEvent(TestCaseType.homeFeiCollection);
+		return buildTestEvent(TestModuleType.movieCloawing, TestCaseType.homeFeiCollection.getId());
 	}
 	
 	private TestEvent downloadTestEvent() {
-		return buildTestEvent(TestCaseType.homeFeiDownload);
+		return buildTestEvent(TestModuleType.movieCloawing, TestCaseType.homeFeiDownload.getId());
 	}
 	
 	@Override
