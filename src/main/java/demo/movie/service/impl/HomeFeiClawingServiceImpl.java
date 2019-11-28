@@ -33,6 +33,7 @@ import demo.movie.pojo.po.MovieIntroduction;
 import demo.movie.pojo.po.MovieMagnetUrl;
 import demo.movie.pojo.po.MovieRecord;
 import demo.movie.pojo.result.DoubanSubClawingResult;
+import demo.movie.pojo.type.MovieClawingCaseType;
 import demo.movie.service.DoubanClawingService;
 import demo.movie.service.HomeFeiClawingService;
 import demo.movie.service.MovieClawingOptionService;
@@ -40,7 +41,7 @@ import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.WebDriverService;
 import demo.selenium.service.impl.JavaScriptServiceImpl;
 import demo.testCase.pojo.po.TestEvent;
-import demo.testCase.pojo.type.TestCaseType;
+import demo.testCase.pojo.result.InsertTestEventResult;
 import demo.testCase.pojo.type.TestModuleType;
 import demo.testCase.service.TestEventService;
 import demo.tool.service.ComplexToolService;
@@ -91,23 +92,23 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 
 	
 	private TestEvent collectionTestEvent() {
-		return buildTestEvent(TestModuleType.movieCloawing, TestCaseType.homeFeiCollection.getId());
+		return buildTestEvent(TestModuleType.movieClawing, MovieClawingCaseType.homeFeiCollection.getId());
 	}
 	
 	private TestEvent downloadTestEvent() {
-		return buildTestEvent(TestModuleType.movieCloawing, TestCaseType.homeFeiDownload.getId());
+		return buildTestEvent(TestModuleType.movieClawing, MovieClawingCaseType.homeFeiDownload.getId());
 	}
 	
 	@Override
-	public Integer insertCollectionEvent() {
+	public InsertTestEventResult insertCollectionEvent() {
 		TestEvent te = collectionTestEvent();
-		return testEventService.insertSelective(te);
+		return testEventService.insertTestEvent(te);
 	}
 	
 	@Override
-	public Integer insertDownloadEvent() {
+	public InsertTestEventResult insertDownloadEvent() {
 		TestEvent te = downloadTestEvent();
-		return testEventService.insertSelective(te);
+		return testEventService.insertTestEvent(te);
 	}
 	
 	@Override
@@ -186,7 +187,7 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 		// 实际运行时, 爬取一定页面后, 运行效率低下, 故需要重新启动浏览器
 		int timeToReOpenBrowser = 5;
 		MovieRecordFindByConditionDTO dto = new MovieRecordFindByConditionDTO();
-		dto.setCaseId(TestCaseType.homeFeiCollection.getId());
+		dto.setCaseId(MovieClawingCaseType.homeFeiCollection.getId());
 		dto.setWasClaw(false);
 		List<MovieRecord> records = recordMapper.findByCondition(dto);
 		

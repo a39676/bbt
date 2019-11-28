@@ -2,10 +2,11 @@ package demo.testCase.service;
 
 import demo.testCase.pojo.bo.TestEventBO;
 import demo.testCase.pojo.po.TestEvent;
+import demo.testCase.pojo.result.InsertTestEventResult;
 
 public interface TestEventService {
 
-	Integer insertSelective(TestEvent po);
+	InsertTestEventResult insertTestEvent(TestEvent po);
 
 	TestEvent runNewTestEvent(TestEventBO bo);
 
@@ -16,5 +17,7 @@ public interface TestEventService {
 	int fixMovieClawingTestEventStatus();
 
 	void findTestEventAndRun();
+
+	int countWaitingEvent();
 
 }

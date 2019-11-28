@@ -25,13 +25,12 @@ import demo.movie.pojo.po.MovieInfo;
 import demo.movie.pojo.po.MovieIntroduction;
 import demo.movie.pojo.po.MovieRecord;
 import demo.movie.pojo.result.DoubanSubClawingResult;
+import demo.movie.pojo.type.MovieClawingCaseType;
 import demo.movie.service.DoubanClawingService;
 import demo.movie.service.DyttClawingService;
-import demo.selenium.service.WebDriverService;
 import demo.testCase.pojo.po.TestEvent;
-import demo.testCase.pojo.type.TestCaseType;
+import demo.testCase.pojo.result.InsertTestEventResult;
 import demo.testCase.pojo.type.TestModuleType;
-import demo.testCase.service.TestEventService;
 import ioHandle.FileUtilCustom;
 
 @Service
@@ -40,11 +39,6 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 	@Autowired
 	private FileUtilCustom iou;
 
-	@Autowired
-	private TestEventService testEventService;
-
-	@Autowired
-	private WebDriverService webDriverService;
 	@Autowired
 	private DoubanClawingService doubanService;
 //	@Autowired
@@ -62,13 +56,13 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 	private String newMovie = mainUrl + "/html/gndy/dyzz/index.html";
 
 	private TestEvent buildTestEvent() {
-		return buildTestEvent(TestModuleType.movieCloawing, TestCaseType.dytt.getId());
+		return buildTestEvent(TestModuleType.movieClawing, MovieClawingCaseType.dytt.getId());
 	}
 	
 	@Override
-	public Integer insertclawingEvent() {
+	public InsertTestEventResult insertclawingEvent() {
 		TestEvent te = buildTestEvent();
-		return testEventService.insertSelective(te);
+		return testEventService.insertTestEvent(te);
 	}
 	
 	@Override
@@ -149,7 +143,7 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 		MovieRecordFindByConditionDTO findMovieRecordDTO = new MovieRecordFindByConditionDTO();
 		findMovieRecordDTO.setUrl(subUrl);
 		findMovieRecordDTO.setWasClaw(true);
-		findMovieRecordDTO.setCaseId(TestCaseType.dytt.getId());
+		findMovieRecordDTO.setCaseId(MovieClawingCaseType.dytt.getId());
 		List<MovieRecord> records = recordMapper.findByCondition(findMovieRecordDTO);
 		if (records != null && records.size() > 0) {
 			log.info(subUrl + " was clawed");
@@ -208,7 +202,7 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 			record.setId(snowFlake.getNextId());
 			record.setWasClaw(true);
 			record.setMovieId(newMovieId);
-			record.setCaseId(TestCaseType.dytt.getId());
+			record.setCaseId(MovieClawingCaseType.dytt.getId());
 			recordMapper.insertSelective(record);
 
 		} catch (Exception e) {

@@ -359,6 +359,16 @@
       and start_time is not null 
       and end_time is null
   </select>
+  
+  <select id="countWaitingEvent" resultType="int">
+    select 
+      count(*) 
+    from 
+      test_event 
+    where 
+      is_delete = false 
+      and start_time is null 
+  </select>
 
   <update id="fixMovieClawingTestEventStatus">
     update 

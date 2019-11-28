@@ -5,15 +5,17 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import demo.badJoke.sms.service.BadJokeCasePrefixService;
 import demo.baseCommon.pojo.result.CommonResultBBT;
-import demo.movie.service.DyttClawingService;
-import demo.movie.service.HomeFeiClawingService;
+import demo.bingDemo.service.BingDemoService;
+import demo.movie.service.MovieClawingCasePrefixService;
 import demo.testCase.mapper.TestEventMapper;
 import demo.testCase.pojo.bo.TestEventBO;
 import demo.testCase.pojo.constant.TestEventOptionConstant;
 import demo.testCase.pojo.po.TestCase;
 import demo.testCase.pojo.po.TestEvent;
-import demo.testCase.pojo.type.TestCaseType;
+import demo.testCase.pojo.result.InsertTestEventResult;
+import demo.testCase.pojo.type.TestModuleType;
 import demo.testCase.service.TestCaseService;
 import demo.testCase.service.TestEventService;
 
@@ -26,22 +28,25 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	private TestEventMapper eventMapper;
 	
 	@Autowired
-	private HomeFeiClawingService homeFeiService;
+	private MovieClawingCasePrefixService movieClawingCasePrefixService;
 	@Autowired
-	private DyttClawingService dyttService;
+	private BadJokeCasePrefixService badJokeCasePrefixService;
+	@Autowired
+	private BingDemoService bingDemoService;
 	
 	@Override
-	public Integer insertSelective(TestEvent po) {
-		return eventMapper.insertSelective(po);
+	public InsertTestEventResult insertTestEvent(TestEvent po) {
+		InsertTestEventResult r = new InsertTestEventResult();
+		r.setInsertCount(eventMapper.insertSelective(po));
+		if(r.getInsertCount() > 0) {
+			r.setIsSuccess();
+		}
+		r.setNewTestEventId(po.getId());
+		return r;
 	}
 	
 	@Override
 	public void findTestEventAndRun() {
-		/*
-		 * TODO
-		 * 需要改变逻辑
-		 * 各模块的testService 需要一个前置逻辑, 确认指定任务
-		 */
 		List<TestEvent> events = findTestEventNotRunYet();
 		if(events == null || events.size() < 1) {
 			return;
@@ -74,16 +79,17 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	}
 	
 	private CommonResultBBT runSubEvent(TestEvent te) {
-		Long caseId = te.getCaseId();
-		if(caseId == null) {
+		Long moduleId = te.getModuleId();
+		if(moduleId == null) {
 			return null;
-		}  
-		if (TestCaseType.dytt.getId().equals(caseId)) {
-			return dyttService.clawing(te);
-		} else if (TestCaseType.homeFeiCollection.getId().equals(caseId)) {
-			return homeFeiService.collection(te);
-		} else if (TestCaseType.homeFeiDownload.getId().equals(caseId)) {
-			return homeFeiService.download(te);
+		}
+		
+		if (TestModuleType.movieClawing.getId().equals(moduleId)) {
+			return movieClawingCasePrefixService.runSubEvent(te);
+		} else if (TestModuleType.badJoke.getId().equals(moduleId)) {
+			return badJokeCasePrefixService.runSubEvent(te);
+		} else if (TestModuleType.ATDemo.getId().equals(moduleId)) {
+			return bingDemoService.clawing(te);
 		}
 		return null;
 	}
@@ -107,4 +113,8 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		return testEvent;
 	}
 	
+	@Override
+	public int countWaitingEvent() {
+		return eventMapper.countWaitingEvent();
+	}
 }

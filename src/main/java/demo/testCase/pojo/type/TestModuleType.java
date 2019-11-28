@@ -3,7 +3,7 @@ package demo.testCase.pojo.type;
 public enum TestModuleType {
 
 	/** movie clawing */
-	movieCloawing(1L, "movieCloawing"),
+	movieClawing(1L, "movieClawing"),
 	
 	/** badJoke */
 	badJoke(2L, "badJoke"),

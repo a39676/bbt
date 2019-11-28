@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import demo.baseCommon.service.CommonService;
 import demo.image.ImageInteractionService;
 import httpHandel.HttpUtil;
-import image.pojo.constant.ImageUrl;
+import image.pojo.constant.ImageInteractionUrl;
 import image.pojo.dto.UploadImageToCloudinaryDTO;
 import image.pojo.result.UploadImageToCloudinaryResult;
 import net.sf.json.JSONObject;
@@ -26,7 +26,7 @@ public class ImageInteractionServiceImpl extends CommonService implements ImageI
 		try {
 			JSONObject j = JSONObject.fromObject(dto);
 	        
-			String url = "http://127.0.0.1:10001" + ImageUrl.root + ImageUrl.uploadImageToCloudinary;
+			String url = "http://127.0.0.1:10001" + ImageInteractionUrl.root + ImageInteractionUrl.uploadImageToCloudinary;
 			String response = String.valueOf(httpUtil.sendPostRestful(url, j.toString()));
 			JSONObject resultJ = JSONObject.fromObject(response);
 			

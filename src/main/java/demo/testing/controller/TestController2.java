@@ -54,7 +54,7 @@ public class TestController2 extends CommonController {
 //			badJoke.chunQiu(d, te, dto);
 //			badJoke.flyme(d, te, dto);
 //			badJoke.zjzwfw(d, te, dto);
-			badJoke.hnair(d, te, dto);
+//			badJoke.hnair(d, te, dto);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
