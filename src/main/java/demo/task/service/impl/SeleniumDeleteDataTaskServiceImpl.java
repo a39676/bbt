@@ -12,15 +12,22 @@ import demo.selenium.service.OldDataDeleteService;
 public class SeleniumDeleteDataTaskServiceImpl {
 
 	@Autowired
-	private OldDataDeleteService OldDataDeleteService;
+	private OldDataDeleteService oldDataDeleteService;
 
 	@Scheduled(cron = "04 13 01 * * *")
 	public void deleteOldDownload() throws IOException {
-		OldDataDeleteService.deleteOldDownload();
+		oldDataDeleteService.deleteOldDownload();
 	}
 	
 	@Scheduled(cron = "05 15 01 * * *")
 	public void deleteOldScreenshot() throws IOException {
-		OldDataDeleteService.deleteOldScreenshot();
+		oldDataDeleteService.deleteOldScreenshot();
+		oldDataDeleteService.deleteOldCaptchaImg();
+		
+	}
+	
+	@Scheduled(cron = "45 11 02 * * *")
+	public void deleteOldReport() throws IOException {
+		oldDataDeleteService.deleteOldReport();
 	}
 }

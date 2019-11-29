@@ -23,11 +23,13 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 	private String tmpFolder = "/tmp";
 	private String screenshotSavingFolder = "/screenshot";
 	private String captchaScreenshotSavingFolder = "/captchaScreenshotSavingFolder";
+	private String reportOutputFolder = "/reportOutputFolder";
 
 	private String downloadDirRedisKey = "seleniumDownloadDir";
 	private String tmpFolderRedisKey = "tmpFolder";
 	private String screenshotSavingFolderRedisKey = "seleniumScreenshotSavingDir";
 	private String captchaScreenshotSavingFolderRedisKey = "captchaScreenshotSavingFolderRedisKey";
+	private String reportOutputFolderRedisKey = "reportOutputFolderRedisKey";
 
 	private String winSeleniumWebDriverFolder = "d:/auxiliary/seleniumWebDriver";
 	private String linuxSeleniumWebDriverFolder = "/home/u2/seleniumWebDriver";
@@ -148,6 +150,31 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 
 		checkFolderExists(captchaScreenshotSavingDir);
 		return captchaScreenshotSavingDir;
+	}
+	
+	@Override
+	public String getReportOutputFolder() {
+		String reportOutputDir = constantService.getValByName(reportOutputFolderRedisKey);
+
+		if (StringUtils.isNotBlank(reportOutputDir)) {
+			checkFolderExists(reportOutputDir);
+			return pathChangeByDetectOS(reportOutputDir);
+		}
+
+		if (isWindows()) {
+			reportOutputDir = mainSavingFolder_win + reportOutputFolder;
+		} else {
+			reportOutputDir = mainSavingFolder_linx + reportOutputFolder;
+		}
+		reportOutputDir = pathChangeByDetectOS(reportOutputDir);
+
+		SystemConstant systemConstant = new SystemConstant();
+		systemConstant.setConstantName(reportOutputFolderRedisKey);
+		systemConstant.setConstantValue(reportOutputDir);
+		constantService.setValByName(systemConstant);
+
+		checkFolderExists(reportOutputDir);
+		return reportOutputDir;
 	}
 
 	@Override

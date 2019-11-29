@@ -50,6 +50,20 @@ public class OldDataDeleteServiceImpl extends CommonService implements OldDataDe
 		
 	}
 	
+	@Override
+	public void deleteOldReport() throws IOException {
+		LocalDateTime oldHistoryLimit = LocalDateTime.now().minusMonths(SeleniumConstant.maxHistoryMonth);
+		
+		deleting(globalOptionService.getReportOutputFolder(), oldHistoryLimit);
+		
+	}
+	
+	/**
+	 * delete files ONLY, will not delete folder even though empty
+	 * @param folderPath
+	 * @param deadLine
+	 * @throws IOException
+	 */
 	private void deleting(String folderPath, LocalDateTime deadLine) throws IOException {
 		
 		File targetDir = new File(folderPath);

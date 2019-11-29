@@ -12,5 +12,6 @@ public interface OldDataDeleteService {
 	void deleteOldDownload() throws IOException;
 	void deleteOldScreenshot() throws IOException;
 	void deleteOldCaptchaImg() throws IOException;
+	void deleteOldReport() throws IOException;
 
 }

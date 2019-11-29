@@ -5,6 +5,7 @@ import java.io.File;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -17,6 +18,7 @@ import demo.bingDemo.pojo.dto.BingDemoDTO;
 import demo.bingDemo.pojo.type.BingDemoCaseType;
 import demo.bingDemo.service.BingDemoService;
 import demo.clawing.service.impl.ClawingCommonService;
+import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.testCase.pojo.po.TestEvent;
 import demo.testCase.pojo.result.InsertTestEventResult;
 import demo.testCase.pojo.type.TestModuleType;
@@ -25,11 +27,19 @@ import image.pojo.result.UploadImageToCloudinaryResult;
 @Service
 public class BingDemoServiceImpl extends ClawingCommonService implements BingDemoService {
 	
-	private final String mainSavePath = "d:/home/u2/tmp/bingClawDemoReport";
-	private final String screenshotPath = mainSavePath + "/screenshotPath";
+	@Autowired
+	private SeleniumGlobalOptionService globalOptionService;
 
 	private TestEvent buildTestEvent() {
 		return buildTestEvent(TestModuleType.ATDemo, BingDemoCaseType.bingDemo.getId());
+	}
+	
+	private String getScreenshotSaveingPath() {
+		return globalOptionService.getScreenshotSavingFolder() + "/bingDemo";
+	}
+	
+	private String getReportOutputPath() {
+		return globalOptionService.getReportOutputFolder() + "/bingDemo";
 	}
 	
 	@Override
@@ -43,8 +53,12 @@ public class BingDemoServiceImpl extends ClawingCommonService implements BingDem
 	public CommonResultBBT clawing(TestEvent te) {
 		CommonResultBBT r = new CommonResultBBT();
 		JsonReportDTO dto = new JsonReportDTO();
-		dto.setOutputReportPath(mainSavePath + File.separator + te.getId());
 		
+		String screenshotPath = getScreenshotSaveingPath();
+		String reportOutputPath = getReportOutputPath();
+		
+		dto.setOutputReportPath(reportOutputPath + File.separator + te.getId());
+
 		WebDriver d = webDriverService.buildFireFoxWebDriver();
 
 		String bingUrl = "https://cn.bing.com/";
@@ -122,4 +136,5 @@ public class BingDemoServiceImpl extends ClawingCommonService implements BingDem
 		
 		return v;
 	}
+	
 }
