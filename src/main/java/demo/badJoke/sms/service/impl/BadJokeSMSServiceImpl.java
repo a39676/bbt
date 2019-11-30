@@ -17,15 +17,15 @@ import demo.badJoke.sms.pojo.type.BadJokeCaseType;
 import demo.badJoke.sms.service.BadJokeSMSService;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.pojo.result.CommonResultBBT;
-import demo.clawing.service.impl.ClawingCommonService;
 import demo.selenium.service.impl.AuxiliaryToolServiceImpl;
+import demo.selenium.service.impl.SeleniumCommonService;
 import demo.testCase.pojo.po.TestEvent;
 import demo.testCase.pojo.result.InsertTestEventResult;
 import demo.testCase.pojo.type.TestModuleType;
 import demo.testCase.service.TestEventService;
 
 @Service
-public class BadJokeSMSServiceImpl extends ClawingCommonService implements BadJokeSMSService {
+public class BadJokeSMSServiceImpl extends SeleniumCommonService implements BadJokeSMSService {
 
 //	@Autowired
 //	private SystemConstantService constantService;

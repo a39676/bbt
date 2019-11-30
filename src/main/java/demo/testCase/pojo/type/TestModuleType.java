@@ -10,6 +10,9 @@ public enum TestModuleType {
 
 	/** ATDemo */
 	ATDemo(3L, "ATDemo"),
+	
+	/** daily sign */
+	dailySign(4L, "dailySign"),
 	;
 
 	private Long id;

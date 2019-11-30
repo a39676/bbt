@@ -1,4 +1,4 @@
-package demo.clawing.service.impl;
+package demo.selenium.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -13,7 +13,7 @@ import demo.testCase.service.TestEventService;
 import image.pojo.dto.UploadImageToCloudinaryDTO;
 import image.pojo.result.UploadImageToCloudinaryResult;
 
-public abstract class ClawingCommonService extends CommonService {
+public abstract class SeleniumCommonService extends CommonService {
 
 	@Autowired
 	protected ATJsonReportService jsonReporter;
@@ -25,13 +25,15 @@ public abstract class ClawingCommonService extends CommonService {
 	protected WebDriverService webDriverService;
 	@Autowired
 	protected ScreenshotService screenshotService;
+	@Autowired
+	protected JavaScriptServiceImpl jsUtil;
 	
 	protected TestEvent buildTestEvent(TestModuleType t, Long caseId) {
 		if(t == null || caseId == null) {
 			return null;
 		}
 		TestEvent te = new TestEvent();
-		te.setCaseId(t.getId());
+		te.setCaseId(caseId);
 		te.setModuleId(t.getId());
 		te.setId(snowFlake.getNextId());
 		te.setEventName(t.getEventName());

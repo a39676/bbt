@@ -11,7 +11,6 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import demo.clawing.service.impl.ClawingCommonService;
 import demo.image.mapper.ImageStoreMapper;
 import demo.image.pojo.po.ImageStore;
 import demo.image.pojo.type.ImageType;
@@ -20,9 +19,10 @@ import demo.movie.mapper.MovieMagnetUrlMapper;
 import demo.movie.pojo.constant.MovieClawingConstant;
 import demo.movie.pojo.po.MovieImage;
 import demo.movie.pojo.po.MovieMagnetUrl;
+import demo.selenium.service.impl.SeleniumCommonService;
 import movie.pojo.type.MovieRegionType;
 
-public abstract class MovieClawingCommonService extends ClawingCommonService {
+public abstract class MovieClawingCommonService extends SeleniumCommonService {
 
 	protected final String mainSavePath = "/home/u2/movieClawing";
 	protected final String introductionSavePath = mainSavePath + "/introduction";

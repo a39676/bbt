@@ -17,15 +17,15 @@ import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.bingDemo.pojo.dto.BingDemoDTO;
 import demo.bingDemo.pojo.type.BingDemoCaseType;
 import demo.bingDemo.service.BingDemoService;
-import demo.clawing.service.impl.ClawingCommonService;
 import demo.selenium.service.SeleniumGlobalOptionService;
+import demo.selenium.service.impl.SeleniumCommonService;
 import demo.testCase.pojo.po.TestEvent;
 import demo.testCase.pojo.result.InsertTestEventResult;
 import demo.testCase.pojo.type.TestModuleType;
 import image.pojo.result.UploadImageToCloudinaryResult;
 
 @Service
-public class BingDemoServiceImpl extends ClawingCommonService implements BingDemoService {
+public class BingDemoServiceImpl extends SeleniumCommonService implements BingDemoService {
 	
 	@Autowired
 	private SeleniumGlobalOptionService globalOptionService;
