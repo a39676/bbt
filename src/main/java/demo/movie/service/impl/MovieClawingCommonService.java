@@ -19,6 +19,8 @@ import demo.movie.mapper.MovieMagnetUrlMapper;
 import demo.movie.pojo.constant.MovieClawingConstant;
 import demo.movie.pojo.po.MovieImage;
 import demo.movie.pojo.po.MovieMagnetUrl;
+import demo.movie.service.DoubanClawingService;
+import demo.movie.service.MovieClawingOptionService;
 import demo.selenium.service.impl.SeleniumCommonService;
 import movie.pojo.type.MovieRegionType;
 
@@ -33,6 +35,10 @@ public abstract class MovieClawingCommonService extends SeleniumCommonService {
 	protected MovieImageMapper movieImageMapper;
 	@Autowired
 	private MovieMagnetUrlMapper magnetUrlMapper;
+	@Autowired
+	protected MovieClawingOptionService optionService;
+	@Autowired
+	protected DoubanClawingService doubanService;
 	
 	
 	protected String getMangetUrlFromTorrent(String path) {

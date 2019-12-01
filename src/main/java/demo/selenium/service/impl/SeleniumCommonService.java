@@ -6,6 +6,7 @@ import at.service.ATJsonReportService;
 import at.service.ScreenshotService;
 import demo.baseCommon.service.CommonService;
 import demo.image.ImageInteractionService;
+import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.WebDriverService;
 import demo.testCase.pojo.po.TestEvent;
 import demo.testCase.pojo.type.TestModuleType;
@@ -27,6 +28,8 @@ public abstract class SeleniumCommonService extends CommonService {
 	protected ScreenshotService screenshotService;
 	@Autowired
 	protected JavaScriptServiceImpl jsUtil;
+	@Autowired
+	protected SeleniumGlobalOptionService globalOptionService;
 	
 	protected TestEvent buildTestEvent(TestModuleType t, Long caseId) {
 		if(t == null || caseId == null) {

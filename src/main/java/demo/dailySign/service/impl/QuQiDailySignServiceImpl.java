@@ -81,18 +81,21 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
 			}
+			
+			Thread.sleep(800L);
 
 			x.start("a").addAttribute("webix_l_id", "personal_center_menu")
 			.findChild("span").addAttribute("class", "personal-arrow-down");
 			WebElement personMenuArrowDown = d.findElement(By.xpath(x.getXpath()));
 			personMenuArrowDown.click();
 			
+			Thread.sleep(800L);
+			
 			x.start("div").addAttribute("view_id", "$submenu1")
 			.findChild("div").addAttribute("class", "webix_win_content")
 			.findChild("div").addAttribute("class", "webix_win_body")
 			.findChild("div").addAttribute("class", "webix_scroll_cont")
-//			TODO 最后这个属性名, 应该有变
-			.findChild("a").addAttribute("webix_l_id", "check_in_done");
+			.findChild("a").addAttribute("webix_l_id", "check_in");
 			WebElement dailySignButton = d.findElement(By.xpath(x.getXpath()));
 			dailySignButton.click();
 			

@@ -9,26 +9,16 @@ import org.springframework.stereotype.Component;
 import demo.movie.service.DyttClawingService;
 import demo.movie.service.HomeFeiClawingService;
 import demo.movie.service.MovieManagerService;
-import demo.testCase.service.impl.TestEventServiceImpl;
 
 @Component
-public class MovieTaskServiceImpl  {
+public class MovieTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 	
-	@Autowired
-	private TestEventServiceImpl testEventService;
 	@Autowired
 	private HomeFeiClawingService homeFeiClawingService;
 	@Autowired
 	private DyttClawingService dyttClawingService;
-	
 	@Autowired
 	private MovieManagerService movieManagerService;
-	
-	
-	@Scheduled(cron="0 */5 * * * ?")
-	public void findTestEventAndRun() {
-		testEventService.findTestEventAndRun();
-	}
 	
 	@Scheduled(cron="43 32 02 * * *") 
 	public void insertHomeFeiEvent1() {

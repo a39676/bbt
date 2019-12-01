@@ -10,6 +10,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.BaseResultType;
+import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.pojo.param.PageParam;
 import demo.config.costom_component.SnowFlake;
 import numericHandel.NumericUtilCustom;
@@ -24,6 +25,8 @@ public abstract class CommonService {
 	@Autowired
 	protected RedisTemplate<String, String> redisTemplate;
 	
+	@Autowired
+	protected SystemConstantService constantService;
 	@Autowired
 	protected NumericUtilCustom numericUtil;
 

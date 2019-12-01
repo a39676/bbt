@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import at.pojo.bo.XpathBuilderBO;
 import demo.base.system.pojo.bo.SystemConstantStore;
-import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.movie.mapper.MovieInfoMapper;
 import demo.movie.mapper.MovieIntroductionMapper;
@@ -34,16 +33,10 @@ import demo.movie.pojo.po.MovieMagnetUrl;
 import demo.movie.pojo.po.MovieRecord;
 import demo.movie.pojo.result.DoubanSubClawingResult;
 import demo.movie.pojo.type.MovieClawingCaseType;
-import demo.movie.service.DoubanClawingService;
 import demo.movie.service.HomeFeiClawingService;
-import demo.movie.service.MovieClawingOptionService;
-import demo.selenium.service.SeleniumGlobalOptionService;
-import demo.selenium.service.WebDriverService;
-import demo.selenium.service.impl.JavaScriptServiceImpl;
 import demo.testCase.pojo.po.TestEvent;
 import demo.testCase.pojo.result.InsertTestEventResult;
 import demo.testCase.pojo.type.TestModuleType;
-import demo.testCase.service.TestEventService;
 import demo.tool.service.ComplexToolService;
 import httpHandel.HttpUtil;
 import ioHandle.FileUtilCustom;
@@ -60,22 +53,6 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 	@Autowired
 	private ComplexToolService complexToolService;
 	
-	@Autowired
-	private TestEventService testEventService;
-	@Autowired
-	private DoubanClawingService doubanService;
-	
-	@Autowired
-	private SystemConstantService constantService;
-	@Autowired
-	private SeleniumGlobalOptionService globalOptionService;
-	@Autowired
-	private WebDriverService webDriverService;
-	@Autowired
-	private MovieClawingOptionService optionService;
-	@Autowired
-	private JavaScriptServiceImpl jsUtil;
-
 	@Autowired
 	private MovieRecordMapper recordMapper;
 	@Autowired

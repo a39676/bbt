@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import demo.badJoke.sms.service.BadJokeCasePrefixService;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.bingDemo.service.BingDemoService;
+import demo.dailySign.service.QuQiDailySignService;
 import demo.movie.service.MovieClawingCasePrefixService;
 import demo.testCase.mapper.TestEventMapper;
 import demo.testCase.pojo.bo.TestEventBO;
@@ -33,6 +34,8 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	private BadJokeCasePrefixService badJokeCasePrefixService;
 	@Autowired
 	private BingDemoService bingDemoService;
+	@Autowired
+	private QuQiDailySignService quQiDailySignService;
 	
 	@Override
 	public InsertTestEventResult insertTestEvent(TestEvent po) {
@@ -90,6 +93,8 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 			return badJokeCasePrefixService.runSubEvent(te);
 		} else if (TestModuleType.ATDemo.getId().equals(moduleId)) {
 			return bingDemoService.clawing(te);
+		} else if (TestModuleType.dailySign.getId().equals(moduleId)) {
+			return quQiDailySignService.clawing(te);
 		}
 		return null;
 	}

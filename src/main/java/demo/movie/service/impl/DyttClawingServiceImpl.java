@@ -26,7 +26,6 @@ import demo.movie.pojo.po.MovieIntroduction;
 import demo.movie.pojo.po.MovieRecord;
 import demo.movie.pojo.result.DoubanSubClawingResult;
 import demo.movie.pojo.type.MovieClawingCaseType;
-import demo.movie.service.DoubanClawingService;
 import demo.movie.service.DyttClawingService;
 import demo.testCase.pojo.po.TestEvent;
 import demo.testCase.pojo.result.InsertTestEventResult;
@@ -38,12 +37,6 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 
 	@Autowired
 	private FileUtilCustom iou;
-
-	@Autowired
-	private DoubanClawingService doubanService;
-//	@Autowired
-//	private JavaScriptService jsUtil;
-
 	
 	@Autowired
 	private MovieInfoMapper infoMapper;
