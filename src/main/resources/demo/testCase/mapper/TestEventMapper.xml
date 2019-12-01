@@ -391,4 +391,36 @@
       is_delete = false
       and start_time is null
   </select>
+
+  <select id="findTestEventPageByCondition" resultMap="BaseResultMap">
+    select
+      *
+    from
+      test_event
+    <where>
+      is_delete = false
+      and report_path is not null
+      <if test="moduleId != null">
+        and module_id = #{moduleId}
+      </if>
+      <if test="id != null">
+        and id = #{id}
+      </if>
+      <if test="eventName != null">
+        and event_name like concat('%', #{eventName}, '%')
+      </if>
+      <if test="reportPath != null">
+        and report_path = #{reportPath}
+      </if>
+      <if test="startTime != null">
+        and start_time &gt;= #{startTime}
+      </if>
+    </where>
+    <if test="limit != null">
+      limit = #{limit}
+    </if>
+    <if test="limit == null">
+      limit = 50
+    </if>
+  </select>
 </mapper>
