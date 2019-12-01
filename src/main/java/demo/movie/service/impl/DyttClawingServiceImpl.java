@@ -49,7 +49,8 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 	private String newMovie = mainUrl + "/html/gndy/dyzz/index.html";
 
 	private TestEvent buildTestEvent() {
-		return buildTestEvent(TestModuleType.movieClawing, MovieClawingCaseType.dytt.getId());
+		MovieClawingCaseType t = MovieClawingCaseType.dytt;
+		return buildTestEvent(TestModuleType.movieClawing, t.getId(), t.getEventName());
 	}
 	
 	@Override

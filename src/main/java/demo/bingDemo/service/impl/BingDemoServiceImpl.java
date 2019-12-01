@@ -27,19 +27,22 @@ import image.pojo.result.UploadImageToCloudinaryResult;
 @Service
 public class BingDemoServiceImpl extends SeleniumCommonService implements BingDemoService {
 	
+	private String eventName = "bingDemo";
+	
 	@Autowired
 	private SeleniumGlobalOptionService globalOptionService;
 
 	private TestEvent buildTestEvent() {
-		return buildTestEvent(TestModuleType.ATDemo, BingDemoCaseType.bingDemo.getId());
+		BingDemoCaseType t = BingDemoCaseType.bingDemo;
+		return buildTestEvent(TestModuleType.ATDemo, t.getId(), t.getEventName());
 	}
 	
 	private String getScreenshotSaveingPath() {
-		return globalOptionService.getScreenshotSavingFolder() + "/bingDemo";
+		return globalOptionService.getScreenshotSavingFolder() + File.separator + eventName;
 	}
 	
 	private String getReportOutputPath() {
-		return globalOptionService.getReportOutputFolder() + "/bingDemo";
+		return globalOptionService.getReportOutputFolder() + File.separator + eventName;
 	}
 	
 	@Override

@@ -31,7 +31,7 @@ public abstract class SeleniumCommonService extends CommonService {
 	@Autowired
 	protected SeleniumGlobalOptionService globalOptionService;
 	
-	protected TestEvent buildTestEvent(TestModuleType t, Long caseId) {
+	protected TestEvent buildTestEvent(TestModuleType t, Long caseId, String eventName) {
 		if(t == null || caseId == null) {
 			return null;
 		}
@@ -39,7 +39,7 @@ public abstract class SeleniumCommonService extends CommonService {
 		te.setCaseId(caseId);
 		te.setModuleId(t.getId());
 		te.setId(snowFlake.getNextId());
-		te.setEventName(t.getEventName());
+		te.setEventName(eventName);
 		return te;
 	}
 	

@@ -21,7 +21,8 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 	private String mainUrl = "https://www.quqi.com/";
 	
 	private TestEvent buildTestEvent() {
-		return buildTestEvent(TestModuleType.dailySign, DailySignCaseType.quqi.getId());
+		DailySignCaseType t = DailySignCaseType.quqi;
+		return buildTestEvent(TestModuleType.dailySign, t.getId(), t.getEventName());
 	}
 	
 	@Override

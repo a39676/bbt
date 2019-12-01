@@ -69,11 +69,13 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 
 	
 	private TestEvent collectionTestEvent() {
-		return buildTestEvent(TestModuleType.movieClawing, MovieClawingCaseType.homeFeiCollection.getId());
+		MovieClawingCaseType t = MovieClawingCaseType.homeFeiCollection;
+		return buildTestEvent(TestModuleType.movieClawing, t.getId(), t.getEventName());
 	}
 	
 	private TestEvent downloadTestEvent() {
-		return buildTestEvent(TestModuleType.movieClawing, MovieClawingCaseType.homeFeiDownload.getId());
+		MovieClawingCaseType t = MovieClawingCaseType.homeFeiDownload;
+		return buildTestEvent(TestModuleType.movieClawing, t.getId(), t.getEventName());
 	}
 	
 	@Override

@@ -54,7 +54,8 @@ public class BadJokeSMSServiceImpl extends SeleniumCommonService implements BadJ
 	private int maxCaptchaCount = 15;
 	
 	private TestEvent buildTestEvent() {
-		return buildTestEvent(TestModuleType.badJoke, BadJokeCaseType.badJokeSms.getId());
+		BadJokeCaseType t = BadJokeCaseType.badJokeSms;
+		return buildTestEvent(TestModuleType.badJoke, t.getId(), t.getEventName());
 	}
 	
 	public InsertTestEventResult insertBadJokeSMSEvent() {
