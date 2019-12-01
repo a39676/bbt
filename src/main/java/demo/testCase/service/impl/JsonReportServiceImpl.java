@@ -20,9 +20,11 @@ public class JsonReportServiceImpl extends CommonService implements JsonReportSe
 	private TestEventMapper eventMapper;
 	
 	public List<TestEvent> findReportsByTestEvent(TestEvent te) {
+//		TODO
 		TestEventExample teExample = new TestEventExample();
 		Criteria c = teExample.createCriteria();
 		c.andIsDeleteEqualTo(false);
+		c.andReportPathIsNotNull();
 		if(te.getModuleId() != null) {
 			c.andModuleIdEqualTo(te.getModuleId());
 		}
