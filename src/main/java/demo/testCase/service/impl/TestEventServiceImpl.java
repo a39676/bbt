@@ -8,9 +8,8 @@ import org.springframework.stereotype.Service;
 import demo.badJoke.sms.service.BadJokeCasePrefixService;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.bingDemo.service.BingDemoService;
-import demo.dailySign.service.QuQiDailySignService;
+import demo.dailySign.service.DailySignPrefixService;
 import demo.movie.service.MovieClawingCasePrefixService;
-import demo.testCase.mapper.TestEventMapper;
 import demo.testCase.pojo.bo.TestEventBO;
 import demo.testCase.pojo.constant.TestEventOptionConstant;
 import demo.testCase.pojo.po.TestCase;
@@ -25,8 +24,6 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 
 	@Autowired
 	private TestCaseService caseService;
-	@Autowired
-	private TestEventMapper eventMapper;
 	
 	@Autowired
 	private MovieClawingCasePrefixService movieClawingCasePrefixService;
@@ -35,7 +32,7 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	@Autowired
 	private BingDemoService bingDemoService;
 	@Autowired
-	private QuQiDailySignService quQiDailySignService;
+	private DailySignPrefixService dailySignPrefixService;
 	
 	@Override
 	public InsertTestEventResult insertTestEvent(TestEvent po) {
@@ -94,7 +91,7 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		} else if (TestModuleType.ATDemo.getId().equals(moduleId)) {
 			return bingDemoService.clawing(te);
 		} else if (TestModuleType.dailySign.getId().equals(moduleId)) {
-			return quQiDailySignService.clawing(te);
+			return dailySignPrefixService.runSubEvent(te);
 		}
 		return null;
 	}
@@ -121,5 +118,14 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	@Override
 	public int countWaitingEvent() {
 		return eventMapper.countWaitingEvent();
+	}
+
+	@Override
+	public int updateTestEventReportPath(TestEvent te, String reportPath) {
+		if(te.getId() == null) {
+			return 0;
+		}
+		te.setReportPath(reportPath);
+		return eventMapper.updateByPrimaryKeySelective(te);
 	}
 }

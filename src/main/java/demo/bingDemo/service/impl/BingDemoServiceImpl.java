@@ -55,13 +55,13 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 		JsonReportDTO dto = new JsonReportDTO();
 		
 		String screenshotPath = getScreenshotSaveingPath();
-		String reportOutputPath = getReportOutputPath();
+		String reportOutputFolderPath = getReportOutputPath();
 		
-		dto.setOutputReportPath(reportOutputPath + File.separator + te.getId());
+		dto.setOutputReportPath(reportOutputFolderPath + File.separator + te.getId());
 
 		WebDriver d = webDriverService.buildFireFoxWebDriver();
 
-		String bingUrl = "https://cn.bing.com/";
+		String bingUrl = "https://cn.bing.com/?FORM=BEHPTB";
 		
 		try {
 			d.get(bingUrl);
@@ -74,7 +74,7 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 			screenshotDTO.setDriver(d);
 			ScreenshotSaveResult screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
 			
-			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath().replaceAll("\\\\", "/"));
+			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
 			jsonReporter.appendImage(dto, uploadImgResult.getImgUrl());
 			
 			x.start("input").addAttribute("id", "sb_form_q");
@@ -86,17 +86,17 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 			jsonReporter.appendContent(dto, "输入关键词: " + te.getRemark());
 			
 			screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
-			uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath().replaceAll("\\", "/"));
+			uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
 			jsonReporter.appendImage(dto, uploadImgResult.getImgUrl());
 			
-			x.start("input").addAttribute("id", "sb_form_go");
+			x.start("div").addAttribute("id", "sb_go_par");
 			WebElement searchButton = d.findElement(By.xpath(x.getXpath()));
 			searchButton.click();
 			
 			jsonReporter.appendContent(dto, "点击搜索");
 			
 			screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
-			uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath().replaceAll("\\", "/"));
+			uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
 			jsonReporter.appendImage(dto, uploadImgResult.getImgUrl());
 			
 			jsonReporter.appendContent(dto, "完成");
@@ -110,7 +110,10 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 			if (d != null) {
 				d.quit();
 			}
-			jsonReporter.outputReport(dto);
+			String reportOutputPath = dto.getOutputReportPath() + File.separatorChar + dto.getReportFileName() + ".json";
+			if(jsonReporter.outputReport(dto, reportOutputPath)) {
+				updateTestEventReportPath(te, reportOutputPath);
+			}
 		}
 		
 		return r;

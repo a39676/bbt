@@ -62,21 +62,6 @@ public abstract class TestEventCommonService extends CommonService {
 		return eventMapper.updateByPrimaryKeySelective(te);
 	}
 	
-//	protected int endEventSuccess(TestEvent te, String report) {
-//		return endEvent(te, true, report);
-//	}
-//	
-//	protected int endEventSuccess(TestEvent te) {
-//		return endEvent(te, true, null);
-//	}
-//	
-//	protected int endEventFail(TestEvent te, String report) {
-//		return endEvent(te, false, report);
-//	}
-//	
-//	protected int endEventFail(TestEvent te) {
-//		return endEvent(te, false, null);
-//	}
 	protected int endEvent(TestEvent te, boolean successFlag) {
 		return endEvent(te, successFlag, null);
 	}

@@ -49,4 +49,8 @@ public abstract class SeleniumCommonService extends CommonService {
 		UploadImageToCloudinaryResult uploadImgResult = imageInteractionService.uploadImageToCloudinary(uploadImgDTO);
 		return uploadImgResult;
 	}
+	
+	protected int updateTestEventReportPath(TestEvent te, String reportPath) {
+		return testEventService.updateTestEventReportPath(te, reportPath);
+	}
 }

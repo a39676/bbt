@@ -20,4 +20,6 @@ public interface TestEventService {
 
 	int countWaitingEvent();
 
+	int updateTestEventReportPath(TestEvent te, String reportPath);
+
 }
