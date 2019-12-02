@@ -158,8 +158,9 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 			
 //			WebElement dailySignButton = d.findElement(By.linkText("签到赚经验值"));
 			if(dailySignButton != null) {
-//				dailySignButton.click();
+				dailySignButton.click();
 				r.setIsSuccess();
+				jsonReporter.appendContent(reportDTO, "sign success");
 			}
 			
 			String reportOutputPath = reportDTO.getOutputReportPath() + File.separatorChar + te.getId() + ".json";
