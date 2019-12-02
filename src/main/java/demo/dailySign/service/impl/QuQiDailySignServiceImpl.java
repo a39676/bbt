@@ -61,6 +61,8 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 		try {
 			d.get(mainUrl);
 			
+			jsonReporter.appendContent(reportDTO, "get");
+			
 			XpathBuilderBO x = new XpathBuilderBO();
 			
 			x.start("div").addAttribute("class", "pure-menu pure-menu-horizontal")
@@ -72,9 +74,12 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 			
 			try {
 				loginPageButton.click();
+				jsonReporter.appendContent(reportDTO, "click loginPageButton");
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
 			}
+			
+			jsonReporter.appendContent(reportDTO, "find login form");
 			
 			x.start("form").addAttribute("id", "phone-password-login-form")
 			.findChild("div").addAttribute("class", "form-item")
@@ -86,6 +91,8 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 			phoneInput.clear();
 			phoneInput.sendKeys("18022379435");
 			
+			jsonReporter.appendContent(reportDTO, "input username");
+			
 			x.start("form").addAttribute("id", "phone-password-login-form")
 			.findChild("div").addAttribute("class", "form-item")
 			.findChild("div").addAttribute("class", "form-field")
@@ -96,13 +103,19 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 			pwdInput.clear();
 			pwdInput.sendKeys("GJ1621828228");
 			
+			jsonReporter.appendContent(reportDTO, "input pwd");
+			
 			x.start("button").addAttribute("id", "btn-signup");
 			WebElement loginButton = d.findElement(By.xpath(x.getXpath()));
+			
+			jsonReporter.appendContent(reportDTO, "find login button");
 			try {
 				loginButton.click();
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
 			}
+			
+			jsonReporter.appendContent(reportDTO, "click login button");
 			
 			Thread.sleep(800L);
 
@@ -110,6 +123,8 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 			.findChild("span").addAttribute("class", "personal-arrow-down");
 			WebElement personMenuArrowDown = d.findElement(By.xpath(x.getXpath()));
 			personMenuArrowDown.click();
+			
+			jsonReporter.appendContent(reportDTO, "arrow down click");
 			
 			Thread.sleep(800L);
 			
@@ -122,6 +137,8 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 				.findChild("div").addAttribute("class", "webix_scroll_cont")
 				.findChild("a").addAttribute("webix_l_id", "check_in");
 				dailySignButton = d.findElement(By.xpath(x.getXpath()));
+				
+				jsonReporter.appendContent(reportDTO, "found sign button");
 			} catch (Exception e) {
 				String htmlStr = jsUtil.getHtmlSource(d);
 				TakeScreenshotSaveDTO screenshotDTO = new TakeScreenshotSaveDTO();
