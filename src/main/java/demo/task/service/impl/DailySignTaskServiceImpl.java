@@ -13,7 +13,7 @@ public class DailySignTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 	private QuQiDailySignService quQiDailySignService;
 	
 	@Scheduled(cron="03 02 01 * * *") 
-	public void insertHomeFeiEvent1() {
+	public void insertQuQiDailySign() {
 		quQiDailySignService.insertclawingEvent();
 	}
 	

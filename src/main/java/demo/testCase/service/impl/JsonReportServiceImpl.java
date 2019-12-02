@@ -1,16 +1,16 @@
 package demo.testCase.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.baseCommon.service.CommonService;
 import demo.testCase.mapper.TestEventMapper;
+import demo.testCase.pojo.bo.TestReportBO;
+import demo.testCase.pojo.dto.FindTestEventPageByConditionDTO;
 import demo.testCase.pojo.po.TestEvent;
-import demo.testCase.pojo.po.TestEventExample;
-import demo.testCase.pojo.po.TestEventExample.Criteria;
 import demo.testCase.service.JsonReportService;
 
 @Service
@@ -19,25 +19,33 @@ public class JsonReportServiceImpl extends CommonService implements JsonReportSe
 	@Autowired
 	private TestEventMapper eventMapper;
 	
-	public List<TestEvent> findReportsByTestEvent(TestEvent te) {
-//		TODO
-		TestEventExample teExample = new TestEventExample();
-		Criteria c = teExample.createCriteria();
-		c.andIsDeleteEqualTo(false);
-		c.andReportPathIsNotNull();
-		if(te.getModuleId() != null) {
-			c.andModuleIdEqualTo(te.getModuleId());
-		}
-		if(te.getId() != null) {
-			c.andIdEqualTo(te.getId());
-		}
-		if(StringUtils.isNotBlank(te.getEventName())) {
-			c.andEventNameLike(te.getEventName());
-		}
-		if(StringUtils.isNotBlank(te.getReportPath())) {
-			c.andReportPathEqualTo(te.getReportPath());
+	@Override
+	public List<TestReportBO> findReportsByTestEvent(FindTestEventPageByConditionDTO dto) {
+		
+		List<TestEvent> poList = eventMapper.findTestEventPageByCondition(dto);
+		List<TestReportBO> boList = new ArrayList<>();
+		for(TestEvent i : poList) {
+			boList.add(buildBOByPO(i));
 		}
 		
-		return eventMapper.selectByExample(teExample);
+		return boList;
 	}
+	
+	private TestReportBO buildBOByPO(TestEvent te) {
+		TestReportBO bo = new TestReportBO();
+		bo.setCaseId(te.getCaseId());
+		bo.setCreateTime(te.getCreateTime());
+		bo.setEndTime(te.getEndTime());
+		bo.setEventName(te.getEventName());
+		bo.setId(te.getId());
+		bo.setIsPass(te.getIsPass());
+		bo.setModuleId(te.getModuleId());
+		bo.setProjectId(te.getProjectId());
+		bo.setReportPath(te.getReportPath());
+		bo.setStartTime(te.getStartTime());
+		
+		return bo;
+	}
+
+	
 }

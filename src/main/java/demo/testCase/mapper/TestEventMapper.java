@@ -1,9 +1,12 @@
 package demo.testCase.mapper;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import demo.testCase.pojo.dto.FindTestEventPageByConditionDTO;
 import demo.testCase.pojo.po.TestEvent;
 import demo.testCase.pojo.po.TestEventExample;
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
 public interface TestEventMapper {
     long countByExample(TestEventExample example);
@@ -40,4 +43,6 @@ public interface TestEventMapper {
     int fixMovieClawingTestEventStatus();
     
     List<TestEvent> findTestEventNotRunYet();
+    
+    List<TestEvent> findTestEventPageByCondition(FindTestEventPageByConditionDTO dto);
 }
