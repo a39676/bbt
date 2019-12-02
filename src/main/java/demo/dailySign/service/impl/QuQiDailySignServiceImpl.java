@@ -34,11 +34,15 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 	}
 	
 	private String getScreenshotSaveingPath() {
-		return globalOptionService.getScreenshotSavingFolder() + File.separator + eventName;
+		String path = globalOptionService.getScreenshotSavingFolder() + File.separator + eventName;
+		globalOptionService.checkFolderExists(path);
+		return path;
 	}
 	
 	private String getReportOutputPath() {
-		return globalOptionService.getReportOutputFolder() + File.separator + eventName;
+		String path = globalOptionService.getReportOutputFolder() + File.separator + eventName;
+		globalOptionService.checkFolderExists(path);
+		return path;
 	}
 	
 	@Override
@@ -139,6 +143,7 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 				dailySignButton = d.findElement(By.xpath(x.getXpath()));
 				
 				jsonReporter.appendContent(reportDTO, "found sign button");
+				
 			} catch (Exception e) {
 				String htmlStr = jsUtil.getHtmlSource(d);
 				TakeScreenshotSaveDTO screenshotDTO = new TakeScreenshotSaveDTO();
@@ -148,13 +153,18 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 				UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
 				jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
 				jsonReporter.appendContent(reportDTO, htmlStr);
-				jsonReporter.outputReport(reportDTO, reportOutputFolderPath);
+				
 			}
 			
 //			WebElement dailySignButton = d.findElement(By.linkText("签到赚经验值"));
 			if(dailySignButton != null) {
-				dailySignButton.click();
+//				dailySignButton.click();
 				r.setIsSuccess();
+			}
+			
+			String reportOutputPath = reportDTO.getOutputReportPath() + File.separatorChar + reportDTO.getReportFileName() + ".json";
+			if(jsonReporter.outputReport(reportDTO, reportOutputPath)) {
+				updateTestEventReportPath(te, reportOutputPath);
 			}
 
 		} catch (Exception e) {
