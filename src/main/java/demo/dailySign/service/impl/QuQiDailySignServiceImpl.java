@@ -115,7 +115,6 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 			
 			jsonReporter.appendContent(reportDTO, "input pwd");
 			
-//			x.start("button").addAttribute("id", "btn-signup");
 			WebElement loginButton = d.findElement(By.id("btn-signup"));
 			
 			jsonReporter.appendContent(reportDTO, "find login button");
@@ -140,7 +139,6 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 			
 			Thread.sleep(3000L);
 			
-			
 			WebElement dailySignButton = null;
 			x.start("div").addAttribute("view_id", "$submenu1")
 			.findChild("div").addAttribute("class", "webix_win_content")
@@ -151,7 +149,6 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 			
 			jsonReporter.appendContent(reportDTO, "found sign button");
 			
-//			WebElement dailySignButton = d.findElement(By.linkText("签到赚经验值"));
 			if(dailySignButton != null) {
 				dailySignButton.click();
 				r.setIsSuccess();
@@ -169,14 +166,16 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
 			jsonReporter.appendContent(reportDTO, htmlStr);
 			
+			if(jsonReporter.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
+				updateTestEventReportPath(te, reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json");
+			}
+			
 		} finally {
 			if (d != null) {
 				d.quit();
 			}
 			
-			if(jsonReporter.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
-				updateTestEventReportPath(te, reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json");
-			}
+			
 		}
 		
 		return r;
