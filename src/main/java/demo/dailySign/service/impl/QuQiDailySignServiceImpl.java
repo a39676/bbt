@@ -66,11 +66,9 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 			try {
 				d.get(mainUrl);
 				jsonReporter.appendContent(reportDTO, "get");
-				System.out.println("get");
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
 				jsonReporter.appendContent(reportDTO, "get but timeout");
-				System.out.println("get but timeout");
 			}
 			
 			
@@ -87,13 +85,11 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 			try {
 				loginPageButton.click();
 				jsonReporter.appendContent(reportDTO, "click loginPageButton");
-				System.out.println("click loginPageButton");
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
 			}
 			
 			jsonReporter.appendContent(reportDTO, "find login form");
-			System.out.println("find login form");
 			
 			x.start("form").addAttribute("id", "phone-password-login-form")
 			.findChild("div").addAttribute("class", "form-item")
@@ -106,7 +102,6 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 			phoneInput.sendKeys("18022379435");
 			
 			jsonReporter.appendContent(reportDTO, "input username");
-			System.out.println("input username");
 			
 			x.start("form").addAttribute("id", "phone-password-login-form")
 			.findChild("div").addAttribute("class", "form-item")
@@ -119,13 +114,11 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 			pwdInput.sendKeys("GJ1621828228");
 			
 			jsonReporter.appendContent(reportDTO, "input pwd");
-			System.out.println("input pwd");
 			
 			x.start("button").addAttribute("id", "btn-signup");
 			WebElement loginButton = d.findElement(By.xpath(x.getXpath()));
 			
 			jsonReporter.appendContent(reportDTO, "find login button");
-			System.out.println("find login button");
 			try {
 				loginButton.click();
 			} catch (TimeoutException e) {
@@ -133,7 +126,6 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 			}
 			
 			jsonReporter.appendContent(reportDTO, "click login button");
-			System.out.println("click login button");
 			
 			Thread.sleep(800L);
 
@@ -143,57 +135,37 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 			personMenuArrowDown.click();
 			
 			jsonReporter.appendContent(reportDTO, "arrow down click");
-			System.out.println("arrow down click");
 			
 			Thread.sleep(800L);
 			
 			
 			WebElement dailySignButton = null;
-			try {
-				x.start("div").addAttribute("view_id", "$submenu1")
-				.findChild("div").addAttribute("class", "webix_win_content")
-				.findChild("div").addAttribute("class", "webix_win_body")
-				.findChild("div").addAttribute("class", "webix_scroll_cont")
-				.findChild("a").addAttribute("webix_l_id", "check_in");
-				dailySignButton = d.findElement(By.xpath(x.getXpath()));
-				
-				jsonReporter.appendContent(reportDTO, "found sign button");
-				System.out.println("found sign button");
-				
-			} catch (Exception e) {
-				String htmlStr = jsUtil.getHtmlSource(d);
-				TakeScreenshotSaveDTO screenshotDTO = new TakeScreenshotSaveDTO();
-				screenshotDTO.setDriver(d);
-				ScreenshotSaveResult screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
-				
-				UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
-				jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
-				System.out.println(uploadImgResult.getImgUrl());
-				jsonReporter.appendContent(reportDTO, htmlStr);
-				System.out.println(htmlStr);
-				
-			}
+			x.start("div").addAttribute("view_id", "$submenu1")
+			.findChild("div").addAttribute("class", "webix_win_content")
+			.findChild("div").addAttribute("class", "webix_win_body")
+			.findChild("div").addAttribute("class", "webix_scroll_cont")
+			.findChild("a").addAttribute("webix_l_id", "check_in");
+			dailySignButton = d.findElement(By.xpath(x.getXpath()));
+			
+			jsonReporter.appendContent(reportDTO, "found sign button");
 			
 //			WebElement dailySignButton = d.findElement(By.linkText("签到赚经验值"));
 			if(dailySignButton != null) {
 				dailySignButton.click();
 				r.setIsSuccess();
 				jsonReporter.appendContent(reportDTO, "sign success");
-				System.out.println("sign success");
 			}
 			
-			System.out.println(reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json");
-			System.out.println(reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json");
-			System.out.println(reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json");
-			System.out.println(reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json");
-			System.out.println(reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json");
-			System.out.println(reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json");
-			System.out.println(reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json");
-			System.out.println(reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json");
-			System.out.println(reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json");
-			System.out.println(reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json");
 			
 		} catch (Exception e) {
+			String htmlStr = jsUtil.getHtmlSource(d);
+			TakeScreenshotSaveDTO screenshotDTO = new TakeScreenshotSaveDTO();
+			screenshotDTO.setDriver(d);
+			ScreenshotSaveResult screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
+			
+			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
+			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
+			jsonReporter.appendContent(reportDTO, htmlStr);
 			
 		} finally {
 			if (d != null) {
