@@ -163,7 +163,17 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 				jsonReporter.appendContent(reportDTO, "sign success");
 			}
 			
-			String reportOutputPath = reportDTO.getOutputReportPath() + File.separatorChar + te.getId() + ".json";
+			String reportOutputPath = reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json";
+			System.out.println(reportOutputPath);
+			System.out.println(reportOutputPath);
+			System.out.println(reportOutputPath);
+			System.out.println(reportOutputPath);
+			System.out.println(reportOutputPath);
+			System.out.println(reportOutputPath);
+			System.out.println(reportOutputPath);
+			System.out.println(reportOutputPath);
+			System.out.println(reportOutputPath);
+			System.out.println(reportOutputPath);
 			if(jsonReporter.outputReport(reportDTO, reportOutputPath)) {
 				updateTestEventReportPath(te, reportOutputPath);
 			}
