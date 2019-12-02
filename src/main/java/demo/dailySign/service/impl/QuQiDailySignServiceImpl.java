@@ -1,5 +1,7 @@
 package demo.dailySign.service.impl;
 
+import java.io.File;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -7,6 +9,9 @@ import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 
 import at.pojo.bo.XpathBuilderBO;
+import at.pojo.dto.JsonReportDTO;
+import at.pojo.dto.TakeScreenshotSaveDTO;
+import at.pojo.result.ScreenshotSaveResult;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.dailySign.pojo.type.DailySignCaseType;
 import demo.dailySign.service.QuQiDailySignService;
@@ -14,15 +19,26 @@ import demo.selenium.service.impl.SeleniumCommonService;
 import demo.testCase.pojo.po.TestEvent;
 import demo.testCase.pojo.result.InsertTestEventResult;
 import demo.testCase.pojo.type.TestModuleType;
+import image.pojo.result.UploadImageToCloudinaryResult;
 
 @Service
 public class QuQiDailySignServiceImpl extends SeleniumCommonService implements QuQiDailySignService {
 
 	private String mainUrl = "https://www.quqi.com/";
 	
+	private String eventName = "quqiDailySign";
+	
 	private TestEvent buildTestEvent() {
 		DailySignCaseType t = DailySignCaseType.quqi;
 		return buildTestEvent(TestModuleType.dailySign, t.getId(), t.getEventName());
+	}
+	
+	private String getScreenshotSaveingPath() {
+		return globalOptionService.getScreenshotSavingFolder() + File.separator + eventName;
+	}
+	
+	private String getReportOutputPath() {
+		return globalOptionService.getReportOutputFolder() + File.separator + eventName;
 	}
 	
 	@Override
@@ -35,7 +51,12 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 	public CommonResultBBT clawing(TestEvent te) {
 		CommonResultBBT r = new CommonResultBBT();
 		
+		JsonReportDTO reportDTO = new JsonReportDTO();
 		WebDriver d = webDriverService.buildFireFoxWebDriver();
+		
+		String screenshotPath = getScreenshotSaveingPath();
+		String reportOutputFolderPath = getReportOutputPath();
+		reportDTO.setOutputReportPath(reportOutputFolderPath + File.separator + te.getId());
 
 		try {
 			d.get(mainUrl);
@@ -92,11 +113,6 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 			
 			Thread.sleep(800L);
 			
-			x.start("div").addAttribute("view_id", "$submenu2")
-			.findChild("div").addAttribute("class", "webix_win_content")
-			.findChild("div").addAttribute("class", "webix_win_body")
-			.findChild("div").addAttribute("class", "webix_scroll_cont")
-			.findChild("a").addAttribute("webix_l_id", "check_in");
 			
 			WebElement dailySignButton = null;
 			try {
@@ -107,12 +123,15 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 				.findChild("a").addAttribute("webix_l_id", "check_in");
 				dailySignButton = d.findElement(By.xpath(x.getXpath()));
 			} catch (Exception e) {
-				x.start("div").addAttribute("view_id", "$submenu2")
-				.findChild("div").addAttribute("class", "webix_win_content")
-				.findChild("div").addAttribute("class", "webix_win_body")
-				.findChild("div").addAttribute("class", "webix_scroll_cont")
-				.findChild("a").addAttribute("webix_l_id", "check_in");
-				dailySignButton = d.findElement(By.xpath(x.getXpath()));
+				String htmlStr = jsUtil.getHtmlSource(d);
+				TakeScreenshotSaveDTO screenshotDTO = new TakeScreenshotSaveDTO();
+				screenshotDTO.setDriver(d);
+				ScreenshotSaveResult screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
+				
+				UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
+				jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
+				jsonReporter.appendContent(reportDTO, htmlStr);
+				jsonReporter.outputReport(reportDTO, reportOutputFolderPath);
 			}
 			
 //			WebElement dailySignButton = d.findElement(By.linkText("签到赚经验值"));

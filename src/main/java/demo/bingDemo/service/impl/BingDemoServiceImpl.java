@@ -55,12 +55,12 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 	@Override
 	public CommonResultBBT clawing(TestEvent te) {
 		CommonResultBBT r = new CommonResultBBT();
-		JsonReportDTO dto = new JsonReportDTO();
+		JsonReportDTO reportDTO = new JsonReportDTO();
 		
 		String screenshotPath = getScreenshotSaveingPath();
 		String reportOutputFolderPath = getReportOutputPath();
 		
-		dto.setOutputReportPath(reportOutputFolderPath + File.separator + te.getId());
+		reportDTO.setOutputReportPath(reportOutputFolderPath + File.separator + te.getId());
 
 		WebDriver d = webDriverService.buildFireFoxWebDriver();
 
@@ -69,7 +69,7 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 		try {
 			d.get(bingUrl);
 			
-			jsonReporter.appendContent(dto, "打开: " + bingUrl);
+			jsonReporter.appendContent(reportDTO, "打开: " + bingUrl);
 			
 			XpathBuilderBO x = new XpathBuilderBO();
 			
@@ -78,7 +78,7 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 			ScreenshotSaveResult screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
 			
 			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
-			jsonReporter.appendImage(dto, uploadImgResult.getImgUrl());
+			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
 			
 			x.start("input").addAttribute("id", "sb_form_q");
 			WebElement keywordInput = d.findElement(By.xpath(x.getXpath()));
@@ -86,35 +86,35 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 			keywordInput.clear();
 			keywordInput.sendKeys(te.getRemark());
 			
-			jsonReporter.appendContent(dto, "输入关键词: " + te.getRemark());
+			jsonReporter.appendContent(reportDTO, "输入关键词: " + te.getRemark());
 			
 			screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
 			uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
-			jsonReporter.appendImage(dto, uploadImgResult.getImgUrl());
+			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
 			
 			x.start("div").addAttribute("id", "sb_go_par");
 			WebElement searchButton = d.findElement(By.xpath(x.getXpath()));
 			searchButton.click();
 			
-			jsonReporter.appendContent(dto, "点击搜索");
+			jsonReporter.appendContent(reportDTO, "点击搜索");
 			
 			screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
 			uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
-			jsonReporter.appendImage(dto, uploadImgResult.getImgUrl());
+			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
 			
-			jsonReporter.appendContent(dto, "完成");
+			jsonReporter.appendContent(reportDTO, "完成");
 			
 			r.setIsSuccess();
 		} catch (Exception e) {
-			jsonReporter.appendContent(dto, e.getMessage());
+			jsonReporter.appendContent(reportDTO, e.getMessage());
 			
 		} finally {
-			r.setMessage(dto.getContent());
+			r.setMessage(reportDTO.getContent());
 			if (d != null) {
 				d.quit();
 			}
-			String reportOutputPath = dto.getOutputReportPath() + File.separatorChar + dto.getReportFileName() + ".json";
-			if(jsonReporter.outputReport(dto, reportOutputPath)) {
+			String reportOutputPath = reportDTO.getOutputReportPath() + File.separatorChar + reportDTO.getReportFileName() + ".json";
+			if(jsonReporter.outputReport(reportDTO, reportOutputPath)) {
 				updateTestEventReportPath(te, reportOutputPath);
 			}
 		}
