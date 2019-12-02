@@ -115,8 +115,8 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 			
 			jsonReporter.appendContent(reportDTO, "input pwd");
 			
-			x.start("button").addAttribute("id", "btn-signup");
-			WebElement loginButton = d.findElement(By.xpath(x.getXpath()));
+//			x.start("button").addAttribute("id", "btn-signup");
+			WebElement loginButton = d.findElement(By.id("btn-signup"));
 			
 			jsonReporter.appendContent(reportDTO, "find login button");
 			try {
@@ -127,16 +127,18 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 			
 			jsonReporter.appendContent(reportDTO, "click login button");
 			
-			Thread.sleep(800L);
+			Thread.sleep(3000L);
+			jsonReporter.appendContent(reportDTO, "after click login button sleep");
 
 			x.start("a").addAttribute("webix_l_id", "personal_center_menu")
 			.findChild("span").addAttribute("class", "personal-arrow-down");
 			WebElement personMenuArrowDown = d.findElement(By.xpath(x.getXpath()));
+			jsonReporter.appendContent(reportDTO, "find personMenuArrowDown");
 			personMenuArrowDown.click();
 			
 			jsonReporter.appendContent(reportDTO, "arrow down click");
 			
-			Thread.sleep(800L);
+			Thread.sleep(3000L);
 			
 			
 			WebElement dailySignButton = null;
