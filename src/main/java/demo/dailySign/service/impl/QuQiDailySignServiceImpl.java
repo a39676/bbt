@@ -92,16 +92,35 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 			
 			Thread.sleep(800L);
 			
-//			x.start("div").addAttribute("view_id", "$submenu2")
-//			.findChild("div").addAttribute("class", "webix_win_content")
-//			.findChild("div").addAttribute("class", "webix_win_body")
-//			.findChild("div").addAttribute("class", "webix_scroll_cont")
-//			.findChild("a").addAttribute("webix_l_id", "check_in");
-//			WebElement dailySignButton = d.findElement(By.xpath(x.getXpath()));
-			WebElement dailySignButton = d.findElement(By.linkText("签到赚经验值"));
-			dailySignButton.click();
+			x.start("div").addAttribute("view_id", "$submenu2")
+			.findChild("div").addAttribute("class", "webix_win_content")
+			.findChild("div").addAttribute("class", "webix_win_body")
+			.findChild("div").addAttribute("class", "webix_scroll_cont")
+			.findChild("a").addAttribute("webix_l_id", "check_in");
 			
-			r.setIsSuccess();
+			WebElement dailySignButton = null;
+			try {
+				x.start("div").addAttribute("view_id", "$submenu1")
+				.findChild("div").addAttribute("class", "webix_win_content")
+				.findChild("div").addAttribute("class", "webix_win_body")
+				.findChild("div").addAttribute("class", "webix_scroll_cont")
+				.findChild("a").addAttribute("webix_l_id", "check_in");
+				dailySignButton = d.findElement(By.xpath(x.getXpath()));
+			} catch (Exception e) {
+				x.start("div").addAttribute("view_id", "$submenu2")
+				.findChild("div").addAttribute("class", "webix_win_content")
+				.findChild("div").addAttribute("class", "webix_win_body")
+				.findChild("div").addAttribute("class", "webix_scroll_cont")
+				.findChild("a").addAttribute("webix_l_id", "check_in");
+				dailySignButton = d.findElement(By.xpath(x.getXpath()));
+			}
+			
+//			WebElement dailySignButton = d.findElement(By.linkText("签到赚经验值"));
+			if(dailySignButton != null) {
+				dailySignButton.click();
+				r.setIsSuccess();
+			}
+
 		} catch (Exception e) {
 			
 		} finally {
