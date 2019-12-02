@@ -107,10 +107,10 @@ public abstract class MovieClawingCommonService extends SeleniumCommonService {
 		} else if (StringUtils.containsAny(countryDesc, "日", "韩")) {
 			return MovieRegionType.jpAndKr.getCode();
 			
-		} else if (StringUtils.containsAny(countryDesc, "中", "大陆")) {
+		} else if (StringUtils.containsAny(countryDesc, "中")) {
 			return MovieRegionType.domestic.getCode();
 			
-		} else if (StringUtils.containsAny(countryDesc, "香", "港", "台")) {
+		} else if (StringUtils.containsAny(countryDesc, "香", "港", "台", "澳门")) {
 			return MovieRegionType.hongKongMarcoTaiwan.getCode();
 			
 		} 
