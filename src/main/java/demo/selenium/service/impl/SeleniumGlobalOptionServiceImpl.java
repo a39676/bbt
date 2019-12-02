@@ -17,7 +17,7 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 	@Autowired
 	private SystemConstantService constantService;
 
-	private String mainSavingFolder_win = "d:/auxiliary";
+	private String mainSavingFolder_win = "d:/home/u2";
 	private String mainSavingFolder_linx = "/home/u2";
 	private String downloadFolder = "/tmp";
 	private String tmpFolder = "/tmp";
