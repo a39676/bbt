@@ -113,7 +113,7 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 			if (d != null) {
 				d.quit();
 			}
-			String reportOutputPath = reportDTO.getOutputReportPath() + File.separatorChar + reportDTO.getReportFileName() + ".json";
+			String reportOutputPath = reportDTO.getOutputReportPath() + File.separatorChar + te.getId() + ".json";
 			if(jsonReporter.outputReport(reportDTO, reportOutputPath)) {
 				updateTestEventReportPath(te, reportOutputPath);
 			}
