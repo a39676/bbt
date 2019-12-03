@@ -412,10 +412,20 @@
       <if test="reportPath != null">
         and report_path = #{reportPath}
       </if>
-      <if test="startTime != null">
-        and start_time &gt;= #{startTime}
+      <if test="createStartTime != null">
+        and create_time &gt;= #{createStartTime}
+      </if>
+      <if test="createEndTime != null">
+        and create_time &lt;= #{createEndTime}
+      </if>
+      <if test="runTimeStartTime != null">
+        and start_time &gt;= #{runTimeStartTime}
+      </if>
+      <if test="runTimeEndTime != null">
+        and start_time &lt;= #{runTimeEndTime}
       </if>
     </where>
+    order by create_time desc
     <if test="limit != null">
       limit = #{limit}
     </if>

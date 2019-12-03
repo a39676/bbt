@@ -155,7 +155,6 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 				jsonReporter.appendContent(reportDTO, "sign success");
 			}
 			
-			
 		} catch (Exception e) {
 			String htmlStr = jsUtil.getHtmlSource(d);
 			TakeScreenshotSaveDTO screenshotDTO = new TakeScreenshotSaveDTO();

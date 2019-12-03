@@ -2,13 +2,22 @@ package demo.testCase.pojo.dto;
 
 import java.time.LocalDateTime;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class FindTestEventPageByConditionDTO {
 
 	private Long id;
 	private Long moduleId;
 	private String eventName;
 	private String reportPath;
-	private LocalDateTime startTime;
+	@ApiModelProperty("最早创建时间")
+	private LocalDateTime createStartTime;
+	@ApiModelProperty("最迟创建时间")
+	private LocalDateTime createEndTime;
+	@ApiModelProperty("最早运行时间")
+	private LocalDateTime runTimeStartTime;
+	@ApiModelProperty("最迟运行时间")
+	private LocalDateTime runTimeEndTime;
 	private Long limit;
 
 	public Long getId() {
@@ -43,12 +52,36 @@ public class FindTestEventPageByConditionDTO {
 		this.reportPath = reportPath;
 	}
 
-	public LocalDateTime getStartTime() {
-		return startTime;
+	public LocalDateTime getCreateStartTime() {
+		return createStartTime;
 	}
 
-	public void setStartTime(LocalDateTime startTime) {
-		this.startTime = startTime;
+	public void setCreateStartTime(LocalDateTime createStartTime) {
+		this.createStartTime = createStartTime;
+	}
+
+	public LocalDateTime getCreateEndTime() {
+		return createEndTime;
+	}
+
+	public void setCreateEndTime(LocalDateTime createEndTime) {
+		this.createEndTime = createEndTime;
+	}
+
+	public LocalDateTime getRunTimeStartTime() {
+		return runTimeStartTime;
+	}
+
+	public void setRunTimeStartTime(LocalDateTime runTimeStartTime) {
+		this.runTimeStartTime = runTimeStartTime;
+	}
+
+	public LocalDateTime getRunTimeEndTime() {
+		return runTimeEndTime;
+	}
+
+	public void setRunTimeEndTime(LocalDateTime runTimeEndTime) {
+		this.runTimeEndTime = runTimeEndTime;
 	}
 
 	public Long getLimit() {
@@ -62,7 +95,9 @@ public class FindTestEventPageByConditionDTO {
 	@Override
 	public String toString() {
 		return "FindTestEventPageByConditionDTO [id=" + id + ", moduleId=" + moduleId + ", eventName=" + eventName
-				+ ", reportPath=" + reportPath + ", startTime=" + startTime + ", limit=" + limit + "]";
+				+ ", reportPath=" + reportPath + ", createStartTime=" + createStartTime + ", createEndTime="
+				+ createEndTime + ", runTimeStartTime=" + runTimeStartTime + ", runTimeEndTime=" + runTimeEndTime
+				+ ", limit=" + limit + "]";
 	}
 
 }
