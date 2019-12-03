@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import auxiliaryCommon.autoTest.jsonReport.pojo.constant.ServerHost;
 import demo.baseCommon.service.CommonService;
 import demo.image.ImageInteractionService;
 import httpHandel.HttpUtil;
@@ -26,7 +27,7 @@ public class ImageInteractionServiceImpl extends CommonService implements ImageI
 		try {
 			JSONObject j = JSONObject.fromObject(dto);
 	        
-			String url = "http://127.0.0.1:10001" + ImageInteractionUrl.root + ImageInteractionUrl.uploadImageToCloudinary;
+			String url = ServerHost.host1 + ImageInteractionUrl.root + ImageInteractionUrl.uploadImageToCloudinary;
 			String response = String.valueOf(httpUtil.sendPostRestful(url, j.toString()));
 			JSONObject resultJ = JSONObject.fromObject(response);
 			

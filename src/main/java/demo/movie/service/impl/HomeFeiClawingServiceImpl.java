@@ -565,7 +565,7 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 		dto.setIntroduction(introduction);
 		
 		String url = constantService.getValByName(SystemConstantStore.hostName1) + MovieInteractionUrl.root + MovieInteractionUrl.handleMovieIntroductionRecive;
-//		String url = "http://127.0.0.1:10002" + MovieInteractionUrl.root + MovieInteractionUrl.handleMovieIntroductionRecive;
+//		String url = ServerHost.host2 + MovieInteractionUrl.root + MovieInteractionUrl.handleMovieIntroductionRecive;
 		
 		try {
 			JSONObject j = JSONObject.fromObject(dto);
