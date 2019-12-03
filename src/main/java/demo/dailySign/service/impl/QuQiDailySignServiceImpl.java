@@ -126,7 +126,7 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 			
 			jsonReporter.appendContent(reportDTO, "click login button");
 			
-			Thread.sleep(3000L);
+			Thread.sleep(13000L);
 			jsonReporter.appendContent(reportDTO, "after click login button sleep");
 
 			x.start("a").addAttribute("webix_l_id", "personal_center_menu")
@@ -137,7 +137,7 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 			
 			jsonReporter.appendContent(reportDTO, "arrow down click");
 			
-			Thread.sleep(3000L);
+			Thread.sleep(13000L);
 			
 			WebElement dailySignButton = null;
 			x.start("div").addAttribute("view_id", "$submenu1")
