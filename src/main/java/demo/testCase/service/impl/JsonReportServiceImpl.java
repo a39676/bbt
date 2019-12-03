@@ -7,11 +7,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import autoTest.jsonReport.pojo.dto.FindReportByTestEventIdDTO;
+import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
 import demo.baseCommon.service.CommonService;
 import demo.testCase.mapper.TestEventMapper;
 import demo.testCase.pojo.bo.TestReportBO;
-import demo.testCase.pojo.dto.FindReportByTestEventIdDTO;
-import demo.testCase.pojo.dto.FindTestEventPageByConditionDTO;
 import demo.testCase.pojo.po.TestEvent;
 import demo.testCase.pojo.result.FindReportByTestEventIdResult;
 import demo.testCase.service.JsonReportService;

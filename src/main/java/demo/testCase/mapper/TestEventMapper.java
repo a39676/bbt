@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import demo.testCase.pojo.dto.FindTestEventPageByConditionDTO;
+import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
 import demo.testCase.pojo.po.TestEvent;
 import demo.testCase.pojo.po.TestEventExample;
 

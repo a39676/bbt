@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import auxiliaryCommon.autoTest.jsonReport.pojo.constant.ServerHost;
+import auxiliaryCommon.pojo.constant.ServerHost;
 import demo.baseCommon.service.CommonService;
 import demo.image.ImageInteractionService;
 import httpHandel.HttpUtil;
