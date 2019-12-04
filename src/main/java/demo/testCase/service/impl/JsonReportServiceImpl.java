@@ -7,13 +7,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import autoTest.jsonReport.pojo.bo.TestReportBO;
 import autoTest.jsonReport.pojo.dto.FindReportByTestEventIdDTO;
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
+import autoTest.jsonReport.pojo.result.FindReportByTestEventIdResult;
+import dateTimeHandle.DateTimeHandle;
 import demo.baseCommon.service.CommonService;
 import demo.testCase.mapper.TestEventMapper;
-import demo.testCase.pojo.bo.TestReportBO;
 import demo.testCase.pojo.po.TestEvent;
-import demo.testCase.pojo.result.FindReportByTestEventIdResult;
 import demo.testCase.service.JsonReportService;
 import ioHandle.FileUtilCustom;
 
@@ -42,6 +43,10 @@ public class JsonReportServiceImpl extends CommonService implements JsonReportSe
 			dto.setLimit(reportPageNormalSize);
 		}
 		
+		if(dto.getEndTime() != null) {
+			dto.setEndTime(dto.getEndTime().minusSeconds(1L));
+		}
+		
 		List<TestEvent> poList = eventMapper.findTestEventPageByCondition(dto);
 		List<TestReportBO> boList = new ArrayList<>();
 		for(TestEvent i : poList) {
@@ -54,7 +59,6 @@ public class JsonReportServiceImpl extends CommonService implements JsonReportSe
 	private TestReportBO buildBOByPO(TestEvent te) {
 		TestReportBO bo = new TestReportBO();
 		bo.setCaseId(te.getCaseId());
-		bo.setCreateTime(te.getCreateTime());
 		bo.setEndTime(te.getEndTime());
 		bo.setEventName(te.getEventName());
 		bo.setId(te.getId());
@@ -62,8 +66,12 @@ public class JsonReportServiceImpl extends CommonService implements JsonReportSe
 		bo.setModuleId(te.getModuleId());
 		bo.setProjectId(te.getProjectId());
 		bo.setReportPath(te.getReportPath());
+		bo.setCreateTime(te.getCreateTime());
+		bo.setCreateTimeStr(DateTimeHandle.dateToStr(te.getCreateTime()));
 		bo.setStartTime(te.getStartTime());
+		bo.setStartTimeStr(DateTimeHandle.dateToStr(te.getStartTime()));
 		bo.setEndTime(te.getEndTime());
+		bo.setEndTimeStr(DateTimeHandle.dateToStr(te.getEndTime()));
 		
 		return bo;
 	}

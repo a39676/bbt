@@ -60,6 +60,9 @@ public class MybatisConfig implements TransactionManagementConfigurer {
 		mybatisProperties.setProperty("cacheEnabled", "true");
 		sqlSessionFactoryBean.setConfigurationProperties(mybatisProperties);
 		sqlSessionFactoryBean.setDataSource(dataSource());
+		sqlSessionFactoryBean.setTypeAliasesPackage(""
+				+ "demo.interaction.movieInteraction.pojo, "
+				);
 		
 		return sqlSessionFactoryBean;
 	}

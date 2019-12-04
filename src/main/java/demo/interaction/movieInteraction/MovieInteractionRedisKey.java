@@ -1,4 +1,4 @@
-package demo.movieInteraction;
+package demo.interaction.movieInteraction;
 
 public class MovieInteractionRedisKey {
 	

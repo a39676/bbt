@@ -1,8 +1,8 @@
 package demo.movie.mapper;
 
+import demo.interaction.movieInteraction.pojo.dto.FindPosterIdByMovieIdListDTO;
 import demo.movie.pojo.po.MovieImage;
 import demo.movie.pojo.po.MovieImageExample;
-import demo.movieInteraction.pojo.dto.FindPosterIdByMovieIdListDTO;
 
 import java.util.List;
 import org.apache.ibatis.annotations.Param;

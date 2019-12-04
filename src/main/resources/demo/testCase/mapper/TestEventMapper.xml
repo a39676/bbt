@@ -403,6 +403,9 @@
       <if test="moduleId != null">
         and module_id = #{moduleId}
       </if>
+      <if test="caseId != null">
+        and case_id = #{caseId}
+      </if>
       <if test="id != null">
         and id = #{id}
       </if>
@@ -423,6 +426,9 @@
       </if>
       <if test="runTimeEndTime != null">
         and start_time &lt;= #{runTimeEndTime}
+      </if>
+      <if test="endTime != null">
+        and create_time &lt;= #{endTime}
       </if>
     </where>
     order by create_time desc

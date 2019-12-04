@@ -1,4 +1,4 @@
-package demo.movieInteraction.controller;
+package demo.interaction.movieInteraction.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.interaction.movieInteraction.pojo.result.FindMovieRecommendResult;
+import demo.interaction.movieInteraction.service.MovieInteractionService;
 import demo.movie.pojo.dto.MovieIntroductionDTO;
 import demo.movie.pojo.result.FindMovieDetailResult;
 import demo.movie.pojo.result.FindMovieSummaryListResult;
 import demo.movie.service.HomeFeiClawingService;
-import demo.movieInteraction.pojo.result.FindMovieRecommendResult;
-import demo.movieInteraction.service.MovieInteractionService;
 import io.swagger.annotations.ApiOperation;
 import movie.pojo.constant.MovieInteractionUrl;
 import movie.pojo.dto.FindMovieDetailDTO;

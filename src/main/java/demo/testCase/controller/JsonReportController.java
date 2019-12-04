@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import autoTest.jsonReport.pojo.bo.TestReportBO;
 import autoTest.jsonReport.pojo.constant.JsonReportInteractionUrl;
 import autoTest.jsonReport.pojo.dto.FindReportByTestEventIdDTO;
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
+import autoTest.jsonReport.pojo.result.FindReportByTestEventIdResult;
 import demo.baseCommon.controller.CommonController;
-import demo.testCase.pojo.bo.TestReportBO;
-import demo.testCase.pojo.result.FindReportByTestEventIdResult;
 import demo.testCase.service.JsonReportService;
 
 @Controller

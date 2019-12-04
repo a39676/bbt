@@ -1,9 +1,9 @@
-package demo.movieInteraction.pojo.result;
+package demo.interaction.movieInteraction.pojo.result;
 
 import java.util.List;
 
 import demo.baseCommon.pojo.result.CommonResultBBT;
-import demo.movieInteraction.pojo.vo.MovieRecommendVO;
+import demo.interaction.movieInteraction.pojo.vo.MovieRecommendVO;
 
 public class FindMovieRecommendResult extends CommonResultBBT {
 

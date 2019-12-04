@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.service.UserRegistService;
-import demo.movieInteraction.service.MovieInteractionService;
+import demo.interaction.movieInteraction.service.MovieInteractionService;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.task.service.TaskToolService;
 import demo.tool.mapper.MailRecordMapper;

@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import demo.interaction.movieInteraction.pojo.dto.FindLastHotClickDTO;
 import demo.movie.pojo.dto.InsertOrUpdateMovieClickCountDTO;
 import demo.movie.pojo.po.MovieClickCount;
 import demo.movie.pojo.po.MovieClickCountExample;
-import demo.movieInteraction.pojo.dto.FindLastHotClickDTO;
 
 public interface MovieClickCountMapper {
     long countByExample(MovieClickCountExample example);

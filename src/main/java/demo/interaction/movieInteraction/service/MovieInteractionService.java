@@ -1,10 +1,10 @@
-package demo.movieInteraction.service;
+package demo.interaction.movieInteraction.service;
 
 import javax.servlet.http.HttpServletRequest;
 
+import demo.interaction.movieInteraction.pojo.result.FindMovieRecommendResult;
 import demo.movie.pojo.result.FindMovieDetailResult;
 import demo.movie.pojo.result.FindMovieSummaryListResult;
-import demo.movieInteraction.pojo.result.FindMovieRecommendResult;
 import movie.pojo.dto.FindMovieDetailDTO;
 import movie.pojo.dto.FindMovieSummaryListDTO;
 

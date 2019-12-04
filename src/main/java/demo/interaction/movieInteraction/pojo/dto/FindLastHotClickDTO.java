@@ -1,4 +1,4 @@
-package demo.movieInteraction.pojo.dto;
+package demo.interaction.movieInteraction.pojo.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
