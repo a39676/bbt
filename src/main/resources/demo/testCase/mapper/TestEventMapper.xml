@@ -433,10 +433,10 @@
     </where>
     order by create_time desc
     <if test="limit != null">
-      limit = #{limit}
+      limit #{limit}
     </if>
     <if test="limit == null">
-      limit = 50
+      limit 50
     </if>
   </select>
 </mapper>

@@ -65,7 +65,7 @@ public class JsonReportServiceImpl extends CommonService implements JsonReportSe
 		bo.setIsPass(te.getIsPass());
 		bo.setModuleId(te.getModuleId());
 		bo.setProjectId(te.getProjectId());
-		bo.setReportPath(te.getReportPath());
+//		bo.setReportPath(te.getReportPath());
 		bo.setCreateTime(te.getCreateTime());
 		bo.setCreateTimeStr(DateTimeHandle.dateToStr(te.getCreateTime()));
 		bo.setStartTime(te.getStartTime());
