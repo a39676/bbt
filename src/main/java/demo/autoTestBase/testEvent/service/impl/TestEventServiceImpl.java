@@ -3,6 +3,7 @@ package demo.autoTestBase.testEvent.service.impl;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,13 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	@Autowired
 	private DailySignPrefixService dailySignPrefixService;
 	
+	private String pauseWordRedisKey = "testEventPauseWord";
+	private String safeWord = "breakNow";
+	
+	private String findPauseWord() {
+		return constantService.getValByName(pauseWordRedisKey);
+	}
+	
 	@Override
 	public InsertTestEventResult insertTestEvent(TestEvent po) {
 		InsertTestEventResult r = new InsertTestEventResult();
@@ -51,6 +59,14 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	
 	@Override
 	public void findTestEventAndRun() {
+		
+		String breakWord = findPauseWord();
+		if(StringUtils.isNotBlank(breakWord)) {
+			if(breakWord.equals(safeWord)) {
+				return;
+			}
+		}
+		
 		List<TestEvent> events = findTestEventNotRunYet();
 		if(events == null || events.size() < 1) {
 			return;
