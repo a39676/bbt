@@ -1,8 +1,8 @@
 package demo.dailySign.service;
 
+import demo.autoTestBase.testEvent.pojo.po.TestEvent;
+import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.baseCommon.pojo.result.CommonResultBBT;
-import demo.testCase.pojo.po.TestEvent;
-import demo.testCase.pojo.result.InsertTestEventResult;
 
 public interface QuQiDailySignService {
 

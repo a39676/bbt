@@ -12,6 +12,9 @@ import at.pojo.bo.XpathBuilderBO;
 import at.pojo.dto.JsonReportDTO;
 import at.pojo.dto.TakeScreenshotSaveDTO;
 import at.pojo.result.ScreenshotSaveResult;
+import demo.autoTestBase.testEvent.pojo.po.TestEvent;
+import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
+import demo.autoTestBase.testModule.pojo.type.TestModuleType;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.bingDemo.po.result.InsertBingDemoEventResult;
 import demo.bingDemo.pojo.dto.BingDemoDTO;
@@ -19,9 +22,6 @@ import demo.bingDemo.pojo.type.BingDemoCaseType;
 import demo.bingDemo.service.BingDemoService;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.impl.SeleniumCommonService;
-import demo.testCase.pojo.po.TestEvent;
-import demo.testCase.pojo.result.InsertTestEventResult;
-import demo.testCase.pojo.type.TestModuleType;
 import image.pojo.result.UploadImageToCloudinaryResult;
 
 @Service

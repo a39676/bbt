@@ -15,6 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import at.pojo.bo.XpathBuilderBO;
+import demo.autoTestBase.testEvent.pojo.po.TestEvent;
+import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
+import demo.autoTestBase.testModule.pojo.type.TestModuleType;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.movie.mapper.MovieInfoMapper;
 import demo.movie.mapper.MovieIntroductionMapper;
@@ -27,9 +30,6 @@ import demo.movie.pojo.po.MovieRecord;
 import demo.movie.pojo.result.DoubanSubClawingResult;
 import demo.movie.pojo.type.MovieClawingCaseType;
 import demo.movie.service.DyttClawingService;
-import demo.testCase.pojo.po.TestEvent;
-import demo.testCase.pojo.result.InsertTestEventResult;
-import demo.testCase.pojo.type.TestModuleType;
 import ioHandle.FileUtilCustom;
 
 @Service

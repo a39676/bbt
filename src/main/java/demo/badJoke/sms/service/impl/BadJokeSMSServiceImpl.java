@@ -12,6 +12,10 @@ import org.springframework.stereotype.Service;
 
 import at.pojo.bo.XpathBuilderBO;
 import at.web.WebATToolService;
+import demo.autoTestBase.testEvent.pojo.po.TestEvent;
+import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
+import demo.autoTestBase.testEvent.service.TestEventService;
+import demo.autoTestBase.testModule.pojo.type.TestModuleType;
 import demo.badJoke.sms.pojo.dto.BadJokeSMSDTO;
 import demo.badJoke.sms.pojo.type.BadJokeCaseType;
 import demo.badJoke.sms.service.BadJokeSMSService;
@@ -19,10 +23,6 @@ import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.selenium.service.impl.AuxiliaryToolServiceImpl;
 import demo.selenium.service.impl.SeleniumCommonService;
-import demo.testCase.pojo.po.TestEvent;
-import demo.testCase.pojo.result.InsertTestEventResult;
-import demo.testCase.pojo.type.TestModuleType;
-import demo.testCase.service.TestEventService;
 
 @Service
 public class BadJokeSMSServiceImpl extends SeleniumCommonService implements BadJokeSMSService {

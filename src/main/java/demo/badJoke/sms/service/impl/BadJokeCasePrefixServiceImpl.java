@@ -3,11 +3,11 @@ package demo.badJoke.sms.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.badJoke.sms.pojo.type.BadJokeCaseType;
 import demo.badJoke.sms.service.BadJokeCasePrefixService;
 import demo.badJoke.sms.service.BadJokeSMSService;
 import demo.baseCommon.pojo.result.CommonResultBBT;
-import demo.testCase.pojo.po.TestEvent;
 
 @Service
 public class BadJokeCasePrefixServiceImpl implements BadJokeCasePrefixService {

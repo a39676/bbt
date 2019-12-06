@@ -14,14 +14,14 @@ import org.springframework.stereotype.Service;
 import at.pojo.dto.TakeScreenshotSaveDTO;
 import at.service.ScreenshotService;
 import at.web.WebATToolService;
+import demo.autoTestBase.testEvent.pojo.bo.TestEventDemoBO;
+import demo.autoTestBase.testEvent.pojo.po.TestEvent;
+import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.baseCommon.service.CommonService;
 import demo.selenium.pojo.result.TestEventResult;
 import demo.selenium.service.JavaScriptService;
 import demo.selenium.service.SeleniumService;
 import demo.selenium.service.WebDriverService;
-import demo.testCase.pojo.bo.TestEventDemoBO;
-import demo.testCase.pojo.po.TestEvent;
-import demo.testCase.service.TestEventService;
 
 @Service
 public class SeleniumServiceImpl extends CommonService implements SeleniumService {

@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import at.pojo.bo.XpathBuilderBO;
 import at.web.WebATToolService;
+import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.baseCommon.service.CommonService;
 import demo.clawing.mapper.MeizituGroupRecordMapper;
 import demo.clawing.pojo.po.MeizituGroupRecord;
@@ -33,7 +34,6 @@ import demo.image.pojo.type.ImageType;
 import demo.selenium.service.JavaScriptService;
 import demo.selenium.service.WebDriverService;
 import demo.selenium.service.impl.AuxiliaryToolServiceImpl;
-import demo.testCase.pojo.po.TestEvent;
 import httpHandel.HttpUtil;
 
 @Service

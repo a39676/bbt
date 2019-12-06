@@ -14,10 +14,10 @@ import org.springframework.stereotype.Service;
 import at.pojo.bo.XpathBuilderBO;
 import dateTimeHandle.DateTimeHandle;
 import dateTimeHandle.DateUtilCustom;
+import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.movie.pojo.result.DoubanSubClawingResult;
 import demo.movie.service.DoubanClawingService;
 import demo.selenium.service.impl.JavaScriptServiceImpl;
-import demo.testCase.pojo.po.TestEvent;
 
 @Service
 public final class DoubanClawingServiceImpl extends MovieClawingCommonService implements DoubanClawingService {

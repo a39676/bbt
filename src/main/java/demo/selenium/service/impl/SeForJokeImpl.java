@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 import at.pojo.bo.XpathBuilderBO;
 import at.pojo.dto.TakeScreenshotSaveDTO;
 import at.service.ScreenshotService;
+import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.baseCommon.service.CommonService;
 import demo.selenium.service.SeForJoke;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.WebDriverService;
-import demo.testCase.pojo.po.TestEvent;
 
 @Service
 public class SeForJokeImpl extends CommonService implements SeForJoke {

@@ -12,13 +12,13 @@ import at.pojo.bo.XpathBuilderBO;
 import at.pojo.dto.JsonReportDTO;
 import at.pojo.dto.TakeScreenshotSaveDTO;
 import at.pojo.result.ScreenshotSaveResult;
+import demo.autoTestBase.testEvent.pojo.po.TestEvent;
+import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
+import demo.autoTestBase.testModule.pojo.type.TestModuleType;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.dailySign.pojo.type.DailySignCaseType;
 import demo.dailySign.service.QuQiDailySignService;
 import demo.selenium.service.impl.SeleniumCommonService;
-import demo.testCase.pojo.po.TestEvent;
-import demo.testCase.pojo.result.InsertTestEventResult;
-import demo.testCase.pojo.type.TestModuleType;
 import image.pojo.result.UploadImageToCloudinaryResult;
 
 @Service

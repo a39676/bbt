@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.bingDemo.po.result.InsertBingDemoEventResult;
 import demo.bingDemo.pojo.dto.BingDemoDTO;
 import demo.bingDemo.service.BingDemoService;
-import demo.testCase.service.TestEventService;
 
 @Controller
 @RequestMapping(value = "/bingDemo")

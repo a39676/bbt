@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.movie.service.DyttClawingService;
 import demo.movie.service.HomeFeiClawingService;
-import demo.testCase.service.TestEventService;
 
 @Controller
 @RequestMapping(value = "/movieClawing")

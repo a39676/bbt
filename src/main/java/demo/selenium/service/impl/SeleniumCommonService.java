@@ -4,13 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import at.service.ATJsonReportService;
 import at.service.ScreenshotService;
+import demo.autoTestBase.testEvent.pojo.po.TestEvent;
+import demo.autoTestBase.testEvent.service.TestEventService;
+import demo.autoTestBase.testModule.pojo.type.TestModuleType;
 import demo.baseCommon.service.CommonService;
 import demo.image.ImageInteractionService;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.WebDriverService;
-import demo.testCase.pojo.po.TestEvent;
-import demo.testCase.pojo.type.TestModuleType;
-import demo.testCase.service.TestEventService;
 import image.pojo.dto.UploadImageToCloudinaryDTO;
 import image.pojo.result.UploadImageToCloudinaryResult;
 

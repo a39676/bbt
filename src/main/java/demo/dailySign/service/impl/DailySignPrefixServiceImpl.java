@@ -3,12 +3,12 @@ package demo.dailySign.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.baseCommon.service.CommonService;
 import demo.dailySign.pojo.type.DailySignCaseType;
 import demo.dailySign.service.DailySignPrefixService;
 import demo.dailySign.service.QuQiDailySignService;
-import demo.testCase.pojo.po.TestEvent;
 
 @Service
 public class DailySignPrefixServiceImpl extends CommonService implements DailySignPrefixService {
