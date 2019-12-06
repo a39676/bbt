@@ -80,18 +80,23 @@ public class JsonReportServiceImpl extends CommonService implements JsonReportSe
 	public FindReportByTestEventIdResult findReportByTestEventId(FindReportByTestEventIdDTO dto) {
 		FindReportByTestEventIdResult r = new FindReportByTestEventIdResult();
 		if(dto.getTestEventId() == null) {
-			r.setReportStr("报告不存在, 可能是此报告已过期删除");
 			return r;
 		}
 		
 		TestEvent po = eventMapper.selectByPrimaryKey(dto.getTestEventId());
 		if(po == null || StringUtils.isBlank(po.getReportPath()) || "null".equals(po.getReportPath())) {
-			r.setReportStr("报告不存在, 可能是以下情况之一(测试任务未运行或运行中, 此报告已过期删除)");
 			return r;
 		}
 		
+		r.setId(po.getId());
+		r.setCreateTime(po.getCreateTime());
+		r.setStartTime(po.getStartTime());
+		r.setEndTime(po.getEndTime());
+		r.setTitle(po.getEventName());
+		
 		String reportStr = ioUtil.getStringFromFile(po.getReportPath());
 		r.setReportStr(reportStr);
+		
 		r.setIsSuccess();
 		
 		return r;
