@@ -1,5 +1,3 @@
 JsonReportServiceImpl 需完善
 
 未实现查看测试报告列表
-
-自动测试任务 test_event 应加入预约运行时间
