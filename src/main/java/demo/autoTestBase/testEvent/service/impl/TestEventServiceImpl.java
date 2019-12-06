@@ -15,10 +15,10 @@ import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.autoTestBase.testModule.pojo.type.TestModuleType;
 import demo.baseCommon.pojo.result.CommonResultBBT;
-import demo.bingDemo.service.BingDemoService;
 import demo.clawing.badJoke.sms.service.BadJokeCasePrefixService;
+import demo.clawing.bingDemo.service.BingDemoService;
 import demo.clawing.dailySign.service.DailySignPrefixService;
-import demo.movie.service.MovieClawingCasePrefixService;
+import demo.clawing.movie.service.MovieClawingCasePrefixService;
 
 @Service
 public class TestEventServiceImpl extends TestEventCommonService implements TestEventService {

@@ -1,6 +1,6 @@
 package demo.selenium.pojo.constant;
 
-import demo.movie.pojo.constant.MovieInteractionConstant;
+import demo.clawing.movie.pojo.constant.MovieInteractionConstant;
 
 public class SeleniumConstant {
 	

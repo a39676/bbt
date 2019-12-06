@@ -10,7 +10,7 @@ import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.baseCommon.controller.CommonController;
 import demo.clawing.badJoke.sms.pojo.dto.BadJokeSMSDTO;
 import demo.clawing.badJoke.sms.service.BadJokeSMSService;
-import demo.clawing.service.ClawingStudentService;
+import demo.clawing.clawingStudent.service.ClawingStudentService;
 import demo.selenium.service.WebDriverService;
 import demo.testing.pojo.constant.TestUrl;
 

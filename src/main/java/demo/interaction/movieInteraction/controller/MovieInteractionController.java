@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import auxiliaryCommon.pojo.result.CommonResult;
+import demo.clawing.movie.pojo.dto.MovieIntroductionDTO;
+import demo.clawing.movie.pojo.result.FindMovieDetailResult;
+import demo.clawing.movie.pojo.result.FindMovieSummaryListResult;
+import demo.clawing.movie.service.HomeFeiClawingService;
 import demo.interaction.movieInteraction.pojo.result.FindMovieRecommendResult;
 import demo.interaction.movieInteraction.service.MovieInteractionService;
-import demo.movie.pojo.dto.MovieIntroductionDTO;
-import demo.movie.pojo.result.FindMovieDetailResult;
-import demo.movie.pojo.result.FindMovieSummaryListResult;
-import demo.movie.service.HomeFeiClawingService;
 import io.swagger.annotations.ApiOperation;
 import movie.pojo.constant.MovieInteractionUrl;
 import movie.pojo.dto.FindMovieDetailDTO;

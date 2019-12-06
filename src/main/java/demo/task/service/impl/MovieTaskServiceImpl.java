@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import demo.movie.service.DyttClawingService;
-import demo.movie.service.HomeFeiClawingService;
-import demo.movie.service.MovieManagerService;
+import demo.clawing.movie.service.DyttClawingService;
+import demo.clawing.movie.service.HomeFeiClawingService;
+import demo.clawing.movie.service.MovieManagerService;
 
 @Component
 public class MovieTaskServiceImpl extends SeleniumTaskCommonServiceImpl {

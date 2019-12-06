@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.clawing.movie.mapper.MovieImageMapper">
+  <resultMap id="BaseResultMap" type="demo.clawing.movie.pojo.po.MovieImage">
+    <id column="image_id" jdbcType="BIGINT" property="imageId" />
+    <result column="movie_id" jdbcType="BIGINT" property="movieId" />
+    <result column="is_poster" jdbcType="BIT" property="isPoster" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    image_id, movie_id, is_poster, is_delete, create_time
+  </sql>
+  <select id="selectByExample" parameterType="demo.clawing.movie.pojo.po.MovieImageExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from movie_image
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from movie_image
+    where image_id = #{imageId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from movie_image
+    where image_id = #{imageId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="demo.clawing.movie.pojo.po.MovieImageExample">
+    delete from movie_image
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="demo.clawing.movie.pojo.po.MovieImage">
+    insert into movie_image (image_id, movie_id, is_poster, 
+      is_delete, create_time)
+    values (#{imageId,jdbcType=BIGINT}, #{movieId,jdbcType=BIGINT}, #{isPoster,jdbcType=BIT}, 
+      #{isDelete,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="demo.clawing.movie.pojo.po.MovieImage">
+    insert into movie_image
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="imageId != null">
+        image_id,
+      </if>
+      <if test="movieId != null">
+        movie_id,
+      </if>
+      <if test="isPoster != null">
+        is_poster,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="imageId != null">
+        #{imageId,jdbcType=BIGINT},
+      </if>
+      <if test="movieId != null">
+        #{movieId,jdbcType=BIGINT},
+      </if>
+      <if test="isPoster != null">
+        #{isPoster,jdbcType=BIT},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="demo.clawing.movie.pojo.po.MovieImageExample" resultType="java.lang.Long">
+    select count(*) from movie_image
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update movie_image
+    <set>
+      <if test="record.imageId != null">
+        image_id = #{record.imageId,jdbcType=BIGINT},
+      </if>
+      <if test="record.movieId != null">
+        movie_id = #{record.movieId,jdbcType=BIGINT},
+      </if>
+      <if test="record.isPoster != null">
+        is_poster = #{record.isPoster,jdbcType=BIT},
+      </if>
+      <if test="record.isDelete != null">
+        is_delete = #{record.isDelete,jdbcType=BIT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update movie_image
+    set image_id = #{record.imageId,jdbcType=BIGINT},
+      movie_id = #{record.movieId,jdbcType=BIGINT},
+      is_poster = #{record.isPoster,jdbcType=BIT},
+      is_delete = #{record.isDelete,jdbcType=BIT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="demo.clawing.movie.pojo.po.MovieImage">
+    update movie_image
+    <set>
+      <if test="movieId != null">
+        movie_id = #{movieId,jdbcType=BIGINT},
+      </if>
+      <if test="isPoster != null">
+        is_poster = #{isPoster,jdbcType=BIT},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where image_id = #{imageId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="demo.clawing.movie.pojo.po.MovieImage">
+    update movie_image
+    set movie_id = #{movieId,jdbcType=BIGINT},
+      is_poster = #{isPoster,jdbcType=BIT},
+      is_delete = #{isDelete,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where image_id = #{imageId,jdbcType=BIGINT}
+  </update>
+
+  <select id="findPosterIdByMovieIdList" resultMap="BaseResultMap">
+    select
+      movie_id,
+      image_id
+    from
+      movie_image
+    <where>
+      1=1
+      and is_poster = true
+      <if test="isDelete != null">
+        and is_delete = #{isDelete,jdbcType=BIT}
+      </if>
+      <if test="isDelete == null">
+        and is_delete = false
+      </if>
+      <if test="movieIdList != null">
+        and movie_id in
+        <foreach item="movieId" index="index" collection="movieIdList" open="(" separator="," close=")">
+          #{movieId}
+        </foreach>
+      </if>
+      <if test="startTime != null">
+        and create_time &gt;= #{startTime}
+      </if>
+    </where>
+  </select>
+</mapper>
