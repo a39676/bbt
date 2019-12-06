@@ -28,8 +28,8 @@ import demo.clawing.movie.pojo.po.MovieIntroductionExample;
 import demo.clawing.movie.pojo.po.MovieMagnetUrlExample;
 import demo.clawing.movie.pojo.po.MovieRecordExample;
 import demo.clawing.movie.service.MovieManagerService;
-import demo.image.mapper.ImageStoreMapper;
-import demo.image.pojo.po.ImageStoreExample;
+import demo.interaction.image.mapper.ImageStoreMapper;
+import demo.interaction.image.pojo.po.ImageStoreExample;
 import demo.selenium.pojo.constant.SeleniumConstant;
 
 @Service

@@ -8,7 +8,7 @@ import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.autoTestBase.testModule.pojo.type.TestModuleType;
 import demo.baseCommon.service.CommonService;
-import demo.image.ImageInteractionService;
+import demo.interaction.image.ImageInteractionService;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.WebDriverService;
 import image.pojo.dto.UploadImageToCloudinaryDTO;

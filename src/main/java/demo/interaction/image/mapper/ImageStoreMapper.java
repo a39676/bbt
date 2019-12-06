@@ -1,9 +1,10 @@
-package demo.image.mapper;
+package demo.interaction.image.mapper;
 
-import demo.image.pojo.po.ImageStore;
-import demo.image.pojo.po.ImageStoreExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import demo.interaction.image.pojo.po.ImageStore;
+import demo.interaction.image.pojo.po.ImageStoreExample;
 
 public interface ImageStoreMapper {
     long countByExample(ImageStoreExample example);

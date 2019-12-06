@@ -18,9 +18,9 @@ import demo.clawing.movie.pojo.po.MovieImage;
 import demo.clawing.movie.pojo.po.MovieMagnetUrl;
 import demo.clawing.movie.service.DoubanClawingService;
 import demo.clawing.movie.service.MovieClawingOptionService;
-import demo.image.mapper.ImageStoreMapper;
-import demo.image.pojo.po.ImageStore;
-import demo.image.pojo.type.ImageType;
+import demo.interaction.image.mapper.ImageStoreMapper;
+import demo.interaction.image.pojo.po.ImageStore;
+import demo.interaction.image.pojo.type.ImageType;
 import demo.selenium.service.impl.SeleniumCommonService;
 import movie.pojo.type.MovieRegionType;
 

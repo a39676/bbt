@@ -1,4 +1,4 @@
-package demo.image;
+package demo.interaction.image;
 
 import image.pojo.dto.UploadImageToCloudinaryDTO;
 import image.pojo.result.UploadImageToCloudinaryResult;

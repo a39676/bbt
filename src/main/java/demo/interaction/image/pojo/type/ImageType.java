@@ -1,4 +1,4 @@
-package demo.image.pojo.type;
+package demo.interaction.image.pojo.type;
 
 public enum ImageType {
 	

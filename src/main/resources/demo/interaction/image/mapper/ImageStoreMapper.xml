@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="demo.image.mapper.ImageStoreMapper">
-  <resultMap id="BaseResultMap" type="demo.image.pojo.po.ImageStore">
+<mapper namespace="demo.interaction.image.mapper.ImageStoreMapper">
+  <resultMap id="BaseResultMap" type="demo.interaction.image.pojo.po.ImageStore">
     <result column="id" jdbcType="BIGINT" property="id" />
     <result column="image_path" jdbcType="VARCHAR" property="imagePath" />
     <result column="image_type" jdbcType="TINYINT" property="imageType" />
@@ -69,7 +69,7 @@
   <sql id="Base_Column_List">
     id, image_path, image_type, create_time, is_delete
   </sql>
-  <select id="selectByExample" parameterType="demo.image.pojo.po.ImageStoreExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="demo.interaction.image.pojo.po.ImageStoreExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -83,19 +83,19 @@
       order by ${orderByClause}
     </if>
   </select>
-  <delete id="deleteByExample" parameterType="demo.image.pojo.po.ImageStoreExample">
+  <delete id="deleteByExample" parameterType="demo.interaction.image.pojo.po.ImageStoreExample">
     delete from image_store
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="demo.image.pojo.po.ImageStore">
+  <insert id="insert" parameterType="demo.interaction.image.pojo.po.ImageStore">
     insert into image_store (id, image_path, image_type, 
       create_time, is_delete)
     values (#{id,jdbcType=BIGINT}, #{imagePath,jdbcType=VARCHAR}, #{imageType,jdbcType=TINYINT}, 
       #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT})
   </insert>
-  <insert id="insertSelective" parameterType="demo.image.pojo.po.ImageStore">
+  <insert id="insertSelective" parameterType="demo.interaction.image.pojo.po.ImageStore">
     insert into image_store
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -132,7 +132,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="demo.image.pojo.po.ImageStoreExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="demo.interaction.image.pojo.po.ImageStoreExample" resultType="java.lang.Long">
     select count(*) from image_store
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />

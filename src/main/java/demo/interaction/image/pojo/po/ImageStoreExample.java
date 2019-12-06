@@ -1,4 +1,4 @@
-package demo.image.pojo.po;
+package demo.interaction.image.pojo.po;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
