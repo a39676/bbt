@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import demo.base.user.pojo.po.Users;
 import demo.baseCommon.service.CommonService;
-import demo.util.BaseUtilCustom;
+import demo.config.costom_component.BaseUtilCustom;
 import net.sf.json.JSONObject;
 
 @Service

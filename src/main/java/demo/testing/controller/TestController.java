@@ -11,15 +11,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.baseCommon.controller.CommonController;
+import demo.clawing.neobux.service.NeobuxService;
 import demo.clawing.service.ClawingSinaMedicineService;
-import demo.neobux.service.NeobuxService;
 import demo.selenium.service.SeForJoke;
 import demo.selenium.service.SeleniumService;
 import demo.testing.pojo.constant.TestUrl;
 import demo.testing.pojo.constant.TestViewConstants;
 import demo.testing.service.TestService;
-import demo.weka.pojo.result.WekaCommonResult;
-import demo.weka.service.WekaCluster;
+import demo.toyParts.weka.pojo.result.WekaCommonResult;
+import demo.toyParts.weka.service.WekaCluster;
 import io.swagger.annotations.ApiOperation;
 
 @Controller

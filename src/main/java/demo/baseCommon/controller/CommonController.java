@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import demo.base.user.mapper.UserIpMapper;
 import demo.base.user.pojo.po.UserIp;
-import demo.util.BaseUtilCustom;
+import demo.config.costom_component.BaseUtilCustom;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import numericHandel.NumericUtilCustom;

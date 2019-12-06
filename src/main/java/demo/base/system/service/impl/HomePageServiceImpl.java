@@ -14,7 +14,7 @@ import demo.base.system.pojo.constant.BaseViewConstant;
 import demo.base.system.service.HomePageService;
 import demo.base.user.pojo.type.RolesType;
 import demo.baseCommon.service.CommonService;
-import demo.util.BaseUtilCustom;
+import demo.config.costom_component.BaseUtilCustom;
 
 @Service
 public class HomePageServiceImpl extends CommonService implements HomePageService {

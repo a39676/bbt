@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.TransactionManagementConfigure
 })
 @EnableTransactionManagement // <tx:annotation-driven />
 // multiple scan, 通配符的使用应放后边, 否则会被"覆盖?重写?"后失效
-@MapperScan({"demo.mapper", "demo.base.*.mapper", "demo.*.mapper"})
+@MapperScan({"demo.mapper", "demo.base.*.mapper", "demo.autoTestBase.*.mapper", "demo.toyParts.*.mapper", "demo.*.mapper"})
 public class MybatisConfig implements TransactionManagementConfigurer {
 	
 	

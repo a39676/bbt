@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.pojo.po.UsersDetail;
-import demo.util.BaseUtilCustom;
+import demo.config.costom_component.BaseUtilCustom;
 import net.sf.json.JSONObject;
 
 @Component

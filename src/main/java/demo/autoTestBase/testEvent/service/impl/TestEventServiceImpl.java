@@ -14,10 +14,10 @@ import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.autoTestBase.testModule.pojo.type.TestModuleType;
-import demo.badJoke.sms.service.BadJokeCasePrefixService;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.bingDemo.service.BingDemoService;
-import demo.dailySign.service.DailySignPrefixService;
+import demo.clawing.badJoke.sms.service.BadJokeCasePrefixService;
+import demo.clawing.dailySign.service.DailySignPrefixService;
 import demo.movie.service.MovieClawingCasePrefixService;
 
 @Service

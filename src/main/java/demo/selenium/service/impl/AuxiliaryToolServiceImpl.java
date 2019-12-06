@@ -20,9 +20,9 @@ import at.pojo.constant.WebDriverConstant;
 import at.pojo.dto.TakeScreenshotSaveDTO;
 import at.pojo.result.ScreenshotSaveResult;
 import at.service.ScreenshotService;
+import demo.autoTestBase.captcha.service.CaptchaService;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.baseCommon.service.CommonService;
-import demo.captcha.service.CaptchaService;
 import demo.selenium.service.SeleniumGlobalOptionService;
 
 @Service

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import demo.dailySign.service.QuQiDailySignService;
+import demo.clawing.dailySign.service.QuQiDailySignService;
 
 @Component
 public class DailySignTaskServiceImpl extends SeleniumTaskCommonServiceImpl {

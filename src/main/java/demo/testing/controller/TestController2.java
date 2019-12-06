@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
-import demo.badJoke.sms.pojo.dto.BadJokeSMSDTO;
-import demo.badJoke.sms.service.BadJokeSMSService;
 import demo.baseCommon.controller.CommonController;
+import demo.clawing.badJoke.sms.pojo.dto.BadJokeSMSDTO;
+import demo.clawing.badJoke.sms.service.BadJokeSMSService;
 import demo.clawing.service.ClawingStudentService;
 import demo.selenium.service.WebDriverService;
 import demo.testing.pojo.constant.TestUrl;

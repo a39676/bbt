@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import dateTimeHandle.DateTimeUtilCommon;
+import demo.autoTestBase.captcha.service.CaptchaService;
 import demo.baseCommon.service.CommonService;
-import demo.captcha.service.CaptchaService;
 import demo.selenium.pojo.constant.SeleniumConstant;
 import demo.selenium.service.OldDataDeleteService;
 import demo.selenium.service.SeleniumGlobalOptionService;

@@ -21,9 +21,9 @@ import demo.base.user.pojo.type.RolesType;
 import demo.base.user.pojo.vo.UsersDetailVO;
 import demo.base.user.service.UsersService;
 import demo.baseCommon.controller.CommonController;
+import demo.config.costom_component.BaseUtilCustom;
 import demo.tool.pojo.MailRecord;
 import demo.tool.service.MailService;
-import demo.util.BaseUtilCustom;
 import net.sf.json.JSONObject;
 
 @Controller

@@ -25,7 +25,7 @@ import demo.base.user.pojo.constant.UsersUrlConstant;
 import demo.base.user.pojo.dto.UserRegistDTO;
 import demo.base.user.service.UserRegistService;
 import demo.baseCommon.controller.CommonController;
-import demo.util.BaseUtilCustom;
+import demo.config.costom_component.BaseUtilCustom;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import net.sf.json.JSONObject;

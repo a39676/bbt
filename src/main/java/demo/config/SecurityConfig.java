@@ -34,9 +34,9 @@ import demo.base.user.service.impl.CustomAuthenticationSuccessHandler;
 import demo.base.user.service.impl.CustomUserDetailsService;
 import demo.config.costom_component.CustomAuthenticationProvider;
 import demo.config.costom_component.CustomPasswordEncoder;
+import demo.config.costom_component.LimitLoginAuthenticationProvider;
 import demo.tool.pojo.constant.ToolUrlConstant;
 import demo.tool.pojo.constant.UploadUrlConstant;
-import demo.web.handler.LimitLoginAuthenticationProvider;
 
 @Configuration
 @EnableWebSecurity

@@ -15,7 +15,7 @@ import demo.base.user.pojo.type.AuthType;
 import demo.base.user.service.AuthService;
 import demo.base.user.service.UserAuthService;
 import demo.baseCommon.service.CommonService;
-import demo.util.BaseUtilCustom;
+import demo.config.costom_component.BaseUtilCustom;
 
 @Service
 public class UserAuthServiceImpl extends CommonService implements UserAuthService {
