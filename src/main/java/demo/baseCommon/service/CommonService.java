@@ -10,12 +10,19 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.BaseResultType;
+import dateTimeHandle.DateHandler;
+import dateTimeHandle.LocalDateTimeHandler;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.pojo.param.PageParam;
 import demo.config.costom_component.SnowFlake;
 import numericHandel.NumericUtilCustom;
 
 public abstract class CommonService {
+	
+	@Autowired
+	protected LocalDateTimeHandler localDateTimeHandler;
+	@Autowired
+	protected DateHandler dateHandler;
 	
 	protected final Logger log = LoggerFactory.getLogger(getClass());
 	

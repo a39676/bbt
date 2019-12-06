@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import dateTimeHandle.DateUtilCustom;
+import dateTimeHandle.DateHandler;
 import demo.baseCommon.pojo.param.CommonControllerParam;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -51,11 +51,12 @@ public class UserIpDeleteDTO implements CommonControllerParam {
 	@Override
 	public UserIpDeleteDTO fromJson(JSONObject json) {
 		UserIpDeleteDTO param = new UserIpDeleteDTO();
+		DateHandler dateHandler = new DateHandler();
 		if(json.containsKey("startDate")) {
-			param.setStartDate(DateUtilCustom.stringToDateUnkonwFormat(json.getString("startDate")));
+			param.setStartDate(dateHandler.stringToDateUnkonwFormat(json.getString("startDate")));
 		}
 		if(json.containsKey("endDate")) {
-			param.setEndDate(DateUtilCustom.stringToDateUnkonwFormat(json.getString("endDate")));
+			param.setEndDate(dateHandler.stringToDateUnkonwFormat(json.getString("endDate")));
 		}
 		if(json.containsKey("uri")) {
 			param.setUri(json.getString("uri"));

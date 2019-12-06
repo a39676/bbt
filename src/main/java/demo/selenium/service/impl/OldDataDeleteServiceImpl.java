@@ -11,7 +11,6 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import dateTimeHandle.DateTimeUtilCommon;
 import demo.autoTestBase.captcha.service.CaptchaService;
 import demo.baseCommon.service.CommonService;
 import demo.selenium.pojo.constant.SeleniumConstant;
@@ -83,7 +82,7 @@ public class OldDataDeleteServiceImpl extends CommonService implements OldDataDe
 				file = f.toPath();
 				attr = Files.readAttributes(file, BasicFileAttributes.class);
 				createDate = new Date(attr.creationTime().toMillis());
-				createDateTime = DateTimeUtilCommon.dateToLocalDateTime(createDate);
+				createDateTime = dateHandler.dateToLocalDateTime(createDate);
 				if(createDateTime.isBefore(deadLine)) {
 					f.delete();
 				}

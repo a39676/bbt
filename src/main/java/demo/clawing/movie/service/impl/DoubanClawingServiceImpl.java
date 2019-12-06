@@ -12,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import at.pojo.bo.XpathBuilderBO;
-import dateTimeHandle.DateTimeHandle;
-import dateTimeHandle.DateUtilCustom;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.clawing.movie.pojo.result.DoubanSubClawingResult;
 import demo.clawing.movie.service.DoubanClawingService;
@@ -176,11 +174,11 @@ public final class DoubanClawingServiceImpl extends MovieClawingCommonService im
 		String releaseDateStr = releaseDateSpan.getText();
 		releaseDateStr = releaseDateStr.replaceAll("[^\\d-/\\\\]", "");
 		
-		Date releaseDate = DateUtilCustom.stringToDateUnkonwFormat(releaseDateStr);
+		Date releaseDate = dateHandler.stringToDateUnkonwFormat(releaseDateStr);
 		if(releaseDate == null) {
 			return;
 		}
-		LocalDateTime releaseDateTime = DateTimeHandle.dateToLocalDateTime(releaseDate);
+		LocalDateTime releaseDateTime = localDateTimeHandler.dateToLocalDateTime(releaseDate);
 		r.setReleaseTime(releaseDateTime);
 		
 //		By initialReleaseDateBy = auxTool.byXpathBuilder("span", "property", "v:initialReleaseDate");

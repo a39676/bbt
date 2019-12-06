@@ -28,7 +28,6 @@ import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.BaseResultType;
-import dateTimeHandle.DateUtilCustom;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.base.user.pojo.bo.UserMailAndMailKeyBO;
@@ -334,12 +333,12 @@ public class MailServiceImpl extends CommonService implements MailService {
 		
 		MailRecord mr = new MailRecord();
 		if(hasOldMail) {
-			Date tmpDate = DateUtilCustom.dateDiffDays(1);
+			Date tmpDate = dateHandler.dateDiffDays(1);
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			mailRecordMapper.updateResend(mailKey, sdf.format(tmpDate));
 		} else {
 			mr.setMailType(MailType.forgotPassword.getCode());
-			mr.setValidTime(DateUtilCustom.localDateTimeToDate(LocalDateTime.now().plusDays(3L)));
+			mr.setValidTime(dateHandler.localDateTimeToDate(LocalDateTime.now().plusDays(3L)));
 			mr.setMailKey(mailKey);
 			mr.setUserId(userId);
 			
@@ -528,7 +527,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 						if(message.getReceivedDate() == null) {
 							continue;
 						}
-						LocalDateTime receivedDate = DateUtilCustom.dateToLocalDateTime(message.getReceivedDate());
+						LocalDateTime receivedDate = dateHandler.dateToLocalDateTime(message.getReceivedDate());
 						if(receivedDate == null || receivedDate.isAfter(bo.getValidTime())) {
 							continue;
 						}
@@ -570,7 +569,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 		String mailKey = UUID.randomUUID().toString().replaceAll("-", "");
 		InsertNewMailRecordParam p = new InsertNewMailRecordParam();
 		p.setMailType(MailType.registActivation.getCode());
-		p.setValidTime(DateUtilCustom.localDateTimeToDate(LocalDateTime.now().plusDays(3L)));
+		p.setValidTime(dateHandler.localDateTimeToDate(LocalDateTime.now().plusDays(3L)));
 		p.setMailKey(mailKey);
 		p.setUserId(userId);
 		if(mailRecordMapper.insertNewMailRecord(p) > 0) {

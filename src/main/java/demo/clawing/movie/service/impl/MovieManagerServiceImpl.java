@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import dateTimeHandle.DateTimeUtilCommon;
 import demo.clawing.movie.mapper.MovieClickCountMapper;
 import demo.clawing.movie.mapper.MovieImageMapper;
 import demo.clawing.movie.mapper.MovieInfoMapper;
@@ -94,7 +93,7 @@ public class MovieManagerServiceImpl extends MovieClawingCommonService implement
 			file = f.toPath();
 			attr = Files.readAttributes(file, BasicFileAttributes.class);
 			createDate = new Date(attr.creationTime().toMillis());
-			createDateTime = DateTimeUtilCommon.dateToLocalDateTime(createDate);
+			createDateTime = dateHandler.dateToLocalDateTime(createDate);
 			if(createDateTime.isBefore(oldHistoryLimit)) {
 				f.delete();
 			}

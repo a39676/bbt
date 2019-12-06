@@ -11,7 +11,6 @@ import autoTest.jsonReport.pojo.bo.TestReportBO;
 import autoTest.jsonReport.pojo.dto.FindReportByTestEventIdDTO;
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
 import autoTest.jsonReport.pojo.result.FindReportByTestEventIdResult;
-import dateTimeHandle.DateTimeHandle;
 import demo.autoTestBase.JsonReport.service.JsonReportService;
 import demo.autoTestBase.testEvent.mapper.TestEventMapper;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
@@ -67,11 +66,11 @@ public class JsonReportServiceImpl extends CommonService implements JsonReportSe
 		bo.setProjectId(te.getProjectId());
 //		bo.setReportPath(te.getReportPath());
 		bo.setCreateTime(te.getCreateTime());
-		bo.setCreateTimeStr(DateTimeHandle.dateToStr(te.getCreateTime()));
+		bo.setCreateTimeStr(localDateTimeHandler.dateToStr(te.getCreateTime()));
 		bo.setStartTime(te.getStartTime());
-		bo.setStartTimeStr(DateTimeHandle.dateToStr(te.getStartTime()));
+		bo.setStartTimeStr(localDateTimeHandler.dateToStr(te.getStartTime()));
 		bo.setEndTime(te.getEndTime());
-		bo.setEndTimeStr(DateTimeHandle.dateToStr(te.getEndTime()));
+		bo.setEndTimeStr(localDateTimeHandler.dateToStr(te.getEndTime()));
 		
 		return bo;
 	}

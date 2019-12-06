@@ -3,6 +3,8 @@ package demo.config.costom_component;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+import dateTimeHandle.DateHandler;
+import dateTimeHandle.LocalDateTimeHandler;
 import httpHandel.HttpUtil;
 import ioHandle.FileUtilCustom;
 import numericHandel.NumericUtilCustom;
@@ -41,4 +43,13 @@ public class CustomBeanConfig {
 		return new HttpUtil();
 	}
 	
+	@Bean
+	public DateHandler getDateHandler() {
+		return new DateHandler();
+	}
+	
+	@Bean
+	public LocalDateTimeHandler getLocalDateTimeHandler() {
+		return new LocalDateTimeHandler();
+	}
 }
