@@ -7,13 +7,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import autoTest.testEvent.pojo.constant.BingDemoUrl;
+import autoTest.testEvent.pojo.result.InsertBingDemoEventResult;
 import demo.autoTestBase.testEvent.service.TestEventService;
-import demo.clawing.bingDemo.po.result.InsertBingDemoEventResult;
 import demo.clawing.bingDemo.pojo.dto.BingDemoDTO;
 import demo.clawing.bingDemo.service.BingDemoService;
 
 @Controller
-@RequestMapping(value = "/bingDemo")
+@RequestMapping(value = BingDemoUrl.root)
 public class BingDemoController {
 
 	@Autowired
@@ -21,7 +22,7 @@ public class BingDemoController {
 	@Autowired
 	private TestEventService testEventService;
 	
-	@GetMapping(value = "/insert")
+	@GetMapping(value = BingDemoUrl.insert)
 	@ResponseBody
 	public InsertBingDemoEventResult insert(@RequestParam(value = "keyword", defaultValue = "testDemo") String keyword) {
 		BingDemoDTO dto = new BingDemoDTO();
@@ -29,7 +30,7 @@ public class BingDemoController {
 		return bingDemoService.demo(dto);
 	}
 	
-	@GetMapping(value = "/run")
+	@GetMapping(value = BingDemoUrl.run)
 	@ResponseBody
 	public String run() {
 		testEventService.findTestEventAndRun();

@@ -69,9 +69,6 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	@Autowired
 	private UserAuthService userAuthService;
 	
-	/* FIXME 2019-06-26 发现, 应改造, 至少迁移至redis */
-	private static List<UserMailAndMailKeyBO> mailRecordList = new ArrayList<UserMailAndMailKeyBO>();
-	
 	@Override
 	@Transactional(value = "transactionManager", rollbackFor = Exception.class)
 	public CommonResultBBT newUserRegist(UserRegistDTO param, String ip) {
@@ -471,7 +468,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 	}
 	
 	private Message[] searchMailInbox() {
-		findUserEmailAndKey();
+		List<UserMailAndMailKeyBO> mailRecordList = findUserEmailAndKey();
 		if(mailRecordList.size() < 1) {
 			return new Message[] {};
 		}
@@ -485,6 +482,7 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		for(Message mail : mails) {
 			tmpBo = new UserMailAndMailKeyBO();
 			try {
+				List<UserMailAndMailKeyBO> mailRecordList = findUserEmailAndKey();
 				for(UserMailAndMailKeyBO m : mailRecordList) {
 					if(((MimeMultipart) mail.getContent()).getBodyPart(0).getContent().toString().contains(m.getMailKey())) {
 						tmpBo.setMailKey(m.getMailKey());
@@ -508,8 +506,8 @@ public class UserRegistServiceImpl extends CommonService implements UserRegistSe
 		return targetBo;
 	}
 	
-	private void findUserEmailAndKey() {
-		mailRecordList = usersDetailMapper.findUserEmailAndKey();
+	private List<UserMailAndMailKeyBO> findUserEmailAndKey() {
+		return usersDetailMapper.findUserEmailAndKey();
 	}
 	/*
 	 * 2018-06-28 暂停向注册用户发送激活邮件,改由用户发回激活码.
