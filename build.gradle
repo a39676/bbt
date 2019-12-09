@@ -49,7 +49,6 @@ repositories {
 
 dependencies {
 	// tools
-	compile project(':toolPacksG') 
 	compile project(':ATTool')
 	compile project(':auxiliaryCommon')
 
