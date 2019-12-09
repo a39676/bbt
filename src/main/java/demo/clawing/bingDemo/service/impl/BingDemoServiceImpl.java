@@ -2,6 +2,7 @@ package demo.clawing.bingDemo.service.impl;
 
 import java.io.File;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -86,7 +87,11 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 			keywordInput.clear();
 			keywordInput.sendKeys(te.getRemark());
 			
-			jsonReporter.appendContent(reportDTO, "输入关键词: " + te.getRemark());
+			if(StringUtils.isBlank(te.getRemark())) {
+				jsonReporter.appendContent(reportDTO, "输入空白关键词");
+			} else {
+				jsonReporter.appendContent(reportDTO, "输入关键词: " + te.getRemark());
+			}
 			
 			screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
 			uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());

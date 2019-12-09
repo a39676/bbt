@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import autoTest.jsonReport.pojo.bo.TestReportBO;
-import autoTest.jsonReport.pojo.constant.JsonReportInteractionUrl;
+import autoTest.jsonReport.pojo.constant.AutoTestInteractionUrl;
 import autoTest.jsonReport.pojo.dto.FindReportByTestEventIdDTO;
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
 import autoTest.jsonReport.pojo.result.FindReportByTestEventIdResult;
@@ -18,19 +18,19 @@ import demo.autoTestBase.JsonReport.service.JsonReportService;
 import demo.baseCommon.controller.CommonController;
 
 @Controller
-@RequestMapping(value = {JsonReportInteractionUrl.root})
+@RequestMapping(value = {AutoTestInteractionUrl.root})
 public class JsonReportController extends CommonController {
 
 	@Autowired
 	private JsonReportService jsonReportService;
 	
-	@PostMapping(value = JsonReportInteractionUrl.findReportsByCondition)
+	@PostMapping(value = AutoTestInteractionUrl.findReportsByCondition)
 	@ResponseBody
 	public List<TestReportBO> findReportsByCondition(@RequestBody FindTestEventPageByConditionDTO dto) {
 		return jsonReportService.findReportsByCondition(dto);
 	}
 	
-	@PostMapping(value = JsonReportInteractionUrl.findReportByTestEventId)
+	@PostMapping(value = AutoTestInteractionUrl.findReportByTestEventId)
 	@ResponseBody
 	public FindReportByTestEventIdResult findReportByTestEventId(@RequestBody FindReportByTestEventIdDTO dto) {
 		return jsonReportService.findReportByTestEventId(dto);

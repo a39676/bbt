@@ -31,8 +31,7 @@ logging:
     # demo.mapper: DEBUG
     # demo.base.system.mapper: DEBUG
     demo.base.user.mapper: DEBUG
-    demo.testCase.mapper: DEBUG
-    demo.movie.mapper: DEBUG
+    demo.autoTestBase.testEvent.mapper: DEBUG
   pattern:
     console: "%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"
     file: "[%p] [%d{yyyy-MM-dd HH:mm:ss}][%c]%m%n [%thread] %-5level %logger{36}"
