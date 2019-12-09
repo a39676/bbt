@@ -25,8 +25,8 @@ println System.getProperty("java.home")
 
 // JDK version source compatibility
 compileJava {
-	sourceCompatibility = '1.8'
-	targetCompatibility = '1.8'
+	sourceCompatibility = '12'
+	targetCompatibility = '12'
 }
 
 [compileJava,compileTestJava,javadoc]*.options*.encoding = 'UTF-8'
@@ -50,8 +50,8 @@ repositories {
 dependencies {
 	// tools
 	compile project(':toolPacksG') 
-	compile project(':auxiliaryCommon')
 	compile project(':ATTool')
+	compile project(':auxiliaryCommon')
 
 	// spring boot
     compile group: 'org.springframework.boot', name: 'spring-boot-starter', version: '2.1.5.RELEASE'
