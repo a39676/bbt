@@ -14,12 +14,12 @@ import at.pojo.bo.XpathBuilderBO;
 import at.pojo.dto.JsonReportDTO;
 import at.pojo.dto.TakeScreenshotSaveDTO;
 import at.pojo.result.ScreenshotSaveResult;
+import autoTest.testEvent.pojo.dto.InsertBingDemoTestEventDTO;
 import autoTest.testEvent.pojo.result.InsertBingDemoEventResult;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.autoTestBase.testModule.pojo.type.TestModuleType;
 import demo.baseCommon.pojo.result.CommonResultBBT;
-import demo.clawing.bingDemo.pojo.dto.BingDemoDTO;
 import demo.clawing.bingDemo.pojo.type.BingDemoCaseType;
 import demo.clawing.bingDemo.service.BingDemoService;
 import demo.selenium.service.SeleniumGlobalOptionService;
@@ -47,10 +47,10 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 		return globalOptionService.getReportOutputFolder() + File.separator + eventName;
 	}
 	
-	@Override
-	public InsertTestEventResult insertclawingEvent(String keyword) {
+	public InsertTestEventResult insertclawingEvent(InsertBingDemoTestEventDTO dto) {
 		TestEvent te = buildTestEvent();
-		te.setRemark(keyword);
+		te.setRemark(dto.getSearchKeyWord());
+		te.setAppointment(dto.getAppointment());
 		return testEventService.insertTestEvent(te);
 	}
 	
@@ -131,8 +131,8 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 	}
 
 	@Override
-	public InsertBingDemoEventResult insert(BingDemoDTO dto) {
-		InsertTestEventResult r = insertclawingEvent(dto.getKeyword());
+	public InsertBingDemoEventResult insert(InsertBingDemoTestEventDTO dto) {
+		InsertTestEventResult r = insertclawingEvent(dto);
 		int waitingEventCount = testEventService.countWaitingEvent();
 		Long eventId = r.getNewTestEventId();
 		
