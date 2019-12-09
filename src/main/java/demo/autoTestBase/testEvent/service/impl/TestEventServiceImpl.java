@@ -60,13 +60,6 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	@Override
 	public void findTestEventAndRun() {
 		
-		String breakWord = findPauseWord();
-		if(StringUtils.isNotBlank(breakWord)) {
-			if(breakWord.equals(safeWord)) {
-				return;
-			}
-		}
-		
 		List<TestEvent> events = findTestEventNotRunYet();
 		if(events == null || events.size() < 1) {
 			return;
@@ -92,6 +85,13 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		 */
 		CommonResultBBT r = null;
 		for(TestEvent te : events) {
+			String breakWord = findPauseWord();
+			if(StringUtils.isNotBlank(breakWord)) {
+				if(breakWord.equals(safeWord)) {
+					return;
+				}
+			}
+			
 			if(te.getAppointment() == null || te.getAppointment().isBefore(LocalDateTime.now())) {
 				startEvent(te);
 				r = runSubEvent(te);
