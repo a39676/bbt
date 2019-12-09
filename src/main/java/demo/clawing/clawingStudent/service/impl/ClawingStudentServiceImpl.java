@@ -14,14 +14,14 @@ import org.springframework.stereotype.Service;
 
 import at.pojo.bo.XpathBuilderBO;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
-import demo.baseCommon.service.CommonService;
 import demo.clawing.clawingStudent.service.ClawingStudentService;
 import demo.selenium.service.WebDriverService;
 import demo.selenium.service.impl.AuxiliaryToolServiceImpl;
+import demo.selenium.service.impl.SeleniumCommonService;
 import ioHandle.FileUtilCustom;
 
 @Service
-public class ClawingStudentServiceImpl extends CommonService implements ClawingStudentService {
+public class ClawingStudentServiceImpl extends SeleniumCommonService implements ClawingStudentService {
 
 	@Autowired
 	private FileUtilCustom fileUtil;
@@ -64,9 +64,7 @@ public class ClawingStudentServiceImpl extends CommonService implements ClawingS
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (d != null) {
-				d.quit();
-			}
+			tryQuitWebDriver(d);
 			System.out.println(numIndex);
 		}
 	}

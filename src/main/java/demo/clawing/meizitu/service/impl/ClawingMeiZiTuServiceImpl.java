@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import at.pojo.bo.XpathBuilderBO;
 import at.web.WebATToolService;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
-import demo.baseCommon.service.CommonService;
 import demo.clawing.meizitu.mapper.MeizituGroupRecordMapper;
 import demo.clawing.meizitu.pojo.po.MeizituGroupRecord;
 import demo.clawing.meizitu.service.ClawingMeiZiTuGlobalOptionService;
@@ -34,10 +33,11 @@ import demo.interaction.image.pojo.type.ImageType;
 import demo.selenium.service.JavaScriptService;
 import demo.selenium.service.WebDriverService;
 import demo.selenium.service.impl.AuxiliaryToolServiceImpl;
+import demo.selenium.service.impl.SeleniumCommonService;
 import httpHandel.HttpUtil;
 
 @Service
-public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingMeiZiTuService {
+public class ClawingMeiZiTuServiceImpl extends SeleniumCommonService implements ClawingMeiZiTuService {
 
 	@Autowired
 	private WebDriverService webDriverService;
@@ -102,9 +102,7 @@ public class ClawingMeiZiTuServiceImpl extends CommonService implements ClawingM
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (d != null) {
-				d.quit();
-			}
+			tryQuitWebDriver(d);
 		}
 	}
 

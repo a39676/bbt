@@ -1,7 +1,9 @@
 package demo.selenium.service.impl;
 
+import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import at.pojo.dto.JsonReportDTO;
 import at.service.ATJsonReportService;
 import at.service.ScreenshotService;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
@@ -52,5 +54,25 @@ public abstract class SeleniumCommonService extends CommonService {
 	
 	protected int updateTestEventReportPath(TestEvent te, String reportPath) {
 		return testEventService.updateTestEventReportPath(te, reportPath);
+	}
+
+	protected boolean tryQuitWebDriver(WebDriver d, JsonReportDTO reportDTO) {
+		if(d != null) {
+			try {
+				d.quit();
+				return true;
+			} catch (Exception e2) {
+				if(reportDTO != null) {
+					jsonReporter.appendContent(reportDTO, e2.getMessage());
+				}
+				return false;
+			}
+		} else {
+			return true;
+		}
+	}
+	
+	protected boolean tryQuitWebDriver(WebDriver d) {
+		return tryQuitWebDriver(d, null);
 	}
 }

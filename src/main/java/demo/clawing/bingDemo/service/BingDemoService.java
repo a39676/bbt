@@ -12,6 +12,6 @@ public interface BingDemoService {
 
 	CommonResultBBT clawing(TestEvent te);
 
-	InsertBingDemoEventResult demo(BingDemoDTO dto);
+	InsertBingDemoEventResult insert(BingDemoDTO dto);
 
 }

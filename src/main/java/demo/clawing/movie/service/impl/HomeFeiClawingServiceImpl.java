@@ -145,9 +145,7 @@ public final class HomeFeiClawingServiceImpl extends MovieClawingCommonService i
 			
 		} finally {
 			r.setMessage(report.toString());
-			if (d != null) {
-				d.quit();
-			}
+			tryQuitWebDriver(d);
 		}
 		return r;
 	}

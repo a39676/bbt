@@ -83,9 +83,7 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 			
 		} finally {
 			r.setMessage(report.toString());
-			if (d != null) {
-				d.quit();
-			}
+			tryQuitWebDriver(d);
 		}
 		
 		return r;

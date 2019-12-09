@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,9 +69,13 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 		String bingUrl = "https://cn.bing.com/?FORM=BEHPTB";
 		
 		try {
-			d.get(bingUrl);
-			
-			jsonReporter.appendContent(reportDTO, "打开: " + bingUrl);
+			try {
+				d.get(bingUrl);
+				jsonReporter.appendContent(reportDTO, "打开: " + bingUrl);
+			} catch (TimeoutException e) {
+				jsUtil.windowStop(d);
+				jsonReporter.appendContent(reportDTO, "访问超时");
+			}
 			
 			XpathBuilderBO x = new XpathBuilderBO();
 			
@@ -115,9 +120,7 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 			
 		} finally {
 			r.setMessage(reportDTO.getContent());
-			if (d != null) {
-				d.quit();
-			}
+			tryQuitWebDriver(d, reportDTO);
 			String reportOutputPath = reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json";
 			if(jsonReporter.outputReport(reportDTO, reportOutputPath)) {
 				updateTestEventReportPath(te, reportOutputPath);
@@ -128,7 +131,7 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 	}
 
 	@Override
-	public InsertBingDemoEventResult demo(BingDemoDTO dto) {
+	public InsertBingDemoEventResult insert(BingDemoDTO dto) {
 		InsertTestEventResult r = insertclawingEvent(dto.getKeyword());
 		int waitingEventCount = testEventService.countWaitingEvent();
 		Long eventId = r.getNewTestEventId();
@@ -141,21 +144,6 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 		ir.setEventId(eventId);
 
 		return ir;
-//		/*
-//		 * TODO 
-//		 * set a common result
-//		 */
-//		
-//		ModelAndView v = new ModelAndView();
-//		v.addObject("waitingEventCount", waitingEventCount);
-//		v.addObject("eventId", eventId);
-//		if(r.isSuccess()) {
-//			v.addObject("message", "本次任务已经成功排入队列, 输入参数为: " + dto.getKeyword() + ", 前面还有 " + waitingEventCount + " 个任务在等待执行");
-//		} else {
-//			v.addObject("message", "本次任务未成功排入队列, 请联系 davenchan12546@gmail.com");
-//		}
-//		
-//		return v;
 	}
 	
 }

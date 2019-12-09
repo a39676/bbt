@@ -27,7 +27,7 @@ public class BingDemoController {
 	public InsertBingDemoEventResult insert(@RequestParam(value = "keyword", defaultValue = "testDemo") String keyword) {
 		BingDemoDTO dto = new BingDemoDTO();
 		dto.setKeyword(keyword);
-		return bingDemoService.demo(dto);
+		return bingDemoService.insert(dto);
 	}
 	
 	@GetMapping(value = BingDemoUrl.run)

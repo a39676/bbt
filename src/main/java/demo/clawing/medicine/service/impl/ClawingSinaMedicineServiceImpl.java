@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import at.pojo.bo.XpathBuilderBO;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
-import demo.baseCommon.service.CommonService;
 import demo.clawing.medicine.mapper.MedicineInfoErrorMapper;
 import demo.clawing.medicine.mapper.MedicineInfoMapper;
 import demo.clawing.medicine.pojo.po.MedicineInfo;
@@ -24,9 +23,10 @@ import demo.clawing.medicine.pojo.result.SinaMedicineDetailMainHandleResult;
 import demo.clawing.medicine.service.ClawingSinaMedicineFactoryService;
 import demo.clawing.medicine.service.ClawingSinaMedicineService;
 import demo.selenium.service.WebDriverService;
+import demo.selenium.service.impl.SeleniumCommonService;
 
 @Service
-public class ClawingSinaMedicineServiceImpl extends CommonService implements ClawingSinaMedicineService {
+public class ClawingSinaMedicineServiceImpl extends SeleniumCommonService implements ClawingSinaMedicineService {
 
 	@Autowired
 	private WebDriverService webDriverService;
@@ -64,9 +64,7 @@ public class ClawingSinaMedicineServiceImpl extends CommonService implements Cla
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (d != null) {
-				d.quit();
-			}
+			tryQuitWebDriver(d);
 		}
 	}
 

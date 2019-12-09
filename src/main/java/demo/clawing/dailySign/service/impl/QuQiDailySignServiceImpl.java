@@ -170,11 +170,7 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 			}
 			
 		} finally {
-			if (d != null) {
-				d.quit();
-			}
-			
-			
+			tryQuitWebDriver(d, reportDTO);
 		}
 		
 		return r;

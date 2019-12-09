@@ -13,15 +13,15 @@ import at.pojo.bo.XpathBuilderBO;
 import at.pojo.dto.TakeScreenshotSaveDTO;
 import at.service.ScreenshotService;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
-import demo.baseCommon.service.CommonService;
 import demo.clawing.neobux.service.NeobuxOptionService;
 import demo.clawing.neobux.service.NeobuxService;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.WebDriverService;
 import demo.selenium.service.impl.AuxiliaryToolServiceImpl;
+import demo.selenium.service.impl.SeleniumCommonService;
 
 @Service
-public class NeobuxServiceImpl extends CommonService implements NeobuxService {
+public class NeobuxServiceImpl extends SeleniumCommonService implements NeobuxService {
 
 	@Autowired
 	private WebDriverService webDriverService;
@@ -92,9 +92,7 @@ public class NeobuxServiceImpl extends CommonService implements NeobuxService {
 			e.printStackTrace();
 			screenshotService.screenshotSave(dto, scrSavePath, null);
 		} finally {
-			if (d != null) {
-				d.quit();
-			}
+			tryQuitWebDriver(d);
 		}
 		
 	}

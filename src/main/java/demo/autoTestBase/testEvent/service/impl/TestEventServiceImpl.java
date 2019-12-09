@@ -92,7 +92,7 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		 */
 		CommonResultBBT r = null;
 		for(TestEvent te : events) {
-			if(te.getAppointment() != null && te.getAppointment().isAfter(LocalDateTime.now())) {
+			if(te.getAppointment() == null || te.getAppointment().isBefore(LocalDateTime.now())) {
 				startEvent(te);
 				r = runSubEvent(te);
 				endEvent(te, r.isSuccess(), r.getMessage());
