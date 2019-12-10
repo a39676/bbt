@@ -48,11 +48,11 @@ import demo.interaction.movieInteraction.pojo.result.FindMovieRecommendResult;
 import demo.interaction.movieInteraction.pojo.vo.MovieRecommendVO;
 import demo.interaction.movieInteraction.service.MovieInteractionService;
 import demo.tool.service.VisitDataService;
-import ioHandle.FileUtilCustom;
 import movie.pojo.dto.FindMovieDetailDTO;
 import movie.pojo.dto.FindMovieSummaryListDTO;
-import numericHandel.NumericUtilCustom;
 import tool.pojo.bo.IpRecordBO;
+import toolPack.ioHandle.FileUtilCustom;
+import toolPack.numericHandel.NumericUtilCustom;
 
 @Service
 public class MovieInteractionServiceImpl extends CommonService implements MovieInteractionService {

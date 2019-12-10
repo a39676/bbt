@@ -17,8 +17,8 @@ import demo.base.user.pojo.po.UserIp;
 import demo.config.costom_component.BaseUtilCustom;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import numericHandel.NumericUtilCustom;
 import tool.pojo.bo.IpRecordBO;
+import toolPack.numericHandel.NumericUtilCustom;
 
 public abstract class CommonController {
 	

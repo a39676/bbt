@@ -34,7 +34,7 @@ import demo.selenium.service.JavaScriptService;
 import demo.selenium.service.WebDriverService;
 import demo.selenium.service.impl.AuxiliaryToolServiceImpl;
 import demo.selenium.service.impl.SeleniumCommonService;
-import httpHandel.HttpUtil;
+import toolPack.httpHandel.HttpUtil;
 
 @Service
 public class ClawingMeiZiTuServiceImpl extends SeleniumCommonService implements ClawingMeiZiTuService {

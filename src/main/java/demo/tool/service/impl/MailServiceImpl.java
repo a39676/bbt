@@ -43,9 +43,9 @@ import demo.tool.pojo.constant.ToolPathConstant;
 import demo.tool.pojo.param.InsertNewMailRecordParam;
 import demo.tool.pojo.type.MailType;
 import demo.tool.service.MailService;
-import emailHandle.MailHandle;
-import emailHandle.mailService.send.SendEmail;
-import ioHandle.FileUtilCustom;
+import toolPack.emailHandle.MailHandle;
+import toolPack.emailHandle.mailService.send.SendEmail;
+import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class MailServiceImpl extends CommonService implements MailService {

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
 import demo.tool.service.DownloadService;
-import ioHandle.FileUtilCustom;
+import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class DownloadServiceImpl implements DownloadService {

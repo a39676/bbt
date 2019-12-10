@@ -17,7 +17,7 @@ import auxiliaryCommon.pojo.type.BaseResultType;
 import demo.tool.pojo.constant.ToolPathConstant;
 import demo.tool.pojo.result.UploadResult;
 import demo.tool.service.UploadService;
-import ioHandle.FileUtilCustom;
+import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class UploadServiceImpl implements UploadService {

@@ -18,7 +18,7 @@ import demo.clawing.clawingStudent.service.ClawingStudentService;
 import demo.selenium.service.WebDriverService;
 import demo.selenium.service.impl.AuxiliaryToolServiceImpl;
 import demo.selenium.service.impl.SeleniumCommonService;
-import ioHandle.FileUtilCustom;
+import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class ClawingStudentServiceImpl extends SeleniumCommonService implements ClawingStudentService {
