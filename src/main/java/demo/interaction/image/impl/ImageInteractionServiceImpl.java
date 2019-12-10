@@ -27,7 +27,7 @@ public class ImageInteractionServiceImpl extends CommonService implements ImageI
 		try {
 			JSONObject j = JSONObject.fromObject(dto);
 	        
-			String url = ServerHost.host1 + ImageInteractionUrl.root + ImageInteractionUrl.uploadImageToCloudinary;
+			String url = ServerHost.localHost10001 + ImageInteractionUrl.root + ImageInteractionUrl.uploadImageToCloudinary;
 			String response = String.valueOf(httpUtil.sendPostRestful(url, j.toString()));
 			JSONObject resultJ = JSONObject.fromObject(response);
 			
