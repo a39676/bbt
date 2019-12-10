@@ -14,10 +14,7 @@
   <div class="col-md-12">
 
     <span style="font-size: smaller;">${message}</span><br>
-    <button class="btn  btn-warning  btn-sm" name="urlButton" url="${urlRedirect}">
-      <span style="font-size: smaller">[回到主页]</span>
-    </button>
-
+    <a href="/"><span style="font-size: smaller">[回到主页]</span></a>
   </div>
 
 </body>
@@ -25,12 +22,6 @@
 <%@ include file="../baseElementJSP/normalFooter.jsp" %>
 <script type="text/javascript">
 $(document).ready(function() {
-
-  $("button[name='urlButton']").click(function () {
-
-    location.reload();
-
-  });
 
 });
 
