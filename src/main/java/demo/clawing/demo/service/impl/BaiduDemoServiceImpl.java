@@ -1,6 +1,7 @@
-package demo.clawing.bingDemo.service.impl;
+package demo.clawing.demo.service.impl;
 
 import java.io.File;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
@@ -14,28 +15,28 @@ import at.pojo.bo.XpathBuilderBO;
 import at.pojo.dto.JsonReportDTO;
 import at.pojo.dto.TakeScreenshotSaveDTO;
 import at.pojo.result.ScreenshotSaveResult;
-import autoTest.testEvent.pojo.dto.InsertBingDemoTestEventDTO;
-import autoTest.testEvent.pojo.result.InsertBingDemoEventResult;
+import autoTest.testEvent.pojo.dto.InsertSearchingDemoTestEventDTO;
+import autoTest.testEvent.pojo.result.InsertSearchingDemoEventResult;
 import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.baseCommon.pojo.result.CommonResultBBT;
-import demo.clawing.bingDemo.pojo.type.BingDemoCaseType;
-import demo.clawing.bingDemo.service.BingDemoService;
+import demo.clawing.demo.pojo.type.SearchingDemoCaseType;
+import demo.clawing.demo.service.BaiduDemoService;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.impl.SeleniumCommonService;
 import image.pojo.result.UploadImageToCloudinaryResult;
 
 @Service
-public class BingDemoServiceImpl extends SeleniumCommonService implements BingDemoService {
+public class BaiduDemoServiceImpl extends SeleniumCommonService implements BaiduDemoService {
 	
-	private String eventName = "bingDemo";
+	private String eventName = "baidu search demo";
 	
 	@Autowired
 	private SeleniumGlobalOptionService globalOptionService;
 
 	private TestEvent buildTestEvent() {
-		BingDemoCaseType t = BingDemoCaseType.bingDemo;
+		SearchingDemoCaseType t = SearchingDemoCaseType.baiduDemo;
 		return buildTestEvent(TestModuleType.ATDemo, t.getId(), t.getEventName());
 	}
 	
@@ -47,7 +48,7 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 		return globalOptionService.getReportOutputFolder() + File.separator + eventName;
 	}
 	
-	public InsertTestEventResult insertclawingEvent(InsertBingDemoTestEventDTO dto) {
+	public InsertTestEventResult insertclawingEvent(InsertSearchingDemoTestEventDTO dto) {
 		TestEvent te = buildTestEvent();
 		te.setRemark(dto.getSearchKeyWord());
 		te.setAppointment(dto.getAppointment());
@@ -66,12 +67,13 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 
 		WebDriver d = webDriverService.buildFireFoxWebDriver();
 
-		String bingUrl = "https://cn.bing.com/?FORM=BEHPTB";
+		String mainUrl = "https://www.baidu.com/";
+		
 		
 		try {
 			try {
-				d.get(bingUrl);
-				jsonReporter.appendContent(reportDTO, "打开: " + bingUrl);
+				d.get(mainUrl);
+				jsonReporter.appendContent(reportDTO, "打开: " + mainUrl);
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
 				jsonReporter.appendContent(reportDTO, "访问超时");
@@ -86,7 +88,7 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
 			
-			x.start("input").addAttribute("id", "sb_form_q");
+			x.start("input").addAttribute("id", "kw");
 			WebElement keywordInput = d.findElement(By.xpath(x.getXpath()));
 			keywordInput.click();
 			keywordInput.clear();
@@ -102,7 +104,7 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 			uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
 			
-			x.start("div").addAttribute("id", "sb_go_par");
+			x.start("input").addAttribute("id", "su");
 			WebElement searchButton = d.findElement(By.xpath(x.getXpath()));
 			searchButton.click();
 			
@@ -111,6 +113,10 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 			screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
 			uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
+			
+			x.start("a").addAttribute("class", "OP_LOG_LINK");
+			List<WebElement> orgAList = d.findElements(By.xpath(x.getXpath()));
+			jsonReporter.appendContent(reportDTO, "找到: " + orgAList.size() + "个官网标记");
 			
 			jsonReporter.appendContent(reportDTO, "完成");
 			
@@ -131,12 +137,12 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 	}
 
 	@Override
-	public InsertBingDemoEventResult insert(InsertBingDemoTestEventDTO dto) {
+	public InsertSearchingDemoEventResult insert(InsertSearchingDemoTestEventDTO dto) {
 		InsertTestEventResult r = insertclawingEvent(dto);
 		int waitingEventCount = testEventService.countWaitingEvent();
 		Long eventId = r.getNewTestEventId();
 		
-		InsertBingDemoEventResult ir = new InsertBingDemoEventResult();
+		InsertSearchingDemoEventResult ir = new InsertSearchingDemoEventResult();
 		ir.setCode(r.getCode());
 		ir.setSuccess(r.isSuccess());
 		ir.setMessage(r.getMessage());

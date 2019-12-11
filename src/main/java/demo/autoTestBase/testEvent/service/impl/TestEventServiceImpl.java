@@ -16,8 +16,8 @@ import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.badJoke.sms.service.BadJokeCasePrefixService;
-import demo.clawing.bingDemo.service.BingDemoService;
 import demo.clawing.dailySign.service.DailySignPrefixService;
+import demo.clawing.demo.service.SearchingDemoPrefixService;
 import demo.clawing.movie.service.MovieClawingCasePrefixService;
 
 @Service
@@ -31,7 +31,7 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	@Autowired
 	private BadJokeCasePrefixService badJokeCasePrefixService;
 	@Autowired
-	private BingDemoService bingDemoService;
+	private SearchingDemoPrefixService searchingDemoService;
 	@Autowired
 	private DailySignPrefixService dailySignPrefixService;
 	
@@ -109,7 +109,7 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		} else if (TestModuleType.badJoke.getId().equals(moduleId)) {
 			return badJokeCasePrefixService.runSubEvent(te);
 		} else if (TestModuleType.ATDemo.getId().equals(moduleId)) {
-			return bingDemoService.clawing(te);
+			return searchingDemoService.runSubEvent(te);
 		} else if (TestModuleType.dailySign.getId().equals(moduleId)) {
 			return dailySignPrefixService.runSubEvent(te);
 		}
