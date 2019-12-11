@@ -414,7 +414,6 @@
       test_event
     <where>
       is_delete = false
-      and report_path is not null
       <if test="moduleId != null">
         and module_id = #{moduleId}
       </if>
