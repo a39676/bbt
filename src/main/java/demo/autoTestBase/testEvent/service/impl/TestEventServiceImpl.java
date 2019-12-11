@@ -3,10 +3,10 @@ package demo.autoTestBase.testEvent.service.impl;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testCase.pojo.po.TestCase;
 import demo.autoTestBase.testCase.service.TestCaseService;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
@@ -14,7 +14,6 @@ import demo.autoTestBase.testEvent.pojo.constant.TestEventOptionConstant;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.autoTestBase.testEvent.service.TestEventService;
-import demo.autoTestBase.testModule.pojo.type.TestModuleType;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.badJoke.sms.service.BadJokeCasePrefixService;
 import demo.clawing.bingDemo.service.BingDemoService;
@@ -40,7 +39,7 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	private String safeWord = "breakNow";
 	
 	private String findPauseWord() {
-		return constantService.getValByName(pauseWordRedisKey);
+		return constantService.getValByName(pauseWordRedisKey, true);
 	}
 	
 	@Override
@@ -85,11 +84,10 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		 */
 		CommonResultBBT r = null;
 		for(TestEvent te : events) {
+			
 			String breakWord = findPauseWord();
-			if(StringUtils.isNotBlank(breakWord)) {
-				if(breakWord.equals(safeWord)) {
-					return;
-				}
+			if(safeWord.equals(breakWord)) {
+				return;
 			}
 			
 			if(te.getAppointment() == null || te.getAppointment().isBefore(LocalDateTime.now())) {
