@@ -1,4 +1,4 @@
-package demo.clawing.bingDemo.controller;
+package demo.clawing.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,28 +8,28 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import autoTest.testEvent.pojo.constant.BingDemoUrl;
-import autoTest.testEvent.pojo.dto.InsertBingDemoTestEventDTO;
-import autoTest.testEvent.pojo.result.InsertBingDemoEventResult;
+import autoTest.testEvent.pojo.constant.SearchingDemoUrl;
+import autoTest.testEvent.pojo.dto.InsertSearchingDemoTestEventDTO;
+import autoTest.testEvent.pojo.result.InsertSearchingDemoEventResult;
 import demo.autoTestBase.testEvent.service.TestEventService;
-import demo.clawing.bingDemo.service.BingDemoService;
+import demo.clawing.demo.service.SearchingDemoManagerService;
 
 @Controller
-@RequestMapping(value = BingDemoUrl.root)
-public class BingDemoController {
+@RequestMapping(value = SearchingDemoUrl.root)
+public class SearchingDemoController {
 
 	@Autowired
-	private BingDemoService bingDemoService;
+	private SearchingDemoManagerService searchingDemoManagerService;
 	@Autowired
 	private TestEventService testEventService;
 	
-	@PostMapping(value = BingDemoUrl.insert)
+	@PostMapping(value = SearchingDemoUrl.insert)
 	@ResponseBody
-	public InsertBingDemoEventResult insert(@RequestBody InsertBingDemoTestEventDTO dto) {
-		return bingDemoService.insert(dto);
+	public InsertSearchingDemoEventResult insert(@RequestBody InsertSearchingDemoTestEventDTO dto) {
+		return searchingDemoManagerService.insert(dto);
 	}
 	
-	@GetMapping(value = BingDemoUrl.run)
+	@GetMapping(value = SearchingDemoUrl.run)
 	@ResponseBody
 	public String run() {
 		testEventService.findTestEventAndRun();
