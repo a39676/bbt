@@ -436,14 +436,21 @@
       <if test="createEndTime != null">
         and create_time &lt;= #{createEndTime}
       </if>
-      <if test="runTimeStartTime != null">
-        and start_time &gt;= #{runTimeStartTime}
-      </if>
-      <if test="runTimeEndTime != null">
-        and start_time &lt;= #{runTimeEndTime}
-      </if>
+      
       <if test="endTime != null">
         and create_time &lt;= #{endTime}
+      </if>
+      <if test="runFlag != null and runFlag == true">
+        and start_time is not null
+        <if test="runTimeStartTime != null">
+          and start_time &gt;= #{runTimeStartTime}
+        </if>
+        <if test="runTimeEndTime != null">
+          and start_time &lt;= #{runTimeEndTime}
+        </if>
+      </if>
+      <if test="runFlag == null or runFlag == false">
+        and start_time is null
       </if>
     </where>
     order by create_time desc
