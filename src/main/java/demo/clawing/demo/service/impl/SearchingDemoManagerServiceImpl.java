@@ -27,7 +27,7 @@ public class SearchingDemoManagerServiceImpl extends SeleniumCommonService imple
 			ir.failWithMessage("数据异常");
 			return ir;
 		}
-
+		
 		InsertTestEventResult r = insertclawingEvent(dto, t);
 		int waitingEventCount = testEventService.countWaitingEvent();
 		Long eventId = r.getNewTestEventId();

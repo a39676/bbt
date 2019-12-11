@@ -1,7 +1,6 @@
 package demo.clawing.demo.service.impl;
 
 import java.io.File;
-import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
@@ -114,9 +113,14 @@ public class BaiduDemoServiceImpl extends SeleniumCommonService implements Baidu
 			uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
 			
-			x.start("a").addAttribute("class", "OP_LOG_LINK");
-			List<WebElement> orgAList = d.findElements(By.xpath(x.getXpath()));
-			jsonReporter.appendContent(reportDTO, "找到: " + orgAList.size() + "个官网标记");
+			Thread.sleep(1500L);
+			
+			/*
+			 * TODO
+			 */
+//			x.start("a").addAttribute("class", "OP_LOG_LINK");
+//			List<WebElement> orgAList = d.findElements(By.xpath(x.getXpath()));
+//			jsonReporter.appendContent(reportDTO, "找到: " + orgAList.size() + "个官网标记");
 			
 			jsonReporter.appendContent(reportDTO, "完成");
 			
