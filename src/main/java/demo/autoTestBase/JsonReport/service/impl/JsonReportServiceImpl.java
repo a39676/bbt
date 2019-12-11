@@ -83,7 +83,7 @@ public class JsonReportServiceImpl extends CommonService implements JsonReportSe
 		}
 		
 		TestEvent po = eventMapper.selectByPrimaryKey(dto.getTestEventId());
-		if(po == null || StringUtils.isBlank(po.getReportPath()) || "null".equals(po.getReportPath())) {
+		if(po == null) {
 			return r;
 		}
 		
@@ -93,8 +93,10 @@ public class JsonReportServiceImpl extends CommonService implements JsonReportSe
 		r.setEndTime(po.getEndTime());
 		r.setTitle(po.getEventName());
 		
-		String reportStr = ioUtil.getStringFromFile(po.getReportPath());
-		r.setReportStr(reportStr);
+		if(StringUtils.isNotBlank(po.getReportPath())) {
+			String reportStr = ioUtil.getStringFromFile(po.getReportPath());
+			r.setReportStr(reportStr);
+		}
 		
 		r.setIsSuccess();
 		
