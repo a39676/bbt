@@ -15,9 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import at.pojo.bo.XpathBuilderBO;
+import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
-import demo.autoTestBase.testModule.pojo.type.TestModuleType;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.movie.mapper.MovieInfoMapper;
 import demo.clawing.movie.mapper.MovieIntroductionMapper;
