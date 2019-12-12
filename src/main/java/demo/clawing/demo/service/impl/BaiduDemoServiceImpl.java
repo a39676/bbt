@@ -7,7 +7,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import at.pojo.bo.XpathBuilderBO;
@@ -22,7 +21,6 @@ import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.demo.pojo.type.SearchingDemoCaseType;
 import demo.clawing.demo.service.BaiduDemoService;
-import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.impl.SeleniumCommonService;
 import image.pojo.result.UploadImageToCloudinaryResult;
 
@@ -31,9 +29,6 @@ public class BaiduDemoServiceImpl extends SeleniumCommonService implements Baidu
 	
 	private String eventName = "baidu search demo";
 	
-	@Autowired
-	private SeleniumGlobalOptionService globalOptionService;
-
 	private TestEvent buildTestEvent() {
 		SearchingDemoCaseType t = SearchingDemoCaseType.baiduDemo;
 		return buildTestEvent(TestModuleType.ATDemo, t.getId(), t.getEventName());

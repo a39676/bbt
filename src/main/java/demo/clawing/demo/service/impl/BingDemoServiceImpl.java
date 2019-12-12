@@ -7,7 +7,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import at.pojo.bo.XpathBuilderBO;
@@ -17,7 +16,6 @@ import at.pojo.result.ScreenshotSaveResult;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.demo.service.BingDemoService;
-import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.impl.SeleniumCommonService;
 import image.pojo.result.UploadImageToCloudinaryResult;
 
@@ -26,9 +24,6 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 	
 	private String eventName = "bing search demo";
 	
-	@Autowired
-	private SeleniumGlobalOptionService globalOptionService;
-
 	private String getScreenshotSaveingPath() {
 		return globalOptionService.getScreenshotSavingFolder() + File.separator + eventName;
 	}

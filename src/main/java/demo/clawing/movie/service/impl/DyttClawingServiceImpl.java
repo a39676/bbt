@@ -15,6 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import at.pojo.bo.XpathBuilderBO;
+import at.pojo.dto.JsonReportDTO;
+import at.pojo.dto.TakeScreenshotSaveDTO;
+import at.pojo.result.ScreenshotSaveResult;
 import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
@@ -30,6 +33,7 @@ import demo.clawing.movie.pojo.po.MovieRecord;
 import demo.clawing.movie.pojo.result.DoubanSubClawingResult;
 import demo.clawing.movie.pojo.type.MovieClawingCaseType;
 import demo.clawing.movie.service.DyttClawingService;
+import image.pojo.result.UploadImageToCloudinaryResult;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -48,6 +52,16 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 	private String mainUrl = "https://www.dytt8.net";
 	private String newMovie = mainUrl + "/html/gndy/dyzz/index.html";
 
+	private String eventName = "dytt";
+	
+	private String getScreenshotSaveingPath() {
+		return globalOptionService.getScreenshotSavingFolder() + File.separator + eventName;
+	}
+	
+	private String getReportOutputPath() {
+		return globalOptionService.getReportOutputFolder() + File.separator + eventName;
+	}
+	
 	private TestEvent buildTestEvent() {
 		MovieClawingCaseType t = MovieClawingCaseType.dytt;
 		return buildTestEvent(TestModuleType.movieClawing, t.getId(), t.getEventName());
@@ -63,6 +77,11 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 	public CommonResultBBT clawing(TestEvent te) {
 		CommonResultBBT r = new CommonResultBBT();
 		StringBuffer report = new StringBuffer();
+		JsonReportDTO reportDTO = new JsonReportDTO();
+		
+		String reportOutputFolderPath = getReportOutputPath();
+		
+		reportDTO.setOutputReportPath(reportOutputFolderPath + File.separator + te.getId());
 		
 		WebDriver d = webDriverService.buildFireFoxWebDriver();
 
@@ -72,7 +91,7 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 			d.get(newMovie);
 			
 			while(maxClawPageCount > 0) {
-				pageHandler(d, te);
+				pageHandler(d, te, reportDTO);
 				swithToNextPage(d);
 				maxClawPageCount--;
 			}
@@ -86,10 +105,15 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 			tryQuitWebDriver(d);
 		}
 		
+		String reportOutputPath = reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json";
+		if(jsonReporter.outputReport(reportDTO, reportOutputPath)) {
+			updateTestEventReportPath(te, reportOutputPath);
+		}
+		
 		return r;
 	}
 	
-	private void pageHandler(WebDriver d, TestEvent te) throws Exception {
+	private void pageHandler(WebDriver d, TestEvent te, JsonReportDTO reportDTO) throws Exception {
 		String mainWindowHandle = d.getWindowHandle();
 		Set<String> windowHandles = null;
 		d.switchTo().window(mainWindowHandle);
@@ -102,7 +126,7 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 		WebElement ele = null;
 		for (int i = 0; i < targetAList.size(); i++) {
 			ele = targetAList.get(i);
-			singleMovieHandle(d, ele, mainWindowHandle, te);
+			singleMovieHandle(d, ele, mainWindowHandle, te, reportDTO);
 			windowHandles = d.getWindowHandles();
 			if (windowHandles.size() > 5) {
 				throw new Exception();
@@ -126,10 +150,12 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 		}
 	}
 	
-	private void singleMovieHandle(WebDriver d, WebElement ele, String mainWindowHandler, TestEvent te) throws Exception {
+	private void singleMovieHandle(WebDriver d, WebElement ele, String mainWindowHandler, TestEvent te, JsonReportDTO reportDTO) throws Exception {
 		if (ele == null || StringUtils.isBlank(ele.getAttribute("href"))) {
 			return;
 		}
+		
+		String screenshotPath = getScreenshotSaveingPath();
 		
 		String subUrl = ele.getAttribute("href");
 		MovieRecordFindByConditionDTO findMovieRecordDTO = new MovieRecordFindByConditionDTO();
@@ -138,7 +164,6 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 		findMovieRecordDTO.setCaseId(MovieClawingCaseType.dytt.getId());
 		List<MovieRecord> records = recordMapper.findByCondition(findMovieRecordDTO);
 		if (records != null && records.size() > 0) {
-			log.info(subUrl + " was clawed");
 			return;
 		}
 		
@@ -161,11 +186,10 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 		}
 
 		if (targetWindowHandle == null) {
-			log.info("can not find correct window");
+			jsonReporter.appendContent(reportDTO, "无法找到目标窗口");
 			throw new Exception();
 		} else {
 			d.switchTo().window(targetWindowHandle);
-			log.info("switch to : " + targetWindowHandle);
 		}
 		currentUrl = d.getCurrentUrl();
 
@@ -199,6 +223,14 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			jsonReporter.appendContent(reportDTO, e.toString());
+			TakeScreenshotSaveDTO screenshotDTO = new TakeScreenshotSaveDTO();
+			screenshotDTO.setDriver(d);
+			ScreenshotSaveResult screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
+			
+			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
+			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
+			
 		} finally {
 			if (!mainWindowHandler.equals(d.getWindowHandle())) {
 				d.close();
@@ -253,7 +285,9 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 		infoMapper.insertSelective(info);
 
 		String savePath = introductionSavePath + File.separator + movieId + ".txt";
-		iou.byteToFile(doubanResult.getIntroduction().getBytes(StandardCharsets.UTF_8), savePath);
+		if(StringUtils.isNotBlank(doubanResult.getIntroduction())) {
+			iou.byteToFile(doubanResult.getIntroduction().getBytes(StandardCharsets.UTF_8), savePath);
+		}
 
 		MovieIntroduction po = new MovieIntroduction();
 		po.setMovieId(movieId);
