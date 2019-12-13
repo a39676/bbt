@@ -34,7 +34,6 @@
   <input type="text" name="customEndDate" value="2018-01-01 00:00:00"><br>
   <button id="deleteUserIpRecord">deleteUserIpRecord</button><br>
   <button id="batchUpdatePrivateKey">batchUpdatePrivateKey</button><br>
-  <button id="loadArticleUUIDChannel">loadArticleUUIDChannel</button><br>
   <button id="createFakeEvaluationStore">createFakeEvaluationStore</button><br>
 </div>
 
@@ -138,39 +137,6 @@
       });  
     };
 
-    $("#loadArticleUUIDChannel").click( function() {
-      loadArticleUUIDChannel();
-    });
-
-    function loadArticleUUIDChannel() {
-      
-      var url = "${pageContext.request.contextPath}/articleAdmin/loadArticleUUIDChannel";
-     
-      var jsonOutput = {
-      };
-
-      $.ajax({  
-        type : "POST",  
-        async : true,
-        url : url,  
-        data: JSON.stringify(jsonOutput),
-        cache : false,
-        contentType: "application/json",
-        dataType: "json",
-        timeout:50000,  
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader(csrfHeader, csrfToken);
-        },
-        success:function(datas){
-          console.log(datas);
-          $("span[name='resultSpan']").text(datas);
-        },  
-        error: function(datas) {  
-          $("span[name='resultSpan']").text(datas);
-        }  
-      });  
-    };
-    
     $("#refreshSystemConstant").click( function() {
       refreshSystemConstant();
     });
