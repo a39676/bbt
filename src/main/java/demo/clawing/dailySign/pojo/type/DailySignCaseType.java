@@ -5,6 +5,9 @@ public enum DailySignCaseType {
 	/** quqi */
 	quqi(1L, "quqi"),
 	
+	/** wuYiJob */
+	wuYiJob(1L, "wuYiJob"),
+	
 	;
 
 	private Long id;

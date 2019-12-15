@@ -1,5 +1,7 @@
 package demo.selenium.service.impl;
 
+import java.io.File;
+
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -74,5 +76,17 @@ public abstract class SeleniumCommonService extends CommonService {
 	
 	protected boolean tryQuitWebDriver(WebDriver d) {
 		return tryQuitWebDriver(d, null);
+	}
+
+	protected String getScreenshotSaveingPath(String eventName) {
+		String path = globalOptionService.getScreenshotSavingFolder() + File.separator + eventName;
+		globalOptionService.checkFolderExists(path);
+		return path;
+	}
+	
+	protected String getReportOutputPath(String eventName) {
+		String path = globalOptionService.getReportOutputFolder() + File.separator + eventName;
+		globalOptionService.checkFolderExists(path);
+		return path;
 	}
 }

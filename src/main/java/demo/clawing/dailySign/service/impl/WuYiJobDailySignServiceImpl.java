@@ -17,19 +17,27 @@ import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.dailySign.pojo.type.DailySignCaseType;
-import demo.clawing.dailySign.service.QuQiDailySignService;
+import demo.clawing.dailySign.service.WuYiJobDailySignService;
 import demo.selenium.service.impl.SeleniumCommonService;
 import image.pojo.result.UploadImageToCloudinaryResult;
 
 @Service
-public class QuQiDailySignServiceImpl extends SeleniumCommonService implements QuQiDailySignService {
+public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implements WuYiJobDailySignService {
 
-	private String mainUrl = "https://www.quqi.com/";
+	private String mainUrl = "https://www.51job.com/guangzhou/";
 	
-	private String eventName = "quqiDailySign";
+	private String eventName = "wuYiJobDailySign";
+	
+	/*
+	 * TODO
+	 * 已经新建表 daily_sign_account
+	 * 待修改 QuQi 读取账号密码方式
+	 * 待新建 每日签到的公共类, extends SeleniumCommonService 
+	 *     增加从 daily_sign_account 读取账号密码( 可能同一个网站有多个账号同日签到)的功能逻辑
+	 */
 	
 	private TestEvent buildTestEvent() {
-		DailySignCaseType t = DailySignCaseType.quqi;
+		DailySignCaseType t = DailySignCaseType.wuYiJob;
 		return buildTestEvent(TestModuleType.dailySign, t.getId(), t.getEventName());
 	}
 	
