@@ -3,12 +3,10 @@ package demo.selenium.service;
 public interface SeleniumGlobalOptionService {
 
 	String getDownloadDir();
-
 	String getScreenshotSavingFolder();
-	
 	String getCaptchaScreenshotSavingFolder();
-	
 	String getReportOutputFolder();
+	String getParameterSavingFolder();
 
 	String getChrome76Path();
 	String getChrome45Path();

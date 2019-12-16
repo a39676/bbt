@@ -89,4 +89,11 @@ public abstract class SeleniumCommonService extends CommonService {
 		globalOptionService.checkFolderExists(path);
 		return path;
 	}
+	
+	protected String getParameterSaveingPath(String eventName) {
+		String path = globalOptionService.getParameterSavingFolder() + File.separator + eventName;
+		globalOptionService.checkFolderExists(path);
+		return path;
+	}
+	
 }

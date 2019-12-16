@@ -24,12 +24,14 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 	private String screenshotSavingFolder = "/screenshot";
 	private String captchaScreenshotSavingFolder = "/captchaScreenshotSavingFolder";
 	private String reportOutputFolder = "/reportOutputFolder";
+	private String parameterSavingFolder = "/parameters";
 
 	private String downloadDirRedisKey = "seleniumDownloadDir";
 	private String tmpFolderRedisKey = "tmpFolder";
 	private String screenshotSavingFolderRedisKey = "seleniumScreenshotSavingDir";
 	private String captchaScreenshotSavingFolderRedisKey = "captchaScreenshotSavingFolderRedisKey";
 	private String reportOutputFolderRedisKey = "reportOutputFolderRedisKey";
+	private String parameterSavingFolderRedisKey = "parameterSavingFolderRedisKey";
 
 	private String winSeleniumWebDriverFolder = "d:/auxiliary/seleniumWebDriver";
 	private String linuxSeleniumWebDriverFolder = "/home/u2/seleniumWebDriver";
@@ -177,6 +179,31 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 		return reportOutputDir;
 	}
 
+	@Override
+	public String getParameterSavingFolder() {
+		String screenshotSavingDir = constantService.getValByName(parameterSavingFolderRedisKey);
+
+		if (StringUtils.isNotBlank(screenshotSavingDir)) {
+			checkFolderExists(screenshotSavingDir);
+			return pathChangeByDetectOS(screenshotSavingDir);
+		}
+
+		if (isWindows()) {
+			screenshotSavingDir = mainSavingFolder_win + parameterSavingFolder;
+		} else {
+			screenshotSavingDir = mainSavingFolder_linx + parameterSavingFolder;
+		}
+		screenshotSavingDir = pathChangeByDetectOS(screenshotSavingDir);
+
+		SystemConstant systemConstant = new SystemConstant();
+		systemConstant.setConstantName(parameterSavingFolderRedisKey);
+		systemConstant.setConstantValue(screenshotSavingDir);
+		constantService.setValByName(systemConstant);
+
+		checkFolderExists(screenshotSavingDir);
+		return screenshotSavingDir;
+	}
+	
 	@Override
 	public String getChrome76Path() {
 		String path = null;

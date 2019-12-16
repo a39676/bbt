@@ -6,7 +6,7 @@ public enum DailySignCaseType {
 	quqi(1L, "quqi"),
 	
 	/** wuYiJob */
-	wuYiJob(1L, "wuYiJob"),
+	wuYiJob(2L, "wuYiJob"),
 	
 	;
 
