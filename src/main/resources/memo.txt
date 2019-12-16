@@ -1,1 +1,2 @@
-详见 WuYiJobDailySignServiceImpl 
+﻿详见 WuYiJobDailySignServiceImpl 
+针对 51job 签到， 个人简介同时编辑， 加入刷新时间或一些其他要素
