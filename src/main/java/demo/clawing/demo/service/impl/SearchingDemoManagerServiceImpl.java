@@ -10,12 +10,17 @@ import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.clawing.demo.pojo.type.SearchingDemoCaseType;
 import demo.clawing.demo.service.SearchingDemoManagerService;
 import demo.selenium.service.impl.SeleniumCommonService;
+import demo.selenium.service.pojo.bo.BuildTestEventBO;
 
 @Service
 public class SearchingDemoManagerServiceImpl extends SeleniumCommonService implements SearchingDemoManagerService {
 
 	private TestEvent buildTestEvent(SearchingDemoCaseType t) {
-		return buildTestEvent(TestModuleType.ATDemo, t.getId(), t.getEventName());
+		BuildTestEventBO bo = new BuildTestEventBO();
+		bo.setTestModuleType(TestModuleType.ATDemo);
+		bo.setCaseId(t.getId());
+		bo.setEventName(t.getEventName());
+		return buildTestEvent(bo);
 	}
 	
 	@Override

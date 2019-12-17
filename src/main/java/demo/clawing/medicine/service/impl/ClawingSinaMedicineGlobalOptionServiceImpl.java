@@ -6,17 +6,14 @@ import org.springframework.stereotype.Service;
 
 import demo.base.system.pojo.bo.SystemConstant;
 import demo.base.system.service.impl.SystemConstantService;
-import demo.baseCommon.service.CommonService;
 import demo.clawing.medicine.service.ClawingSinaMedicineGlobalOptionService;
-import demo.selenium.service.SeleniumGlobalOptionService;
+import demo.selenium.service.impl.SeleniumCommonService;
 
 @Service
-public class ClawingSinaMedicineGlobalOptionServiceImpl extends CommonService implements ClawingSinaMedicineGlobalOptionService {
+public class ClawingSinaMedicineGlobalOptionServiceImpl extends SeleniumCommonService implements ClawingSinaMedicineGlobalOptionService {
 
 	@Autowired
 	private SystemConstantService constantService;
-	@Autowired
-	private SeleniumGlobalOptionService globalOptionService;
 	
 	protected String mainSavingFolder_win = "d:/auxiliary";
 	protected String mainSavingFolder_linx = "/home/u2";

@@ -9,12 +9,15 @@ import demo.baseCommon.service.CommonService;
 import demo.clawing.dailySign.pojo.type.DailySignCaseType;
 import demo.clawing.dailySign.service.DailySignPrefixService;
 import demo.clawing.dailySign.service.QuQiDailySignService;
+import demo.clawing.dailySign.service.WuYiJobDailySignService;
 
 @Service
 public class DailySignPrefixServiceImpl extends CommonService implements DailySignPrefixService {
 
 	@Autowired
 	private QuQiDailySignService quqiSign;
+	@Autowired
+	private WuYiJobDailySignService wuYiSign;
 	
 	@Override
 	public CommonResultBBT runSubEvent(TestEvent te) {
@@ -22,6 +25,8 @@ public class DailySignPrefixServiceImpl extends CommonService implements DailySi
 		
 		if (DailySignCaseType.quqi.getId().equals(caseId)) {
 			return quqiSign.clawing(te);
+		} else if (DailySignCaseType.wuYiJob.getId().equals(caseId)) {
+			return wuYiSign.dailySign(te);
 		}
 		return new CommonResultBBT();
 	}

@@ -17,19 +17,21 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 	@Autowired
 	private SystemConstantService constantService;
 
-	private String mainSavingFolder_win = "d:/home/u2";
 	private String mainSavingFolder_linx = "/home/u2";
-	private String downloadFolder = "/tmp";
+	private String mainSavingFolder_win = "d:" + mainSavingFolder_linx;
 	private String tmpFolder = "/tmp";
+	private String downloadFolder = tmpFolder;
 	private String screenshotSavingFolder = "/screenshot";
 	private String captchaScreenshotSavingFolder = "/captchaScreenshotSavingFolder";
 	private String reportOutputFolder = "/reportOutputFolder";
+	private String parameterSavingFolder = "/autoTestParameterFiles";
 
 	private String downloadDirRedisKey = "seleniumDownloadDir";
 	private String tmpFolderRedisKey = "tmpFolder";
 	private String screenshotSavingFolderRedisKey = "seleniumScreenshotSavingDir";
 	private String captchaScreenshotSavingFolderRedisKey = "captchaScreenshotSavingFolderRedisKey";
 	private String reportOutputFolderRedisKey = "reportOutputFolderRedisKey";
+	private String parameterSavingFolderRedisKey = "parameterSavingFolderRedisKey";
 
 	private String winSeleniumWebDriverFolder = "d:/auxiliary/seleniumWebDriver";
 	private String linuxSeleniumWebDriverFolder = "/home/u2/seleniumWebDriver";
@@ -58,10 +60,7 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 		}
 		downloadFolderPath = pathChangeByDetectOS(downloadFolderPath);
 
-		SystemConstant constant = new SystemConstant();
-		constant.setConstantName(downloadDirRedisKey);
-		constant.setConstantValue(downloadFolderPath);
-		constantService.setValByName(constant);
+		constantService.setValByName(downloadDirRedisKey, downloadFolderPath);
 
 		checkFolderExists(downloadFolderPath);
 		return downloadFolderPath;
@@ -83,10 +82,7 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 		}
 		tmpFolderPath = pathChangeByDetectOS(tmpFolderPath);
 
-		SystemConstant constant = new SystemConstant();
-		constant.setConstantName(tmpFolderRedisKey);
-		constant.setConstantValue(tmpFolderPath);
-		constantService.setValByName(constant);
+		constantService.setValByName(tmpFolderRedisKey, tmpFolderPath);
 
 		checkFolderExists(tmpFolderPath);
 		return tmpFolderPath;
@@ -118,10 +114,7 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 		}
 		screenshotSavingDir = pathChangeByDetectOS(screenshotSavingDir);
 
-		SystemConstant systemConstant = new SystemConstant();
-		systemConstant.setConstantName(screenshotSavingFolderRedisKey);
-		systemConstant.setConstantValue(screenshotSavingDir);
-		constantService.setValByName(systemConstant);
+		constantService.setValByName(screenshotSavingFolderRedisKey, screenshotSavingDir);
 
 		checkFolderExists(screenshotSavingDir);
 		return screenshotSavingDir;
@@ -143,10 +136,7 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 		}
 		captchaScreenshotSavingDir = pathChangeByDetectOS(captchaScreenshotSavingDir);
 
-		SystemConstant systemConstant = new SystemConstant();
-		systemConstant.setConstantName(captchaScreenshotSavingFolderRedisKey);
-		systemConstant.setConstantValue(captchaScreenshotSavingDir);
-		constantService.setValByName(systemConstant);
+		constantService.setValByName(captchaScreenshotSavingFolderRedisKey, captchaScreenshotSavingDir);
 
 		checkFolderExists(captchaScreenshotSavingDir);
 		return captchaScreenshotSavingDir;
@@ -177,6 +167,31 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 		return reportOutputDir;
 	}
 
+	@Override
+	public String getParameterSavingFolder() {
+		String screenshotSavingDir = constantService.getValByName(parameterSavingFolderRedisKey);
+
+		if (StringUtils.isNotBlank(screenshotSavingDir)) {
+			checkFolderExists(screenshotSavingDir);
+			return pathChangeByDetectOS(screenshotSavingDir);
+		}
+
+		if (isWindows()) {
+			screenshotSavingDir = mainSavingFolder_win + parameterSavingFolder;
+		} else {
+			screenshotSavingDir = mainSavingFolder_linx + parameterSavingFolder;
+		}
+		screenshotSavingDir = pathChangeByDetectOS(screenshotSavingDir);
+
+		SystemConstant systemConstant = new SystemConstant();
+		systemConstant.setConstantName(parameterSavingFolderRedisKey);
+		systemConstant.setConstantValue(screenshotSavingDir);
+		constantService.setValByName(systemConstant);
+
+		checkFolderExists(screenshotSavingDir);
+		return screenshotSavingDir;
+	}
+	
 	@Override
 	public String getChrome76Path() {
 		String path = null;

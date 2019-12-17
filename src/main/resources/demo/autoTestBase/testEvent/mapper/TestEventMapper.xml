@@ -9,6 +9,7 @@
     <result column="module_id" jdbcType="BIGINT" property="moduleId" />
     <result column="event_name" jdbcType="VARCHAR" property="eventName" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="parameter_file_path" jdbcType="VARCHAR" property="parameterFilePath" />
     <result column="report_path" jdbcType="VARCHAR" property="reportPath" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="appointment" jdbcType="TIMESTAMP" property="appointment" />
@@ -76,8 +77,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, project_id, case_id, process_id, module_id, event_name, remark, report_path, 
-    create_time, appointment, start_time, end_time, is_pass, is_delete
+    id, project_id, case_id, process_id, module_id, event_name, remark, parameter_file_path, 
+    report_path, create_time, appointment, start_time, end_time, is_pass, is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.autoTestBase.testEvent.pojo.po.TestEventExample" resultMap="BaseResultMap">
     select
@@ -112,14 +113,16 @@
   <insert id="insert" parameterType="demo.autoTestBase.testEvent.pojo.po.TestEvent">
     insert into test_event (id, project_id, case_id, 
       process_id, module_id, event_name, 
-      remark, report_path, create_time, 
-      appointment, start_time, end_time, 
-      is_pass, is_delete)
+      remark, parameter_file_path, report_path, 
+      create_time, appointment, start_time, 
+      end_time, is_pass, is_delete
+      )
     values (#{id,jdbcType=BIGINT}, #{projectId,jdbcType=BIGINT}, #{caseId,jdbcType=BIGINT}, 
       #{processId,jdbcType=BIGINT}, #{moduleId,jdbcType=BIGINT}, #{eventName,jdbcType=VARCHAR}, 
-      #{remark,jdbcType=VARCHAR}, #{reportPath,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{appointment,jdbcType=TIMESTAMP}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
-      #{isPass,jdbcType=BIT}, #{isDelete,jdbcType=BIT})
+      #{remark,jdbcType=VARCHAR}, #{parameterFilePath,jdbcType=VARCHAR}, #{reportPath,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{appointment,jdbcType=TIMESTAMP}, #{startTime,jdbcType=TIMESTAMP}, 
+      #{endTime,jdbcType=TIMESTAMP}, #{isPass,jdbcType=BIT}, #{isDelete,jdbcType=BIT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="demo.autoTestBase.testEvent.pojo.po.TestEvent">
     insert into test_event
@@ -144,6 +147,9 @@
       </if>
       <if test="remark != null">
         remark,
+      </if>
+      <if test="parameterFilePath != null">
+        parameter_file_path,
       </if>
       <if test="reportPath != null">
         report_path,
@@ -188,6 +194,9 @@
       </if>
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="parameterFilePath != null">
+        #{parameterFilePath,jdbcType=VARCHAR},
       </if>
       <if test="reportPath != null">
         #{reportPath,jdbcType=VARCHAR},
@@ -242,6 +251,9 @@
       <if test="record.remark != null">
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
+      <if test="record.parameterFilePath != null">
+        parameter_file_path = #{record.parameterFilePath,jdbcType=VARCHAR},
+      </if>
       <if test="record.reportPath != null">
         report_path = #{record.reportPath,jdbcType=VARCHAR},
       </if>
@@ -277,6 +289,7 @@
       module_id = #{record.moduleId,jdbcType=BIGINT},
       event_name = #{record.eventName,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
+      parameter_file_path = #{record.parameterFilePath,jdbcType=VARCHAR},
       report_path = #{record.reportPath,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       appointment = #{record.appointment,jdbcType=TIMESTAMP},
@@ -308,6 +321,9 @@
       </if>
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="parameterFilePath != null">
+        parameter_file_path = #{parameterFilePath,jdbcType=VARCHAR},
       </if>
       <if test="reportPath != null">
         report_path = #{reportPath,jdbcType=VARCHAR},
@@ -341,6 +357,7 @@
       module_id = #{moduleId,jdbcType=BIGINT},
       event_name = #{eventName,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
+      parameter_file_path = #{parameterFilePath,jdbcType=VARCHAR},
       report_path = #{reportPath,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       appointment = #{appointment,jdbcType=TIMESTAMP},

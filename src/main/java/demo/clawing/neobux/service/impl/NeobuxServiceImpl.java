@@ -15,7 +15,6 @@ import at.service.ScreenshotService;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.clawing.neobux.service.NeobuxOptionService;
 import demo.clawing.neobux.service.NeobuxService;
-import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.WebDriverService;
 import demo.selenium.service.impl.AuxiliaryToolServiceImpl;
 import demo.selenium.service.impl.SeleniumCommonService;
@@ -29,8 +28,6 @@ public class NeobuxServiceImpl extends SeleniumCommonService implements NeobuxSe
 	private AuxiliaryToolServiceImpl auxTool;
 	@Autowired
 	private NeobuxOptionService optionService;
-	@Autowired
-	private SeleniumGlobalOptionService globalOptionService;
 	@Autowired
 	private ScreenshotService screenshotService;
 

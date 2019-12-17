@@ -50,4 +50,10 @@ public class JavaScriptServiceImpl extends CommonService implements JavaScriptSe
 		JavascriptExecutor jse = (JavascriptExecutor) driver;
 		jse.executeScript(windowStop);
 	}
+	
+	@Override
+	public void execute(WebDriver driver, String js) {
+		JavascriptExecutor jse = (JavascriptExecutor) driver;
+		jse.executeScript(js);
+	}
 }

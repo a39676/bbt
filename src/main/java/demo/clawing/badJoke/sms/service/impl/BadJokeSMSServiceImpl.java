@@ -23,6 +23,7 @@ import demo.clawing.badJoke.sms.pojo.type.BadJokeCaseType;
 import demo.clawing.badJoke.sms.service.BadJokeSMSService;
 import demo.selenium.service.impl.AuxiliaryToolServiceImpl;
 import demo.selenium.service.impl.SeleniumCommonService;
+import demo.selenium.service.pojo.bo.BuildTestEventBO;
 
 @Service
 public class BadJokeSMSServiceImpl extends SeleniumCommonService implements BadJokeSMSService {
@@ -55,7 +56,11 @@ public class BadJokeSMSServiceImpl extends SeleniumCommonService implements BadJ
 	
 	private TestEvent buildTestEvent() {
 		BadJokeCaseType t = BadJokeCaseType.badJokeSms;
-		return buildTestEvent(TestModuleType.badJoke, t.getId(), t.getEventName());
+		BuildTestEventBO bo = new BuildTestEventBO();
+		bo.setTestModuleType(TestModuleType.badJoke);
+		bo.setCaseId(t.getId());
+		bo.setEventName(t.getEventName());
+		return buildTestEvent(bo);
 	}
 	
 	public InsertTestEventResult insertBadJokeSMSEvent() {

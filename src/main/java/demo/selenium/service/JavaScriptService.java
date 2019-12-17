@@ -14,4 +14,6 @@ public interface JavaScriptService {
 
 	void windowStop(WebDriver driver);
 
+	void execute(WebDriver driver, String js);
+
 }
