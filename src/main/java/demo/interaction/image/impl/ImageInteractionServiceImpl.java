@@ -23,7 +23,7 @@ public class ImageInteractionServiceImpl extends CommonService implements ImageI
 	
 	@Override
 	public UploadImageToCloudinaryResult uploadImageToCloudinary(@RequestBody UploadImageToCloudinaryDTO dto) {
-		UploadImageToCloudinaryResult r = null;
+		UploadImageToCloudinaryResult r = new UploadImageToCloudinaryResult();
 		try {
 			JSONObject j = JSONObject.fromObject(dto);
 	        
@@ -33,11 +33,10 @@ public class ImageInteractionServiceImpl extends CommonService implements ImageI
 			
 			r = new ObjectMapper().readValue(resultJ.toString(), UploadImageToCloudinaryResult.class);
 			
-			return r;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		return r;
 	}
 
 }

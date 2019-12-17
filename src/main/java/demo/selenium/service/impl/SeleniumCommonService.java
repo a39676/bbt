@@ -8,13 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import at.pojo.dto.JsonReportDTO;
 import at.service.ATJsonReportService;
 import at.service.ScreenshotService;
-import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.baseCommon.service.CommonService;
 import demo.interaction.image.ImageInteractionService;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.WebDriverService;
+import demo.selenium.service.pojo.bo.BuildTestEventBO;
 import image.pojo.dto.UploadImageToCloudinaryDTO;
 import image.pojo.result.UploadImageToCloudinaryResult;
 
@@ -35,15 +35,17 @@ public abstract class SeleniumCommonService extends CommonService {
 	@Autowired
 	protected SeleniumGlobalOptionService globalOptionService;
 	
-	protected TestEvent buildTestEvent(TestModuleType t, Long caseId, String eventName) {
-		if(t == null || caseId == null) {
+	protected TestEvent buildTestEvent(BuildTestEventBO bo) {
+		if(bo.getTestModuleType() == null || bo.getCaseId() == null) {
 			return null;
 		}
 		TestEvent te = new TestEvent();
-		te.setCaseId(caseId);
-		te.setModuleId(t.getId());
+		te.setProcessId(bo.getProcessId());
+		te.setCaseId(bo.getCaseId());
+		te.setModuleId(bo.getTestModuleType().getId());
 		te.setId(snowFlake.getNextId());
-		te.setEventName(eventName);
+		te.setEventName(bo.getEventName());
+		te.setParameterFilePath(bo.getParameterFilePath());
 		return te;
 	}
 	

@@ -20,11 +20,11 @@ public class DailySignTestController {
 	
 	@GetMapping(value = DailySignUrl.insertQuQiSign)
 	public void insertQuQiSign() {
-		quQiservice.insertclawingEvent();
+		quQiservice.insertDailySignEvent();
 	}
 	
 	@GetMapping(value = DailySignUrl.insertWuYiSign)
 	public void insertWuYiSign() {
-		wuyiService.insertclawingEvent();
+		wuyiService.insertDailySignEvent();
 	}
 }

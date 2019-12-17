@@ -13,13 +13,8 @@ import at.pojo.bo.XpathBuilderBO;
 import at.pojo.dto.JsonReportDTO;
 import at.pojo.dto.TakeScreenshotSaveDTO;
 import at.pojo.result.ScreenshotSaveResult;
-import autoTest.testEvent.pojo.dto.InsertSearchingDemoTestEventDTO;
-import autoTest.testEvent.pojo.result.InsertSearchingDemoEventResult;
-import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
-import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.baseCommon.pojo.result.CommonResultBBT;
-import demo.clawing.demo.pojo.type.SearchingDemoCaseType;
 import demo.clawing.demo.service.BaiduDemoService;
 import demo.selenium.service.impl.SeleniumCommonService;
 import image.pojo.result.UploadImageToCloudinaryResult;
@@ -29,24 +24,12 @@ public class BaiduDemoServiceImpl extends SeleniumCommonService implements Baidu
 	
 	private String eventName = "baidu search demo";
 	
-	private TestEvent buildTestEvent() {
-		SearchingDemoCaseType t = SearchingDemoCaseType.baiduDemo;
-		return buildTestEvent(TestModuleType.ATDemo, t.getId(), t.getEventName());
-	}
-	
 	private String getScreenshotSaveingPath() {
 		return globalOptionService.getScreenshotSavingFolder() + File.separator + eventName;
 	}
 	
 	private String getReportOutputPath() {
 		return globalOptionService.getReportOutputFolder() + File.separator + eventName;
-	}
-	
-	public InsertTestEventResult insertclawingEvent(InsertSearchingDemoTestEventDTO dto) {
-		TestEvent te = buildTestEvent();
-		te.setRemark(dto.getSearchKeyWord());
-		te.setAppointment(dto.getAppointment());
-		return testEventService.insertTestEvent(te);
 	}
 	
 	@Override
@@ -135,20 +118,4 @@ public class BaiduDemoServiceImpl extends SeleniumCommonService implements Baidu
 		return r;
 	}
 
-	@Override
-	public InsertSearchingDemoEventResult insert(InsertSearchingDemoTestEventDTO dto) {
-		InsertTestEventResult r = insertclawingEvent(dto);
-		int waitingEventCount = testEventService.countWaitingEvent();
-		Long eventId = r.getNewTestEventId();
-		
-		InsertSearchingDemoEventResult ir = new InsertSearchingDemoEventResult();
-		ir.setCode(r.getCode());
-		ir.setSuccess(r.isSuccess());
-		ir.setMessage(r.getMessage());
-		ir.setWaitingEventCount(waitingEventCount);
-		ir.setEventId(eventId);
-
-		return ir;
-	}
-	
 }

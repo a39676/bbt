@@ -33,6 +33,7 @@ import demo.clawing.movie.pojo.po.MovieRecord;
 import demo.clawing.movie.pojo.result.DoubanSubClawingResult;
 import demo.clawing.movie.pojo.type.MovieClawingCaseType;
 import demo.clawing.movie.service.DyttClawingService;
+import demo.selenium.service.pojo.bo.BuildTestEventBO;
 import image.pojo.result.UploadImageToCloudinaryResult;
 import toolPack.ioHandle.FileUtilCustom;
 
@@ -64,7 +65,11 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 	
 	private TestEvent buildTestEvent() {
 		MovieClawingCaseType t = MovieClawingCaseType.dytt;
-		return buildTestEvent(TestModuleType.movieClawing, t.getId(), t.getEventName());
+		BuildTestEventBO bo = new BuildTestEventBO();
+		bo.setTestModuleType(TestModuleType.movieClawing);
+		bo.setCaseId(t.getId());
+		bo.setEventName(t.getEventName());
+		return buildTestEvent(bo);
 	}
 	
 	@Override

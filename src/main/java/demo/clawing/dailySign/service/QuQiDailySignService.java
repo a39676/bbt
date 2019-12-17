@@ -6,7 +6,7 @@ import demo.baseCommon.pojo.result.CommonResultBBT;
 
 public interface QuQiDailySignService {
 
-	InsertTestEventResult insertclawingEvent();
+	InsertTestEventResult insertDailySignEvent();
 
 	CommonResultBBT clawing(TestEvent te);
 

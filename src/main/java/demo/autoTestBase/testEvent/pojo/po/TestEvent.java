@@ -5,141 +5,152 @@ import java.time.LocalDateTime;
 public class TestEvent {
     private Long id;
 
-    private Long projectId;
+	private Long projectId;
 
-    private Long caseId;
+	private Long caseId;
 
-    private Long processId;
+	private Long processId;
 
-    private Long moduleId;
+	private Long moduleId;
 
-    private String eventName;
+	private String eventName;
 
-    private String remark;
+	private String remark;
 
-    private String reportPath;
+	private String parameterFilePath;
 
-    private LocalDateTime createTime;
+	private String reportPath;
 
-    private LocalDateTime appointment;
+	private LocalDateTime createTime;
 
-    private LocalDateTime startTime;
+	private LocalDateTime appointment;
 
-    private LocalDateTime endTime;
+	private LocalDateTime startTime;
 
-    private Boolean isPass;
+	private LocalDateTime endTime;
 
-    private Boolean isDelete;
+	private Boolean isPass;
 
-    public Long getId() {
-        return id;
-    }
+	private Boolean isDelete;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public Long getProjectId() {
-        return projectId;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
+	public Long getProjectId() {
+		return projectId;
+	}
 
-    public Long getCaseId() {
-        return caseId;
-    }
+	public void setProjectId(Long projectId) {
+		this.projectId = projectId;
+	}
 
-    public void setCaseId(Long caseId) {
-        this.caseId = caseId;
-    }
+	public Long getCaseId() {
+		return caseId;
+	}
 
-    public Long getProcessId() {
-        return processId;
-    }
+	public void setCaseId(Long caseId) {
+		this.caseId = caseId;
+	}
 
-    public void setProcessId(Long processId) {
-        this.processId = processId;
-    }
+	public Long getProcessId() {
+		return processId;
+	}
 
-    public Long getModuleId() {
-        return moduleId;
-    }
+	public void setProcessId(Long processId) {
+		this.processId = processId;
+	}
 
-    public void setModuleId(Long moduleId) {
-        this.moduleId = moduleId;
-    }
+	public Long getModuleId() {
+		return moduleId;
+	}
 
-    public String getEventName() {
-        return eventName;
-    }
+	public void setModuleId(Long moduleId) {
+		this.moduleId = moduleId;
+	}
 
-    public void setEventName(String eventName) {
-        this.eventName = eventName == null ? null : eventName.trim();
-    }
+	public String getEventName() {
+		return eventName;
+	}
 
-    public String getRemark() {
-        return remark;
-    }
+	public void setEventName(String eventName) {
+		this.eventName = eventName == null ? null : eventName.trim();
+	}
 
-    public void setRemark(String remark) {
-        this.remark = remark == null ? null : remark.trim();
-    }
+	public String getRemark() {
+		return remark;
+	}
 
-    public String getReportPath() {
-        return reportPath;
-    }
+	public void setRemark(String remark) {
+		this.remark = remark == null ? null : remark.trim();
+	}
 
-    public void setReportPath(String reportPath) {
-        this.reportPath = reportPath == null ? null : reportPath.trim();
-    }
+	public String getParameterFilePath() {
+		return parameterFilePath;
+	}
 
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
+	public void setParameterFilePath(String parameterFilePath) {
+		this.parameterFilePath = parameterFilePath == null ? null : parameterFilePath.trim();
+	}
 
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
+	public String getReportPath() {
+		return reportPath;
+	}
 
-    public LocalDateTime getAppointment() {
-        return appointment;
-    }
+	public void setReportPath(String reportPath) {
+		this.reportPath = reportPath == null ? null : reportPath.trim();
+	}
 
-    public void setAppointment(LocalDateTime appointment) {
-        this.appointment = appointment;
-    }
+	public LocalDateTime getCreateTime() {
+		return createTime;
+	}
 
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
+	public void setCreateTime(LocalDateTime createTime) {
+		this.createTime = createTime;
+	}
 
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
+	public LocalDateTime getAppointment() {
+		return appointment;
+	}
 
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
+	public void setAppointment(LocalDateTime appointment) {
+		this.appointment = appointment;
+	}
 
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
-    }
+	public LocalDateTime getStartTime() {
+		return startTime;
+	}
 
-    public Boolean getIsPass() {
-        return isPass;
-    }
+	public void setStartTime(LocalDateTime startTime) {
+		this.startTime = startTime;
+	}
 
-    public void setIsPass(Boolean isPass) {
-        this.isPass = isPass;
-    }
+	public LocalDateTime getEndTime() {
+		return endTime;
+	}
 
-    public Boolean getIsDelete() {
-        return isDelete;
-    }
+	public void setEndTime(LocalDateTime endTime) {
+		this.endTime = endTime;
+	}
 
-    public void setIsDelete(Boolean isDelete) {
-        this.isDelete = isDelete;
-    }
+	public Boolean getIsPass() {
+		return isPass;
+	}
+
+	public void setIsPass(Boolean isPass) {
+		this.isPass = isPass;
+	}
+
+	public Boolean getIsDelete() {
+		return isDelete;
+	}
+
+	public void setIsDelete(Boolean isDelete) {
+		this.isDelete = isDelete;
+	}
+
 }

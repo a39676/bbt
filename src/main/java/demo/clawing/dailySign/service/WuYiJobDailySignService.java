@@ -6,8 +6,8 @@ import demo.baseCommon.pojo.result.CommonResultBBT;
 
 public interface WuYiJobDailySignService {
 
-	InsertTestEventResult insertclawingEvent();
+	InsertTestEventResult insertDailySignEvent();
 
-	CommonResultBBT clawing(TestEvent te);
+	CommonResultBBT dailySign(TestEvent te);
 
 }

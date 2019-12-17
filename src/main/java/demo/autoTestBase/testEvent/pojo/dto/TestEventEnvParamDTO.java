@@ -2,7 +2,7 @@ package demo.autoTestBase.testEvent.pojo.dto;
 
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 
-public class TestEventRunParamDTO {
+public class TestEventEnvParamDTO {
 
 	private TestEvent te;
 	private String screenshotPath;

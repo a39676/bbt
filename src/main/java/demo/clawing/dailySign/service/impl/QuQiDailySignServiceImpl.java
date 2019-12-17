@@ -19,6 +19,7 @@ import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.dailySign.pojo.type.DailySignCaseType;
 import demo.clawing.dailySign.service.QuQiDailySignService;
 import demo.selenium.service.impl.SeleniumCommonService;
+import demo.selenium.service.pojo.bo.BuildTestEventBO;
 import image.pojo.result.UploadImageToCloudinaryResult;
 
 @Service
@@ -29,12 +30,18 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 	private String eventName = "quqiDailySign";
 	
 	private TestEvent buildTestEvent() {
+		BuildTestEventBO bo = new BuildTestEventBO();
 		DailySignCaseType t = DailySignCaseType.quqi;
-		return buildTestEvent(TestModuleType.dailySign, t.getId(), t.getEventName());
+		bo.setTestModuleType(TestModuleType.ATDemo);
+		bo.setCaseId(t.getId());
+		bo.setEventName(t.getEventName());
+//		TODO
+		bo.setParameterFilePath("");
+		return buildTestEvent(bo);
 	}
 	
 	@Override
-	public InsertTestEventResult insertclawingEvent() {
+	public InsertTestEventResult insertDailySignEvent() {
 		TestEvent te = buildTestEvent();
 		return testEventService.insertTestEvent(te);
 	}

@@ -26,7 +26,7 @@ public class DailySignPrefixServiceImpl extends CommonService implements DailySi
 		if (DailySignCaseType.quqi.getId().equals(caseId)) {
 			return quqiSign.clawing(te);
 		} else if (DailySignCaseType.wuYiJob.getId().equals(caseId)) {
-			return wuYiSign.clawing(te);
+			return wuYiSign.dailySign(te);
 		}
 		return new CommonResultBBT();
 	}

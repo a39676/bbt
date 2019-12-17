@@ -45,6 +45,9 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	@Override
 	public InsertTestEventResult insertTestEvent(TestEvent po) {
 		InsertTestEventResult r = new InsertTestEventResult();
+		if(po == null || po.getCaseId() == null || po.getModuleId() == null) {
+			return r;
+		}
 		r.setCode(po.getEventName());
 		r.setModuleId(po.getModuleId());
 		r.setCaseId(po.getCaseId());
