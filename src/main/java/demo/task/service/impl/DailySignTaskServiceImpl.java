@@ -5,21 +5,23 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import demo.clawing.dailySign.service.QuQiDailySignService;
+import demo.clawing.dailySign.service.WuYiJobDailySignService;
 
 @Component
 public class DailySignTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 	
 	@Autowired
 	private QuQiDailySignService quQiDailySignService;
+	@Autowired
+	private WuYiJobDailySignService wuyiService;
+	
 	@Scheduled(cron="03 02 01 * * *")
 	public void insertQuQiDailySign() {
 		quQiDailySignService.insertDailySignEvent();
 	}
 	
-//	@Autowired
-//	private WuYiJobDailySignService wuyiService;
-//	@Scheduled(fixedRate = 1000L * 60 * 15)
-//	public void insertWuYiSign() {
-//		wuyiService.insertDailySignEvent();
-//	}
+	@Scheduled(fixedRate = 1000L * 60 * 15)
+	public void insertWuYiSign() {
+		wuyiService.insertDailySignEvent();
+	}
 }
