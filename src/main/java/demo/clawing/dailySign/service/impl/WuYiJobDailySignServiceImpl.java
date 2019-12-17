@@ -84,7 +84,7 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 		CommonResultBBT r = new CommonResultBBT();
 		
 		JsonReportDTO reportDTO = new JsonReportDTO();
-		WebDriver d = webDriverService.buildChrome76WebDriver();
+		WebDriver d = webDriverService.buildFireFoxWebDriver();
 		
 		String screenshotPath = getScreenshotSaveingPath(dailySignEventName);
 		String reportOutputFolderPath = getReportOutputPath(dailySignEventName);
