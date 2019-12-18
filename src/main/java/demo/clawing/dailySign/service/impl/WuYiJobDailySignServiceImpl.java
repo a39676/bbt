@@ -84,7 +84,7 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 		CommonResultBBT r = new CommonResultBBT();
 		
 		JsonReportDTO reportDTO = new JsonReportDTO();
-		WebDriver d = webDriverService.buildChrome76WebDriver();
+		WebDriver d = webDriverService.buildFireFoxWebDriver();
 		
 		String screenshotPath = getScreenshotSaveingPath(dailySignEventName);
 		String reportOutputFolderPath = getReportOutputPath(dailySignEventName);
@@ -92,6 +92,7 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 		reportDTO.setOutputReportPath(reportOutputFolderPath + File.separator + te.getId());
 		
 		try {
+			
 			String jsonStr = ioUtil.getStringFromFile(te.getParameterFilePath());
 			if(StringUtils.isBlank(jsonStr)) {
 				jsonReporter.appendContent(reportDTO, "参数文件读取异常");
@@ -114,77 +115,71 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 				jsonReporter.appendContent(reportDTO, "get but timeout");
 			}
 			
+			findAndCloseLeadDiv(d);
+			
 			XpathBuilderBO x = new XpathBuilderBO();
 			
-			x.start("input").addAttribute("id", "loginname");
+			x.start("div").addAttribute("id", "pageTop")
+			.findChild("header")
+			.findChild("p").addAttribute("class", "links")
+			.findChild("a", 1)
+			;
 			
+			d.findElement(By.xpath(x.getXpath())).click();
+			
+			x.start("input").addAttribute("id", "loginname");
 			WebElement usernameInput = d.findElement(By.xpath(x.getXpath()));
 			usernameInput.click();
 			usernameInput.clear();
 			usernameInput.sendKeys(dailySignBO.getUsername());
 			
-			jsonReporter.appendContent(reportDTO, "input username");
-			
 			x.start("input").addAttribute("id", "password");
-			
 			WebElement pwdInput = d.findElement(By.xpath(x.getXpath()));
 			pwdInput.click();
 			pwdInput.clear();
 			pwdInput.sendKeys(dailySignBO.getPwd());
 			
-			jsonReporter.appendContent(reportDTO, "input pwd");
+			x.start("button").addAttribute("id", "login_btn");
+			WebElement loginButton = d.findElement(By.xpath(x.getXpath()));
+			loginButton.click();
 			
-			WebElement loginButton = d.findElement(By.id("login_btn"));
-			
-			jsonReporter.appendContent(reportDTO, "find login button");
 			try {
-				loginButton.click();
+				d.get("https://m.51job.com/my/my51job.php");
+				jsonReporter.appendContent(reportDTO, "get");
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
+				jsonReporter.appendContent(reportDTO, "get but timeout");
 			}
 			
-			jsonReporter.appendContent(reportDTO, "click login button");
-			
-			Thread.sleep(5000L);
-			
-			jsonReporter.appendContent(reportDTO, "after click login button sleep");
-			
-			x.start("a").addAttribute("track-type", "trackIndexClick").addAttribute("href",
-					"//i.51job.com/resume/resume_center.php?lang=c");
-			WebElement resumeCenter = d.findElement(By.xpath(x.getXpath()));
-			jsonReporter.appendContent(reportDTO, "find resume center button");
-			resumeCenter.click();
-			
-			jsonReporter.appendContent(reportDTO, "resume center button click");
-			
-			Thread.sleep(5000L);
-			
-			WebElement targetResumeButton = null;
-			x.start("div").addAttribute("class", "rbox")
-			.findChild("div", 4).addAttribute("class", "rli")
-			.findChild("ul").addAttribute("class", "clearfix")
-			.findChild("li")
-			.findChild("a")
-			;
-			targetResumeButton = d.findElement(By.xpath(x.getXpath()));
-			
-			jsonReporter.appendContent(reportDTO, "found resume button");
-			
-			if (targetResumeButton != null) {
-				targetResumeButton.click();
-				jsonReporter.appendContent(reportDTO, "找到目标简历");
-			} else {
-				jsonReporter.appendContent(reportDTO, "简历失踪了");
+			try {
+				d.get("https://m.51job.com/resume/myresume.php");
+				jsonReporter.appendContent(reportDTO, "get");
+			} catch (TimeoutException e) {
+				jsUtil.windowStop(d);
+				jsonReporter.appendContent(reportDTO, "get but timeout");
 			}
 			
-			x.start("div").addAttribute("class", "con")
-			.findChild("div", 6)
-			.findChild("div");
+			try {
+				d.get("https://m.51job.com/resume/detail.php?userid=398934495");
+				jsonReporter.appendContent(reportDTO, "get");
+			} catch (TimeoutException e) {
+				jsUtil.windowStop(d);
+				jsonReporter.appendContent(reportDTO, "get but timeout");
+			}
 			
-			WebElement intentionDetailDiv = d.findElement(By.xpath(x.getXpath()));
+			try {
+				d.get("https://m.51job.com/resume/jobintent.php?userid=398934495");
+				jsonReporter.appendContent(reportDTO, "get");
+			} catch (TimeoutException e) {
+				jsUtil.windowStop(d);
+				jsonReporter.appendContent(reportDTO, "get but timeout");
+			}
+			
+			x.start("textarea").addAttribute("id", "intro");
+			WebElement intentionDetailTextarea = d.findElement(By.xpath(x.getXpath()));
 			String now = localDateTimeHandler.dateToStr(LocalDateTime.now());
 			String timeMarkStr = "自动签到时间: " + now;
-			String intentionDetailSourceStr = intentionDetailDiv.getText();
+			String intentionDetailSourceStr = intentionDetailTextarea.getText();
 			String lineBreak = null;
 			if(intentionDetailSourceStr.contains(System.lineSeparator())) {
 				lineBreak = System.lineSeparator();
@@ -206,18 +201,13 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 				sb.append(lineBreak);
 			}
 			
-			jsUtil.execute(d, "document.getElementById('intention_edit').style.display='block';");
-			x.start("span").addAttribute("id", "intention_edit");
-			WebElement intentionEditButton = d.findElement(By.xpath(x.getXpath()));
-			intentionEditButton.click();
+			intentionDetailTextarea.clear();
+			intentionDetailTextarea.sendKeys(sb.toString());
 			
-			WebElement intentionEditor = d.findElement(By.id("int_selfintro"));
-			intentionEditor.clear();
-			intentionEditor.sendKeys(sb.toString());
-			
-			d.findElement(By.id("intention_save")).click();
+			d.findElement(By.id("saveresumefour")).click();
 			
 			r.setIsSuccess();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			String htmlStr = jsUtil.getHtmlSource(d);
@@ -239,6 +229,30 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 		}
 		
 		return r;
+	}
+	
+	
+	private void findAndCloseLeadDiv(WebDriver d) {
+		XpathBuilderBO x = new XpathBuilderBO();
+		
+		x.start("div").addAttribute("id", "lead");
+		
+		try {
+			WebElement leadDiv = d.findElement(By.xpath(x.getXpath()));
+			if(leadDiv == null || !leadDiv.isDisplayed()) {
+				return;
+			}
+			
+			x.start("div").addAttribute("id", "lead")
+			.findChild("div").addAttribute("class", "img")
+			.findChild("div").addAttribute("class", "close closeloginpop")
+			;
+			
+			WebElement leadCloseButton = d.findElement(By.xpath(x.getXpath()));
+			leadCloseButton.click();
+		} catch (Exception e) {
+			
+		}
 	}
 
 }

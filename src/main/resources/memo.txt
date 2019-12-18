@@ -2,3 +2,4 @@
 
 详见 WuYiJobDailySignServiceImpl 
 针对 51job 签到， 个人简介同时编辑， 加入刷新时间或一些其他要素
+使用手机版网页!! https://m.51job.com/
