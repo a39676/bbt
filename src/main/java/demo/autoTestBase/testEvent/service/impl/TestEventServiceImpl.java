@@ -95,7 +95,11 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 			
 			if(te.getAppointment() == null || te.getAppointment().isBefore(LocalDateTime.now())) {
 				startEvent(te);
-				r = runSubEvent(te);
+				try {
+					r = runSubEvent(te);
+				} catch (Exception e) {
+					r = new CommonResultBBT();
+				}
 				endEvent(te, r.isSuccess(), r.getMessage());
 			}
 		}

@@ -107,9 +107,12 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 			tryQuitWebDriver(d);
 		}
 		
-		String reportOutputPath = reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json";
-		if(jsonReporter.outputReport(reportDTO, reportOutputPath)) {
-			updateTestEventReportPath(te, reportOutputPath);
+		try {
+			String reportOutputPath = reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json";
+			if(jsonReporter.outputReport(reportDTO, reportOutputPath)) {
+				updateTestEventReportPath(te, reportOutputPath);
+			}
+		} catch (Exception e) {
 		}
 		
 		return r;
