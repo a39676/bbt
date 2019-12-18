@@ -88,11 +88,11 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 		
 		reportDTO.setOutputReportPath(reportOutputFolderPath + File.separator + te.getId());
 		
-		WebDriver d = webDriverService.buildFireFoxWebDriver();
-
+		WebDriver d = null;
 		int maxClawPageCount = 3;
 
 		try {
+			d = webDriverService.buildFireFoxWebDriver();
 			d.get(newMovie);
 			
 			while(maxClawPageCount > 0) {
