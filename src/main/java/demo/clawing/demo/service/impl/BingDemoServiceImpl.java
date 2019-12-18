@@ -42,11 +42,12 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 		
 		reportDTO.setOutputReportPath(reportOutputFolderPath + File.separator + te.getId());
 
-		WebDriver d = webDriverService.buildFireFoxWebDriver();
+		WebDriver d = null;
 
 		String mainUrl = "https://cn.bing.com/?FORM=BEHPTB";
 		
 		try {
+			d = webDriverService.buildFireFoxWebDriver();
 			try {
 				d.get(mainUrl);
 				jsonReporter.appendContent(reportDTO, "打开: " + mainUrl);

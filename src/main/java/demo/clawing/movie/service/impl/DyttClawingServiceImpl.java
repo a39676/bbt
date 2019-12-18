@@ -81,7 +81,6 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 	@Override
 	public CommonResultBBT clawing(TestEvent te) {
 		CommonResultBBT r = new CommonResultBBT();
-		StringBuffer report = new StringBuffer();
 		JsonReportDTO reportDTO = new JsonReportDTO();
 		
 		String reportOutputFolderPath = getReportOutputPath();
@@ -103,10 +102,8 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 			
 			r.setIsSuccess();
 		} catch (Exception e) {
-			report.append(e.getMessage() + "\n");
-			
+			jsonReporter.appendContent(reportDTO, e.toString());
 		} finally {
-			r.setMessage(report.toString());
 			tryQuitWebDriver(d);
 		}
 		
@@ -122,21 +119,29 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 		String mainWindowHandle = d.getWindowHandle();
 		Set<String> windowHandles = null;
 		d.switchTo().window(mainWindowHandle);
+		
+		jsonReporter.appendContent(reportDTO, "切换窗口");
 
 		XpathBuilderBO xpathBuilder = new XpathBuilderBO();
 		xpathBuilder.start("a").addAttribute("class", "ulink");
 		By targetAListBy = By.xpath(xpathBuilder.getXpath());
 
 		List<WebElement> targetAList = d.findElements(targetAListBy);
+		
+		jsonReporter.appendContent(reportDTO, "找到" + targetAList.size() + "个链接");
+		
 		WebElement ele = null;
 		for (int i = 0; i < targetAList.size(); i++) {
 			ele = targetAList.get(i);
 			singleMovieHandle(d, ele, mainWindowHandle, te, reportDTO);
+			jsonReporter.appendContent(reportDTO, "处理第" + i + "个");
 			windowHandles = d.getWindowHandles();
 			if (windowHandles.size() > 5) {
+				jsonReporter.appendContent(reportDTO, "窗口多开数量异常");
 				throw new Exception();
 			}
 			d.switchTo().window(mainWindowHandle);
+			jsonReporter.appendContent(reportDTO, "返回主窗口");
 		}
 	}
 
@@ -163,12 +168,14 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 		String screenshotPath = getScreenshotSaveingPath();
 		
 		String subUrl = ele.getAttribute("href");
+		jsonReporter.appendContent(reportDTO, "正在处理: " + subUrl);
 		MovieRecordFindByConditionDTO findMovieRecordDTO = new MovieRecordFindByConditionDTO();
 		findMovieRecordDTO.setUrl(subUrl);
 		findMovieRecordDTO.setWasClaw(true);
 		findMovieRecordDTO.setCaseId(MovieClawingCaseType.dytt.getId());
 		List<MovieRecord> records = recordMapper.findByCondition(findMovieRecordDTO);
 		if (records != null && records.size() > 0) {
+			jsonReporter.appendContent(reportDTO, "本条url 已经处理过:" + subUrl);
 			return;
 		}
 		
@@ -195,6 +202,7 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 			throw new Exception();
 		} else {
 			d.switchTo().window(targetWindowHandle);
+			jsonReporter.appendContent(reportDTO, "切换到目标窗口");
 		}
 		currentUrl = d.getCurrentUrl();
 
@@ -206,16 +214,20 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 
 		try {
 			divZoom = d.findElement(divZoomBy);
+			jsonReporter.appendContent(reportDTO, "找到内容主div");
 			Long newMovieId = snowFlake.getNextId();
 
 			List<WebElement> imgs = divZoom.findElements(ByTagName.tagName("img"));
+			jsonReporter.appendContent(reportDTO, "准备处理图片数据");
 			saveMovieImg(imgs, newMovieId);
 
 			List<WebElement> aTags = divZoom.findElements(ByTagName.tagName("a"));
+			jsonReporter.appendContent(reportDTO, "准备匹配磁链");
 			handleMovieMagnetUrl(aTags, newMovieId);
 
 			List<WebElement> pTags = divZoom.findElements(ByTagName.tagName("p"));
-			saveMovieInfo(d, pTags, newMovieId, te);
+			jsonReporter.appendContent(reportDTO, "准备匹配详细信息");
+			saveMovieInfo(d, pTags, newMovieId, te, reportDTO);
 
 
 			MovieRecord record = new MovieRecord();
@@ -225,6 +237,8 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 			record.setMovieId(newMovieId);
 			record.setCaseId(MovieClawingCaseType.dytt.getId());
 			recordMapper.insertSelective(record);
+			
+			jsonReporter.appendContent(reportDTO, "更新db for: " + currentUrl);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -239,6 +253,7 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 		} finally {
 			if (!mainWindowHandler.equals(d.getWindowHandle())) {
 				d.close();
+				jsonReporter.appendContent(reportDTO, "关闭子窗口");
 			}
 		}
 	}
@@ -253,9 +268,11 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 		}
 	}
 
-	private void saveMovieInfo(WebDriver d, List<WebElement> pTags, Long movieId, TestEvent te) {
+	private void saveMovieInfo(WebDriver d, List<WebElement> pTags, Long movieId, TestEvent te, JsonReportDTO reportDTO) {
 		WebElement targetP = null;
 		WebElement tmpEle = null;
+		
+		jsonReporter.appendContent(reportDTO, "准备处理dytt 来源信息");
 		for (int i = 0; i < pTags.size() && targetP == null; i++) {
 			tmpEle = pTags.get(i);
 			if (StringUtils.isNotBlank(tmpEle.getText())) {
@@ -277,27 +294,42 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 			}
 		}
 		
+		jsonReporter.appendContent(reportDTO, "初步处理 dytt 信息, 准备前往 douban");
+		
 		DoubanSubClawingResult doubanResult = null;
 		if(StringUtils.isNotBlank(info.getCnTitle())) {
 			doubanResult = doubanService.clawing(d, info.getCnTitle(), te);
 		} else {
 			doubanResult = doubanService.clawing(d, info.getOriginalTitle(), te);
 		}
+		
+		if(doubanResult.isSuccess()) {
+			jsonReporter.appendContent(reportDTO, "成功处理 douban 返回信息");
+		} else {
+			jsonReporter.appendContent(reportDTO, "douban 返回信息处理异常");
+		}
+		
 		info.setCnTitle(doubanResult.getCnTitle());
 		info.setOriginalTitle(doubanResult.getOriginalTitle());
 		info.setNationId(detectMovieRegion(doubanResult.getRegion()).longValue());
 		
 		infoMapper.insertSelective(info);
+		
+		jsonReporter.appendContent(reportDTO, "成功插入详情介绍");
 
 		String savePath = introductionSavePath + File.separator + movieId + ".txt";
 		if(StringUtils.isNotBlank(doubanResult.getIntroduction())) {
 			iou.byteToFile(doubanResult.getIntroduction().getBytes(StandardCharsets.UTF_8), savePath);
 		}
+		
+		jsonReporter.appendContent(reportDTO, "保存详情文档");
 
 		MovieIntroduction po = new MovieIntroduction();
 		po.setMovieId(movieId);
 		po.setIntroPath(savePath);
 		introduectionMapper.insertSelective(po);
+		
+		jsonReporter.appendContent(reportDTO, "更新详情保存路径到db");
 	}
 
 }
