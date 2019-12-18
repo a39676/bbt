@@ -32,7 +32,7 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 	private TestEvent buildTestEvent() {
 		BuildTestEventBO bo = new BuildTestEventBO();
 		DailySignCaseType t = DailySignCaseType.quqi;
-		bo.setTestModuleType(TestModuleType.ATDemo);
+		bo.setTestModuleType(TestModuleType.dailySign);
 		bo.setCaseId(t.getId());
 		bo.setEventName(t.getEventName());
 //		TODO
