@@ -220,12 +220,11 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
 			jsonReporter.appendContent(reportDTO, htmlStr);
 			
+		} finally {
+			tryQuitWebDriver(d, reportDTO);
 			if (jsonReporter.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
 				updateTestEventReportPath(te, reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json");
 			}
-			
-		} finally {
-			tryQuitWebDriver(d, reportDTO);
 		}
 		
 		return r;
