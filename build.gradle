@@ -137,4 +137,6 @@ dependencies {
 	// opencv
 	// compile group: 'org.bytedeco.javacpp-presets', name: 'opencv', version: '4.0.1-1.4.4'
 	
+	// 富文本输入内容过滤/防御
+	compile group: 'com.googlecode.owasp-java-html-sanitizer', name: 'owasp-java-html-sanitizer', version: '20191001.1'
 }
