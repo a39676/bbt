@@ -37,7 +37,7 @@ public class SwaggerConfig {
 			d = new Docket(DocumentationType.SWAGGER_2)
 					.apiInfo(apiInfo())
 					.select()
-					.apis(RequestHandlerSelectors.basePackage("demo.movieInteraction.controller"))
+					.apis(RequestHandlerSelectors.basePackage("demo.interaction.movieInteraction.controller"))
 					.paths(PathSelectors.any())
 					.build();
 		}
