@@ -8,6 +8,7 @@ import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.baseCommon.service.CommonService;
 import demo.clawing.dailySign.pojo.type.DailySignCaseType;
 import demo.clawing.dailySign.service.DailySignPrefixService;
+import demo.clawing.dailySign.service.LiePinDailySignService;
 import demo.clawing.dailySign.service.QuQiDailySignService;
 import demo.clawing.dailySign.service.WuYiJobDailySignService;
 
@@ -18,6 +19,8 @@ public class DailySignPrefixServiceImpl extends CommonService implements DailySi
 	private QuQiDailySignService quqiSign;
 	@Autowired
 	private WuYiJobDailySignService wuYiSign;
+	@Autowired
+	private LiePinDailySignService liePinSign;
 	
 	@Override
 	public CommonResultBBT runSubEvent(TestEvent te) {
@@ -27,6 +30,8 @@ public class DailySignPrefixServiceImpl extends CommonService implements DailySi
 			return quqiSign.clawing(te);
 		} else if (DailySignCaseType.wuYiJob.getId().equals(caseId)) {
 			return wuYiSign.dailySign(te);
+		} else if (DailySignCaseType.liePin.getId().equals(caseId)) {
+			return liePinSign.dailySign(te);
 		}
 		return new CommonResultBBT();
 	}

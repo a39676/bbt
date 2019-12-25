@@ -8,4 +8,6 @@ public class DailySignUrl {
 	
 	public static final String insertWuYiSign = "/insertWuYiSign";
 	
+	public static final String insertLiePinSign = "/insertLiePinSign";
+	
 }

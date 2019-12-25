@@ -8,6 +8,9 @@ public enum DailySignCaseType {
 	/** wuYiJob */
 	wuYiJob(2L, "wuYiJob"),
 	
+	/** liePin */
+	liePin(3L, "liePin"),
+	
 	;
 
 	private Long id;
