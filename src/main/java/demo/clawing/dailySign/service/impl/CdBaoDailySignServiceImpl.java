@@ -23,39 +23,29 @@ import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.dailySign.pojo.bo.DailySignAccountBO;
 import demo.clawing.dailySign.pojo.type.DailySignCaseType;
-import demo.clawing.dailySign.service.WuYiJobDailySignService;
+import demo.clawing.dailySign.service.CdBaoDailySignService;
+import demo.selenium.service.impl.AuxiliaryToolServiceImpl;
 import demo.selenium.service.impl.SeleniumCommonService;
 import demo.selenium.service.pojo.bo.BuildTestEventBO;
 import image.pojo.result.UploadImageToCloudinaryResult;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
-public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implements WuYiJobDailySignService {
+public class CdBaoDailySignServiceImpl extends SeleniumCommonService implements CdBaoDailySignService {
 
 	@Autowired
 	private FileUtilCustom ioUtil;
+	@Autowired
+	private AuxiliaryToolServiceImpl auxTool;
 	
-	private String dailySignEventName = "wuYiJobDailySign";
+	private String dailySignEventName = "cdBaoDailySign";
 	
-	private String userDataFileName = "51jobDailySign.json";
+	private String userDataFileName = "cdBaoDailySign.json";
 	
 	private TestModuleType testModuleType = TestModuleType.dailySign;
-	private DailySignCaseType testCastType = DailySignCaseType.wuYiJob;
+	private DailySignCaseType testCastType = DailySignCaseType.cdBao;
 
-	/*
-	 * TODO 
-	 * 待修改 QuQi 读取账号密码方式 改成读取本地文件, 
-	 * 
-	 * 已经新建 test_process 表, 但批量增加 test_event 并有顺序要求的情况, 难以封装, 后期可能视具体情况, 固定代码实现
-	 * 
-	 * 因每个任务的 参数BO 均不同, 不再封装公共方法
-	 * 
-	 * 考虑在 SeleniumCommonService 新建以参数文件数量, 对应新建多个子任务的方法
-	 * 每个 testEvent 很可能对应多个参数文件, 那么加入任务的时候, 如果不声明指定的参数文件,
-	 * 则应该所有参数配置都跑一次 但当时新建任务时 if(无指定参数文件的任务 && 对应的参数文件夹下有多个参数搭配文件) { 就应该同时建立N个子任务,
-	 * 不是等运行时才建立子任务, 保证数据排序, 并且对应多个子任务有多个报告 新建子任务后, 就可以生成一份报告, 报告内是对应各个子报告的链接 考虑选用
-	 * processId 做关联? }
-	 */
+	
 
 	private TestEvent buildDailySignEvent() {
 		String paramterFolderPath = getParameterSaveingPath(dailySignEventName);
@@ -117,17 +107,23 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 				jsonReporter.appendContent(reportDTO, "get but timeout");
 			}
 			
-			findAndCloseLeadDiv(d);
-			
 			XpathBuilderBO x = new XpathBuilderBO();
 			
-			x.start("div").addAttribute("id", "pageTop")
-			.findChild("header")
-			.findChild("p").addAttribute("class", "links")
-			.findChild("a", 1)
-			;
+			x.start("a").addAttribute("class", "nousername");
 			
 			d.findElement(By.xpath(x.getXpath())).click();
+			
+			x.start("img").addAttribute("onclick", "updateseccode('cS')");
+			WebElement captchaCodeImg = null;
+			int captchaCount = 0;
+//			TODO
+			
+			while(captchaCount < 15) {
+				captchaCodeImg = d.findElement(By.xpath(x.getXpath()));
+				auxTool.captchaHandle(d, captchaCodeImg, te);
+				captchaCount++;
+			}
+			
 			
 			x.start("input").addAttribute("id", "loginname");
 			WebElement usernameInput = d.findElement(By.xpath(x.getXpath()));
@@ -232,28 +228,5 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 		return r;
 	}
 	
-	
-	private void findAndCloseLeadDiv(WebDriver d) {
-		XpathBuilderBO x = new XpathBuilderBO();
-		
-		x.start("div").addAttribute("id", "lead");
-		
-		try {
-			WebElement leadDiv = d.findElement(By.xpath(x.getXpath()));
-			if(leadDiv == null || !leadDiv.isDisplayed()) {
-				return;
-			}
-			
-			x.start("div").addAttribute("id", "lead")
-			.findChild("div").addAttribute("class", "img")
-			.findChild("div").addAttribute("class", "close closeloginpop")
-			;
-			
-			WebElement leadCloseButton = d.findElement(By.xpath(x.getXpath()));
-			leadCloseButton.click();
-		} catch (Exception e) {
-			
-		}
-	}
 
 }

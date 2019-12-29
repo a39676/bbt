@@ -11,6 +11,9 @@ public enum DailySignCaseType {
 	/** liePin */
 	liePin(3L, "liePin"),
 	
+	/** cdBao */
+	cdBao(4L, "cdBao"),
+	
 	;
 
 	private Long id;
