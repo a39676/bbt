@@ -24,7 +24,6 @@ import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.dailySign.pojo.bo.DailySignAccountBO;
 import demo.clawing.dailySign.pojo.type.DailySignCaseType;
 import demo.clawing.dailySign.service.CdBaoDailySignService;
-import demo.selenium.service.impl.AuxiliaryToolServiceImpl;
 import demo.selenium.service.impl.SeleniumCommonService;
 import demo.selenium.service.pojo.bo.BuildTestEventBO;
 import image.pojo.result.UploadImageToCloudinaryResult;
@@ -35,8 +34,6 @@ public class CdBaoDailySignServiceImpl extends SeleniumCommonService implements 
 
 	@Autowired
 	private FileUtilCustom ioUtil;
-	@Autowired
-	private AuxiliaryToolServiceImpl auxTool;
 	
 	private String dailySignEventName = "cdBaoDailySign";
 	
@@ -114,13 +111,22 @@ public class CdBaoDailySignServiceImpl extends SeleniumCommonService implements 
 			d.findElement(By.xpath(x.getXpath())).click();
 			
 			x.start("img").addAttribute("onclick", "updateseccode('cS')");
+			By captchaImgBy = By.xpath(x.getXpath());
+			x.start("span").addAttribute("id", "checkseccodeverify_cS")
+			.findChild("img");
+			By captchaFlagImgBy = By.xpath(x.getXpath());
 			WebElement captchaCodeImg = null;
+			WebElement captchaInput = d.findElement(By.id("seccodeverify_cS"));
 			int captchaCount = 0;
+			String captcha = null;
 //			TODO
 			
 			while(captchaCount < 15) {
-				captchaCodeImg = d.findElement(By.xpath(x.getXpath()));
-				auxTool.captchaHandle(d, captchaCodeImg, te);
+				captchaCodeImg = d.findElement(captchaImgBy);
+				captcha = auxTool.captchaHandle(d, captchaCodeImg, te);
+				captchaInput.click();
+				captchaInput.click();
+				captchaInput.sendKeys(captcha);
 				captchaCount++;
 			}
 			

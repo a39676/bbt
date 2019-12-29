@@ -21,7 +21,6 @@ import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.badJoke.sms.pojo.dto.BadJokeSMSDTO;
 import demo.clawing.badJoke.sms.pojo.type.BadJokeCaseType;
 import demo.clawing.badJoke.sms.service.BadJokeSMSService;
-import demo.selenium.service.impl.AuxiliaryToolServiceImpl;
 import demo.selenium.service.impl.SeleniumCommonService;
 import demo.selenium.service.pojo.bo.BuildTestEventBO;
 
@@ -35,8 +34,6 @@ public class BadJokeSMSServiceImpl extends SeleniumCommonService implements BadJ
 	private TestEventService testEventService;
 //	@Autowired
 //	private WebDriverService webDriverService;
-	@Autowired
-	private AuxiliaryToolServiceImpl auxTool;
 	@Autowired
 	private WebATToolService webATTool;
 	@Autowired

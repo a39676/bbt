@@ -29,6 +29,8 @@ public abstract class SeleniumCommonService extends CommonService {
 	@Autowired
 	protected WebDriverService webDriverService;
 	@Autowired
+	protected AuxiliaryToolServiceImpl auxTool;
+	@Autowired
 	protected ScreenshotService screenshotService;
 	@Autowired
 	protected JavaScriptServiceImpl jsUtil;
