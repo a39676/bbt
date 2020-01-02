@@ -1,10 +1,10 @@
 package demo.clawing.dailySign.service.impl;
 
 import java.io.File;
-import java.time.LocalDateTime;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -110,105 +110,57 @@ public class CdBaoDailySignServiceImpl extends SeleniumCommonService implements 
 			
 			d.findElement(By.xpath(x.getXpath())).click();
 			
-			x.start("img").addAttribute("onclick", "updateseccode('cS')");
+			x.start("span").addAttribute("id", "vseccode_cS").findChild("img").addAttribute("class", "vm");
 			By captchaImgBy = By.xpath(x.getXpath());
-			x.start("span").addAttribute("id", "checkseccodeverify_cS")
-			.findChild("img");
-			By captchaFlagImgBy = By.xpath(x.getXpath());
 			WebElement captchaCodeImg = null;
 			WebElement captchaInput = d.findElement(By.id("seccodeverify_cS"));
 			int captchaCount = 0;
 			String captcha = null;
 //			TODO
-			
-			while(captchaCount < 15) {
-				captchaCodeImg = d.findElement(captchaImgBy);
-				captcha = auxTool.captchaHandle(d, captchaCodeImg, te);
-				captchaInput.click();
-				captchaInput.click();
-				captchaInput.sendKeys(captcha);
-				captchaCount++;
-			}
-			
-			
-			x.start("input").addAttribute("id", "loginname");
+			x.start("input").addAttribute("name", "username").addAttribute("type", "text").addAttribute("class", "px p_fre");
 			WebElement usernameInput = d.findElement(By.xpath(x.getXpath()));
 			usernameInput.click();
 			usernameInput.clear();
 			usernameInput.sendKeys(dailySignBO.getUsername());
 			
-			x.start("input").addAttribute("id", "password");
+			while(captchaCount < 25 && !detectCaptchaImgFlag(d)) {
+				captchaCodeImg = d.findElement(captchaImgBy);
+				captchaCodeImg.click();
+				Thread.sleep(800L);
+				captchaCodeImg = d.findElement(captchaImgBy);
+				Point p = captchaCodeImg.getLocation();
+				int width = captchaCodeImg.getSize().width + p.getX();
+				int height = captchaCodeImg.getSize().height + p.getY();
+				Thread.sleep(300L);
+				captcha = auxTool.captchaHandle(d, p.getX(), p.getY(), width, height, te);
+				System.out.println(captcha);
+				captchaInput.click();
+				captchaInput.clear();
+				captchaInput.sendKeys(captcha);
+				usernameInput.click();
+				captchaCount++;
+			}
+			
+			if(!detectCaptchaImgFlag(d)) {
+				jsonReporter.appendContent(reportDTO, "无法识别验证码");
+				throw new Exception();
+			}
+			
+			x.start("input").addAttribute("type", "password").addAttribute("name", "password").addAttribute("class", "px p_fre");
 			WebElement pwdInput = d.findElement(By.xpath(x.getXpath()));
 			pwdInput.click();
 			pwdInput.clear();
 			pwdInput.sendKeys(dailySignBO.getPwd());
 			
-			x.start("button").addAttribute("id", "login_btn");
+			x.start("table")
+			.findChild("tbody")
+			.findChild("tr")
+			.findChild("td")
+			.findChild("button").addAttribute("name", "loginsubmit").addAttribute("class", "pn pnc")
+			;
 			WebElement loginButton = d.findElement(By.xpath(x.getXpath()));
 			loginButton.click();
 			
-			try {
-				d.get("https://m.51job.com/my/my51job.php");
-				jsonReporter.appendContent(reportDTO, "get");
-			} catch (TimeoutException e) {
-				jsUtil.windowStop(d);
-				jsonReporter.appendContent(reportDTO, "get but timeout");
-			}
-			
-			try {
-				d.get("https://m.51job.com/resume/myresume.php");
-				jsonReporter.appendContent(reportDTO, "get");
-			} catch (TimeoutException e) {
-				jsUtil.windowStop(d);
-				jsonReporter.appendContent(reportDTO, "get but timeout");
-			}
-			
-			try {
-				d.get("https://m.51job.com/resume/detail.php?userid=398934495");
-				jsonReporter.appendContent(reportDTO, "get");
-			} catch (TimeoutException e) {
-				jsUtil.windowStop(d);
-				jsonReporter.appendContent(reportDTO, "get but timeout");
-			}
-			
-			try {
-				d.get("https://m.51job.com/resume/jobintent.php?userid=398934495");
-				jsonReporter.appendContent(reportDTO, "get");
-			} catch (TimeoutException e) {
-				jsUtil.windowStop(d);
-				jsonReporter.appendContent(reportDTO, "get but timeout");
-			}
-			
-			x.start("textarea").addAttribute("id", "intro");
-			WebElement intentionDetailTextarea = d.findElement(By.xpath(x.getXpath()));
-			String now = localDateTimeHandler.dateToStr(LocalDateTime.now());
-			String timeMarkStr = "自动签到时间: " + now;
-			String intentionDetailSourceStr = intentionDetailTextarea.getText();
-			String lineBreak = null;
-			if(intentionDetailSourceStr.contains(System.lineSeparator())) {
-				lineBreak = System.lineSeparator();
-			} else if(intentionDetailSourceStr.contains("\r\n")) {
-				lineBreak = "\r\n";
-			} else if(intentionDetailSourceStr.contains("\n")) {
-				lineBreak = "\n";
-			} else if(intentionDetailSourceStr.contains("\r")) {
-				lineBreak = "\r";
-			}
-			String[] sourceLines = intentionDetailSourceStr.split(lineBreak); 
-			StringBuffer sb = new StringBuffer();
-			for(int i = 0; i < sourceLines.length; i++) {
-				if(i == 0) {
-					sb.append(timeMarkStr);
-				} else {
-					sb.append(sourceLines[i]);
-				}
-				sb.append(lineBreak);
-			}
-			
-			intentionDetailTextarea.clear();
-			intentionDetailTextarea.sendKeys(sb.toString());
-			
-			d.findElement(By.id("saveresumefour")).click();
 			
 			r.setIsSuccess();
 			
@@ -234,5 +186,24 @@ public class CdBaoDailySignServiceImpl extends SeleniumCommonService implements 
 		return r;
 	}
 	
-
+	private boolean detectCaptchaImgFlag(WebDriver d) {
+		XpathBuilderBO x = new XpathBuilderBO();
+		x.start("span").addAttribute("id", "checkseccodeverify_cS")
+		.findChild("img");
+		
+		WebElement flagImg = null;
+		try {
+			flagImg = d.findElement(By.xpath(x.getXpath()));
+			if(flagImg != null && flagImg.isDisplayed()) {
+				String src = flagImg.getAttribute("src");
+				if(src != null && src.contains("right")) {
+					return true;
+				}
+			}
+		} catch (Exception e) {
+			return false;
+		}
+		
+		return false;
+	}
 }

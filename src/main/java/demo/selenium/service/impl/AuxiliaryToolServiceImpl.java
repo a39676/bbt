@@ -48,6 +48,24 @@ public class AuxiliaryToolServiceImpl extends CommonService {
 
 		return foo;
 	};
+	
+	public String captchaHandle(WebDriver d, int startX, int startY, int endX, int endY, TestEvent te, boolean numberAndLetterOnly)
+			throws IOException {
+		
+		TakeScreenshotSaveDTO dto = new TakeScreenshotSaveDTO();
+		dto.setDriver(d);
+		dto.setStartX(startX);
+		dto.setStartY(startY);
+		dto.setEndX(endX);
+		dto.setEndY(endY);
+		ScreenshotSaveResult vcodeImgSaveResult = screenshotService.screenshotSave(dto, globalOptionService.getScreenshotSavingFolder(), null);
+		return captchaService.ocr(vcodeImgSaveResult.getSavingPath(), numberAndLetterOnly);
+	}
+	
+	public String captchaHandle(WebDriver d, int startX, int startY, int endX, int endY, TestEvent te)
+			throws IOException {
+		return captchaHandle(d, startX, startY, endX, endY, te, true);
+	}
 
 	public String captchaHandle(WebDriver d, WebElement captchaCodeElement, TestEvent te, boolean numberAndLetterOnly)
 			throws IOException {

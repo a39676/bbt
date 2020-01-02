@@ -10,4 +10,6 @@ public class DailySignUrl {
 	
 	public static final String insertLiePinSign = "/insertLiePinSign";
 	
+	public static final String insertCDBaoSign = "/insertCDBaoSign";
+	
 }

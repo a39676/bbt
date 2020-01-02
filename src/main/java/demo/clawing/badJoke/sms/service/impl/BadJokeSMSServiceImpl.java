@@ -179,23 +179,24 @@ public class BadJokeSMSServiceImpl extends SeleniumCommonService implements BadJ
 			WebElement sendSmsButton = d.findElement(By.id("smsbtn"));
 			
 			String captchaCode = null;
-			WebElement captchaIsCorrect = d.findElement(By.id("trphone_code"));
+			WebElement captchaIsNotCorrect = d.findElement(By.id("spanphone_code"));
 			
 			int captchaCount = 0;
-			while(captchaIsCorrect.isDisplayed() && captchaCount < maxCaptchaCount) {
+			while(captchaIsNotCorrect.isDisplayed() && captchaCount < maxCaptchaCount) {
 				captchaImg.click();
 				try {
 					captchaCode = auxTool.captchaHandle(d, captchaImg, te);
 					captchaInput.clear();
 					captchaInput.sendKeys(captchaCode);
 					pwdInput.click();
-					captchaIsCorrect = d.findElement(By.id("trphone_code"));
+					Thread.sleep(800L);
+					captchaIsNotCorrect = d.findElement(By.id("spanphone_code"));
 					captchaCount++;
 				} catch (Exception e) {
 				}
 			}
 			
-			if(!captchaIsCorrect.isDisplayed()) {
+			if(!captchaIsNotCorrect.isDisplayed()) {
 				sendSmsButton.click();
 				r.setIsSuccess();
 			}

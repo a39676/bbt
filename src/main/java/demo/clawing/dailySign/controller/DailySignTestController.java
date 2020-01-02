@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import demo.clawing.dailySign.pojo.constant.DailySignUrl;
+import demo.clawing.dailySign.service.CdBaoDailySignService;
 import demo.clawing.dailySign.service.LiePinDailySignService;
 import demo.clawing.dailySign.service.QuQiDailySignService;
 import demo.clawing.dailySign.service.WuYiJobDailySignService;
@@ -20,6 +21,8 @@ public class DailySignTestController {
 	private WuYiJobDailySignService wuyiService;
 	@Autowired
 	private LiePinDailySignService leiPinService;
+	@Autowired
+	private CdBaoDailySignService cdBaoService;
 	
 	@GetMapping(value = DailySignUrl.insertQuQiSign)
 	public void insertQuQiSign() {
@@ -32,7 +35,12 @@ public class DailySignTestController {
 	}
 	
 	@GetMapping(value = DailySignUrl.insertLiePinSign)
-	public void leiPinService() {
+	public void insertLiePinSign() {
 		leiPinService.insertDailySignEvent();
+	}
+	
+	@GetMapping(value = DailySignUrl.insertCDBaoSign)
+	public void insertCDBaoSign() {
+		cdBaoService.insertDailySignEvent();
 	}
 }
