@@ -21,7 +21,9 @@ import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.baseCommon.pojo.result.CommonResultBBT;
+import demo.clawing.dailySign.mapper.WuyiWatchMeMapper;
 import demo.clawing.dailySign.pojo.bo.DailySignAccountBO;
+import demo.clawing.dailySign.pojo.po.WuyiWatchMe;
 import demo.clawing.dailySign.pojo.type.DailySignCaseType;
 import demo.clawing.dailySign.service.WuYiJobDailySignService;
 import demo.selenium.service.impl.SeleniumCommonService;
@@ -34,6 +36,8 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 
 	@Autowired
 	private FileUtilCustom ioUtil;
+	@Autowired
+	private WuyiWatchMeMapper wuyiWatcheMeMapper;
 	
 	private String dailySignEventName = "wuYiJobDailySign";
 	
@@ -83,6 +87,20 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 	public CommonResultBBT dailySign(TestEvent te) {
 		CommonResultBBT r = new CommonResultBBT();
 		
+		String wuYiRunCountKey = "wuYiRunCountKey";
+		String runCountStr = constantService.getValByName(wuYiRunCountKey);
+		int runCount = 0;
+		if(StringUtils.isBlank(runCountStr) || "null".equals(runCountStr) || !numericUtil.matchInteger(runCountStr)) {
+			constantService.setValByName(wuYiRunCountKey, "1");
+			runCount = 1;
+		} else {
+			runCount = Integer.parseInt(runCountStr);
+		}
+		
+		if(runCount % 4 == 0) {
+			runCount = 0;
+		}
+		
 		JsonReportDTO reportDTO = new JsonReportDTO();
 		WebDriver d = null;
 		
@@ -92,8 +110,6 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 		reportDTO.setOutputReportPath(reportOutputFolderPath + File.separator + te.getId());
 		
 		try {
-			
-			d = webDriverService.buildFireFoxWebDriver();
 			
 			String jsonStr = ioUtil.getStringFromFile(te.getParameterFilePath());
 			if(StringUtils.isBlank(jsonStr)) {
@@ -109,17 +125,83 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 				throw new Exception();
 			}
 			
-			try {
-				d.get(dailySignBO.getMainUrl());
-				jsonReporter.appendContent(reportDTO, "get");
-			} catch (TimeoutException e) {
-				jsUtil.windowStop(d);
-				jsonReporter.appendContent(reportDTO, "get but timeout");
+			if(dailySignBO == null) {
+				jsonReporter.appendContent(reportDTO, "参数文件结构异常");
+				throw new Exception();
+			}
+
+			d = webDriverService.buildFireFoxWebDriver();
+			
+			if(!login(d, reportDTO, dailySignBO)) {
+				r.failWithMessage("登录失败");
+				throw new Exception();
 			}
 			
-			findAndCloseLeadDiv(d);
+			catchWatchMe(d, reportDTO);
+			if(runCount == 0) {
+				if(!updateDetail(d, reportDTO)) {
+					r.failWithMessage("更新失败");
+					throw new Exception();
+				}
+			}
 			
-			XpathBuilderBO x = new XpathBuilderBO();
+			constantService.setValByName(wuYiRunCountKey, String.valueOf(runCount + 1));
+			
+			r.setIsSuccess();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			String htmlStr = jsUtil.getHtmlSource(d);
+			TakeScreenshotSaveDTO screenshotDTO = new TakeScreenshotSaveDTO();
+			screenshotDTO.setDriver(d);
+			ScreenshotSaveResult screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath,
+					null);
+			
+			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
+			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
+			jsonReporter.appendContent(reportDTO, htmlStr);
+			
+		} finally {
+			tryQuitWebDriver(d, reportDTO);
+			if (jsonReporter.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
+				updateTestEventReportPath(te, reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json");
+			}
+		}
+		
+		return r;
+	}
+	
+	private void findAndCloseLeadDiv(WebDriver d) {
+		XpathBuilderBO x = new XpathBuilderBO();
+		
+		x.start("div").addAttribute("id", "lead");
+		
+		try {
+			WebElement leadDiv = d.findElement(By.xpath(x.getXpath()));
+			if(leadDiv == null || !leadDiv.isDisplayed()) {
+				return;
+			}
+			
+			x.start("div").addAttribute("id", "lead")
+			.findChild("div").addAttribute("class", "img")
+			.findChild("div").addAttribute("class", "close closeloginpop")
+			;
+			
+			WebElement leadCloseButton = d.findElement(By.xpath(x.getXpath()));
+			leadCloseButton.click();
+		} catch (Exception e) {
+			
+		}
+	}
+	
+	private boolean login(WebDriver d, JsonReportDTO reportDTO, DailySignAccountBO dailySignBO) {
+		XpathBuilderBO x = new XpathBuilderBO();
+		
+		try {
+			d.get(dailySignBO.getMainUrl());
+			jsonReporter.appendContent(reportDTO, "get");
+			
+			findAndCloseLeadDiv(d);
 			
 			x.start("div").addAttribute("id", "pageTop")
 			.findChild("header")
@@ -145,6 +227,19 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 			WebElement loginButton = d.findElement(By.xpath(x.getXpath()));
 			loginButton.click();
 			
+			return true;
+		} catch (TimeoutException e) {
+			jsUtil.windowStop(d);
+			jsonReporter.appendContent(reportDTO, "get but timeout");
+			return false;
+		}
+		
+	}
+
+	private boolean updateDetail(WebDriver d, JsonReportDTO reportDTO) {
+		XpathBuilderBO x = new XpathBuilderBO();
+		
+		try {
 			try {
 				d.get("https://m.51job.com/my/my51job.php");
 				jsonReporter.appendContent(reportDTO, "get");
@@ -208,52 +303,100 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 			
 			d.findElement(By.id("saveresumefour")).click();
 			
-			r.setIsSuccess();
-			
+			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
-			String htmlStr = jsUtil.getHtmlSource(d);
-			TakeScreenshotSaveDTO screenshotDTO = new TakeScreenshotSaveDTO();
-			screenshotDTO.setDriver(d);
-			ScreenshotSaveResult screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath,
-					null);
-			
-			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
-			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
-			jsonReporter.appendContent(reportDTO, htmlStr);
-			
-		} finally {
-			tryQuitWebDriver(d, reportDTO);
-			if (jsonReporter.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
-				updateTestEventReportPath(te, reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json");
-			}
+			return false;
 		}
-		
-		return r;
 	}
 	
-	
-	private void findAndCloseLeadDiv(WebDriver d) {
+	private boolean catchWatchMe(WebDriver d, JsonReportDTO reportDTO) {
 		XpathBuilderBO x = new XpathBuilderBO();
 		
-		x.start("div").addAttribute("id", "lead");
-		
 		try {
-			WebElement leadDiv = d.findElement(By.xpath(x.getXpath()));
-			if(leadDiv == null || !leadDiv.isDisplayed()) {
-				return;
+			try {
+				d.get("https://m.51job.com/my/whosawrsm.php");
+				jsonReporter.appendContent(reportDTO, "whosawrsm.php");
+			} catch (TimeoutException e) {
+				jsUtil.windowStop(d);
+				jsonReporter.appendContent(reportDTO, "get whosawrsm.php but timeout");
 			}
 			
-			x.start("div").addAttribute("id", "lead")
-			.findChild("div").addAttribute("class", "img")
-			.findChild("div").addAttribute("class", "close closeloginpop")
-			;
 			
-			WebElement leadCloseButton = d.findElement(By.xpath(x.getXpath()));
-			leadCloseButton.click();
+			String companyLinkX = x.start("div").addAttribute("class", "new_l")
+					.findChild("a", 1)
+					.getXpath();
+			String companyNameX = x.start("div").addAttribute("class", "new_l")
+					.findChild("a", 1)
+					.findChild("p").addAttribute("class", "gs")
+					.getXpath();
+			String resumeNameX = x.start("div").addAttribute("class", "new_l")
+					.findChild("a", 1)
+					.findChild("div").addAttribute("class", "ms")
+					.findChild("b").findChild("span")
+					.getXpath();
+			String likelyX = x.start("div").addAttribute("class", "new_l")
+					.findChild("a", 1)
+					.findChild("div").addAttribute("class", "ms")
+					.findChild("p").addAttribute("class", "lk")
+					.findChild("object").findChild("a").findChild("span") // class="s4"
+					.getXpath()
+					;
+			String watchTimeX = x.start("div").addAttribute("class", "new_l")
+					.findChild("a", 1)
+					.findChild("div").addAttribute("class", "ms")
+					.findChild("p").addAttribute("class", "lk")
+					.findChild("em")  // 查看时间:01-06 10:39
+					.getXpath()
+					;
+			
+			WebElement companyLinkDiv = d.findElement(By.xpath(companyLinkX));
+			WebElement companyNameP = d.findElement(By.xpath(companyNameX));
+			WebElement resumeNameDiv = d.findElement(By.xpath(resumeNameX));
+			WebElement likelySpan = d.findElement(By.xpath(likelyX));
+			WebElement watcheTimeEm = d.findElement(By.xpath(watchTimeX));
+			
+			LocalDateTime theWatchTime = null;
+			WuyiWatchMe newPO = new WuyiWatchMe();
+			try {
+				LocalDateTime now = LocalDateTime.now();
+				Integer year = now.getYear();
+				
+				String watchTimeSourceStr = watcheTimeEm.getText();
+				watchTimeSourceStr = watchTimeSourceStr.replaceAll("查看时间:", year.toString() + "-") + ":00";
+				
+				theWatchTime = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(watchTimeSourceStr);
+				newPO.setWatchTime(theWatchTime);
+			} catch (Exception e) {
+			}
+			
+			WuyiWatchMe lastWatchPO = wuyiWatcheMeMapper.findTheLastWatch();
+			if(lastWatchPO != null && lastWatchPO.getWatchTime().isEqual(theWatchTime)) {
+				if(lastWatchPO.getCompanyLink().equals(companyLinkDiv.getAttribute("href"))) {
+					return true;
+				}
+			}
+			
+			newPO.setId(snowFlake.getNextId());
+			newPO.setCompanyLink(companyLinkDiv.getAttribute("href"));
+			newPO.setCompanyName(companyNameP.getText().replaceAll("企业搜索", ""));
+			newPO.setMyResumeName(resumeNameDiv.getText().replaceAll("查看：", ""));
+			try {
+				String likelyClass = likelySpan.getAttribute("class");
+				newPO.setDegreeOfInterest(Integer.parseInt(likelyClass.replaceAll("s", "")));
+			} catch (Exception e) {
+			}
+			
+			wuyiWatcheMeMapper.insertSelective(newPO);
+			
+			return true;
 		} catch (Exception e) {
-			
+			e.printStackTrace();
+			return false;
 		}
 	}
-
+	
+	public void findTheLastWatch() {
+		
+		
+	}
 }

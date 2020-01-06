@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.clawing.dailySign.mapper.WuyiWatchMeMapper">
+  <resultMap id="BaseResultMap" type="demo.clawing.dailySign.pojo.po.WuyiWatchMe">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="company_name" jdbcType="VARCHAR" property="companyName" />
+    <result column="company_link" jdbcType="VARCHAR" property="companyLink" />
+    <result column="watch_time" jdbcType="TIMESTAMP" property="watchTime" />
+    <result column="degree_of_interest" jdbcType="INTEGER" property="degreeOfInterest" />
+    <result column="my_resume_name" jdbcType="VARCHAR" property="myResumeName" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, company_name, company_link, watch_time, degree_of_interest, my_resume_name, create_time, 
+    is_delete
+  </sql>
+  <select id="selectByExample" parameterType="demo.clawing.dailySign.pojo.po.WuyiWatchMeExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from wuyi_watch_me
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from wuyi_watch_me
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from wuyi_watch_me
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="demo.clawing.dailySign.pojo.po.WuyiWatchMeExample">
+    delete from wuyi_watch_me
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="demo.clawing.dailySign.pojo.po.WuyiWatchMe">
+    insert into wuyi_watch_me (id, company_name, company_link, 
+      watch_time, degree_of_interest, my_resume_name, 
+      create_time, is_delete)
+    values (#{id,jdbcType=BIGINT}, #{companyName,jdbcType=VARCHAR}, #{companyLink,jdbcType=VARCHAR}, 
+      #{watchTime,jdbcType=TIMESTAMP}, #{degreeOfInterest,jdbcType=INTEGER}, #{myResumeName,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="demo.clawing.dailySign.pojo.po.WuyiWatchMe">
+    insert into wuyi_watch_me
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="companyName != null">
+        company_name,
+      </if>
+      <if test="companyLink != null">
+        company_link,
+      </if>
+      <if test="watchTime != null">
+        watch_time,
+      </if>
+      <if test="degreeOfInterest != null">
+        degree_of_interest,
+      </if>
+      <if test="myResumeName != null">
+        my_resume_name,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="companyName != null">
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyLink != null">
+        #{companyLink,jdbcType=VARCHAR},
+      </if>
+      <if test="watchTime != null">
+        #{watchTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="degreeOfInterest != null">
+        #{degreeOfInterest,jdbcType=INTEGER},
+      </if>
+      <if test="myResumeName != null">
+        #{myResumeName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="demo.clawing.dailySign.pojo.po.WuyiWatchMeExample" resultType="java.lang.Long">
+    select count(*) from wuyi_watch_me
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update wuyi_watch_me
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.companyName != null">
+        company_name = #{record.companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.companyLink != null">
+        company_link = #{record.companyLink,jdbcType=VARCHAR},
+      </if>
+      <if test="record.watchTime != null">
+        watch_time = #{record.watchTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.degreeOfInterest != null">
+        degree_of_interest = #{record.degreeOfInterest,jdbcType=INTEGER},
+      </if>
+      <if test="record.myResumeName != null">
+        my_resume_name = #{record.myResumeName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.isDelete != null">
+        is_delete = #{record.isDelete,jdbcType=BIT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update wuyi_watch_me
+    set id = #{record.id,jdbcType=BIGINT},
+      company_name = #{record.companyName,jdbcType=VARCHAR},
+      company_link = #{record.companyLink,jdbcType=VARCHAR},
+      watch_time = #{record.watchTime,jdbcType=TIMESTAMP},
+      degree_of_interest = #{record.degreeOfInterest,jdbcType=INTEGER},
+      my_resume_name = #{record.myResumeName,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      is_delete = #{record.isDelete,jdbcType=BIT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="demo.clawing.dailySign.pojo.po.WuyiWatchMe">
+    update wuyi_watch_me
+    <set>
+      <if test="companyName != null">
+        company_name = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyLink != null">
+        company_link = #{companyLink,jdbcType=VARCHAR},
+      </if>
+      <if test="watchTime != null">
+        watch_time = #{watchTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="degreeOfInterest != null">
+        degree_of_interest = #{degreeOfInterest,jdbcType=INTEGER},
+      </if>
+      <if test="myResumeName != null">
+        my_resume_name = #{myResumeName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="demo.clawing.dailySign.pojo.po.WuyiWatchMe">
+    update wuyi_watch_me
+    set company_name = #{companyName,jdbcType=VARCHAR},
+      company_link = #{companyLink,jdbcType=VARCHAR},
+      watch_time = #{watchTime,jdbcType=TIMESTAMP},
+      degree_of_interest = #{degreeOfInterest,jdbcType=INTEGER},
+      my_resume_name = #{myResumeName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      is_delete = #{isDelete,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="findTheLastWatch" resultMap="BaseResultMap">
+    select
+      *
+    from
+      wuyi_watch_me
+    where
+      is_delete = false
+    order by watch_time desc
+    limit 1
+  </select>
+</mapper>
