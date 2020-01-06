@@ -20,7 +20,7 @@ public class DailySignTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 		quQiDailySignService.insertDailySignEvent();
 	}
 	
-	@Scheduled(fixedRate = 1000L * 60 * 20)
+	@Scheduled(fixedRate = 1000L * 60 * 5)
 	public void insertWuYiSign() {
 		if(!"dev".equals(constantService.getValByName("envName"))) {
 			wuyiService.insertDailySignEvent();
