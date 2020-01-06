@@ -166,7 +166,6 @@ public class CdBaoDailySignServiceImpl extends SeleniumCommonService implements 
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			String htmlStr = jsUtil.getHtmlSource(d);
 			TakeScreenshotSaveDTO screenshotDTO = new TakeScreenshotSaveDTO();
 			screenshotDTO.setDriver(d);
 			ScreenshotSaveResult screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath,
@@ -174,7 +173,6 @@ public class CdBaoDailySignServiceImpl extends SeleniumCommonService implements 
 			
 			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
-			jsonReporter.appendContent(reportDTO, htmlStr);
 			
 		} finally {
 			tryQuitWebDriver(d, reportDTO);

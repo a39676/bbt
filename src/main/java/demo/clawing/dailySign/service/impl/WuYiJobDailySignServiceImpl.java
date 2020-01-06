@@ -151,7 +151,7 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			String htmlStr = jsUtil.getHtmlSource(d);
+//			String htmlStr = jsUtil.getHtmlSource(d);
 			TakeScreenshotSaveDTO screenshotDTO = new TakeScreenshotSaveDTO();
 			screenshotDTO.setDriver(d);
 			ScreenshotSaveResult screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath,
@@ -159,7 +159,7 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 			
 			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
-			jsonReporter.appendContent(reportDTO, htmlStr);
+//			jsonReporter.appendContent(reportDTO, htmlStr);
 			
 		} finally {
 			tryQuitWebDriver(d, reportDTO);
