@@ -198,8 +198,13 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 		XpathBuilderBO x = new XpathBuilderBO();
 		
 		try {
-			d.get(dailySignBO.getMainUrl());
-			jsonReporter.appendContent(reportDTO, "get");
+			try {
+				d.get(dailySignBO.getMainUrl());
+				jsonReporter.appendContent(reportDTO, "get");
+			} catch (TimeoutException e) {
+				jsUtil.windowStop(d);
+				jsonReporter.appendContent(reportDTO, "get but timeout");
+			}
 			
 			findAndCloseLeadDiv(d);
 			
@@ -228,11 +233,11 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 			loginButton.click();
 			
 			return true;
-		} catch (TimeoutException e) {
-			jsUtil.windowStop(d);
-			jsonReporter.appendContent(reportDTO, "get but timeout");
+		} catch (Exception e) {
 			return false;
 		}
+		
+		
 		
 	}
 
@@ -395,8 +400,4 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 		}
 	}
 	
-	public void findTheLastWatch() {
-		
-		
-	}
 }
