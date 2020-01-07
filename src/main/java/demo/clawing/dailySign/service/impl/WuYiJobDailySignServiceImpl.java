@@ -2,6 +2,7 @@ package demo.clawing.dailySign.service.impl;
 
 import java.io.File;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
@@ -10,6 +11,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
 
@@ -24,6 +26,7 @@ import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.dailySign.mapper.WuyiWatchMeMapper;
 import demo.clawing.dailySign.pojo.bo.DailySignAccountBO;
 import demo.clawing.dailySign.pojo.po.WuyiWatchMe;
+import demo.clawing.dailySign.pojo.po.WuyiWatchMeExample;
 import demo.clawing.dailySign.pojo.type.DailySignCaseType;
 import demo.clawing.dailySign.service.WuYiJobDailySignService;
 import demo.selenium.service.impl.SeleniumCommonService;
@@ -400,4 +403,14 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 		}
 	}
 	
+	@Override
+	public ModelAndView watchMeList() {
+		ModelAndView v = new ModelAndView("testJSP/message");
+		WuyiWatchMeExample example = new WuyiWatchMeExample();
+		example.createCriteria().andIsDeleteEqualTo(false);
+		example.setOrderByClause("watch_time desc");
+		List<WuyiWatchMe> poList = wuyiWatcheMeMapper.selectByExample(example);
+		v.addObject("message", poList);
+		return v;
+	}
 }
