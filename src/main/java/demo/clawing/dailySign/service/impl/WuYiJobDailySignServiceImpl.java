@@ -37,13 +37,10 @@ import demo.clawing.dailySign.service.WuYiJobDailySignService;
 import demo.selenium.service.impl.SeleniumCommonService;
 import demo.selenium.service.pojo.bo.BuildTestEventBO;
 import image.pojo.result.UploadImageToCloudinaryResult;
-import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implements WuYiJobDailySignService {
 
-	@Autowired
-	private FileUtilCustom ioUtil;
 	@Autowired
 	private WuyiWatchMeMapper wuyiWatcheMeMapper;
 	
@@ -56,7 +53,6 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 
 	/*
 	 * TODO 
-	 * 待修改 QuQi 读取账号密码方式 改成读取本地文件, 
 	 * 
 	 * 已经新建 test_process 表, 但批量增加 test_event 并有顺序要求的情况, 难以封装, 后期可能视具体情况, 固定代码实现
 	 * 

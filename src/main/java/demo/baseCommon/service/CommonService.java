@@ -15,6 +15,7 @@ import demo.baseCommon.pojo.param.PageParam;
 import demo.config.costom_component.SnowFlake;
 import toolPack.dateTimeHandle.DateHandler;
 import toolPack.dateTimeHandle.LocalDateTimeHandler;
+import toolPack.ioHandle.FileUtilCustom;
 import toolPack.numericHandel.NumericUtilCustom;
 
 public abstract class CommonService {
@@ -36,6 +37,8 @@ public abstract class CommonService {
 	protected SystemConstantService constantService;
 	@Autowired
 	protected NumericUtilCustom numericUtil;
+	@Autowired
+	protected FileUtilCustom ioUtil;
 
 	private static final int normalPageSize = 10;
 	private static final int maxPageSize = 300;

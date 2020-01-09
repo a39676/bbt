@@ -2,11 +2,14 @@ package demo.clawing.dailySign.service.impl;
 
 import java.io.File;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
+
+import com.google.gson.Gson;
 
 import at.pojo.bo.XpathBuilderBO;
 import at.pojo.dto.JsonReportDTO;
@@ -16,6 +19,7 @@ import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.baseCommon.pojo.result.CommonResultBBT;
+import demo.clawing.dailySign.pojo.bo.DailySignAccountBO;
 import demo.clawing.dailySign.pojo.type.DailySignCaseType;
 import demo.clawing.dailySign.service.QuQiDailySignService;
 import demo.selenium.service.impl.SeleniumCommonService;
@@ -27,16 +31,22 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 
 	private String mainUrl = "https://www.quqi.com/";
 	
-	private String eventName = "quqiDailySign";
+	private String dailySignEventName = "quqiDailySign";
+	private String userDataFileName = "quqiDailySign.json";
 	
 	private TestEvent buildTestEvent() {
+		String paramterFolderPath = getParameterSaveingPath(dailySignEventName);
+		File paramterFile = new File(paramterFolderPath + File.separator + userDataFileName);
+		if (!paramterFile.exists()) {
+			return null;
+		}
+		
 		BuildTestEventBO bo = new BuildTestEventBO();
 		DailySignCaseType t = DailySignCaseType.quqi;
 		bo.setTestModuleType(TestModuleType.dailySign);
 		bo.setCaseId(t.getId());
 		bo.setEventName(t.getEventName());
-//		TODO
-		bo.setParameterFilePath("");
+		bo.setParameterFilePath(paramterFile.getAbsolutePath());
 		return buildTestEvent(bo);
 	}
 	
@@ -53,11 +63,31 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 		JsonReportDTO reportDTO = new JsonReportDTO();
 		WebDriver d = webDriverService.buildFireFoxWebDriver();
 		
-		String screenshotPath = getScreenshotSaveingPath(eventName);
-		String reportOutputFolderPath = getReportOutputPath(eventName);
+		String screenshotPath = getScreenshotSaveingPath(dailySignEventName);
+		String reportOutputFolderPath = getReportOutputPath(dailySignEventName);
 		reportDTO.setOutputReportPath(reportOutputFolderPath + File.separator + te.getId());
 		
 		try {
+			
+			String jsonStr = ioUtil.getStringFromFile(te.getParameterFilePath());
+			if(StringUtils.isBlank(jsonStr)) {
+				jsonReporter.appendContent(reportDTO, "参数文件读取异常");
+				throw new Exception();
+			}
+			
+			DailySignAccountBO dailySignBO = null;
+			try {
+				dailySignBO = new Gson().fromJson(jsonStr, DailySignAccountBO.class);
+			} catch (Exception e) {
+				jsonReporter.appendContent(reportDTO, "参数文件结构异常");
+				throw new Exception();
+			}
+			
+			if(dailySignBO == null) {
+				jsonReporter.appendContent(reportDTO, "参数文件结构异常");
+				throw new Exception();
+			}
+			
 			try {
 				d.get(mainUrl);
 				jsonReporter.appendContent(reportDTO, "get");
@@ -94,7 +124,7 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 			WebElement phoneInput = d.findElement(By.xpath(x.getXpath()));
 			phoneInput.click();
 			phoneInput.clear();
-			phoneInput.sendKeys("18022379435");
+			phoneInput.sendKeys(dailySignBO.getUsername());
 			
 			jsonReporter.appendContent(reportDTO, "input username");
 			
@@ -106,7 +136,7 @@ public class QuQiDailySignServiceImpl extends SeleniumCommonService implements Q
 			WebElement pwdInput = d.findElement(By.xpath(x.getXpath()));
 			pwdInput.click();
 			pwdInput.clear();
-			pwdInput.sendKeys("GJ1621828228");
+			pwdInput.sendKeys(dailySignBO.getPwd());
 			
 			jsonReporter.appendContent(reportDTO, "input pwd");
 			
