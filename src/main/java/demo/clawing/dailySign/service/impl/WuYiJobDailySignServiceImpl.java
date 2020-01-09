@@ -419,7 +419,7 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 		WuyiWatchMeVO vo = null;
 		Map<String, WuyiWatchMeVO> voMap = new HashMap<String, WuyiWatchMeVO>();
 		for(WuyiWatchMe i : poList) {
-			vo = voMap.get(i.getCompanyLink());
+			vo = voMap.get(i.getCompanyLink() + i.getCompanyName());
 			if(vo == null) {
 				vo = new WuyiWatchMeVO();
 				vo.setCompanyLink(i.getCompanyLink());
@@ -441,7 +441,7 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 				vo.setWatchCount(vo.getWatchCount() + 1);
 			}
 			
-			voMap.put(i.getCompanyLink(), vo);
+			voMap.put(i.getCompanyLink() + i.getCompanyName(), vo);
 		}
 		
 		List<WuyiWatchMeVO> voList = new ArrayList<WuyiWatchMeVO>(voMap.values());
