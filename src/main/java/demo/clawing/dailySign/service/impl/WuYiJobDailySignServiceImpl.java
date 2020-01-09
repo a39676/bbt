@@ -2,7 +2,11 @@ package demo.clawing.dailySign.service.impl;
 
 import java.io.File;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
@@ -28,6 +32,7 @@ import demo.clawing.dailySign.pojo.bo.DailySignAccountBO;
 import demo.clawing.dailySign.pojo.po.WuyiWatchMe;
 import demo.clawing.dailySign.pojo.po.WuyiWatchMeExample;
 import demo.clawing.dailySign.pojo.type.DailySignCaseType;
+import demo.clawing.dailySign.pojo.vo.WuyiWatchMeVO;
 import demo.clawing.dailySign.service.WuYiJobDailySignService;
 import demo.selenium.service.impl.SeleniumCommonService;
 import demo.selenium.service.pojo.bo.BuildTestEventBO;
@@ -405,12 +410,43 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 	
 	@Override
 	public ModelAndView watchMeList() {
-		ModelAndView v = new ModelAndView("testJSP/message");
+		ModelAndView v = new ModelAndView("tmpJSP/51JobWatchMe");
 		WuyiWatchMeExample example = new WuyiWatchMeExample();
 		example.createCriteria().andIsDeleteEqualTo(false);
 		example.setOrderByClause("watch_time desc");
 		List<WuyiWatchMe> poList = wuyiWatcheMeMapper.selectByExample(example);
-		v.addObject("message", poList);
+		
+		WuyiWatchMeVO vo = null;
+		Map<String, WuyiWatchMeVO> voMap = new HashMap<String, WuyiWatchMeVO>();
+		for(WuyiWatchMe i : poList) {
+			vo = voMap.get(i.getCompanyLink());
+			if(vo == null) {
+				vo = new WuyiWatchMeVO();
+				vo.setCompanyLink(i.getCompanyLink());
+				vo.setCompanyName(i.getCompanyName());
+				vo.setDegreeOfInterest(i.getDegreeOfInterest());
+				vo.setDegreeOfInterestAvg(i.getDegreeOfInterest().doubleValue());
+				vo.setLastWatchTime(i.getWatchTime());
+				vo.setMyResumeName(i.getMyResumeName());
+				vo.setWatchCount(1);
+			} else {
+				vo.setDegreeOfInterest(i.getDegreeOfInterest());
+				vo.setDegreeOfInterestAvg(0D + (vo.getDegreeOfInterest() * vo.getWatchCount() + i.getDegreeOfInterest()) / (vo.getWatchCount() + 1));
+				if(i.getWatchTime().isAfter(vo.getLastWatchTime())) {
+					vo.setLastWatchTime(i.getWatchTime());
+				}
+				if(StringUtils.isBlank(vo.getMyResumeName()) || !vo.getMyResumeName().contains(i.getMyResumeName())) {
+					vo.setMyResumeName(vo.getMyResumeName() + ", " + i.getMyResumeName());
+				}
+				vo.setWatchCount(vo.getWatchCount() + 1);
+			}
+			
+			voMap.put(i.getCompanyLink(), vo);
+		}
+		
+		List<WuyiWatchMeVO> voList = new ArrayList<WuyiWatchMeVO>(voMap.values());
+		Collections.sort(voList);
+		v.addObject("voList", voList);
 		return v;
 	}
 }
