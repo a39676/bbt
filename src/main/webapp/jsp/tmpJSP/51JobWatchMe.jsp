@@ -18,13 +18,13 @@
     </tr>
     <c:forEach items="${voList}" var="vo">
       <tr>
-        <td>${vo.companyName}</td>
-        <td>${vo.myResumeName}</td>
-        <td>${vo.watchCount}</td>
-        <td>${vo.lastWatchTime}</td>
-        <td>${vo.degreeOfInterestAvg}</td>
-        <td>${vo.degreeOfInterest}</td>
-        <td>${vo.companyLink}</td>
+        <td align="center">${vo.companyName}</td>
+        <td align="center">${vo.myResumeName}</td>
+        <td align="center">${vo.watchCount}</td>
+        <td align="center">${vo.lastWatchTime}</td>
+        <td align="center">${vo.degreeOfInterestAvg}</td>
+        <td align="center">${vo.degreeOfInterest}</td>
+        <td align="center">${vo.companyLink}</td>
       </tr>
     </c:forEach>
   </table>
