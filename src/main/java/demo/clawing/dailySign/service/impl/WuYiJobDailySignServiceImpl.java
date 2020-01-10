@@ -408,7 +408,7 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 	public ModelAndView watchMeList() {
 		ModelAndView v = new ModelAndView("tmpJSP/51JobWatchMe");
 		WuyiWatchMeExample example = new WuyiWatchMeExample();
-		example.createCriteria().andIsDeleteEqualTo(false);
+		example.createCriteria().andIsDeleteEqualTo(false).andCreateTimeGreaterThan(LocalDateTime.now().minusMonths(12));
 		example.setOrderByClause("watch_time desc");
 		List<WuyiWatchMe> poList = wuyiWatcheMeMapper.selectByExample(example);
 		
