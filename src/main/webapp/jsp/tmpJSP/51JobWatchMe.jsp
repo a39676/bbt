@@ -8,12 +8,12 @@
 <div class="row" >
   <table>
     <tr>
-      <td>公司名</td>
-      <td>简历名</td>
-      <td>查看总数</td>
-      <td>最后查看时间</td>
-      <td>平均兴趣</td>
-      <td>最后兴趣</td>
+      <td align="center">公司名</td>
+      <td align="center">简历名</td>
+      <td align="center">查看总数</td>
+      <td align="center">最后查看时间</td>
+      <td align="center">平均兴趣</td>
+      <td align="center">最后兴趣</td>
     </tr>
     <c:forEach items="${voList}" var="vo">
       <tr>
