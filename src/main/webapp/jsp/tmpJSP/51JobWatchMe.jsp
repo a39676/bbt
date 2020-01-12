@@ -14,17 +14,15 @@
       <td>最后查看时间</td>
       <td>平均兴趣</td>
       <td>最后兴趣</td>
-      <td>companyLink</td>
     </tr>
     <c:forEach items="${voList}" var="vo">
       <tr>
-        <td align="center">${vo.companyName}</td>
+        <td align="center"><a href="${vo.companyLink}">${vo.companyName}</a></td>
         <td align="center">${vo.myResumeName}</td>
         <td align="center">${vo.watchCount}</td>
         <td align="center">${vo.lastWatchTime}</td>
         <td align="center">${vo.degreeOfInterestAvg}</td>
         <td align="center">${vo.degreeOfInterest}</td>
-        <td align="center">${vo.companyLink}</td>
       </tr>
     </c:forEach>
   </table>
