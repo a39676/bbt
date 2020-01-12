@@ -409,7 +409,7 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 		ModelAndView v = new ModelAndView("tmpJSP/51JobWatchMe");
 		WuyiWatchMeExample example = new WuyiWatchMeExample();
 		example.createCriteria().andIsDeleteEqualTo(false).andCreateTimeGreaterThan(LocalDateTime.now().minusMonths(12));
-		example.setOrderByClause("watch_time desc");
+		example.setOrderByClause("watch_time");
 		List<WuyiWatchMe> poList = wuyiWatcheMeMapper.selectByExample(example);
 		
 		WuyiWatchMeVO vo = null;
@@ -427,7 +427,7 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 				vo.setWatchCount(1);
 			} else {
 				vo.setDegreeOfInterest(i.getDegreeOfInterest());
-				vo.setDegreeOfInterestAvg(0D + (vo.getDegreeOfInterest() * vo.getWatchCount() + i.getDegreeOfInterest()) / (vo.getWatchCount() + 1));
+				vo.setDegreeOfInterestAvg(0D + (vo.getDegreeOfInterest() * vo.getWatchCount().doubleValue() + i.getDegreeOfInterest()) / (vo.getWatchCount() + 1));
 				if(i.getWatchTime().isAfter(vo.getLastWatchTime())) {
 					vo.setLastWatchTime(i.getWatchTime());
 				}
