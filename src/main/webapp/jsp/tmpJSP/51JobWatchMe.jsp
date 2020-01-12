@@ -17,7 +17,7 @@
     </tr>
     <c:forEach items="${voList}" var="vo">
       <tr>
-        <td align="center"><a href="${vo.companyLink}">${vo.companyName}</a></td>
+        <td align="center"><a href="${vo.companyLink}" target="_blank">${vo.companyName}</a></td>
         <td align="center">${vo.myResumeName}</td>
         <td align="center">${vo.watchCount}</td>
         <td align="center">${vo.lastWatchTime}</td>
