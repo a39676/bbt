@@ -427,7 +427,7 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 				vo.setWatchCount(1);
 			} else {
 				vo.setDegreeOfInterest(i.getDegreeOfInterest());
-				vo.setDegreeOfInterestAvg(0D + (vo.getDegreeOfInterest() * vo.getWatchCount().doubleValue() + i.getDegreeOfInterest()) / (vo.getWatchCount() + 1));
+				vo.setDegreeOfInterestAvg((vo.getDegreeOfInterestAvg() * vo.getWatchCount() + i.getDegreeOfInterest()) / (vo.getWatchCount() + 1));
 				if(i.getWatchTime().isAfter(vo.getLastWatchTime())) {
 					vo.setLastWatchTime(i.getWatchTime());
 				}
