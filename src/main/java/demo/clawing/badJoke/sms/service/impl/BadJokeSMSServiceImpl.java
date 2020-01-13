@@ -20,6 +20,7 @@ import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.badJoke.sms.pojo.dto.BadJokeSMSDTO;
 import demo.clawing.badJoke.sms.pojo.type.BadJokeCaseType;
+import demo.clawing.badJoke.sms.pojo.type.BadJokeSubCaseType;
 import demo.clawing.badJoke.sms.service.BadJokeSMSService;
 import demo.selenium.service.impl.SeleniumCommonService;
 import demo.selenium.service.pojo.bo.BuildTestEventBO;
@@ -92,28 +93,35 @@ public class BadJokeSMSServiceImpl extends SeleniumCommonService implements BadJ
 		}
 		
 		CommonResultBBT result = null;
-		if(i == 1) {
+		BadJokeSubCaseType subCaseType = BadJokeSubCaseType.getType(i);
+		if(subCaseType == BadJokeSubCaseType._91wenwen) {
 			result = _91wenwen(d, te, dto);
-		} else if(i == 2) {
+		} else if(subCaseType == BadJokeSubCaseType.zhiWang) {
 			result = zhiWang(d, te, dto);
-		} else if(i == 3) {
-		} else if(i == 4) {
-		} else if(i == 5) {
-		} else if(i == 6) {
-		} else if(i == 7) {
-		} else if(i == 8) {
-		} else if(i == 9) {
-		} else if(i == 10) {
-		} else if(i == 11) {
-		} else if(i == 12) {
-		} else if(i == 13) {
-		} else if(i == 14) {
-		} else if(i == 15) {
-		} else if(i == 16) {
-		} else if(i == 17) {
-		} else if(i == 18) {
-		} else if(i == 19) {
-		} else if(i == 20) {
+		} else if(subCaseType == BadJokeSubCaseType.yinXiang) {
+			result = yinXiang(d, te, dto);
+		} else if(subCaseType == BadJokeSubCaseType.mafengwo) {
+			result = mafengwo(d, te, dto);
+		} else if(subCaseType == BadJokeSubCaseType.zhipin) {
+			result = zhipin(d, te, dto);
+		} else if(subCaseType == BadJokeSubCaseType.jumpw) {
+			result = jumpw(d, te, dto);
+		} else if(subCaseType == BadJokeSubCaseType.nike) {
+			result = nike(d, te, dto);
+		} else if(subCaseType == BadJokeSubCaseType.chunQiu) {
+			result = chunQiu(d, te, dto);
+		} else if(subCaseType == BadJokeSubCaseType.flyme) {
+			result = flyme(d, te, dto);
+		} else if(subCaseType == BadJokeSubCaseType.ctrip) {
+			result = ctrip(d, te, dto);
+		} else if(subCaseType == BadJokeSubCaseType.wondercv) {
+			result = wondercv(d, te, dto);
+		} else if(subCaseType == BadJokeSubCaseType.zjzwfw) {
+			result = zjzwfw(d, te, dto);
+		} else if(subCaseType == BadJokeSubCaseType._9you) {
+			result = _9you(d, te, dto);
+		} else if(subCaseType == BadJokeSubCaseType.hnair) {
+			result = hnair(d, te, dto);
 		}
 		
 		if(!result.isSuccess()) {
