@@ -2,9 +2,6 @@ package demo.clawing.dailySign.pojo.type;
 
 public enum DailySignCaseType {
 
-	/** quqi */
-	quqi(1L, "quqi"),
-	
 	/** wuYiJob */
 	wuYiJob(2L, "wuYiJob"),
 	
