@@ -29,7 +29,6 @@ import org.springframework.stereotype.Service;
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.BaseResultType;
 import demo.base.system.pojo.bo.SystemConstantStore;
-import demo.base.system.service.impl.SystemConstantService;
 import demo.base.user.pojo.bo.UserMailAndMailKeyBO;
 import demo.base.user.pojo.constant.UsersUrlConstant;
 import demo.base.user.service.UsersService;
@@ -45,28 +44,22 @@ import demo.tool.pojo.type.MailType;
 import demo.tool.service.MailService;
 import toolPack.emailHandle.MailHandle;
 import toolPack.emailHandle.mailService.send.SendEmail;
-import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class MailServiceImpl extends CommonService implements MailService {
 
 	@Autowired
-	private SystemConstantService systemConstantService;
-	
-	@Autowired
 	private UsersService userService;
 	
 	@Autowired
 	private MailRecordMapper mailRecordMapper;
-	@Autowired
-	private FileUtilCustom ioUtil;
 	
 	
 	private boolean isMailReady() {
 		if(redisTemplate.hasKey(SystemConstantStore.adminMailName) && redisTemplate.hasKey(SystemConstantStore.adminMailPwd)) {
 			return true;
 		} else {
-			systemConstantService.getValsByName(Arrays.asList(SystemConstantStore.adminMailName, SystemConstantStore.adminMailPwd));
+			constantService.getValsByName(Arrays.asList(SystemConstantStore.adminMailName, SystemConstantStore.adminMailPwd));
 			if(redisTemplate.hasKey(SystemConstantStore.adminMailName) && redisTemplate.hasKey(SystemConstantStore.adminMailPwd)) {
 				return true;
 			} else {
@@ -99,11 +92,11 @@ public class MailServiceImpl extends CommonService implements MailService {
 
 		SendEmail sm = new SendEmail();
 		sm.sendMail(
-				systemConstantService.getValByName(SystemConstantStore.adminMailName), 
-				systemConstantService.getValByName(SystemConstantStore.adminMailPwd), 
+				constantService.getValByName(SystemConstantStore.adminMailName), 
+				constantService.getValByName(SystemConstantStore.adminMailPwd), 
 				Arrays.asList(sendTo),
 				null,
-				Arrays.asList(systemConstantService.getValByName(SystemConstantStore.adminMailName)),
+				Arrays.asList(constantService.getValByName(SystemConstantStore.adminMailName)),
 				title, 
 				content, 
 				null,
@@ -123,11 +116,11 @@ public class MailServiceImpl extends CommonService implements MailService {
 		}
 		SendEmail sm = new SendEmail();
 		sm.sendMail(
-				systemConstantService.getValByName(SystemConstantStore.adminMailName), 
-				systemConstantService.getValByName(SystemConstantStore.adminMailPwd), 
+				constantService.getValByName(SystemConstantStore.adminMailName), 
+				constantService.getValByName(SystemConstantStore.adminMailPwd), 
 				Arrays.asList(sendTo),
 				null,
-				Arrays.asList(systemConstantService.getValByName(SystemConstantStore.adminMailName)),
+				Arrays.asList(constantService.getValByName(SystemConstantStore.adminMailName)),
 				title, 
 				content, 
 				attachmentPathList,
@@ -143,11 +136,11 @@ public class MailServiceImpl extends CommonService implements MailService {
 		}
 		SendEmail sm = new SendEmail();
 		sm.sendMail(
-				systemConstantService.getValByName(SystemConstantStore.adminMailName), 
-				systemConstantService.getValByName(SystemConstantStore.adminMailPwd), 
+				constantService.getValByName(SystemConstantStore.adminMailName), 
+				constantService.getValByName(SystemConstantStore.adminMailPwd), 
 				Arrays.asList(sendTo),
 				null,
-				Arrays.asList(systemConstantService.getValByName(SystemConstantStore.adminMailName)),
+				Arrays.asList(constantService.getValByName(SystemConstantStore.adminMailName)),
 				title, 
 				content, 
 				Arrays.asList(attachmentPath),
@@ -177,7 +170,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 			e.printStackTrace();
 		}
 
-		sendMailWithAttachment(systemConstantService.getValByName(SystemConstantStore.adminMailName), title, "", ToolPathConstant.getTomcatOutPath(), properties);
+		sendMailWithAttachment(constantService.getValByName(SystemConstantStore.adminMailName), title, "", ToolPathConstant.getTomcatOutPath(), properties);
 
 		outputZip.delete();
 	}
@@ -409,9 +402,9 @@ public class MailServiceImpl extends CommonService implements MailService {
 		
 		SendEmail sm = new SendEmail();
 		sm.sendMail(
-				systemConstantService.getValByName(SystemConstantStore.adminMailName), 
-				systemConstantService.getValByName(SystemConstantStore.adminMailPwd), 
-				Arrays.asList(systemConstantService.getValByName(SystemConstantStore.adminMailName)),
+				constantService.getValByName(SystemConstantStore.adminMailName), 
+				constantService.getValByName(SystemConstantStore.adminMailPwd), 
+				Arrays.asList(constantService.getValByName(SystemConstantStore.adminMailName)),
 				null,
 				null,
 				("error : " + LocalDateTime.now().toString()), 
@@ -443,8 +436,8 @@ public class MailServiceImpl extends CommonService implements MailService {
 		}
 		
 		Store store = mailHandle.getMailStore(
-				systemConstantService.getValByName(SystemConstantStore.adminMailName), 
-				systemConstantService.getValByName(SystemConstantStore.adminMailPwd), 
+				constantService.getValByName(SystemConstantStore.adminMailName), 
+				constantService.getValByName(SystemConstantStore.adminMailPwd), 
 				smtpProperties, 
 				imapProperties
 				);

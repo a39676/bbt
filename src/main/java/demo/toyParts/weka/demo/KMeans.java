@@ -1,4 +1,4 @@
-package demo.testing.weka.cluster.demo;
+package demo.toyParts.weka.demo;
 
 import java.io.File;
 import java.io.PrintStream;

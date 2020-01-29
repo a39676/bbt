@@ -160,4 +160,8 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		te.setReportPath(reportPath);
 		return eventMapper.updateByPrimaryKeySelective(te);
 	}
+	
+	public void findFailReports(LocalDateTime startTime, LocalDateTime endTime) {
+//		TODO
+	}
 }
