@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import at.pojo.bo.XpathBuilderBO;
 import at.pojo.dto.JsonReportDTO;
+import at.pojo.dto.TakeScreenshotSaveDTO;
+import at.pojo.result.ScreenshotSaveResult;
 import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
@@ -26,6 +28,7 @@ import demo.clawing.lottery.pojo.type.ClawTaskType;
 import demo.clawing.lottery.service.LotterySixService;
 import demo.selenium.service.impl.SeleniumCommonService;
 import demo.selenium.service.pojo.bo.BuildTestEventBO;
+import image.pojo.result.UploadImageToCloudinaryResult;
 import toolPack.dateTimeHandle.DateTimeUtilCommon;
 
 @Service
@@ -62,7 +65,7 @@ public class LotterySixServiceImpl extends SeleniumCommonService implements Lott
 		JsonReportDTO reportDTO = new JsonReportDTO();
 		WebDriver d = null;
 
-//		String screenshotPath = getScreenshotSaveingPath(clawEventName);
+		String screenshotPath = getScreenshotSaveingPath(clawEventName);
 		String reportOutputFolderPath = getReportOutputPath(clawEventName);
 
 		reportDTO.setOutputReportPath(reportOutputFolderPath + File.separator + te.getId());
@@ -100,12 +103,12 @@ public class LotterySixServiceImpl extends SeleniumCommonService implements Lott
 
 		} catch (Exception e) {
 			e.printStackTrace();
-//			TakeScreenshotSaveDTO screenshotDTO = new TakeScreenshotSaveDTO();
-//			screenshotDTO.setDriver(d);
-//			ScreenshotSaveResult screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath,
-//					null);
-//			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
-//			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
+			TakeScreenshotSaveDTO screenshotDTO = new TakeScreenshotSaveDTO();
+			screenshotDTO.setDriver(d);
+			ScreenshotSaveResult screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath,
+					null);
+			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
+			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
 
 		} finally {
 			tryQuitWebDriver(d, reportDTO);
