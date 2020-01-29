@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.clawing.lottery.mapper.LotterySixMapper">
+  <resultMap id="BaseResultMap" type="demo.clawing.lottery.pojo.po.LotterySix">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="record_time" jdbcType="TIMESTAMP" property="recordTime" />
+    <result column="red_1" jdbcType="INTEGER" property="red1" />
+    <result column="red_2" jdbcType="INTEGER" property="red2" />
+    <result column="red_3" jdbcType="INTEGER" property="red3" />
+    <result column="red_4" jdbcType="INTEGER" property="red4" />
+    <result column="red_5" jdbcType="INTEGER" property="red5" />
+    <result column="red_6" jdbcType="INTEGER" property="red6" />
+    <result column="blue_1" jdbcType="INTEGER" property="blue1" />
+    <result column="sold_amount" jdbcType="DECIMAL" property="soldAmount" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, record_time, red_1, red_2, red_3, red_4, red_5, red_6, blue_1, sold_amount, is_delete, 
+    create_time
+  </sql>
+  <select id="selectByExample" parameterType="demo.clawing.lottery.pojo.po.LotterySixExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from lottery_six
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from lottery_six
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from lottery_six
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="demo.clawing.lottery.pojo.po.LotterySixExample">
+    delete from lottery_six
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="demo.clawing.lottery.pojo.po.LotterySix">
+    insert into lottery_six (id, record_time, red_1, 
+      red_2, red_3, red_4, red_5, 
+      red_6, blue_1, sold_amount, 
+      is_delete, create_time)
+    values (#{id,jdbcType=BIGINT}, #{recordTime,jdbcType=TIMESTAMP}, #{red1,jdbcType=INTEGER}, 
+      #{red2,jdbcType=INTEGER}, #{red3,jdbcType=INTEGER}, #{red4,jdbcType=INTEGER}, #{red5,jdbcType=INTEGER}, 
+      #{red6,jdbcType=INTEGER}, #{blue1,jdbcType=INTEGER}, #{soldAmount,jdbcType=DECIMAL}, 
+      #{isDelete,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="demo.clawing.lottery.pojo.po.LotterySix">
+    insert into lottery_six
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="recordTime != null">
+        record_time,
+      </if>
+      <if test="red1 != null">
+        red_1,
+      </if>
+      <if test="red2 != null">
+        red_2,
+      </if>
+      <if test="red3 != null">
+        red_3,
+      </if>
+      <if test="red4 != null">
+        red_4,
+      </if>
+      <if test="red5 != null">
+        red_5,
+      </if>
+      <if test="red6 != null">
+        red_6,
+      </if>
+      <if test="blue1 != null">
+        blue_1,
+      </if>
+      <if test="soldAmount != null">
+        sold_amount,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="recordTime != null">
+        #{recordTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="red1 != null">
+        #{red1,jdbcType=INTEGER},
+      </if>
+      <if test="red2 != null">
+        #{red2,jdbcType=INTEGER},
+      </if>
+      <if test="red3 != null">
+        #{red3,jdbcType=INTEGER},
+      </if>
+      <if test="red4 != null">
+        #{red4,jdbcType=INTEGER},
+      </if>
+      <if test="red5 != null">
+        #{red5,jdbcType=INTEGER},
+      </if>
+      <if test="red6 != null">
+        #{red6,jdbcType=INTEGER},
+      </if>
+      <if test="blue1 != null">
+        #{blue1,jdbcType=INTEGER},
+      </if>
+      <if test="soldAmount != null">
+        #{soldAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="demo.clawing.lottery.pojo.po.LotterySixExample" resultType="java.lang.Long">
+    select count(*) from lottery_six
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update lottery_six
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.recordTime != null">
+        record_time = #{record.recordTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.red1 != null">
+        red_1 = #{record.red1,jdbcType=INTEGER},
+      </if>
+      <if test="record.red2 != null">
+        red_2 = #{record.red2,jdbcType=INTEGER},
+      </if>
+      <if test="record.red3 != null">
+        red_3 = #{record.red3,jdbcType=INTEGER},
+      </if>
+      <if test="record.red4 != null">
+        red_4 = #{record.red4,jdbcType=INTEGER},
+      </if>
+      <if test="record.red5 != null">
+        red_5 = #{record.red5,jdbcType=INTEGER},
+      </if>
+      <if test="record.red6 != null">
+        red_6 = #{record.red6,jdbcType=INTEGER},
+      </if>
+      <if test="record.blue1 != null">
+        blue_1 = #{record.blue1,jdbcType=INTEGER},
+      </if>
+      <if test="record.soldAmount != null">
+        sold_amount = #{record.soldAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.isDelete != null">
+        is_delete = #{record.isDelete,jdbcType=BIT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update lottery_six
+    set id = #{record.id,jdbcType=BIGINT},
+      record_time = #{record.recordTime,jdbcType=TIMESTAMP},
+      red_1 = #{record.red1,jdbcType=INTEGER},
+      red_2 = #{record.red2,jdbcType=INTEGER},
+      red_3 = #{record.red3,jdbcType=INTEGER},
+      red_4 = #{record.red4,jdbcType=INTEGER},
+      red_5 = #{record.red5,jdbcType=INTEGER},
+      red_6 = #{record.red6,jdbcType=INTEGER},
+      blue_1 = #{record.blue1,jdbcType=INTEGER},
+      sold_amount = #{record.soldAmount,jdbcType=DECIMAL},
+      is_delete = #{record.isDelete,jdbcType=BIT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="demo.clawing.lottery.pojo.po.LotterySix">
+    update lottery_six
+    <set>
+      <if test="recordTime != null">
+        record_time = #{recordTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="red1 != null">
+        red_1 = #{red1,jdbcType=INTEGER},
+      </if>
+      <if test="red2 != null">
+        red_2 = #{red2,jdbcType=INTEGER},
+      </if>
+      <if test="red3 != null">
+        red_3 = #{red3,jdbcType=INTEGER},
+      </if>
+      <if test="red4 != null">
+        red_4 = #{red4,jdbcType=INTEGER},
+      </if>
+      <if test="red5 != null">
+        red_5 = #{red5,jdbcType=INTEGER},
+      </if>
+      <if test="red6 != null">
+        red_6 = #{red6,jdbcType=INTEGER},
+      </if>
+      <if test="blue1 != null">
+        blue_1 = #{blue1,jdbcType=INTEGER},
+      </if>
+      <if test="soldAmount != null">
+        sold_amount = #{soldAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="demo.clawing.lottery.pojo.po.LotterySix">
+    update lottery_six
+    set record_time = #{recordTime,jdbcType=TIMESTAMP},
+      red_1 = #{red1,jdbcType=INTEGER},
+      red_2 = #{red2,jdbcType=INTEGER},
+      red_3 = #{red3,jdbcType=INTEGER},
+      red_4 = #{red4,jdbcType=INTEGER},
+      red_5 = #{red5,jdbcType=INTEGER},
+      red_6 = #{red6,jdbcType=INTEGER},
+      blue_1 = #{blue1,jdbcType=INTEGER},
+      sold_amount = #{soldAmount,jdbcType=DECIMAL},
+      is_delete = #{isDelete,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="findLastRecord" resultMap="BaseResultMap">
+    select 
+      * 
+    from 
+      lottery_six 
+    where 
+      is_delete = false 
+    order by record_time desc 
+    limit 1
+  </select>
+</mapper>
