@@ -1,5 +1,7 @@
 package demo.autoTestBase.testEvent.service;
 
+import java.time.LocalDateTime;
+
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
@@ -21,5 +23,9 @@ public interface TestEventService {
 	int countWaitingEvent();
 
 	int updateTestEventReportPath(TestEvent te, String reportPath);
+
+	void sendFailReports();
+
+	void sendFailReports(LocalDateTime startTime, LocalDateTime endTime);
 
 }

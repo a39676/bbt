@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.base.user.mapper.UsersMapper;
 import demo.base.user.service.UserRegistService;
 import demo.interaction.movieInteraction.service.MovieInteractionService;
@@ -27,6 +28,8 @@ public class TaskToolServiceImpl implements TaskToolService {
 	private ComplexToolService complexToolService;
 	@Autowired
 	private MovieInteractionService movieInteractionService;
+	@Autowired
+	private TestEventService testEventService;
 	
 	@Autowired
 	private UsersMapper usersMapper;
@@ -67,4 +70,12 @@ public class TaskToolServiceImpl implements TaskToolService {
 	public void movieClickCountingRedisToOrm() {
 		movieInteractionService.movieClickCountingRedisToOrm();
 	}
+	
+	/** 将最近2天运行失败的定时任务报告发送到指定邮箱 */
+	@Scheduled(cron="02 01 00 * * *")
+	public void sendFailReports() {
+		testEventService.sendFailReports();
+	}
+	
+	
 }

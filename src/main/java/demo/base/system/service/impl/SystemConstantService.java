@@ -1,6 +1,5 @@
 package demo.base.system.service.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import demo.base.system.mapper.SystemConstantMapper;
 import demo.base.system.pojo.bo.SystemConstant;
-import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.baseCommon.service.CommonService;
 
 @Service
@@ -88,35 +86,4 @@ public class SystemConstantService extends CommonService {
 		redisTemplate.opsForValue().multiSet(values);
 	}
 	
-	public List<List<Character>> getCustomKeys() {
-		List<String> constantNames = new ArrayList<String>();
-		constantNames.add(SystemConstantStore.ckey0);
-		constantNames.add(SystemConstantStore.ckey1);
-		constantNames.add(SystemConstantStore.ckey2);
-		constantNames.add(SystemConstantStore.ckey3);
-		constantNames.add(SystemConstantStore.ckey4);
-		constantNames.add(SystemConstantStore.ckey5);
-		constantNames.add(SystemConstantStore.ckey6);
-		constantNames.add(SystemConstantStore.ckey7);
-		constantNames.add(SystemConstantStore.ckey8);
-		constantNames.add(SystemConstantStore.ckey9);
-		
-		List<SystemConstant> constants = systemConstantMapper.getValsByName(constantNames);
-		List<Character> tmpKey = null;
-		List<List<Character>> keys = new ArrayList<List<Character>>();
-		
-		char[] keyCharAry = null;
-		for(SystemConstant sc : constants) {
-			tmpKey = new ArrayList<Character>();
-			keyCharAry = sc.getConstantValue().replaceAll("[^0-9A-Za-z_]", "").toCharArray();
-			for(int i = 0; i < keyCharAry.length; i++) {
-				tmpKey.add(keyCharAry[i]);
-			}
-			keys.add(tmpKey);
-		}
-		
-		return keys;
-	}
-
-
 }

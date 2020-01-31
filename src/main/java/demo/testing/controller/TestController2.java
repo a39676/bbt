@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
+import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.baseCommon.controller.CommonController;
 import demo.clawing.badJoke.sms.pojo.dto.BadJokeSMSDTO;
 import demo.clawing.badJoke.sms.service.BadJokeSMSService;
@@ -62,5 +63,13 @@ public class TestController2 extends CommonController {
 //				d.quit();
 			}
 		}
+	}
+	
+	@Autowired
+	private TestEventService testEventService;
+	
+	@GetMapping(value = "/sendFailReports")
+	public void sendFailReports() {
+		testEventService.sendFailReports();
 	}
 }

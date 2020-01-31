@@ -1,6 +1,5 @@
 package demo.tool.service;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -20,10 +19,6 @@ public interface MailService {
 	void sendMailWithAttachment(String sendTo, String title, String context, String attachmentPath,
 			Properties properties);
 
-	void sendTomcatOut() throws IOException;
-
-	void sendTomcatLogFolder() throws IOException;
-	
 //	CommonResult sendRegistMail(Long userId, String email, String nickName); // 暂时不再主动发送注册验证邮件,改为验证用户发送的邮件. 2018-06-28
 
 	public MailRecord findMailByMailKeyMailType(String mailKey, MailType mailType);
@@ -47,6 +42,8 @@ public interface MailService {
 	SearchTerm singleSearchTerm(String targetSendFrom, String targetContent, Date startDate);
 
 	SearchTerm searchByTargetContents(List<UserMailAndMailKeyBO> userMailAndMailKeyBOList);
+
+	CommonResultBBT sandFailTaskReport(Long userId, List<Long> failTastIdList, String email);
 
 
 }

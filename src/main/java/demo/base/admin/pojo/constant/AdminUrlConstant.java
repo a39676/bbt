@@ -8,6 +8,5 @@ public class AdminUrlConstant {
 	public static final String userEraser = "/userEraser";
 	public static final String dba = "/dba**";
 	public static final String refreshSystemConstant = "/refreshSystemConstant";
-	public static final String loadHomepageAnnouncementStr = "/loadHomepageAnnouncementStr";
 	
 }

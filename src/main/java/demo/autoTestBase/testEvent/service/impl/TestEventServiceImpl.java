@@ -2,6 +2,7 @@ package demo.autoTestBase.testEvent.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,18 +13,23 @@ import demo.autoTestBase.testCase.service.TestCaseService;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.pojo.constant.TestEventOptionConstant;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
+import demo.autoTestBase.testEvent.pojo.po.TestEventExample;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.autoTestBase.testEvent.service.TestEventService;
+import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.badJoke.sms.service.BadJokeCasePrefixService;
 import demo.clawing.dailySign.service.DailySignPrefixService;
 import demo.clawing.demo.service.SearchingDemoPrefixService;
 import demo.clawing.lottery.service.LotteryPrefixService;
 import demo.clawing.movie.service.MovieClawingCasePrefixService;
+import demo.tool.service.MailService;
 
 @Service
 public class TestEventServiceImpl extends TestEventCommonService implements TestEventService {
 
+	@Autowired
+	private MailService mailService;
 	@Autowired
 	private TestCaseService caseService;
 	
@@ -161,7 +167,31 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		return eventMapper.updateByPrimaryKeySelective(te);
 	}
 	
-	public void findFailReports(LocalDateTime startTime, LocalDateTime endTime) {
-//		TODO
+	@Override
+	public void sendFailReports() {
+		LocalDateTime now = LocalDateTime.now();
+		sendFailReports(now.minusDays(2L), now);
+	}
+	
+	@Override
+	public void sendFailReports(LocalDateTime startTime, LocalDateTime endTime) {
+		TestEventExample example = new TestEventExample();
+		example.createCriteria()
+		.andIsDeleteEqualTo(false).andIsPassEqualTo(false)
+		.andEndTimeIsNotNull()
+		.andStartTimeBetween(startTime, endTime)
+		;
+		example.setOrderByClause(" start_time desc ");
+		List<TestEvent> failEventList = eventMapper.selectByExample(example);
+		if(failEventList == null || failEventList.size() < 1) {
+			return;
+		}
+		
+		List<Long> failEventIdList = failEventList.stream().map(TestEvent::getId).collect(Collectors.toList());
+		if(failEventIdList == null || failEventIdList.size() < 1) {
+			return;
+		}
+		
+		mailService.sandFailTaskReport(0L, failEventIdList, constantService.getValByName(SystemConstantStore.managerMail));
 	}
 }

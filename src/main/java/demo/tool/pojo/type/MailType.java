@@ -7,6 +7,8 @@ public enum MailType {
 	forgotPassword("forgotPassword", 2),
 	/** 忘记用户名 */
 	forgotUsername("forgotUsername", 3),
+	/** 发送定时任务失败报告 */
+	sandFailTaskReport("sandFailTaskReport", 4),
 	;
 
 	private String name;

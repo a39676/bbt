@@ -1,11 +1,8 @@
 package demo.tool.service.impl;
 
-import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -26,6 +23,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
+import autoTest.jsonReport.pojo.constant.AutoTestInteractionUrl;
+import autoTest.pojo.constant.AutoTestUrl;
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.BaseResultType;
 import demo.base.system.pojo.bo.SystemConstantStore;
@@ -38,7 +37,6 @@ import demo.baseCommon.pojo.type.ResultType;
 import demo.baseCommon.service.CommonService;
 import demo.tool.mapper.MailRecordMapper;
 import demo.tool.pojo.MailRecord;
-import demo.tool.pojo.constant.ToolPathConstant;
 import demo.tool.pojo.param.InsertNewMailRecordParam;
 import demo.tool.pojo.type.MailType;
 import demo.tool.service.MailService;
@@ -54,7 +52,6 @@ public class MailServiceImpl extends CommonService implements MailService {
 	@Autowired
 	private MailRecordMapper mailRecordMapper;
 	
-	
 	private boolean isMailReady() {
 		if(redisTemplate.hasKey(SystemConstantStore.adminMailName) && redisTemplate.hasKey(SystemConstantStore.adminMailPwd)) {
 			return true;
@@ -67,7 +64,6 @@ public class MailServiceImpl extends CommonService implements MailService {
 			}
 		}
 	}
-	
 	
 	public CommonResult sendSimpleMail(Long userId, String sendTo, String title, String content, String mailKey, MailType mailType) {
 		CommonResult result = new CommonResult();
@@ -148,63 +144,6 @@ public class MailServiceImpl extends CommonService implements MailService {
 				);
 	}
 
-	@Override
-	public void sendTomcatOut() throws IOException {
-		if(!isMailReady()) {
-			return;
-		}
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmmss");
-		String title = "日志,截止到( " + LocalDateTime.now().format(formatter) + ")";
-
-		String tomcatOutPath = ToolPathConstant.getTomcatOutPath();
-
-		File outputZip = new File(tomcatOutPath.replaceAll("\\.\\w{1,4}$", ".zip"));
-
-		ioUtil.fileToZip(outputZip.getAbsolutePath(), tomcatOutPath);
-
-		Resource resource = new ClassPathResource(ResourceConstant.mailSinaSmtpSslProperties);
-		Properties properties = null;
-		try {
-			properties = ioUtil.getPropertiesFromFile(resource.getFile().getPath());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		sendMailWithAttachment(constantService.getValByName(SystemConstantStore.adminMailName), title, "", ToolPathConstant.getTomcatOutPath(), properties);
-
-		outputZip.delete();
-	}
-
-	@Override
-	public void sendTomcatLogFolder() throws IOException {
-		if(!isMailReady()) {
-			return;
-		}
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmmss");
-
-		File logsFolder = new File(ToolPathConstant.getTomcatLogsPath());
-		String zipFileName = "logs" + "(" + LocalDateTime.now().format(formatter) + ").zip";
-		File outputZip = new File(logsFolder.getAbsolutePath() + "/" + zipFileName);
-
-		List<String> filePathList = new ArrayList<String>();
-		Arrays.asList(logsFolder.listFiles()).stream().filter(f -> f.isFile())
-				.forEach(f -> filePathList.add(f.getAbsolutePath()));
-
-		ioUtil.filesToZip(outputZip.getAbsolutePath(), filePathList);
-
-//		Resource resource = new ClassPathResource(ResourceConstant.mailSinaSmtpSslProperties);
-//		Properties properties = null;
-//		try {
-//			properties = ioUtil.getPropertiesFromFile(resource.getFile().getPath());
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//
-//		sendMailWithAttachment(systemConstantService.getValByName(SystemConstantStore.adminMailName), zipFileName, zipFileName, outputZip.getAbsolutePath(),
-//				properties);
-
-		outputZip.delete();
-	}
 
 	// 暂时不再主动发送注册验证邮件,改为验证用户发送的邮件. 2018-06-28
 //	@Override
@@ -294,6 +233,31 @@ public class MailServiceImpl extends CommonService implements MailService {
 			return 0;
 		}
 		return mailRecordMapper.updateWasUsed(mailId);
+	}
+	
+	@Override
+	public CommonResultBBT sandFailTaskReport(Long userId, List<Long> failTastIdList, String email) {
+		CommonResultBBT result = new CommonResultBBT();
+		if(!isMailReady()) {
+			result.failWithMessage(ResultType.mailBaseOptionError.getName());
+			return result;
+		}
+		
+		if(failTastIdList == null || failTastIdList.size() < 1) {
+			result.failWithMessage("最近2天没有失败的定时任务报告");
+			return result;
+		}
+		
+		String targetHost = constantService.getValByName(SystemConstantStore.hostNameSeek);
+		StringBuffer sb = new StringBuffer();
+		for(Long testEventId : failTastIdList) {
+			sb.append(targetHost + AutoTestUrl.root + AutoTestInteractionUrl.findReportByTestEventId + "?testEventId=" + testEventId + "\n");
+		}
+		
+		LocalDateTime now = LocalDateTime.now();
+		sendSimpleMail(userId, email, ("截至: " + now + "的最近2天的失败任务报告"), sb.toString(), null, MailType.sandFailTaskReport);
+		result.setIsSuccess();
+		return result;
 	}
 	
 	@Override

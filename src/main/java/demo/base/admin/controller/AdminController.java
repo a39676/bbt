@@ -7,7 +7,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
@@ -21,7 +20,6 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.admin.pojo.constant.AdminUrlConstant;
 import demo.base.admin.pojo.constant.AdminViewConstants;
 import demo.base.admin.service.AdminService;
-import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.base.user.pojo.dto.UserIpDeleteDTO;
 import demo.base.user.pojo.po.Users;
@@ -111,20 +109,6 @@ public class AdminController extends CommonController {
 		List<String> keys = Arrays.asList(jsonInput.getString("keys").split(" "));
 		HashMap<String, String> result = systemConstantService.getValsByName(keys, true);
 		outputJson(response, JSONObject.fromObject(result));
-	}
-	
-	@PostMapping(value = AdminUrlConstant.loadHomepageAnnouncementStr)
-	public void loadHomepageAnnouncementStr(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) {
-		JSONObject jsonInput = getJson(data);
-		String strContent = jsonInput.getString("homepageAnnouncementStr");
-		if(StringUtils.isBlank(strContent) || "null".equals(strContent)) {
-			adminService.loadHomepageAnnouncementStr();
-		} else {
-			adminService.loadHomepageAnnouncementStr(strContent);
-		}
-		JSONObject jsonOutput = new JSONObject();
-		jsonOutput.put("homepageAnnouncementStr", systemConstantService.getValByName(SystemConstantStore.homepageAnnouncementStr));
-		outputJson(response, jsonOutput);
 	}
 	
 }

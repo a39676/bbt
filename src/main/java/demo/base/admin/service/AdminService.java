@@ -7,8 +7,4 @@ public interface AdminService {
 
 	CommonResultBBT deleteUserIpRecord(UserIpDeleteDTO param);
 
-	void loadHomepageAnnouncementStr();
-
-	void loadHomepageAnnouncementStr(String strContent);
-
 }
