@@ -188,9 +188,6 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		}
 		
 		List<Long> failEventIdList = failEventList.stream().map(TestEvent::getId).collect(Collectors.toList());
-		if(failEventIdList == null || failEventIdList.size() < 1) {
-			return;
-		}
 		
 		mailService.sandFailTaskReport(0L, failEventIdList, constantService.getValByName(SystemConstantStore.managerMail));
 	}
