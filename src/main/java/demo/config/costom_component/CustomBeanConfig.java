@@ -3,6 +3,7 @@ package demo.config.costom_component;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+import mail.service.MailToolService;
 import toolPack.dateTimeHandle.DateHandler;
 import toolPack.dateTimeHandle.LocalDateTimeHandler;
 import toolPack.httpHandel.HttpUtil;
@@ -51,5 +52,10 @@ public class CustomBeanConfig {
 	@Bean
 	public LocalDateTimeHandler getLocalDateTimeHandler() {
 		return new LocalDateTimeHandler();
+	}
+	
+	@Bean
+	public MailToolService mailToolService() {
+		return new MailToolService();
 	}
 }

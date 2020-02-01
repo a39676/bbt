@@ -19,8 +19,6 @@ import javax.mail.search.SearchTerm;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import autoTest.jsonReport.pojo.constant.AutoTestInteractionUrl;
@@ -31,7 +29,6 @@ import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.base.user.pojo.bo.UserMailAndMailKeyBO;
 import demo.base.user.pojo.constant.UsersUrlConstant;
 import demo.base.user.service.UsersService;
-import demo.baseCommon.pojo.constant.ResourceConstant;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.baseCommon.pojo.type.ResultType;
 import demo.baseCommon.service.CommonService;
@@ -40,14 +37,18 @@ import demo.tool.pojo.MailRecord;
 import demo.tool.pojo.param.InsertNewMailRecordParam;
 import demo.tool.pojo.type.MailType;
 import demo.tool.service.MailService;
+import mail.service.MailToolService;
 import toolPack.emailHandle.MailHandle;
 import toolPack.emailHandle.mailService.send.SendEmail;
+
 
 @Service
 public class MailServiceImpl extends CommonService implements MailService {
 
 	@Autowired
 	private UsersService userService;
+	@Autowired
+	private MailToolService mailToolService;
 	
 	@Autowired
 	private MailRecordMapper mailRecordMapper;
@@ -76,15 +77,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 			return result;
 		}
 		
-		Resource resource = new ClassPathResource(ResourceConstant.mailSinaSmtpSslProperties);
-		Properties properties = null;
-		try {
-			properties = ioUtil.getPropertiesFromFile(resource.getFile().getPath());
-		} catch (IOException e) {
-			e.printStackTrace();
-			result.failWithMessage(ResultType.mailPropertiesError.getName());
-			return result;
-		}
+		Properties properties = mailToolService.buildSinaSmtpSslProperties();
 
 		SendEmail sm = new SendEmail();
 		sm.sendMail(
@@ -356,13 +349,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 			return;
 		}
 		
-		Resource resource = new ClassPathResource(ResourceConstant.mailSinaSmtpSslProperties);
-		Properties properties = null;
-		try {
-			properties = ioUtil.getPropertiesFromFile(resource.getFile().getPath());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		Properties properties = mailToolService.buildSinaSmtpSslProperties();
 		
 		SendEmail sm = new SendEmail();
 		sm.sendMail(
@@ -387,17 +374,8 @@ public class MailServiceImpl extends CommonService implements MailService {
 		
 		MailHandle mailHandle = new MailHandle();
 
-		Resource resourceSmtpProperties = new ClassPathResource(ResourceConstant.mailSinaSmtpSslProperties);
-		Resource resourceImapProperties = new ClassPathResource(ResourceConstant.mailSinaImapSslProperties);
-		Properties imapProperties = null;
-		Properties smtpProperties = null;
-		try {
-			imapProperties = ioUtil.getPropertiesFromFile(resourceImapProperties.getFile().getAbsolutePath());
-			smtpProperties = ioUtil.getPropertiesFromFile(resourceSmtpProperties.getFile().getAbsolutePath());
-		} catch (IOException e) {
-			e.printStackTrace();
-			return new Message[] {};
-		}
+		Properties imapProperties = mailToolService.buildSinaImapSslProperties();
+		Properties smtpProperties = mailToolService.buildSinaSmtpSslProperties(); ;
 		
 		Store store = mailHandle.getMailStore(
 				constantService.getValByName(SystemConstantStore.adminMailName), 
