@@ -72,7 +72,7 @@ public class TaskToolServiceImpl implements TaskToolService {
 	}
 	
 	/** 将最近2天运行失败的定时任务报告发送到指定邮箱 */
-	@Scheduled(cron="02 03 40 * * *")
+	@Scheduled(cron="02 03 04 * * *")
 	public void sendFailReports() {
 		testEventService.sendFailReports();
 	}
