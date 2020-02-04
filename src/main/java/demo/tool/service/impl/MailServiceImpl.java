@@ -237,8 +237,9 @@ public class MailServiceImpl extends CommonService implements MailService {
 		}
 		
 		LocalDateTime now = LocalDateTime.now();
+		String nowStr = localDateTimeHandler.dateToStr(now);
 		if(failTastIdList == null || failTastIdList.size() < 1) {
-			sendSimpleMail(userId, email, ("截至: " + now + "的最近2天无失败任务"), ("截至: " + now + "的最近2天无失败任务"), null, MailType.sandFailTaskReport);
+			sendSimpleMail(userId, email, ("截至: " + nowStr + " 最近2天无失败任务"), ("截至: " + nowStr + " 最近2天无失败任务"), null, MailType.sandFailTaskReport);
 		} else {
 			String targetHost = constantService.getValByName(SystemConstantStore.hostNameSeek);
 			StringBuffer sb = new StringBuffer();
@@ -246,7 +247,7 @@ public class MailServiceImpl extends CommonService implements MailService {
 				sb.append(targetHost + AutoTestUrl.root + AutoTestInteractionUrl.findReportByTestEventId + "?testEventId=" + testEventId + "\n");
 			}
 			
-			sendSimpleMail(userId, email, ("截至: " + now + "的最近2天的失败任务报告"), sb.toString(), null, MailType.sandFailTaskReport);
+			sendSimpleMail(userId, email, ("截至: " + nowStr + " 最近2天的失败任务报告"), sb.toString(), null, MailType.sandFailTaskReport);
 		}
 		
 		result.setIsSuccess();
