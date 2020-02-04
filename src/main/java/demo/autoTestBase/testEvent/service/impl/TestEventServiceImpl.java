@@ -183,9 +183,6 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		;
 		example.setOrderByClause(" start_time desc ");
 		List<TestEvent> failEventList = eventMapper.selectByExample(example);
-		if(failEventList == null || failEventList.size() < 1) {
-			return;
-		}
 		
 		List<Long> failEventIdList = failEventList.stream().map(TestEvent::getId).collect(Collectors.toList());
 		
