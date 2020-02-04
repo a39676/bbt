@@ -168,13 +168,14 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	}
 	
 	@Override
-	public void sendFailReports() {
+	public CommonResultBBT sendFailReports() {
 		LocalDateTime now = LocalDateTime.now();
-		sendFailReports(now.minusDays(2L), now);
+		return sendFailReports(now.minusDays(2L), now);
 	}
 	
 	@Override
-	public void sendFailReports(LocalDateTime startTime, LocalDateTime endTime) {
+	public CommonResultBBT sendFailReports(LocalDateTime startTime, LocalDateTime endTime) {
+		CommonResultBBT r = new CommonResultBBT();
 		TestEventExample example = new TestEventExample();
 		example.createCriteria()
 		.andIsDeleteEqualTo(false).andIsPassEqualTo(false)
@@ -183,9 +184,18 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		;
 		example.setOrderByClause(" start_time desc ");
 		List<TestEvent> failEventList = eventMapper.selectByExample(example);
+		r.addMessage("failEventListSize : " + failEventList.size() + "\n");
 		
 		List<Long> failEventIdList = failEventList.stream().map(TestEvent::getId).collect(Collectors.toList());
 		
-		mailService.sandFailTaskReport(0L, failEventIdList, constantService.getValByName(SystemConstantStore.managerMail));
+		CommonResultBBT mailResult = mailService.sandFailTaskReport(0L, failEventIdList, constantService.getValByName(SystemConstantStore.managerMail));
+		if(mailResult.isSuccess()) {
+			r.addMessage("send mail success" + "\n");
+		} else {
+			r.addMessage("send mail fali" + "\n");
+			r.addMessage(mailResult.getMessage());
+		}
+		
+		return r;
 	}
 }
