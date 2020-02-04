@@ -239,6 +239,11 @@ public class MailServiceImpl extends CommonService implements MailService {
 		if(failTastIdList == null || failTastIdList.size() < 1) {
 			sendSimpleMail(userId, email, ("截至: " + nowStr + " 最近2天无失败任务"), ("截至: " + nowStr + " 最近2天无失败任务"), null, MailType.sandFailTaskReport);
 		} else {
+			/*
+			 * 2020-02-04
+			 * 未知原因, 邮件无法寄出
+			 * 大概率是新浪邮箱不允许发送邮件内容带有过多链接的邮件
+			 */
 //			String targetHost = constantService.getValByName(SystemConstantStore.hostNameSeek);
 //			StringBuffer sb = new StringBuffer();
 //			for(Long testEventId : failTastIdList) {
