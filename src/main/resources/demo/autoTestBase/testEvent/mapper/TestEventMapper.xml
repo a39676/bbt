@@ -468,6 +468,14 @@
       <if test="runFlag == null or runFlag == false">
         and start_time is null
       </if>
+      <if test="isSuccess != null">
+        <if test="isSuccess == true">
+          and is_pass = true
+        </if>
+        <if test="isSuccess == false">
+          and is_pass = false
+        </if>
+      </if>
     </where>
     order by create_time desc
     <if test="limit != null">
