@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.service.TestEventService;
@@ -14,6 +15,7 @@ import demo.clawing.badJoke.sms.service.BadJokeSMSService;
 import demo.clawing.clawingStudent.service.ClawingStudentService;
 import demo.selenium.service.WebDriverService;
 import demo.testing.pojo.constant.TestUrl;
+import demo.testing.service.TestService;
 
 @Controller
 @RequestMapping(value = { TestUrl.testRoot2 })
@@ -71,5 +73,15 @@ public class TestController2 extends CommonController {
 	@GetMapping(value = "/sendFailReports")
 	public void sendFailReports() {
 		testEventService.sendFailReports();
+	}
+	
+	@Autowired
+	private TestService testService;
+	
+	@GetMapping(value = "/testSendMail")
+	@ResponseBody
+	public String testSendMail() {
+		testService.testSendMail();
+		return "done";
 	}
 }

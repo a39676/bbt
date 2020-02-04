@@ -9,12 +9,13 @@
 </head>
 
 <body>
-  <p>东方思维 - 合同系统 - 部分文档</p>
+  <p>东方思维 - 合同系统 - 在线文档</p>
 
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
 
+        <!-- 1 - 关于 Jira -->
         <div class="row">
           <div class="container-fluid">
             <div class="row">
@@ -54,6 +55,7 @@
 
         <hr>
 
+        <!-- 2 - 关于 生成部署包 -->
         <div class="row">
           <div class="container-fluid">
             <div class="row">
@@ -77,6 +79,7 @@
               </div>
             </div>
 
+            <!-- 2.1 - 如果缺失部分 cshtml 文件 -->
             <div class="row">
               <div class="container-fluid">
                 <div class="row">
@@ -103,6 +106,7 @@
 
         <hr>
 
+        <!-- 3 - 关于 增量更新 -->
         <div class="row">
           <div class="container-fluid">
             <div class="row">
