@@ -100,4 +100,12 @@ public abstract class SeleniumCommonService extends CommonService {
 		return path;
 	}
 	
+	protected void threadSleepRandomTime(Long minMS, Long maxMS) throws InterruptedException {
+		Double i = ((Math.random() * (maxMS - minMS)) + minMS);
+		Thread.sleep(i.longValue());
+	}
+	
+	protected void threadSleepRandomTime() throws InterruptedException {
+		threadSleepRandomTime(3000L, 3000L);
+	}
 }

@@ -235,6 +235,8 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 			usernameInput.clear();
 			usernameInput.sendKeys(dailySignBO.getUsername());
 			
+			threadSleepRandomTime(1000L, 3000L);
+			
 			x.start("input").addAttribute("id", "password");
 			WebElement pwdInput = null;
 			try {
@@ -246,6 +248,8 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 			pwdInput.clear();
 			pwdInput.sendKeys(dailySignBO.getPwd());
 			
+			threadSleepRandomTime(1000L, 3000L);
+			
 			x.start("button").addAttribute("id", "login_btn");
 			WebElement loginButton = null;
 			try {
@@ -254,6 +258,8 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 				jsonReporter.appendContent(reportDTO, "找不到登录按钮");
 			}
 			loginButton.click();
+			
+			threadSleepRandomTime(1000L, 3000L);
 			
 			return true;
 		} catch (Exception e) {
@@ -276,6 +282,8 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 				jsonReporter.appendContent(reportDTO, "get 我的51job  but timeout");
 			}
 			
+			threadSleepRandomTime(1000L, 3000L);
+			
 			try {
 				d.get("https://m.51job.com/resume/myresume.php");
 				jsonReporter.appendContent(reportDTO, "get 我的简历");
@@ -283,6 +291,8 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 				jsUtil.windowStop(d);
 				jsonReporter.appendContent(reportDTO, "get 我的简历 but timeout");
 			}
+			
+			threadSleepRandomTime(1000L, 3000L);
 			
 			try {
 				d.get("https://m.51job.com/resume/detail.php?userid=398934495");
@@ -292,6 +302,8 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 				jsonReporter.appendContent(reportDTO, "get 指定简历 but timeout");
 			}
 			
+			threadSleepRandomTime(1000L, 3000L);
+			
 			try {
 				d.get("https://m.51job.com/resume/jobintent.php?userid=398934495");
 				jsonReporter.appendContent(reportDTO, "get 指定简历编辑界面");
@@ -299,6 +311,8 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 				jsUtil.windowStop(d);
 				jsonReporter.appendContent(reportDTO, "get 指定简历编辑界面 but timeout");
 			}
+			
+			threadSleepRandomTime(1000L, 3000L);
 			
 			x.start("textarea").addAttribute("id", "intro");
 			WebElement intentionDetailTextarea = null;
@@ -335,7 +349,11 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 			intentionDetailTextarea.clear();
 			intentionDetailTextarea.sendKeys(sb.toString());
 			
+			threadSleepRandomTime(1000L, 3000L);
+			
 			d.findElement(By.id("saveresumefour")).click();
+			
+			threadSleepRandomTime(1000L, 3000L);
 			
 			return true;
 		} catch (Exception e) {
@@ -399,6 +417,8 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 				return false;
 			}
 			
+			threadSleepRandomTime(1000L, 3000L);
+			
 			LocalDateTime theWatchTime = null;
 			WuyiWatchMe newPO = new WuyiWatchMe();
 			try {
@@ -433,6 +453,8 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 			}
 			
 			wuyiWatcheMeMapper.insertSelective(newPO);
+			
+			threadSleepRandomTime(1000L, 3000L);
 			
 			return true;
 		} catch (Exception e) {
