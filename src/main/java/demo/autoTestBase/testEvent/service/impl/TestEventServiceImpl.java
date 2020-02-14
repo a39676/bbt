@@ -182,7 +182,8 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		CommonResultBBT r = new CommonResultBBT();
 		TestEventExample example = new TestEventExample();
 		example.createCriteria()
-		.andIsDeleteEqualTo(false).andIsPassEqualTo(false)
+		.andIsDeleteEqualTo(false)
+		.andIsPassEqualTo(false)
 		.andEndTimeIsNotNull()
 		.andStartTimeBetween(startTime, endTime)
 		;

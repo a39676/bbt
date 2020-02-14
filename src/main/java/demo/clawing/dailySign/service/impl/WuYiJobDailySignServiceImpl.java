@@ -149,10 +149,15 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 					jsonReporter.appendContent(reportDTO, "刷新简历失败");
 					r.failWithMessage("更新失败");
 					throw new Exception();
+				} else {
+					jsonReporter.appendContent(reportDTO, "刷新简历完毕");
 				}
+			} else {
+				jsonReporter.appendContent(reportDTO, "暂不新简历");
 			}
 			
 			constantService.setValByName(wuYiRunCountKey, String.valueOf(runCount + 1));
+			jsonReporter.appendContent(reportDTO, "更新 redis 计数");
 			
 			r.setIsSuccess();
 			
@@ -166,6 +171,7 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 			
 			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
+			jsonReporter.appendContent(reportDTO, "异常: " + e.toString());
 //			jsonReporter.appendContent(reportDTO, htmlStr);
 			
 		} finally {
@@ -349,9 +355,12 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 			intentionDetailTextarea.clear();
 			intentionDetailTextarea.sendKeys(sb.toString());
 			
+			jsonReporter.appendContent(reportDTO, "完成编辑内容");
+			
 			threadSleepRandomTime(1000L, 3000L);
 			
 			d.findElement(By.id("saveresumefour")).click();
+			jsonReporter.appendContent(reportDTO, "点击保存");
 			
 			threadSleepRandomTime(1000L, 3000L);
 			
@@ -450,6 +459,7 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 				String likelyClass = likelySpan.getAttribute("class");
 				newPO.setDegreeOfInterest(Integer.parseInt(likelyClass.replaceAll("s", "")));
 			} catch (Exception e) {
+				
 			}
 			
 			wuyiWatcheMeMapper.insertSelective(newPO);
