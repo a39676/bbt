@@ -1,13 +1,16 @@
 package demo.autoTestBase.testEvent.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import autoTest.testModule.pojo.type.TestModuleType;
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.autoTestBase.testCase.pojo.po.TestCase;
 import demo.autoTestBase.testCase.service.TestCaseService;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
@@ -23,6 +26,7 @@ import demo.clawing.dailySign.service.DailySignPrefixService;
 import demo.clawing.demo.service.SearchingDemoPrefixService;
 import demo.clawing.lottery.service.LotteryPrefixService;
 import demo.clawing.movie.service.MovieClawingCasePrefixService;
+import demo.tool.pojo.type.MailType;
 import demo.tool.service.MailService;
 
 @Service
@@ -186,9 +190,10 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		List<TestEvent> failEventList = eventMapper.selectByExample(example);
 		r.addMessage("failEventListSize : " + failEventList.size() + "\n");
 		
-		List<Long> failEventIdList = failEventList.stream().map(TestEvent::getId).collect(Collectors.toList());
 		
-		CommonResultBBT mailResult = mailService.sandFailTaskReport(0L, failEventIdList, constantService.getValByName(SystemConstantStore.managerMail));
+		LocalDateTime now = LocalDateTime.now();
+		String nowStr = localDateTimeHandler.dateToStr(now);
+		CommonResult mailResult = mailService.sendSimpleMail(0L, constantService.getValByName(SystemConstantStore.managerMail), ("截至: " + nowStr + " 最近2天有" + failEventList.size() + "个失败任务"), (buildSendFailReportContent(failEventList)), null, MailType.sandFailTaskReport);
 		if(mailResult.isSuccess()) {
 			r.addMessage("send mail success" + "\n");
 		} else {
@@ -197,5 +202,25 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		}
 		
 		return r;
+	}
+	
+	private String buildSendFailReportContent(List<TestEvent> failEventList) {
+		Map<String, Integer> sumMap = new HashMap<String, Integer>();
+		for(TestEvent po : failEventList) {
+			if(sumMap.containsKey(po.getEventName())) {
+				sumMap.put(po.getEventName(), sumMap.get(po.getEventName()) + 1);
+			} else {
+				sumMap.put(po.getEventName(), 1);
+			}
+		}
+		
+		LocalDateTime now = LocalDateTime.now();
+		String nowStr = localDateTimeHandler.dateToStr(now);
+		StringBuffer sb = new StringBuffer("截至: " + nowStr + " 最近2天有" + failEventList.size() + "个失败任务 \n");
+		
+		for(Entry<String, Integer> entry : sumMap.entrySet()) {
+			sb.append(entry.getKey() + " : " + entry.getValue() + " 个 \n");
+		}
+		return sb.toString();
 	}
 }

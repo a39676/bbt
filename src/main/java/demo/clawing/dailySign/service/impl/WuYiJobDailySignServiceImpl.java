@@ -141,9 +141,12 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 				throw new Exception();
 			}
 			
+			jsonReporter.appendContent(reportDTO, "完成登录");
+			
 			catchWatchMe(d, reportDTO);
 			if(runCount == 0) {
 				if(!updateDetail(d, reportDTO)) {
+					jsonReporter.appendContent(reportDTO, "刷新简历失败");
 					r.failWithMessage("更新失败");
 					throw new Exception();
 				}
@@ -204,10 +207,10 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 		try {
 			try {
 				d.get(dailySignBO.getMainUrl());
-				jsonReporter.appendContent(reportDTO, "get");
+				jsonReporter.appendContent(reportDTO, "get home page");
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
-				jsonReporter.appendContent(reportDTO, "get but timeout");
+				jsonReporter.appendContent(reportDTO, "get home page but timeout");
 			}
 			
 			findAndCloseLeadDiv(d);
@@ -221,19 +224,35 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 			d.findElement(By.xpath(x.getXpath())).click();
 			
 			x.start("input").addAttribute("id", "loginname");
-			WebElement usernameInput = d.findElement(By.xpath(x.getXpath()));
+			WebElement usernameInput = null;
+			try {
+				usernameInput = d.findElement(By.xpath(x.getXpath()));
+			} catch (Exception e) {
+				jsonReporter.appendContent(reportDTO, "找不到用户名输入框");
+				throw new Exception();
+			}
 			usernameInput.click();
 			usernameInput.clear();
 			usernameInput.sendKeys(dailySignBO.getUsername());
 			
 			x.start("input").addAttribute("id", "password");
-			WebElement pwdInput = d.findElement(By.xpath(x.getXpath()));
+			WebElement pwdInput = null;
+			try {
+				pwdInput = d.findElement(By.xpath(x.getXpath()));
+			} catch (Exception e) {
+				jsonReporter.appendContent(reportDTO, "找不到密码输入框");
+			}
 			pwdInput.click();
 			pwdInput.clear();
 			pwdInput.sendKeys(dailySignBO.getPwd());
 			
 			x.start("button").addAttribute("id", "login_btn");
-			WebElement loginButton = d.findElement(By.xpath(x.getXpath()));
+			WebElement loginButton = null;
+			try {
+				loginButton = d.findElement(By.xpath(x.getXpath()));
+			} catch (Exception e) {
+				jsonReporter.appendContent(reportDTO, "找不到登录按钮");
+			}
 			loginButton.click();
 			
 			return true;
@@ -251,38 +270,44 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 		try {
 			try {
 				d.get("https://m.51job.com/my/my51job.php");
-				jsonReporter.appendContent(reportDTO, "get");
+				jsonReporter.appendContent(reportDTO, "get 我的51job ");
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
-				jsonReporter.appendContent(reportDTO, "get but timeout");
+				jsonReporter.appendContent(reportDTO, "get 我的51job  but timeout");
 			}
 			
 			try {
 				d.get("https://m.51job.com/resume/myresume.php");
-				jsonReporter.appendContent(reportDTO, "get");
+				jsonReporter.appendContent(reportDTO, "get 我的简历");
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
-				jsonReporter.appendContent(reportDTO, "get but timeout");
+				jsonReporter.appendContent(reportDTO, "get 我的简历 but timeout");
 			}
 			
 			try {
 				d.get("https://m.51job.com/resume/detail.php?userid=398934495");
-				jsonReporter.appendContent(reportDTO, "get");
+				jsonReporter.appendContent(reportDTO, "get 指定简历");
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
-				jsonReporter.appendContent(reportDTO, "get but timeout");
+				jsonReporter.appendContent(reportDTO, "get 指定简历 but timeout");
 			}
 			
 			try {
 				d.get("https://m.51job.com/resume/jobintent.php?userid=398934495");
-				jsonReporter.appendContent(reportDTO, "get");
+				jsonReporter.appendContent(reportDTO, "get 指定简历编辑界面");
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
-				jsonReporter.appendContent(reportDTO, "get but timeout");
+				jsonReporter.appendContent(reportDTO, "get 指定简历编辑界面 but timeout");
 			}
 			
 			x.start("textarea").addAttribute("id", "intro");
-			WebElement intentionDetailTextarea = d.findElement(By.xpath(x.getXpath()));
+			WebElement intentionDetailTextarea = null;
+			try {
+				intentionDetailTextarea = d.findElement(By.xpath(x.getXpath()));
+			} catch (Exception e) {
+				jsonReporter.appendContent(reportDTO, "无法找到简历简介编辑框");
+				return false;
+			}
 			String now = localDateTimeHandler.dateToStr(LocalDateTime.now());
 			String timeMarkStr = "自动签到时间: " + now;
 			String intentionDetailSourceStr = intentionDetailTextarea.getText();
@@ -324,10 +349,10 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 		try {
 			try {
 				d.get("https://m.51job.com/my/whosawrsm.php");
-				jsonReporter.appendContent(reportDTO, "whosawrsm.php");
+				jsonReporter.appendContent(reportDTO, "进入手机版 我的51job");
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
-				jsonReporter.appendContent(reportDTO, "get whosawrsm.php but timeout");
+				jsonReporter.appendContent(reportDTO, "进入手机版 我的51job but timeout");
 			}
 			
 			
@@ -357,12 +382,22 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 					.findChild("em")  // 查看时间:01-06 10:39
 					.getXpath()
 					;
-			
-			WebElement companyLinkDiv = d.findElement(By.xpath(companyLinkX));
-			WebElement companyNameP = d.findElement(By.xpath(companyNameX));
-			WebElement resumeNameDiv = d.findElement(By.xpath(resumeNameX));
-			WebElement likelySpan = d.findElement(By.xpath(likelyX));
-			WebElement watcheTimeEm = d.findElement(By.xpath(watchTimeX));
+
+			WebElement companyLinkDiv = null;
+			WebElement companyNameP = null;
+			WebElement resumeNameDiv = null;
+			WebElement likelySpan = null;
+			WebElement watcheTimeEm = null;
+			try {
+				companyLinkDiv = d.findElement(By.xpath(companyLinkX));
+				companyNameP = d.findElement(By.xpath(companyNameX));
+				resumeNameDiv = d.findElement(By.xpath(resumeNameX));
+				likelySpan = d.findElement(By.xpath(likelyX));
+				watcheTimeEm = d.findElement(By.xpath(watchTimeX));
+			} catch (Exception e) {
+				jsonReporter.appendContent(reportDTO, "查找页面元素异常");
+				return false;
+			}
 			
 			LocalDateTime theWatchTime = null;
 			WuyiWatchMe newPO = new WuyiWatchMe();
@@ -376,6 +411,8 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 				theWatchTime = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(watchTimeSourceStr);
 				newPO.setWatchTime(theWatchTime);
 			} catch (Exception e) {
+				jsonReporter.appendContent(reportDTO, "拼凑 WuyiWatchMe PO 异常: " + e.toString());
+				return false;
 			}
 			
 			WuyiWatchMe lastWatchPO = wuyiWatcheMeMapper.findTheLastWatch();

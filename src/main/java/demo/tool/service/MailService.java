@@ -7,6 +7,7 @@ import java.util.Properties;
 import javax.mail.Message;
 import javax.mail.search.SearchTerm;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.user.pojo.bo.UserMailAndMailKeyBO;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.tool.pojo.MailRecord;
@@ -44,6 +45,9 @@ public interface MailService {
 	SearchTerm searchByTargetContents(List<UserMailAndMailKeyBO> userMailAndMailKeyBOList);
 
 	CommonResultBBT sandFailTaskReport(Long userId, List<Long> failTastIdList, String email);
+
+	CommonResult sendSimpleMail(Long userId, String sendTo, String title, String content, String mailKey,
+			MailType mailType);
 
 
 }

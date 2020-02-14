@@ -64,7 +64,8 @@ public class MailServiceImpl extends CommonService implements MailService {
 		}
 	}
 	
-	private CommonResult sendSimpleMail(Long userId, String sendTo, String title, String content, String mailKey, MailType mailType) {
+	@Override
+	public CommonResult sendSimpleMail(Long userId, String sendTo, String title, String content, String mailKey, MailType mailType) {
 		CommonResult result = new CommonResult();
 		if(userId == null || mailType == null || mailType.getCode() == null) {
 			result.failWithMessage(BaseResultType.nullParam.getName());

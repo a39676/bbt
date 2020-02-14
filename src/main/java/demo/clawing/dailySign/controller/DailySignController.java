@@ -12,7 +12,7 @@ import demo.clawing.dailySign.service.WuYiJobDailySignService;
 
 @Controller
 @RequestMapping(value = DailySignUrl.root)
-public class DailySignTestController {
+public class DailySignController {
 
 	@Autowired
 	private WuYiJobDailySignService wuyiService;
