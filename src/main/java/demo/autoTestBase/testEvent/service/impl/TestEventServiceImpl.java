@@ -22,6 +22,7 @@ import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.badJoke.sms.service.BadJokeCasePrefixService;
+import demo.clawing.collecting.jandan.service.ClawCollectPrefixService;
 import demo.clawing.dailySign.service.DailySignPrefixService;
 import demo.clawing.demo.service.SearchingDemoPrefixService;
 import demo.clawing.lottery.service.LotteryPrefixService;
@@ -47,6 +48,8 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	private DailySignPrefixService dailySignPrefixService;
 	@Autowired
 	private LotteryPrefixService lotteryPrefixService;
+	@Autowired
+	private ClawCollectPrefixService clawCollectPrefixService;
 	
 	private String pauseWordRedisKey = "testEventPauseWord";
 	private String safeWord = "breakNow";
@@ -134,6 +137,8 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 			return dailySignPrefixService.runSubEvent(te);
 		} else if(TestModuleType.lottery.getId().equals(moduleId)) {
 			return lotteryPrefixService.runSubEvent(te);
+		} else if(TestModuleType.collecting.getId().equals(moduleId)) {
+			return clawCollectPrefixService.runSubEvent(te);
 		}
 		return new CommonResultBBT();
 	}
