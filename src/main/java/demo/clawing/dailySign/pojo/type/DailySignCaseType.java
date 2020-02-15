@@ -11,6 +11,9 @@ public enum DailySignCaseType {
 	/** cdBao */
 	cdBao(4L, "cdBao"),
 	
+	/** zhiLian */
+	zhiLian(5L, "zhiLian"),
+	
 	;
 
 	private Long id;
