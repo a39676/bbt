@@ -42,8 +42,8 @@ public class JsonReportServiceImpl extends CommonService implements JsonReportSe
 			dto.setLimit(reportPageNormalSize);
 		}
 		
-		if(dto.getEndTime() != null) {
-			dto.setEndTime(dto.getEndTime().minusSeconds(1L));
+		if(dto.getCreateEndTime() != null) {
+			dto.setCreateEndTime(dto.getCreateEndTime().minusSeconds(1L));
 		}
 		
 		List<TestEvent> poList = eventMapper.findTestEventPageByCondition(dto);
