@@ -22,7 +22,7 @@ import image.pojo.result.UploadImageToCloudinaryResult;
 @Service
 public class BingDemoServiceImpl extends SeleniumCommonService implements BingDemoService {
 	
-	private String eventName = "bing search demo";
+	private String eventName = "bing_search_demo";
 	
 	private String getScreenshotSaveingPath() {
 		return globalOptionService.getScreenshotSavingFolder() + File.separator + eventName;

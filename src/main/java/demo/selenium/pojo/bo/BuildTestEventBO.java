@@ -1,4 +1,4 @@
-package demo.selenium.service.pojo.bo;
+package demo.selenium.pojo.bo;
 
 import autoTest.testModule.pojo.type.TestModuleType;
 

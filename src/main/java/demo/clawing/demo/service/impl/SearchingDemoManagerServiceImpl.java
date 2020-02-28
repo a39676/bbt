@@ -9,8 +9,8 @@ import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.clawing.demo.pojo.type.SearchingDemoCaseType;
 import demo.clawing.demo.service.SearchingDemoManagerService;
+import demo.selenium.pojo.bo.BuildTestEventBO;
 import demo.selenium.service.impl.SeleniumCommonService;
-import demo.selenium.service.pojo.bo.BuildTestEventBO;
 
 @Service
 public class SearchingDemoManagerServiceImpl extends SeleniumCommonService implements SearchingDemoManagerService {

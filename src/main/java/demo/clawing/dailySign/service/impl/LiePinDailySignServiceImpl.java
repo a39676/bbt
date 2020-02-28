@@ -24,8 +24,8 @@ import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.dailySign.pojo.bo.DailySignAccountBO;
 import demo.clawing.dailySign.pojo.type.DailySignCaseType;
 import demo.clawing.dailySign.service.LiePinDailySignService;
+import demo.selenium.pojo.bo.BuildTestEventBO;
 import demo.selenium.service.impl.SeleniumCommonService;
-import demo.selenium.service.pojo.bo.BuildTestEventBO;
 import image.pojo.result.UploadImageToCloudinaryResult;
 import toolPack.ioHandle.FileUtilCustom;
 

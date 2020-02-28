@@ -22,8 +22,8 @@ import demo.clawing.badJoke.sms.pojo.dto.BadJokeSMSDTO;
 import demo.clawing.badJoke.sms.pojo.type.BadJokeCaseType;
 import demo.clawing.badJoke.sms.pojo.type.BadJokeSubCaseType;
 import demo.clawing.badJoke.sms.service.BadJokeSMSService;
+import demo.selenium.pojo.bo.BuildTestEventBO;
 import demo.selenium.service.impl.SeleniumCommonService;
-import demo.selenium.service.pojo.bo.BuildTestEventBO;
 
 @Service
 public class BadJokeSMSServiceImpl extends SeleniumCommonService implements BadJokeSMSService {

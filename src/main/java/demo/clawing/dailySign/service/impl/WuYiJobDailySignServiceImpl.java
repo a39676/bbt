@@ -34,8 +34,8 @@ import demo.clawing.dailySign.pojo.po.WuyiWatchMeExample;
 import demo.clawing.dailySign.pojo.type.DailySignCaseType;
 import demo.clawing.dailySign.pojo.vo.WuyiWatchMeVO;
 import demo.clawing.dailySign.service.WuYiJobDailySignService;
+import demo.selenium.pojo.bo.BuildTestEventBO;
 import demo.selenium.service.impl.SeleniumCommonService;
-import demo.selenium.service.pojo.bo.BuildTestEventBO;
 import image.pojo.result.UploadImageToCloudinaryResult;
 
 @Service

@@ -33,7 +33,7 @@ import demo.clawing.movie.pojo.po.MovieRecord;
 import demo.clawing.movie.pojo.result.DoubanSubClawingResult;
 import demo.clawing.movie.pojo.type.MovieClawingCaseType;
 import demo.clawing.movie.service.DyttClawingService;
-import demo.selenium.service.pojo.bo.BuildTestEventBO;
+import demo.selenium.pojo.bo.BuildTestEventBO;
 import image.pojo.result.UploadImageToCloudinaryResult;
 import toolPack.ioHandle.FileUtilCustom;
 

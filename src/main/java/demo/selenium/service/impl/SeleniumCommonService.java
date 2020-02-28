@@ -12,9 +12,9 @@ import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.baseCommon.service.CommonService;
 import demo.interaction.image.ImageInteractionService;
+import demo.selenium.pojo.bo.BuildTestEventBO;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.WebDriverService;
-import demo.selenium.service.pojo.bo.BuildTestEventBO;
 import image.pojo.dto.UploadImageToCloudinaryDTO;
 import image.pojo.result.UploadImageToCloudinaryResult;
 

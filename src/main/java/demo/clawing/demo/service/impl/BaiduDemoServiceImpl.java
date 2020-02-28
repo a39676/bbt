@@ -22,7 +22,7 @@ import image.pojo.result.UploadImageToCloudinaryResult;
 @Service
 public class BaiduDemoServiceImpl extends SeleniumCommonService implements BaiduDemoService {
 	
-	private String eventName = "baidu search demo";
+	private String eventName = "baidu_search_demo";
 	
 	private String getScreenshotSaveingPath() {
 		return globalOptionService.getScreenshotSavingFolder() + File.separator + eventName;

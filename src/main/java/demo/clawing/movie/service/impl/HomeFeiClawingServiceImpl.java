@@ -37,7 +37,7 @@ import demo.clawing.movie.pojo.po.MovieRecord;
 import demo.clawing.movie.pojo.result.DoubanSubClawingResult;
 import demo.clawing.movie.pojo.type.MovieClawingCaseType;
 import demo.clawing.movie.service.HomeFeiClawingService;
-import demo.selenium.service.pojo.bo.BuildTestEventBO;
+import demo.selenium.pojo.bo.BuildTestEventBO;
 import demo.tool.service.ComplexToolService;
 import movie.pojo.constant.MovieInteractionUrl;
 import net.sf.json.JSONObject;

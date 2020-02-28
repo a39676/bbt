@@ -26,8 +26,8 @@ import demo.clawing.lottery.pojo.po.LotterySix;
 import demo.clawing.lottery.pojo.po.LotterySixSoldDetail;
 import demo.clawing.lottery.pojo.type.ClawTaskType;
 import demo.clawing.lottery.service.LotterySixService;
+import demo.selenium.pojo.bo.BuildTestEventBO;
 import demo.selenium.service.impl.SeleniumCommonService;
-import demo.selenium.service.pojo.bo.BuildTestEventBO;
 import image.pojo.result.UploadImageToCloudinaryResult;
 import toolPack.dateTimeHandle.DateTimeUtilCommon;
 
