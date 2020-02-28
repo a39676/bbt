@@ -5,18 +5,26 @@ import java.io.File;
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import at.pojo.dto.JsonReportDTO;
 import at.service.ATJsonReportService;
 import at.service.ScreenshotService;
+import auxiliaryCommon.pojo.constant.ServerHost;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.baseCommon.service.CommonService;
-import demo.interaction.image.ImageInteractionService;
+import demo.interaction.image.service.ImageInteractionService;
 import demo.selenium.pojo.bo.BuildTestEventBO;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.WebDriverService;
+import image.pojo.constant.ImageInteractionUrl;
+import image.pojo.dto.ImageSavingDTO;
 import image.pojo.dto.UploadImageToCloudinaryDTO;
+import image.pojo.result.ImageSavingResult;
 import image.pojo.result.UploadImageToCloudinaryResult;
+import net.sf.json.JSONObject;
+import toolPack.httpHandel.HttpUtil;
 
 public abstract class SeleniumCommonService extends CommonService {
 
@@ -37,6 +45,9 @@ public abstract class SeleniumCommonService extends CommonService {
 	@Autowired
 	protected SeleniumGlobalOptionService globalOptionService;
 	
+	@Autowired
+	private HttpUtil httpUtil;
+	
 	protected TestEvent buildTestEvent(BuildTestEventBO bo) {
 		if(bo.getTestModuleType() == null || bo.getCaseId() == null) {
 			return null;
@@ -56,6 +67,28 @@ public abstract class SeleniumCommonService extends CommonService {
 		uploadImgDTO.setFilePath(imgFilePath);
 		UploadImageToCloudinaryResult uploadImgResult = imageInteractionService.uploadImageToCloudinary(uploadImgDTO);
 		return uploadImgResult;
+	}
+	
+	protected ImageSavingResult saveImgToCX(String imgFilePath, String imgFileName) {
+		ImageSavingResult r = new ImageSavingResult();
+		try {
+			ImageSavingDTO dto = new ImageSavingDTO();
+			dto.setImgName(imgFileName);
+			dto.setImgPath(imgFilePath);
+
+			JSONObject j = JSONObject.fromObject(dto);
+	        
+			String url = ServerHost.localHost10001 + ImageInteractionUrl.root + ImageInteractionUrl.imageSaving;
+			String response = String.valueOf(httpUtil.sendPostRestful(url, j.toString()));
+			JSONObject resultJ = JSONObject.fromObject(response);
+			
+			r = new ObjectMapper().readValue(resultJ.toString(), ImageSavingResult.class);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return r;
+		
 	}
 	
 	protected int updateTestEventReportPath(TestEvent te, String reportPath) {

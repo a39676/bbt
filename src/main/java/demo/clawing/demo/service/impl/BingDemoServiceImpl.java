@@ -17,7 +17,7 @@ import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.demo.service.BingDemoService;
 import demo.selenium.service.impl.SeleniumCommonService;
-import image.pojo.result.UploadImageToCloudinaryResult;
+import image.pojo.result.ImageSavingResult;
 
 @Service
 public class BingDemoServiceImpl extends SeleniumCommonService implements BingDemoService {
@@ -62,7 +62,8 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 			screenshotDTO.setDriver(d);
 			ScreenshotSaveResult screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
 			
-			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
+//			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
+			ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName());
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
 			
 			x.start("input").addAttribute("id", "sb_form_q");
@@ -78,7 +79,7 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 			}
 			
 			screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
-			uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
+			uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName());
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
 			
 			x.start("div").addAttribute("id", "sb_go_par");
@@ -88,7 +89,7 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 			jsonReporter.appendContent(reportDTO, "点击搜索");
 			
 			screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
-			uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
+			uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName());
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
 			
 			jsonReporter.appendContent(reportDTO, "完成");

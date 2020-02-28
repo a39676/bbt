@@ -1,4 +1,4 @@
-package demo.interaction.image.impl;
+package demo.interaction.image.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import auxiliaryCommon.pojo.constant.ServerHost;
 import demo.baseCommon.service.CommonService;
-import demo.interaction.image.ImageInteractionService;
+import demo.interaction.image.service.ImageInteractionService;
 import image.pojo.constant.ImageInteractionUrl;
 import image.pojo.dto.UploadImageToCloudinaryDTO;
 import image.pojo.result.UploadImageToCloudinaryResult;

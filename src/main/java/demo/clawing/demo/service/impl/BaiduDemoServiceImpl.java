@@ -17,7 +17,7 @@ import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.demo.service.BaiduDemoService;
 import demo.selenium.service.impl.SeleniumCommonService;
-import image.pojo.result.UploadImageToCloudinaryResult;
+import image.pojo.result.ImageSavingResult;
 
 @Service
 public class BaiduDemoServiceImpl extends SeleniumCommonService implements BaiduDemoService {
@@ -62,7 +62,8 @@ public class BaiduDemoServiceImpl extends SeleniumCommonService implements Baidu
 			screenshotDTO.setDriver(d);
 			ScreenshotSaveResult screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
 			
-			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
+//			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
+			ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName());
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
 			
 			x.start("input").addAttribute("id", "kw");
@@ -78,7 +79,7 @@ public class BaiduDemoServiceImpl extends SeleniumCommonService implements Baidu
 			}
 			
 			screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
-			uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
+			uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName());
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
 			
 			x.start("input").addAttribute("id", "su");
@@ -88,7 +89,7 @@ public class BaiduDemoServiceImpl extends SeleniumCommonService implements Baidu
 			jsonReporter.appendContent(reportDTO, "点击搜索");
 			
 			screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
-			uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
+			uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName());
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
 			
 			Thread.sleep(1500L);
