@@ -1,6 +1,7 @@
 package demo.clawing.demo.service.impl;
 
 import java.io.File;
+import java.time.LocalDateTime;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
@@ -61,9 +62,10 @@ public class BaiduDemoServiceImpl extends SeleniumCommonService implements Baidu
 			TakeScreenshotSaveDTO screenshotDTO = new TakeScreenshotSaveDTO();
 			screenshotDTO.setDriver(d);
 			ScreenshotSaveResult screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
+			LocalDateTime screenshotImageValidTime = LocalDateTime.now().plusMonths(6);
 			
 //			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
-			ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName());
+			ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName(), screenshotImageValidTime);
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
 			
 			x.start("input").addAttribute("id", "kw");
@@ -79,7 +81,7 @@ public class BaiduDemoServiceImpl extends SeleniumCommonService implements Baidu
 			}
 			
 			screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
-			uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName());
+			uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName(), screenshotImageValidTime);
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
 			
 			x.start("input").addAttribute("id", "su");
@@ -89,7 +91,7 @@ public class BaiduDemoServiceImpl extends SeleniumCommonService implements Baidu
 			jsonReporter.appendContent(reportDTO, "点击搜索");
 			
 			screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
-			uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName());
+			uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName(), screenshotImageValidTime);
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
 			
 			Thread.sleep(1500L);

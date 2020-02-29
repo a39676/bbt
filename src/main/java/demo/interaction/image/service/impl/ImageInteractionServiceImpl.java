@@ -10,7 +10,9 @@ import auxiliaryCommon.pojo.constant.ServerHost;
 import demo.baseCommon.service.CommonService;
 import demo.interaction.image.service.ImageInteractionService;
 import image.pojo.constant.ImageInteractionUrl;
+import image.pojo.dto.ImageSavingTransDTO;
 import image.pojo.dto.UploadImageToCloudinaryDTO;
+import image.pojo.result.ImageSavingResult;
 import image.pojo.result.UploadImageToCloudinaryResult;
 import net.sf.json.JSONObject;
 import toolPack.httpHandel.HttpUtil;
@@ -37,6 +39,41 @@ public class ImageInteractionServiceImpl extends CommonService implements ImageI
 			e.printStackTrace();
 		}
 		return r;
+	}
+	
+	@Override
+	public ImageSavingResult saveImgToCX(ImageSavingTransDTO dto) {
+		ImageSavingResult r = new ImageSavingResult();
+		try {
+
+			JSONObject j = JSONObject.fromObject(dto);
+			j.put("validTime", localDateTimeHandler.dateToStr(dto.getValidTime()));
+	        
+			String url = ServerHost.localHost10001 + ImageInteractionUrl.root + ImageInteractionUrl.imageSaving;
+			String response = String.valueOf(httpUtil.sendPostRestful(url, j.toString()));
+			JSONObject resultJ = JSONObject.fromObject(response);
+			
+			r.setCode(resultJ.getString("code"));
+			if("0".equals(r.getCode())) {
+				r.setIsSuccess();
+			} else {
+				r.setIsFail();
+			}
+			if(resultJ.containsKey("message")) {
+				r.setMessage(resultJ.getString("message"));
+			}
+			if(resultJ.containsKey("imgPK")) {
+				r.setImgPK(resultJ.getString("imgPK"));
+			}
+			if(resultJ.containsKey("imgUrl")) {
+				r.setImgUrl(resultJ.getString("imgUrl"));
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return r;
+		
 	}
 
 }

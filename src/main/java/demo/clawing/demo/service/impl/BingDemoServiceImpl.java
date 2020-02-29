@@ -1,6 +1,7 @@
 package demo.clawing.demo.service.impl;
 
 import java.io.File;
+import java.time.LocalDateTime;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
@@ -61,9 +62,9 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 			TakeScreenshotSaveDTO screenshotDTO = new TakeScreenshotSaveDTO();
 			screenshotDTO.setDriver(d);
 			ScreenshotSaveResult screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
-			
+			LocalDateTime screenshotImageValidTime = LocalDateTime.now().plusMonths(6);
 //			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
-			ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName());
+			ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName(), screenshotImageValidTime);
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
 			
 			x.start("input").addAttribute("id", "sb_form_q");
@@ -79,7 +80,7 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 			}
 			
 			screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
-			uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName());
+			uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName(), screenshotImageValidTime);
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
 			
 			x.start("div").addAttribute("id", "sb_go_par");
@@ -89,7 +90,7 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 			jsonReporter.appendContent(reportDTO, "点击搜索");
 			
 			screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
-			uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName());
+			uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName(), screenshotImageValidTime);
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
 			
 			jsonReporter.appendContent(reportDTO, "完成");
