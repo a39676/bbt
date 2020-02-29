@@ -19,6 +19,7 @@ import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.demo.service.BaiduDemoService;
 import demo.selenium.service.impl.SeleniumCommonService;
 import image.pojo.result.ImageSavingResult;
+import selenium.pojo.constant.SeleniumConstant;
 
 @Service
 public class BaiduDemoServiceImpl extends SeleniumCommonService implements BaiduDemoService {
@@ -62,7 +63,7 @@ public class BaiduDemoServiceImpl extends SeleniumCommonService implements Baidu
 			TakeScreenshotSaveDTO screenshotDTO = new TakeScreenshotSaveDTO();
 			screenshotDTO.setDriver(d);
 			ScreenshotSaveResult screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
-			LocalDateTime screenshotImageValidTime = LocalDateTime.now().plusMonths(6);
+			LocalDateTime screenshotImageValidTime = LocalDateTime.now().plusMonths(SeleniumConstant.maxHistoryMonth);
 			
 //			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
 			ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName(), screenshotImageValidTime);
