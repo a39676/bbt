@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 
 import demo.autoTestBase.captcha.service.CaptchaService;
 import demo.baseCommon.service.CommonService;
-import demo.selenium.pojo.constant.SeleniumConstant;
 import demo.selenium.service.OldDataDeleteService;
 import demo.selenium.service.SeleniumGlobalOptionService;
+import selenium.pojo.constant.SeleniumConstant;
 
 @Service
 public class OldDataDeleteServiceImpl extends CommonService implements OldDataDeleteService {

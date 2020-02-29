@@ -29,7 +29,7 @@ import demo.clawing.movie.pojo.po.MovieRecordExample;
 import demo.clawing.movie.service.MovieManagerService;
 import demo.interaction.image.mapper.ImageStoreMapper;
 import demo.interaction.image.pojo.po.ImageStoreExample;
-import demo.selenium.pojo.constant.SeleniumConstant;
+import selenium.pojo.constant.SeleniumConstant;
 
 @Service
 public class MovieManagerServiceImpl extends MovieClawingCommonService implements MovieManagerService {
