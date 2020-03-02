@@ -29,6 +29,7 @@ import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.dailySign.mapper.WuyiWatchMeMapper;
 import demo.clawing.dailySign.pojo.bo.DailySignAccountBO;
+import demo.clawing.dailySign.pojo.bo.WuYiJobDailySignAccountBO;
 import demo.clawing.dailySign.pojo.po.WuyiWatchMe;
 import demo.clawing.dailySign.pojo.po.WuyiWatchMeExample;
 import demo.clawing.dailySign.pojo.type.DailySignCaseType;
@@ -121,9 +122,9 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 				throw new Exception();
 			}
 			
-			DailySignAccountBO dailySignBO = null;
+			WuYiJobDailySignAccountBO dailySignBO = null;
 			try {
-				dailySignBO = new Gson().fromJson(jsonStr, DailySignAccountBO.class);
+				dailySignBO = new Gson().fromJson(jsonStr, WuYiJobDailySignAccountBO.class);
 			} catch (Exception e) {
 				jsonReporter.appendContent(reportDTO, "参数文件结构异常");
 				throw new Exception();
@@ -145,7 +146,7 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 			
 			catchWatchMe(d, reportDTO);
 			if(runCount == 0) {
-				if(!updateDetail(d, reportDTO)) {
+				if(!updateDetail(d, reportDTO, dailySignBO)) {
 					jsonReporter.appendContent(reportDTO, "刷新简历失败");
 					r.failWithMessage("更新失败");
 					throw new Exception();
@@ -276,7 +277,7 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 		
 	}
 
-	private boolean updateDetail(WebDriver d, JsonReportDTO reportDTO) {
+	private boolean updateDetail(WebDriver d, JsonReportDTO reportDTO, WuYiJobDailySignAccountBO dailySignBO) {
 		XpathBuilderBO x = new XpathBuilderBO();
 		
 		try {
@@ -301,7 +302,7 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 			threadSleepRandomTime(1000L, 3000L);
 			
 			try {
-				d.get("https://m.51job.com/resume/detail.php?userid=398934495");
+				d.get(dailySignBO.getResumeDetailUrl());
 				jsonReporter.appendContent(reportDTO, "get 指定简历");
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
@@ -311,7 +312,7 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 			threadSleepRandomTime(1000L, 3000L);
 			
 			try {
-				d.get("https://m.51job.com/resume/jobintent.php?userid=398934495");
+				d.get(dailySignBO.getJobintentUrl());
 				jsonReporter.appendContent(reportDTO, "get 指定简历编辑界面");
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
