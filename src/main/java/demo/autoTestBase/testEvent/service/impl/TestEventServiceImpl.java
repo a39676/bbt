@@ -192,7 +192,6 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		.andEndTimeIsNotNull()
 		.andStartTimeBetween(startTime, endTime)
 		;
-		example.setOrderByClause(" start_time desc ");
 		List<TestEvent> failEventList = eventMapper.selectByExample(example);
 		r.addMessage("failEventListSize : " + failEventList.size() + "\n");
 		
