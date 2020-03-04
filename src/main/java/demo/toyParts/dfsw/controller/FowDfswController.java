@@ -27,6 +27,8 @@ public class FowDfswController extends CommonController {
 	
 	@GetMapping(value = "/heTongDocument")
 	public ModelAndView heTongDocument() {
-		return new ModelAndView("dfsw/heTongDocument");
+		ModelAndView view = new ModelAndView("dfsw/heTongDocument");
+		view.addObject("title", "东方思维 - 合同系统 - 在线文档");
+		return view;
 	}
 }
