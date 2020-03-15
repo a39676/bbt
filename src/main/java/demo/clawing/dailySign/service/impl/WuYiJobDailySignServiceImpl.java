@@ -145,7 +145,7 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 			jsonReporter.appendContent(reportDTO, "完成登录");
 			
 			catchWatchMe(d, reportDTO);
-			if(runCount == 0) {
+			if(runCount == 0 && "1".equals(dailySignBO.getRefreshCV())) {
 				if(!updateDetail(d, reportDTO, dailySignBO)) {
 					jsonReporter.appendContent(reportDTO, "刷新简历失败");
 					r.failWithMessage("更新失败");
@@ -272,9 +272,6 @@ public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implement
 		} catch (Exception e) {
 			return false;
 		}
-		
-		
-		
 	}
 
 	private boolean updateDetail(WebDriver d, JsonReportDTO reportDTO, WuYiJobDailySignAccountBO dailySignBO) {

@@ -4,6 +4,7 @@ public class WuYiJobDailySignAccountBO extends DailySignAccountBO {
 
 	private String resumeDetailUrl;
 	private String jobintentUrl;
+	private String refreshCV;
 
 	public String getResumeDetailUrl() {
 		return resumeDetailUrl;
@@ -21,9 +22,18 @@ public class WuYiJobDailySignAccountBO extends DailySignAccountBO {
 		this.jobintentUrl = jobintentUrl;
 	}
 
+	public String getRefreshCV() {
+		return refreshCV;
+	}
+
+	public void setRefreshCV(String refreshCV) {
+		this.refreshCV = refreshCV;
+	}
+
 	@Override
 	public String toString() {
-		return "WuYiJobDailySignAccountBO [resumeDetailUrl=" + resumeDetailUrl + ", jobintentUrl=" + jobintentUrl + "]";
+		return "WuYiJobDailySignAccountBO [resumeDetailUrl=" + resumeDetailUrl + ", jobintentUrl=" + jobintentUrl
+				+ ", refreshCV=" + refreshCV + "]";
 	}
 
 }
