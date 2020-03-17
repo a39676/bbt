@@ -10,11 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import auxiliaryCommon.pojo.result.CommonResult;
-import demo.clawing.movie.pojo.dto.MovieIntroductionDTO;
 import demo.clawing.movie.pojo.result.FindMovieDetailResult;
 import demo.clawing.movie.pojo.result.FindMovieSummaryListResult;
-import demo.clawing.movie.service.HomeFeiClawingService;
 import demo.interaction.movieInteraction.pojo.result.FindMovieRecommendResult;
 import demo.interaction.movieInteraction.service.MovieInteractionService;
 import io.swagger.annotations.ApiOperation;
@@ -31,8 +28,8 @@ public class MovieInteractionController {
 
 	@Autowired
 	private MovieInteractionService movieInteractionService;
-	@Autowired
-	private HomeFeiClawingService homeFeiClawingService;
+//	@Autowired
+//	private HomeFeiClawingService homeFeiClawingService;
 	
 	@PostMapping(value = MovieInteractionUrl.simpleList)
 	@ApiOperation(value = "电影子栏目列表")
@@ -65,15 +62,15 @@ public class MovieInteractionController {
 		return ja;
 	}
 	
-	@ApiOperation(value = "请忽略")
-	@PostMapping(value = MovieInteractionUrl.handleMovieIntroductionRecive)
-	@ResponseBody
-	public CommonResult handleMovieIntroductionRecive(@RequestBody MovieIntroductionDTO dto) {
-		homeFeiClawingService.handleMovieIntroductionRecive(dto);
-		CommonResult r = new CommonResult();
-		r.setIsSuccess();
-		return r;
-	}
+//	@ApiOperation(value = "请忽略")
+//	@PostMapping(value = MovieInteractionUrl.handleMovieIntroductionRecive)
+//	@ResponseBody
+//	public CommonResult handleMovieIntroductionRecive(@RequestBody MovieIntroductionDTO dto) {
+//		homeFeiClawingService.handleMovieIntroductionRecive(dto);
+//		CommonResult r = new CommonResult();
+//		r.setIsSuccess();
+//		return r;
+//	}
 	
 	@ApiOperation(value = "电影推荐列表")
 	@PostMapping(value = MovieInteractionUrl.recommend)

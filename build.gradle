@@ -93,7 +93,6 @@ dependencies {
 	compile group: 'org.mybatis', name: 'mybatis-typehandlers-jsr310', version: '1.0.2'
 	
 	// mysql
-	// compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.4'
 	compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.16'
 	
 	// redis
@@ -106,7 +105,6 @@ dependencies {
 	// emoji
 	compile group: 'com.vdurmont', name: 'emoji-java', version: '3.2.0'
 
-
 	// other
 	// swagger
 	compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
@@ -117,25 +115,18 @@ dependencies {
 	compile group: 'javax.servlet.jsp', name: 'jsp-api', version: '2.2'
 	compile group: 'javax.servlet', name: 'jstl', version: '1.2'
 	
-	compile group: 'junit', name: 'junit', version: '4.12'
 	compile group: 'org.apache.maven.plugins', name: 'maven-resources-plugin', version: '3.1.0'
 	
 	// weka
-	compile group: 'weka', name: 'weka', version: '3.6.2'
+	// compile group: 'weka', name: 'weka', version: '3.6.2'
 	
 	// selenium
-	compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
-	compile group: 'io.github.seleniumquery', name: 'seleniumquery', version: '0.20.0'
+	// compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
+	// compile group: 'io.github.seleniumquery', name: 'seleniumquery', version: '0.20.0'
 	
 	// tess4j
 	compile group: 'net.sourceforge.tess4j', name: 'tess4j', version: '4.4.0'
 	compile group: 'net.java.dev.jna', name: 'jna', version: '5.4.0'
-	
-	// bit torrent
-	compile group: 'org.eclipse', name: 'bittorrent', version: '0.3.0-v20070627-1030'
-	
-	// opencv
-	// compile group: 'org.bytedeco.javacpp-presets', name: 'opencv', version: '4.0.1-1.4.4'
 	
 	// 富文本输入内容过滤/防御
 	compile group: 'com.googlecode.owasp-java-html-sanitizer', name: 'owasp-java-html-sanitizer', version: '20191001.1'

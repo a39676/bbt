@@ -1,19 +1,15 @@
 package demo.clawing.movie.service.impl;
 
-import java.io.File;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.bittorrent.TorrentFile;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import demo.clawing.movie.mapper.MovieImageMapper;
 import demo.clawing.movie.mapper.MovieMagnetUrlMapper;
-import demo.clawing.movie.pojo.constant.MovieClawingConstant;
 import demo.clawing.movie.pojo.po.MovieImage;
 import demo.clawing.movie.pojo.po.MovieMagnetUrl;
 import demo.clawing.movie.service.DoubanClawingService;
@@ -40,20 +36,19 @@ public abstract class MovieClawingCommonService extends SeleniumCommonService {
 	@Autowired
 	protected DoubanClawingService doubanService;
 	
-	
-	protected String getMangetUrlFromTorrent(String path) {
-		File t = new File(path);
-		if(!t.exists()) {
-			return null;
-		}
-		try {
-			TorrentFile f = new TorrentFile(t);
-			return MovieClawingConstant.magnetPrefix + f.getHexHash();
-		} catch (IllegalArgumentException | IOException e) {
-			log.error("read torrent error path {}", path);
-			return null;
-		}
-	}
+//	protected String getMangetUrlFromTorrent(String path) {
+//		File t = new File(path);
+//		if(!t.exists()) {
+//			return null;
+//		}
+//		try {
+//			TorrentFile f = new TorrentFile(t);
+//			return MovieClawingConstant.magnetPrefix + f.getHexHash();
+//		} catch (IllegalArgumentException | IOException e) {
+//			log.error("read torrent error path {}", path);
+//			return null;
+//		}
+//	}
 	
 	protected void saveMovieMagnetUrl(List<String> magnetUrls, Long movieId) {
 		for(String url : magnetUrls) {

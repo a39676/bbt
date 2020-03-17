@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.clawing.movie.service.DyttClawingService;
-import demo.clawing.movie.service.HomeFeiClawingService;
 
 @Controller
 @RequestMapping(value = "/movieClawing")
@@ -16,8 +15,8 @@ public class MovieClawingController {
 
 	@Autowired
 	private DyttClawingService dytt;
-	@Autowired
-	private HomeFeiClawingService homeFei;
+//	@Autowired
+//	private HomeFeiClawingService homeFei;
 	@Autowired
 	private TestEventService testEventService;
 	
@@ -29,20 +28,20 @@ public class MovieClawingController {
 		return "done";
 	}
 	
-	@GetMapping(value = "/homeFeiCollection")
-	@ResponseBody
-	public String homeFeiCollection() {
-		homeFei.insertCollectionEvent();
-		testEventService.findTestEventAndRun();
-		return "done";
-	}
-	
-	@GetMapping(value = "/homeFeiDownload")
-	@ResponseBody
-	public String homeFeiDownload() {
-		homeFei.insertDownloadEvent();
-		testEventService.findTestEventAndRun();
-		return "done";
-	}
+//	@GetMapping(value = "/homeFeiCollection")
+//	@ResponseBody
+//	public String homeFeiCollection() {
+//		homeFei.insertCollectionEvent();
+//		testEventService.findTestEventAndRun();
+//		return "done";
+//	}
+//	
+//	@GetMapping(value = "/homeFeiDownload")
+//	@ResponseBody
+//	public String homeFeiDownload() {
+//		homeFei.insertDownloadEvent();
+//		testEventService.findTestEventAndRun();
+//		return "done";
+//	}
 	
 }

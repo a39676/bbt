@@ -7,14 +7,13 @@ import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.movie.pojo.type.MovieClawingCaseType;
 import demo.clawing.movie.service.DyttClawingService;
-import demo.clawing.movie.service.HomeFeiClawingService;
 import demo.clawing.movie.service.MovieClawingCasePrefixService;
 
 @Service
 public class MovieClawingCasePrefixServiceImpl implements MovieClawingCasePrefixService {
 
-	@Autowired
-	private HomeFeiClawingService homeFeiService;
+//	@Autowired
+//	private HomeFeiClawingService homeFeiService;
 	@Autowired
 	private DyttClawingService dyttService;
 	
@@ -27,10 +26,10 @@ public class MovieClawingCasePrefixServiceImpl implements MovieClawingCasePrefix
 		
 		if (MovieClawingCaseType.dytt.getId().equals(caseId)) {
 			return dyttService.clawing(te);
-		} else if (MovieClawingCaseType.homeFeiCollection.getId().equals(caseId)) {
-			return homeFeiService.collection(te);
-		} else if (MovieClawingCaseType.homeFeiDownload.getId().equals(caseId)) {
-			return homeFeiService.download(te);
+//		} else if (MovieClawingCaseType.homeFeiCollection.getId().equals(caseId)) {
+//			return homeFeiService.collection(te);
+//		} else if (MovieClawingCaseType.homeFeiDownload.getId().equals(caseId)) {
+//			return homeFeiService.download(te);
 		}
 		return null;
 	}

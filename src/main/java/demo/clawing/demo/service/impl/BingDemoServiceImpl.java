@@ -96,6 +96,29 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 			
 			jsonReporter.appendContent(reportDTO, "完成");
 			
+			// TODO
+			mainUrl = "https://cn.bing.com/";
+			try {
+				d.get(mainUrl);
+			} catch (TimeoutException e) {
+				jsUtil.windowStop(d);
+			}
+			
+			x.start("div").addAttributeText("国际版");
+			try {
+				WebElement tmpEle = d.findElement(By.xpath(x.getXpath()));
+				tmpEle.click();
+			} catch (Exception e) {
+			}
+			
+			x.start("div").addContainsText("国");
+			try {
+				WebElement tmpEle = d.findElement(By.xpath(x.getXpath()));
+				tmpEle.click();
+			} catch (Exception e) {
+			}
+			
+
 			r.setIsSuccess();
 		} catch (Exception e) {
 			jsonReporter.appendContent(reportDTO, e.getMessage());
