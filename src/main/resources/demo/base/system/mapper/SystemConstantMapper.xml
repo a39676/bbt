@@ -70,9 +70,9 @@
   <select id="getValsByName" resultMap="BaseResultMap">
     select
       constantName,
-      constantValue
+      constantValue 
     from
-      systemConstant
+      systemConstant 
 
     where
       isDelete = 0

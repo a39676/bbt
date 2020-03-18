@@ -5,7 +5,12 @@ server:
 
 spring:
   application:
-    name: cdm
+    name: bbt
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/bbt?characterEncoding=utf8&useUnicode=true&useLegacyDatetimeCode=false&useTimezone=true&serverTimezone=GMT%2B8&autoReconnect=true&useSSL=false&useServerPrepStmts=true&allowMultiQueries=true

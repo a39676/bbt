@@ -1,7 +1,6 @@
 package demo.config;
 
 import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.springframework.context.annotation.Bean;
@@ -9,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -49,16 +47,6 @@ public class SpringMvcConfig implements WebMvcConfigurer {
         converters.add(jackson2HttpMessageConverter);
     }
 	
-	@Bean(name = "multipartResolver")
-	public CommonsMultipartResolver createMultiparResolver() {
-		CommonsMultipartResolver resolver = new CommonsMultipartResolver();
-		resolver.setDefaultEncoding(StandardCharsets.UTF_8.displayName());
-		resolver.setMaxUploadSize(5L * 1024 * 1024 * 1024); // 5m
-		resolver.setMaxInMemorySize(40960);
-
-		return resolver;
-	}
-
 	@Bean
 	public InternalResourceViewResolver viewResolver() {
 		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
@@ -68,5 +56,5 @@ public class SpringMvcConfig implements WebMvcConfigurer {
 		viewResolver.setOrder(1);
 		return viewResolver;
 	}
-
+	
 }

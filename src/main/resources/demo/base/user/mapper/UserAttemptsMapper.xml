@@ -10,8 +10,7 @@
   </resultMap>
   
   <insert id="insert">
-    insert into user_attempts (user_id, user_name, attempt_time, 
-      statu)
+    insert into user_attempts (user_id, user_name, attempt_time, statu)
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=CHAR}, #{attemptTime,jdbcType=TIMESTAMP}, 
       #{statu,jdbcType=BIT})
   </insert>
