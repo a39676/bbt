@@ -5,9 +5,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-public class CustomPasswordEncoder implements PasswordEncoder {
+public class CustomPasswordEncoder {
 
 	public String encode(CharSequence rawPassword) {
 		String demoSalt = "demoSalt";
