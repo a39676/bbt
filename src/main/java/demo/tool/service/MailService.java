@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Properties;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.tool.pojo.type.MailType;
 
 public interface MailService {
@@ -15,8 +14,6 @@ public interface MailService {
 			Properties properties);
 
 	int updateWasUsed(Integer mailId);
-
-	CommonResultBBT sandFailTaskReport(Long userId, List<Long> failTastIdList, String email);
 
 	CommonResult sendSimpleMail(Long userId, String sendTo, String title, String content, String mailKey,
 			MailType mailType);

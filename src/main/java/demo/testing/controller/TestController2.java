@@ -28,6 +28,7 @@ public class TestController2 extends CommonController {
 	@Autowired
 	private WebDriverService webDriverService;
 	
+	@SuppressWarnings("unused")
 	@Autowired
 	private TestService testService;
 	
@@ -66,10 +67,5 @@ public class TestController2 extends CommonController {
 //				d.quit();
 			}
 		}
-	}
-	
-	@GetMapping(value = "/test")
-	public void test() {
-		testService.test();
 	}
 }
