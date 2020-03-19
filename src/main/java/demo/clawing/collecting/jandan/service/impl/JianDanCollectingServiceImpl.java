@@ -6,9 +6,9 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.springframework.stereotype.Service;
 
-import at.pojo.dto.JsonReportDTO;
-import at.pojo.dto.TakeScreenshotSaveDTO;
-import at.pojo.result.ScreenshotSaveResult;
+import at.report.pojo.dto.JsonReportDTO;
+import at.screenshot.pojo.dto.TakeScreenshotSaveDTO;
+import at.screenshot.pojo.result.ScreenshotSaveResult;
 import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;

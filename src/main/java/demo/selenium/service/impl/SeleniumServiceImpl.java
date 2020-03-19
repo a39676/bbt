@@ -11,9 +11,9 @@ import org.openqa.selenium.support.ui.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import at.pojo.dto.TakeScreenshotSaveDTO;
-import at.service.ScreenshotService;
-import at.web.WebATToolService;
+import at.screenshot.pojo.dto.TakeScreenshotSaveDTO;
+import at.screenshot.service.ScreenshotService;
+import at.tool.web.WebATToolService;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventDemoBO;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.service.TestEventService;

@@ -11,7 +11,7 @@ import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import at.pojo.bo.XpathBuilderBO;
+import at.xpath.pojo.bo.XpathBuilderBO;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.clawing.movie.pojo.result.DoubanSubClawingResult;
 import demo.clawing.movie.service.DoubanClawingService;

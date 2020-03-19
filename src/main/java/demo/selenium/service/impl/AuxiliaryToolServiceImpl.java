@@ -16,10 +16,10 @@ import org.openqa.selenium.support.ui.Wait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import at.pojo.constant.WebDriverConstant;
-import at.pojo.dto.TakeScreenshotSaveDTO;
-import at.pojo.result.ScreenshotSaveResult;
-import at.service.ScreenshotService;
+import at.screenshot.pojo.dto.TakeScreenshotSaveDTO;
+import at.screenshot.pojo.result.ScreenshotSaveResult;
+import at.screenshot.service.ScreenshotService;
+import at.webDriver.pojo.constant.WebDriverConstant;
 import demo.autoTestBase.captcha.service.CaptchaService;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.baseCommon.service.CommonService;

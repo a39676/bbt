@@ -6,9 +6,9 @@ import java.time.LocalDateTime;
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import at.pojo.dto.JsonReportDTO;
-import at.service.ATJsonReportService;
-import at.service.ScreenshotService;
+import at.report.pojo.dto.JsonReportDTO;
+import at.report.service.ATJsonReportService;
+import at.screenshot.service.ScreenshotService;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.baseCommon.service.CommonService;
