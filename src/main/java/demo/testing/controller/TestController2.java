@@ -11,6 +11,7 @@ import demo.baseCommon.controller.CommonController;
 import demo.clawing.badJoke.sms.pojo.dto.BadJokeSMSDTO;
 import demo.clawing.badJoke.sms.service.BadJokeSMSService;
 import demo.clawing.clawingStudent.service.ClawingStudentService;
+import demo.clawing.tmp.service.TmpClawingService;
 import demo.selenium.service.WebDriverService;
 import demo.testing.pojo.constant.TestUrl;
 import demo.testing.service.TestService;
@@ -67,5 +68,13 @@ public class TestController2 extends CommonController {
 //				d.quit();
 			}
 		}
+	}
+	
+	@Autowired
+	private TmpClawingService tmpClawingService;
+	
+	@GetMapping(value = "/tmpClawing")
+	public void tmpClawing() {
+		tmpClawingService.tmpClawing();
 	}
 }

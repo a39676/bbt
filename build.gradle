@@ -109,6 +109,10 @@ dependencies {
 	
 	compile group: 'org.apache.maven.plugins', name: 'maven-resources-plugin', version: '3.1.0'
 	
+	// tess4j
+	compile group: 'net.sourceforge.tess4j', name: 'tess4j', version: '4.4.0'
+	compile group: 'net.java.dev.jna', name: 'jna', version: '5.4.0'  
+	
 	// 富文本输入内容过滤/防御
 	compile group: 'com.googlecode.owasp-java-html-sanitizer', name: 'owasp-java-html-sanitizer', version: '20191001.1'
 }

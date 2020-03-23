@@ -32,7 +32,6 @@ public class ATComponent {
 		} else {
 			dataPath = "d:/soft/tessdataInUse";
 		}
-		
 		t.initITesseract(dataPath);
 		return t;
 	}
