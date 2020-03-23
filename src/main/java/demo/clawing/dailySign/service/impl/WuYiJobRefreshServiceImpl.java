@@ -244,6 +244,19 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			
 			threadSleepRandomTime(1000L, 3000L);
 			
+			x.start("div").addClass("picture");
+			WebElement logoClick = null;
+			try {
+				logoClick = d.findElement(By.xpath(x.getXpath()));
+				logoClick.click();
+				/*
+				 * 有时候 输入完用户帐号, 会遮挡住密码输入框, 引起报错
+				 */
+			} catch (Exception e) {
+				jsonReporter.appendContent(reportDTO, "找不到Logo");
+			}
+			
+			
 			x.start("input").addAttribute("id", "password");
 			WebElement pwdInput = null;
 			try {
