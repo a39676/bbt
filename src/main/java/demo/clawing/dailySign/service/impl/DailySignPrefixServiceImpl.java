@@ -10,13 +10,13 @@ import demo.clawing.dailySign.pojo.type.DailySignCaseType;
 import demo.clawing.dailySign.service.CdBaoDailySignService;
 import demo.clawing.dailySign.service.DailySignPrefixService;
 import demo.clawing.dailySign.service.LiePinDailySignService;
-import demo.clawing.dailySign.service.WuYiJobDailySignService;
+import demo.clawing.dailySign.service.WuYiJobRefreshService;
 
 @Service
 public class DailySignPrefixServiceImpl extends CommonService implements DailySignPrefixService {
 
 	@Autowired
-	private WuYiJobDailySignService wuYiSign;
+	private WuYiJobRefreshService wuYiSign;
 	@Autowired
 	private LiePinDailySignService liePinSign;
 	@Autowired

@@ -4,13 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import demo.clawing.dailySign.service.WuYiJobDailySignService;
+import demo.clawing.dailySign.service.WuYiJobRefreshService;
 
 @Component
 public class DailySignTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 	
 	@Autowired
-	private WuYiJobDailySignService wuyiService;
+	private WuYiJobRefreshService wuyiService;
 	
 	@Scheduled(fixedRate = 1000L * 60 * 5)
 	public void insertWuYiSign() {

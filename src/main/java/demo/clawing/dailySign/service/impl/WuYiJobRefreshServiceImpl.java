@@ -34,13 +34,13 @@ import demo.clawing.dailySign.pojo.po.WuyiWatchMe;
 import demo.clawing.dailySign.pojo.po.WuyiWatchMeExample;
 import demo.clawing.dailySign.pojo.type.DailySignCaseType;
 import demo.clawing.dailySign.pojo.vo.WuyiWatchMeVO;
-import demo.clawing.dailySign.service.WuYiJobDailySignService;
+import demo.clawing.dailySign.service.WuYiJobRefreshService;
 import demo.selenium.pojo.bo.BuildTestEventBO;
 import demo.selenium.service.impl.SeleniumCommonService;
 import image.pojo.result.UploadImageToCloudinaryResult;
 
 @Service
-public class WuYiJobDailySignServiceImpl extends SeleniumCommonService implements WuYiJobDailySignService {
+public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements WuYiJobRefreshService {
 
 	@Autowired
 	private WuyiWatchMeMapper wuyiWatcheMeMapper;
