@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import at.report.service.ATJsonReportService;
 import at.report.service.ATWordReportService;
 import at.screenshot.service.ScreenshotService;
-import at.testt.service.Tess;
+import at.tess.service.Tess;
 import at.tool.web.WebATToolService;
 
 @Component
