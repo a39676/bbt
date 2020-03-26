@@ -111,6 +111,7 @@ mySqlTestDB.properties
 bbt.properties
 cx.properties
 bbt_backup.properties
+bootstrap.yml
 
 .DS_Store
 .AppleDouble
