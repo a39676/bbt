@@ -8,6 +8,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -49,7 +50,8 @@ public class DatabaseBBTConfig implements TransactionManagementConfigurer {
 	private String DB_PASSWORD;
 	
 	
-	@Bean(name="dataSource")
+	@Bean(name="bbtDataSource")
+	@Primary
 	public BasicDataSource dataSource() {
 		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setDriverClassName(DB_DRIVER_CLASS);
@@ -59,7 +61,8 @@ public class DatabaseBBTConfig implements TransactionManagementConfigurer {
 		return dataSource;
 	}
 	
-	@Bean(name="sqlSessionFactory")
+	@Bean(name="bbtSqlSessionFactory")
+	@Primary
 	public SqlSessionFactoryBean sqlSessionFactory() throws Exception{
 		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
 		
@@ -74,7 +77,8 @@ public class DatabaseBBTConfig implements TransactionManagementConfigurer {
 		return sqlSessionFactoryBean;
 	}
 	
-	@Bean
+	@Bean(name="bbtTransactionManager")
+	@Primary
     public DataSourceTransactionManager transactionManager() {
 		DataSourceTransactionManager transactionManager = new DataSourceTransactionManager(dataSource());
         return transactionManager;

@@ -23,12 +23,7 @@ import org.springframework.transaction.annotation.TransactionManagementConfigure
 @EnableTransactionManagement // <tx:annotation-driven />
 // multiple scan, 通配符的使用应放后边, 否则会被"覆盖?重写?"后失效
 @MapperScan({
-	"demo.base.*.mapper", 
-	"demo.autoTestBase.*.mapper", 
-	"demo.toyParts.*.mapper", 
-	"demo.clawing.*.mapper", 
-	"demo.interaction.*.mapper", 
-	"demo.*.mapper"
+	"demo.toyParts.multipleDB.mapper"
 	})
 public class DatabaseCXConfig implements TransactionManagementConfigurer {
 	
@@ -47,7 +42,7 @@ public class DatabaseCXConfig implements TransactionManagementConfigurer {
 	private String DB_PASSWORD;
 	
 	
-	@Bean(name="dataSource")
+	@Bean(name="cxDataSource")
 	public BasicDataSource dataSource() {
 		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setDriverClassName(DB_DRIVER_CLASS);
@@ -57,7 +52,7 @@ public class DatabaseCXConfig implements TransactionManagementConfigurer {
 		return dataSource;
 	}
 	
-	@Bean(name="sqlSessionFactory")
+	@Bean(name="cxSqlSessionFactory")
 	public SqlSessionFactoryBean sqlSessionFactory() throws Exception{
 		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
 		
@@ -65,14 +60,14 @@ public class DatabaseCXConfig implements TransactionManagementConfigurer {
 		mybatisProperties.setProperty("cacheEnabled", "true");
 		sqlSessionFactoryBean.setConfigurationProperties(mybatisProperties);
 		sqlSessionFactoryBean.setDataSource(dataSource());
-		sqlSessionFactoryBean.setTypeAliasesPackage(""
-				+ "demo.interaction.movieInteraction.pojo, "
-				);
+//		sqlSessionFactoryBean.setTypeAliasesPackage(""
+//				+ "demo.interaction.movieInteraction.pojo, "
+//				);
 		
 		return sqlSessionFactoryBean;
 	}
 	
-	@Bean
+	@Bean(name="cxTransactionManager")
     public DataSourceTransactionManager transactionManager() {
 		DataSourceTransactionManager transactionManager = new DataSourceTransactionManager(dataSource());
         return transactionManager;
