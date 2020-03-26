@@ -109,6 +109,7 @@ mySqlDnfRecorder.properties
 mySqlFinancer.properties
 mySqlTestDB.properties
 bbt.properties
+cx.properties
 bbt_backup.properties
 
 .DS_Store

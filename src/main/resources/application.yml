@@ -12,10 +12,16 @@ spring:
       enabled: true
       force: true
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/bbt?characterEncoding=utf8&useUnicode=true&useLegacyDatetimeCode=false&useTimezone=true&serverTimezone=GMT%2B8&autoReconnect=true&useSSL=false&useServerPrepStmts=true&allowMultiQueries=true
-    username: root
-    password: test
+    bbt:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://127.0.0.1:3306/bbt?characterEncoding=utf8&useUnicode=true&useLegacyDatetimeCode=false&useTimezone=true&serverTimezone=GMT%2B8&autoReconnect=true&useSSL=false&useServerPrepStmts=true&allowMultiQueries=true
+      username: root
+      password: test
+    cx:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://127.0.0.1:3306/financeclear?characterEncoding=utf8&useUnicode=true&useLegacyDatetimeCode=false&useTimezone=true&serverTimezone=GMT%2B8&autoReconnect=true&useSSL=false&useServerPrepStmts=true&allowMultiQueries=true
+      username: root
+      password: test
   redis:
     database: 0
     host: 127.0.0.1

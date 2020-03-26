@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.toyParts.multipleDB.mapper.ArticleLongMapper">
+  <resultMap id="BaseResultMap" type="demo.toyParts.multipleDB.pojo.po.ArticleLong">
+    <id column="article_id" jdbcType="BIGINT" property="articleId" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="channel_id" jdbcType="BIGINT" property="channelId" />
+    <result column="article_title" jdbcType="VARCHAR" property="articleTitle" />
+    <result column="path" jdbcType="VARCHAR" property="path" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="edit_time" jdbcType="TIMESTAMP" property="editTime" />
+    <result column="edit_of" jdbcType="BIGINT" property="editOf" />
+    <result column="edit_count" jdbcType="INTEGER" property="editCount" />
+    <result column="edit_by" jdbcType="BIGINT" property="editBy" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+    <result column="is_pass" jdbcType="BIT" property="isPass" />
+    <result column="is_edited" jdbcType="BIT" property="isEdited" />
+    <result column="is_reject" jdbcType="BIT" property="isReject" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    article_id, user_id, channel_id, article_title, path, create_time, edit_time, edit_of, 
+    edit_count, edit_by, is_delete, is_pass, is_edited, is_reject
+  </sql>
+  <select id="selectByExample" parameterType="demo.toyParts.multipleDB.pojo.po.ArticleLongExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from article_long
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from article_long
+    where article_id = #{articleId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from article_long
+    where article_id = #{articleId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="demo.toyParts.multipleDB.pojo.po.ArticleLongExample">
+    delete from article_long
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="demo.toyParts.multipleDB.pojo.po.ArticleLong">
+    insert into article_long (article_id, user_id, channel_id, 
+      article_title, path, create_time, 
+      edit_time, edit_of, edit_count, 
+      edit_by, is_delete, is_pass, is_edited, 
+      is_reject)
+    values (#{articleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{channelId,jdbcType=BIGINT}, 
+      #{articleTitle,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{editTime,jdbcType=TIMESTAMP}, #{editOf,jdbcType=BIGINT}, #{editCount,jdbcType=INTEGER}, 
+      #{editBy,jdbcType=BIGINT}, #{isDelete,jdbcType=BIT}, #{isPass,jdbcType=BIT}, #{isEdited,jdbcType=BIT}, 
+      #{isReject,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="demo.toyParts.multipleDB.pojo.po.ArticleLong">
+    insert into article_long
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="articleId != null">
+        article_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="channelId != null">
+        channel_id,
+      </if>
+      <if test="articleTitle != null">
+        article_title,
+      </if>
+      <if test="path != null">
+        path,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="editTime != null">
+        edit_time,
+      </if>
+      <if test="editOf != null">
+        edit_of,
+      </if>
+      <if test="editCount != null">
+        edit_count,
+      </if>
+      <if test="editBy != null">
+        edit_by,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="isPass != null">
+        is_pass,
+      </if>
+      <if test="isEdited != null">
+        is_edited,
+      </if>
+      <if test="isReject != null">
+        is_reject,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="articleId != null">
+        #{articleId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="channelId != null">
+        #{channelId,jdbcType=BIGINT},
+      </if>
+      <if test="articleTitle != null">
+        #{articleTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null">
+        #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="editTime != null">
+        #{editTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="editOf != null">
+        #{editOf,jdbcType=BIGINT},
+      </if>
+      <if test="editCount != null">
+        #{editCount,jdbcType=INTEGER},
+      </if>
+      <if test="editBy != null">
+        #{editBy,jdbcType=BIGINT},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="isPass != null">
+        #{isPass,jdbcType=BIT},
+      </if>
+      <if test="isEdited != null">
+        #{isEdited,jdbcType=BIT},
+      </if>
+      <if test="isReject != null">
+        #{isReject,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="demo.toyParts.multipleDB.pojo.po.ArticleLongExample" resultType="java.lang.Long">
+    select count(*) from article_long
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update article_long
+    <set>
+      <if test="record.articleId != null">
+        article_id = #{record.articleId,jdbcType=BIGINT},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=BIGINT},
+      </if>
+      <if test="record.channelId != null">
+        channel_id = #{record.channelId,jdbcType=BIGINT},
+      </if>
+      <if test="record.articleTitle != null">
+        article_title = #{record.articleTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.path != null">
+        path = #{record.path,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.editTime != null">
+        edit_time = #{record.editTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.editOf != null">
+        edit_of = #{record.editOf,jdbcType=BIGINT},
+      </if>
+      <if test="record.editCount != null">
+        edit_count = #{record.editCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.editBy != null">
+        edit_by = #{record.editBy,jdbcType=BIGINT},
+      </if>
+      <if test="record.isDelete != null">
+        is_delete = #{record.isDelete,jdbcType=BIT},
+      </if>
+      <if test="record.isPass != null">
+        is_pass = #{record.isPass,jdbcType=BIT},
+      </if>
+      <if test="record.isEdited != null">
+        is_edited = #{record.isEdited,jdbcType=BIT},
+      </if>
+      <if test="record.isReject != null">
+        is_reject = #{record.isReject,jdbcType=BIT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update article_long
+    set article_id = #{record.articleId,jdbcType=BIGINT},
+      user_id = #{record.userId,jdbcType=BIGINT},
+      channel_id = #{record.channelId,jdbcType=BIGINT},
+      article_title = #{record.articleTitle,jdbcType=VARCHAR},
+      path = #{record.path,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      edit_time = #{record.editTime,jdbcType=TIMESTAMP},
+      edit_of = #{record.editOf,jdbcType=BIGINT},
+      edit_count = #{record.editCount,jdbcType=INTEGER},
+      edit_by = #{record.editBy,jdbcType=BIGINT},
+      is_delete = #{record.isDelete,jdbcType=BIT},
+      is_pass = #{record.isPass,jdbcType=BIT},
+      is_edited = #{record.isEdited,jdbcType=BIT},
+      is_reject = #{record.isReject,jdbcType=BIT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="demo.toyParts.multipleDB.pojo.po.ArticleLong">
+    update article_long
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="channelId != null">
+        channel_id = #{channelId,jdbcType=BIGINT},
+      </if>
+      <if test="articleTitle != null">
+        article_title = #{articleTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null">
+        path = #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="editTime != null">
+        edit_time = #{editTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="editOf != null">
+        edit_of = #{editOf,jdbcType=BIGINT},
+      </if>
+      <if test="editCount != null">
+        edit_count = #{editCount,jdbcType=INTEGER},
+      </if>
+      <if test="editBy != null">
+        edit_by = #{editBy,jdbcType=BIGINT},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="isPass != null">
+        is_pass = #{isPass,jdbcType=BIT},
+      </if>
+      <if test="isEdited != null">
+        is_edited = #{isEdited,jdbcType=BIT},
+      </if>
+      <if test="isReject != null">
+        is_reject = #{isReject,jdbcType=BIT},
+      </if>
+    </set>
+    where article_id = #{articleId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="demo.toyParts.multipleDB.pojo.po.ArticleLong">
+    update article_long
+    set user_id = #{userId,jdbcType=BIGINT},
+      channel_id = #{channelId,jdbcType=BIGINT},
+      article_title = #{articleTitle,jdbcType=VARCHAR},
+      path = #{path,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      edit_time = #{editTime,jdbcType=TIMESTAMP},
+      edit_of = #{editOf,jdbcType=BIGINT},
+      edit_count = #{editCount,jdbcType=INTEGER},
+      edit_by = #{editBy,jdbcType=BIGINT},
+      is_delete = #{isDelete,jdbcType=BIT},
+      is_pass = #{isPass,jdbcType=BIT},
+      is_edited = #{isEdited,jdbcType=BIT},
+      is_reject = #{isReject,jdbcType=BIT}
+    where article_id = #{articleId,jdbcType=BIGINT}
+  </update>
+</mapper>

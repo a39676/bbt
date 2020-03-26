@@ -17,9 +17,7 @@ import org.springframework.transaction.annotation.TransactionManagementConfigure
 
 @Configuration
 @PropertySources({ 
-	@PropertySource(value = "classpath:properties/database/bbt.properties"),
-//	@PropertySource(value = "classpath:properties/database/bbt_backup.properties"),
-//	@PropertySource(value = "classpath:properties/database/vpsFinancer.properties"),
+	@PropertySource(value = "classpath:properties/database/cx.properties"),
 	@PropertySource(value = "classpath:none.properties", ignoreResourceNotFound = true) 
 })
 @EnableTransactionManagement // <tx:annotation-driven />
@@ -32,7 +30,7 @@ import org.springframework.transaction.annotation.TransactionManagementConfigure
 	"demo.interaction.*.mapper", 
 	"demo.*.mapper"
 	})
-public class MybatisConfig implements TransactionManagementConfigurer {
+public class DatabaseCXConfig implements TransactionManagementConfigurer {
 	
 	
 	// 直接写properties文件内的属性名

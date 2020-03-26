@@ -17,7 +17,7 @@
         <!--数据库链接URL，用户名、密码 -->
         <jdbcConnection  
         	driverClass="com.mysql.cj.jdbc.Driver" 
-        	connectionURL="jdbc:mysql://localhost:3306/bbt?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC" 
+        	connectionURL="jdbc:mysql://localhost:3306/financeclear?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC" 
         	userId="root"
         	password="test">    
         </jdbcConnection> 
@@ -30,7 +30,7 @@
         </javaTypeResolver>  
           
         <!-- 生成模型的包名和位置-->    
-        <javaModelGenerator targetPackage="demo.clawing.lottery.pojo.po" targetProject="bbt">
+        <javaModelGenerator targetPackage="demo.toyParts.multipleDB.pojo.po" targetProject="bbt">
             <property name="enableSubPackages" value="true"/>    
             <property name="trimStrings" value="true"/> 
             <!-- for MyBatis3 / MyBatis3Simple
@@ -41,18 +41,18 @@
         </javaModelGenerator>    
         
         <!-- 生成映射文件的包名和位置-->    
-        <sqlMapGenerator targetPackage="demo.clawing.lottery.mapper" targetProject="bbt">
+        <sqlMapGenerator targetPackage="demo.toyParts.multipleDB.mapper" targetProject="bbt">
             <property name="enableSubPackages" value="true"/>    
         </sqlMapGenerator>    
         
         <!-- 生成DAO的包名和位置-->    
-        <javaClientGenerator type="XMLMAPPER" targetPackage="demo.clawing.lottery.mapper" targetProject="bbt">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="demo.toyParts.multipleDB.mapper" targetProject="bbt">
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="lottery_six_sold_detail">
-        	<property name="tableName" value="lottery_six_sold_detail"></property>
-        	<property name="domainObjectName" value="lottery_six_sold_detail" ></property>
+        <table tableName="article_long">
+        	<property name="tableName" value="article_long"></property>
+        	<property name="domainObjectName" value="article_long" ></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>
