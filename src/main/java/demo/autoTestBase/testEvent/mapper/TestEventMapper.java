@@ -9,6 +9,7 @@ import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.po.TestEventExample;
 
 public interface TestEventMapper {
+	
 	long countByExample(TestEventExample example);
 
 	int deleteByExample(TestEventExample example);
