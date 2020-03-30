@@ -2,81 +2,66 @@ package demo.config;
 
 import java.util.Properties;
 
-import org.apache.commons.dbcp.BasicDataSource;
+import javax.sql.DataSource;
+
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.annotation.PropertySources;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.transaction.annotation.TransactionManagementConfigurer;
+
+import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
-@PropertySources({ 
-	@PropertySource(value = "classpath:properties/database/cx.properties"),
-	@PropertySource(value = "classpath:none.properties", ignoreResourceNotFound = true) 
-})
-@EnableTransactionManagement // <tx:annotation-driven />
 // multiple scan, 通配符的使用应放后边, 否则会被"覆盖?重写?"后失效
-@MapperScan({
-	"demo.toyParts.multipleDB.mapper"
-	})
-public class DatabaseCXConfig implements TransactionManagementConfigurer {
-	
-	
-	// 直接写properties文件内的属性名
-	@Value("${DB_DRIVER_CLASS}")
-	private String DB_DRIVER_CLASS;
-	
-	@Value("${DB_URL}")
-	private String DB_URL;
-	
-	@Value("${DB_USERNAME}")
-	private String DB_USERNAME;
-	
-	@Value("${DB_PASSWORD}")
-	private String DB_PASSWORD;
-	
-	
-	@Bean(name="cxDataSource")
-	public BasicDataSource dataSource() {
-		BasicDataSource dataSource = new BasicDataSource();
-		dataSource.setDriverClassName(DB_DRIVER_CLASS);
-		dataSource.setUrl(DB_URL);
-		dataSource.setUsername(DB_USERNAME);
-		dataSource.setPassword(DB_PASSWORD);
-		return dataSource;
+@MapperScan(basePackages = { "demo.toyParts.multipleDB.mapper" }, sqlSessionTemplateRef = "cxSqlSessionTemplate")
+public class DatabaseCXConfig {
+
+	@Bean(name = "cxDataSourceProperties")
+	@ConfigurationProperties(prefix = "spring.datasource.cx")
+	public DataSourceProperties cxDataSourceProperties() {
+		return new DataSourceProperties();
 	}
-	
-	@Bean(name="cxSqlSessionFactory")
-	public SqlSessionFactoryBean sqlSessionFactory() throws Exception{
+
+	@Bean(name = "cxDataSource")
+	public HikariDataSource cxDataSource(@Qualifier("cxDataSourceProperties") DataSourceProperties properties) {
+		return properties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
+	}
+
+//	@Bean(name="cxDataSource")
+//    @ConfigurationProperties(prefix = "spring.datasource-cx")
+//    public DataSource cxDataSource() {
+//        return DataSourceBuilder.create().build();
+//    }
+
+	@Bean(name = "cxSqlSessionFactory")
+	public SqlSessionFactoryBean cxSqlSessionFactory(@Qualifier("cxDataSource") DataSource dataSource)
+			throws Exception {
 		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-		
+
 		Properties mybatisProperties = new Properties();
 		mybatisProperties.setProperty("cacheEnabled", "true");
 		sqlSessionFactoryBean.setConfigurationProperties(mybatisProperties);
-		sqlSessionFactoryBean.setDataSource(dataSource());
-//		sqlSessionFactoryBean.setTypeAliasesPackage(""
-//				+ "demo.interaction.movieInteraction.pojo, "
-//				);
-		
+		sqlSessionFactoryBean.setDataSource(dataSource);
+
 		return sqlSessionFactoryBean;
 	}
-	
-	@Bean(name="cxTransactionManager")
-    public DataSourceTransactionManager transactionManager() {
-		DataSourceTransactionManager transactionManager = new DataSourceTransactionManager(dataSource());
-        return transactionManager;
-    }
 
-	@Override
-	public PlatformTransactionManager annotationDrivenTransactionManager() {
-		return transactionManager();
+	@Bean(name = "cxTransactionManager")
+	public DataSourceTransactionManager cxTransactionManager(@Qualifier("cxDataSource") DataSource dataSource) {
+		DataSourceTransactionManager transactionManager = new DataSourceTransactionManager(dataSource);
+		return transactionManager;
 	}
-	
+
+	@Bean(name = "cxSqlSessionTemplate")
+	public SqlSessionTemplate cxSqlSessionTemplate(
+			@Qualifier("cxSqlSessionFactory") SqlSessionFactory sqlSessionFactory) throws Exception {
+		return new SqlSessionTemplate(sqlSessionFactory);
+	}
 
 }

@@ -103,15 +103,12 @@ local.properties
 # Other
 *.class
 
-message.properties
 mySqlDB01.properties
-mySqlDnfRecorder.properties
-mySqlFinancer.properties
-mySqlTestDB.properties
 bbt.properties
 cx.properties
 bbt_backup.properties
-bootstrap.yml
+application-prod.yml
+application-test.yml
 
 .DS_Store
 .AppleDouble

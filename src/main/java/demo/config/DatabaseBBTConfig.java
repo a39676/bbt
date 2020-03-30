@@ -2,74 +2,66 @@ package demo.config;
 
 import java.util.Properties;
 
-import org.apache.commons.dbcp.BasicDataSource;
+import javax.sql.DataSource;
+
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.annotation.PropertySources;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.transaction.annotation.TransactionManagementConfigurer;
+
+import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
-@PropertySources({ 
-	@PropertySource(value = "classpath:properties/database/bbt.properties"),
-//	@PropertySource(value = "classpath:properties/database/bbt_backup.properties"),
-//	@PropertySource(value = "classpath:properties/database/vpsFinancer.properties"),
-	@PropertySource(value = "classpath:none.properties", ignoreResourceNotFound = true) 
-})
-@EnableTransactionManagement // <tx:annotation-driven />
 // multiple scan, 通配符的使用应放后边, 否则会被"覆盖?重写?"后失效
-@MapperScan({
-	"demo.base.*.mapper", 
-	"demo.autoTestBase.*.mapper", 
-	"demo.toyParts.*.mapper", 
-	"demo.clawing.*.mapper", 
-	"demo.interaction.*.mapper", 
-	"demo.*.mapper"
-	})
-public class DatabaseBBTConfig implements TransactionManagementConfigurer {
+@MapperScan(
+	basePackages = {
+		"demo.base.*.mapper", 
+		"demo.autoTestBase.*.mapper", 
+		"demo.clawing.*.mapper", 
+		"demo.interaction.*.mapper", 
+		"demo.*.mapper"
+	},
+	sqlSessionTemplateRef = "bbtSqlSessionTemplate"
+	)
+public class DatabaseBBTConfig {
 	
-	
-	// 直接写properties文件内的属性名
-	@Value("${DB_DRIVER_CLASS}")
-	private String DB_DRIVER_CLASS;
-	
-	@Value("${DB_URL}")
-	private String DB_URL;
-	
-	@Value("${DB_USERNAME}")
-	private String DB_USERNAME;
-	
-	@Value("${DB_PASSWORD}")
-	private String DB_PASSWORD;
-	
-	
-	@Bean(name="bbtDataSource")
+	@Bean(name="bbtDataSourceProperties")
+	@ConfigurationProperties(prefix = "spring.datasource.bbt")
 	@Primary
-	public BasicDataSource dataSource() {
-		BasicDataSource dataSource = new BasicDataSource();
-		dataSource.setDriverClassName(DB_DRIVER_CLASS);
-		dataSource.setUrl(DB_URL);
-		dataSource.setUsername(DB_USERNAME);
-		dataSource.setPassword(DB_PASSWORD);
-		return dataSource;
-	}
+    public DataSourceProperties bbtDataSourceProperties() {
+		return new DataSourceProperties();
+    }
+
+    @Bean(name="bbtDataSource")
+    @Primary
+    public HikariDataSource bbtDataSource(@Qualifier("bbtDataSourceProperties") DataSourceProperties properties) {
+        return properties.initializeDataSourceBuilder().type(HikariDataSource.class)
+                .build();
+    }
+    
+//    @Bean(name="bbtDataSource")
+//    @ConfigurationProperties(prefix = "spring.datasource.bbt")
+//    @Primary
+//    public DataSource bbtDataSource() {
+//        return DataSourceBuilder.create().build();
+//    }
 	
 	@Bean(name="bbtSqlSessionFactory")
 	@Primary
-	public SqlSessionFactoryBean sqlSessionFactory() throws Exception{
+	public SqlSessionFactoryBean bbtSqlSessionFactory(@Qualifier("bbtDataSource") DataSource dataSource) throws Exception{
 		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
 		
 		Properties mybatisProperties = new Properties();
 		mybatisProperties.setProperty("cacheEnabled", "true");
 		sqlSessionFactoryBean.setConfigurationProperties(mybatisProperties);
-		sqlSessionFactoryBean.setDataSource(dataSource());
+		sqlSessionFactoryBean.setDataSource(dataSource);
 		sqlSessionFactoryBean.setTypeAliasesPackage(""
 				+ "demo.interaction.movieInteraction.pojo, "
 				);
@@ -79,15 +71,22 @@ public class DatabaseBBTConfig implements TransactionManagementConfigurer {
 	
 	@Bean(name="bbtTransactionManager")
 	@Primary
-    public DataSourceTransactionManager transactionManager() {
-		DataSourceTransactionManager transactionManager = new DataSourceTransactionManager(dataSource());
+    public DataSourceTransactionManager bbtTransactionManager(@Qualifier("bbtDataSource") DataSource dataSource) {
+		DataSourceTransactionManager transactionManager = new DataSourceTransactionManager(dataSource);
         return transactionManager;
     }
+	
+	@Bean(name = "bbtSqlSessionTemplate")
+    @Primary
+    public SqlSessionTemplate bbtSqlSessionTemplate(@Qualifier("bbtSqlSessionFactory") SqlSessionFactory sqlSessionFactory) throws Exception {
+        return new SqlSessionTemplate(sqlSessionFactory);
+    }
 
-	@Override
-	public PlatformTransactionManager annotationDrivenTransactionManager() {
-		return transactionManager();
-	}
+//	@Bean(name = "bbtTransactionManager")
+//    @Primary
+//	public PlatformTransactionManager bbtAnnotationDrivenTransactionManager(@Qualifier("bbtDataSource") DataSource dataSource) {
+//		return new DataSourceTransactionManager(dataSource);
+//	}
 	
 
 }
