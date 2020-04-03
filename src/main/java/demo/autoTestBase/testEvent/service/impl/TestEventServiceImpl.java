@@ -25,6 +25,7 @@ import demo.clawing.badJoke.sms.service.BadJokeCasePrefixService;
 import demo.clawing.collecting.jandan.service.ClawCollectPrefixService;
 import demo.clawing.dailySign.service.DailySignPrefixService;
 import demo.clawing.demo.service.SearchingDemoPrefixService;
+import demo.clawing.localClawing.service.LocalClawingPrefixService;
 import demo.clawing.lottery.service.LotteryPrefixService;
 import demo.clawing.movie.service.MovieClawingCasePrefixService;
 import demo.tool.pojo.type.MailType;
@@ -50,6 +51,8 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	private LotteryPrefixService lotteryPrefixService;
 	@Autowired
 	private ClawCollectPrefixService clawCollectPrefixService;
+	@Autowired
+	private LocalClawingPrefixService localClawingPrefixService;
 	
 	private String pauseWordRedisKey = "testEventPauseWord";
 	private String safeWord = "breakNow";
@@ -139,6 +142,8 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 			return lotteryPrefixService.runSubEvent(te);
 		} else if(TestModuleType.collecting.getId().equals(moduleId)) {
 			return clawCollectPrefixService.runSubEvent(te);
+		} else if(TestModuleType.localClawing.getId().equals(moduleId)) {
+			return localClawingPrefixService.runSubEvent(te);
 		}
 		return new CommonResultBBT();
 	}
