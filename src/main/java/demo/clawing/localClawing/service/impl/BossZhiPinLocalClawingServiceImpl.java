@@ -3,6 +3,7 @@ package demo.clawing.localClawing.service.impl;
 import java.io.File;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -58,7 +59,9 @@ public class BossZhiPinLocalClawingServiceImpl extends SeleniumCommonService imp
 		
 		try {
 			
-			d = webDriverService.buildFireFoxWebDriver();
+			d = webDriverService.buildOperaWebDriver();
+			
+//			d.get("https://www.zhipin.com/job_detail/46fe02ecaf4013f80HZ939u7EVQ~.html");
 			
 			try {
 				d.get("https://login.zhipin.com/");
@@ -66,10 +69,11 @@ public class BossZhiPinLocalClawingServiceImpl extends SeleniumCommonService imp
 				jsUtil.windowStop(d);
 			}
 			
-			boolean operatorFlag = tryLogin(d, reportDTO);
-			if(!operatorFlag) {
-				throw new Exception("登录异常");
-			}
+			boolean operatorFlag = false;
+			tryLogin(d, reportDTO);
+//			if(!operatorFlag) {
+//				throw new Exception("登录异常");
+//			}
 			
 			try {
 				d.get("https://www.zhipin.com/?ka=header-home-logo");
@@ -173,15 +177,19 @@ public class BossZhiPinLocalClawingServiceImpl extends SeleniumCommonService imp
 		searchInput.clear();
 		searchInput.sendKeys(keyword);
 		
-		x.start("button").addClass("btn btn-search");
-		WebElement searchButton = null;
-		try {
-			searchButton = d.findElement(By.xpath(x.getXpath()));
-		} catch (Exception e) {
-			return false;
-		}
+		searchInput.sendKeys(Keys.ENTER);
 		
-		searchButton.click();
+//		x.start("button").addClass("btn btn-search");
+//		WebElement searchButton = null;
+//		try {
+//			searchButton = d.findElement(By.xpath(x.getXpath()));
+//		} catch (Exception e) {
+//			return false;
+//		}
+//		
+//		searchButton.click();
+		
+		
 		return true;
 	}
 }

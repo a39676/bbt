@@ -8,7 +8,7 @@ public interface SeleniumGlobalOptionService {
 	String getReportOutputFolder();
 	String getParameterSavingFolder();
 
-	String getChrome76Path();
+	String getChrome80Path();
 	String getChrome45Path();
 
 	String getGeckoPath();
@@ -20,5 +20,6 @@ public interface SeleniumGlobalOptionService {
 	boolean checkFolderExists(String path);
 
 	String getTmpDir();
+	String getOperaPath();
 
 }

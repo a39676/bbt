@@ -14,6 +14,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.opera.OperaDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -106,8 +107,8 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 	}
 
 	@Override
-	public WebDriver buildChrome76WebDriver(ChromeOptions options) {
-		String path = globalOptionService.getChrome76Path();
+	public WebDriver buildChromeWebDriver(ChromeOptions options) {
+		String path = globalOptionService.getChrome80Path();
 		String driverType = WebDriverConstant.chromeDriver;
 		System.setProperty(driverType, path);
 		WebDriver driver = null;
@@ -152,14 +153,17 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 		if (!"dev".equals(envName) || !isWindows()) {
 			options.addArguments(WebDriverConstant.headLess);
 		}
+		options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
+		options.setExperimentalOption("useAutomationExtension", false);
+		
 		capabilities.setCapability(ChromeOptions.CAPABILITY, options);
 		
 		return new ChromeDriver(capabilities);
 	}
 
 	@Override
-	public WebDriver buildChrome76WebDriver() {
-		return buildChrome76WebDriver(null);
+	public WebDriver buildChromeWebDriver() {
+		return buildChromeWebDriver(null);
 	}
 
 	@Override
@@ -202,4 +206,12 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 		return driver;
 	}
 
+	@Override
+	public WebDriver buildOperaWebDriver() {
+		String path = globalOptionService.getOperaPath();
+		String driverType = WebDriverConstant.operaDriver;
+		System.setProperty(driverType, path);
+		WebDriver driver = new OperaDriver();
+		return driver;
+	}
 }

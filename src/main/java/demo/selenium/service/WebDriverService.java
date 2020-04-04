@@ -15,14 +15,16 @@ public interface WebDriverService {
 
 	WebDriver buildEdgeWebDriver();
 
-	WebDriver buildChrome76WebDriver(ChromeOptions options);
+	WebDriver buildChromeWebDriver(ChromeOptions options);
 
-	WebDriver buildChrome76WebDriver();
+	WebDriver buildChromeWebDriver();
 
 	WebDriver buildIEWebDriver();
 
 	WebDriver buildChrome45WebDriver(ChromeOptions options);
 
 	WebDriver buildChrome45WebDriver();
+
+	WebDriver buildOperaWebDriver();
 
 }
