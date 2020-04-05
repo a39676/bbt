@@ -23,9 +23,9 @@ import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.badJoke.sms.service.BadJokeCasePrefixService;
 import demo.clawing.collecting.jandan.service.ClawCollectPrefixService;
-import demo.clawing.dailySign.service.DailySignPrefixService;
+import demo.clawing.dailySign.service.impl.DailySignPrefixServiceImpl;
 import demo.clawing.demo.service.SearchingDemoPrefixService;
-import demo.clawing.localClawing.service.LocalClawingPrefixService;
+import demo.clawing.localClawing.service.impl.LocalClawingPrefixServiceImpl;
 import demo.clawing.lottery.service.LotteryPrefixService;
 import demo.clawing.movie.service.MovieClawingCasePrefixService;
 import demo.tool.pojo.type.MailType;
@@ -46,13 +46,13 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	@Autowired
 	private SearchingDemoPrefixService searchingDemoService;
 	@Autowired
-	private DailySignPrefixService dailySignPrefixService;
+	private DailySignPrefixServiceImpl dailySignPrefixService;
 	@Autowired
 	private LotteryPrefixService lotteryPrefixService;
 	@Autowired
 	private ClawCollectPrefixService clawCollectPrefixService;
 	@Autowired
-	private LocalClawingPrefixService localClawingPrefixService;
+	private LocalClawingPrefixServiceImpl localClawingPrefixService;
 	
 	private String pauseWordRedisKey = "testEventPauseWord";
 	private String safeWord = "breakNow";

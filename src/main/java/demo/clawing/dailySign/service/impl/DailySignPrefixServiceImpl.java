@@ -4,16 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
+import demo.autoTestBase.testEvent.service.RunSubEventPrefixService;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.baseCommon.service.CommonService;
 import demo.clawing.dailySign.pojo.type.DailySignCaseType;
 import demo.clawing.dailySign.service.CdBaoDailySignService;
-import demo.clawing.dailySign.service.DailySignPrefixService;
 import demo.clawing.dailySign.service.LiePinDailySignService;
 import demo.clawing.dailySign.service.WuYiJobRefreshService;
 
 @Service
-public class DailySignPrefixServiceImpl extends CommonService implements DailySignPrefixService {
+public class DailySignPrefixServiceImpl extends CommonService implements RunSubEventPrefixService {
 
 	@Autowired
 	private WuYiJobRefreshService wuYiSign;
