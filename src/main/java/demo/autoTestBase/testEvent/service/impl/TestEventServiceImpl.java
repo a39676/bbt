@@ -21,13 +21,13 @@ import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.baseCommon.pojo.result.CommonResultBBT;
-import demo.clawing.badJoke.sms.service.BadJokeCasePrefixService;
-import demo.clawing.collecting.jandan.service.ClawCollectPrefixService;
+import demo.clawing.badJoke.sms.service.impl.BadJokeCasePrefixServiceImpl;
+import demo.clawing.collecting.jandan.service.impl.ClawCollectPrefixServiceImpl;
 import demo.clawing.dailySign.service.impl.DailySignPrefixServiceImpl;
-import demo.clawing.demo.service.SearchingDemoPrefixService;
+import demo.clawing.demo.service.impl.SearchingDemoPrefixServiceImpl;
 import demo.clawing.localClawing.service.impl.LocalClawingPrefixServiceImpl;
-import demo.clawing.lottery.service.LotteryPrefixService;
-import demo.clawing.movie.service.MovieClawingCasePrefixService;
+import demo.clawing.lottery.service.impl.LotteryPrefixServiceImpl;
+import demo.clawing.movie.service.impl.MovieClawingCasePrefixServiceImpl;
 import demo.tool.pojo.type.MailType;
 import demo.tool.service.MailService;
 
@@ -40,17 +40,17 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	private TestCaseService caseService;
 	
 	@Autowired
-	private MovieClawingCasePrefixService movieClawingCasePrefixService;
+	private MovieClawingCasePrefixServiceImpl movieClawingCasePrefixService;
 	@Autowired
-	private BadJokeCasePrefixService badJokeCasePrefixService;
+	private BadJokeCasePrefixServiceImpl badJokeCasePrefixService;
 	@Autowired
-	private SearchingDemoPrefixService searchingDemoService;
+	private SearchingDemoPrefixServiceImpl searchingDemoService;
 	@Autowired
 	private DailySignPrefixServiceImpl dailySignPrefixService;
 	@Autowired
-	private LotteryPrefixService lotteryPrefixService;
+	private LotteryPrefixServiceImpl lotteryPrefixService;
 	@Autowired
-	private ClawCollectPrefixService clawCollectPrefixService;
+	private ClawCollectPrefixServiceImpl clawCollectPrefixService;
 	@Autowired
 	private LocalClawingPrefixServiceImpl localClawingPrefixService;
 	

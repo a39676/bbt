@@ -4,13 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
+import demo.autoTestBase.testEvent.service.RunSubEventPrefixService;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.movie.pojo.type.MovieClawingCaseType;
 import demo.clawing.movie.service.DyttClawingService;
-import demo.clawing.movie.service.MovieClawingCasePrefixService;
 
 @Service
-public class MovieClawingCasePrefixServiceImpl implements MovieClawingCasePrefixService {
+public class MovieClawingCasePrefixServiceImpl implements RunSubEventPrefixService {
 
 //	@Autowired
 //	private HomeFeiClawingService homeFeiService;

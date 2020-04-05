@@ -4,13 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
+import demo.autoTestBase.testEvent.service.RunSubEventPrefixService;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.badJoke.sms.pojo.type.BadJokeCaseType;
-import demo.clawing.badJoke.sms.service.BadJokeCasePrefixService;
 import demo.clawing.badJoke.sms.service.BadJokeSMSService;
 
 @Service
-public class BadJokeCasePrefixServiceImpl implements BadJokeCasePrefixService {
+public class BadJokeCasePrefixServiceImpl implements RunSubEventPrefixService {
 
 	@Autowired
 	private BadJokeSMSService badJokeSMSService;
