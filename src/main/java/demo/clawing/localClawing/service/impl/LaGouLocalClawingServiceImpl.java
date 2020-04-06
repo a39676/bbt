@@ -279,7 +279,9 @@ public class LaGouLocalClawingServiceImpl extends JobLocalClawingCommonService i
 	private void clickSortByNew(WebDriver d) {
 		XpathBuilderBO x = new XpathBuilderBO();
 		
-		x.start("a").addAttribute("rel", "nofollow");
+		x.start("div").addClass("item order")
+		.findChild("a")
+		;
 		try {
 			List<WebElement> btnList = d.findElements(By.xpath(x.getXpath()));
 			
@@ -348,8 +350,12 @@ public class LaGouLocalClawingServiceImpl extends JobLocalClawingCommonService i
 			
 			for(WebElement ele : btnList) {
 				if(ele.isEnabled() && "下一页".equals(ele.getText())) {
-					ele.click();
-					return true;
+					if(ele.getAttribute("class").contains("pager_next_disabled")) {
+						return false;
+					} else {
+						ele.click();
+						return true;
+					}
 				}
 			}
 			return false;
@@ -382,6 +388,16 @@ public class LaGouLocalClawingServiceImpl extends JobLocalClawingCommonService i
 		for(String url : jobInfoUrlList) {
 			d.get(url);
 			threadSleepRandomTime();
+			
+			XpathBuilderBO x = new XpathBuilderBO();
+			
+			try {
+				x.start("a").addId("btn");
+				WebElement varifyButton = d.findElement(By.xpath(x.getXpath()));
+				varifyButton.click();
+				System.out.println("varifyButton displayed !");
+			} catch (Exception e) {
+			}
 		}
 	}
 }
