@@ -1,8 +1,9 @@
 package demo.clawing.localClawing.service.impl;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
@@ -110,39 +111,17 @@ public class LaGouLocalClawingServiceImpl extends JobLocalClawingCommonService i
 			
 			threadSleepRandomTime(3000L, 5000L);
 			
-			List<String> jobInfoUrlList = new ArrayList<String>();
+			Set<String> jobInfoUrlSet = new HashSet<String>();
+			Set<String> jobInfoUrlSubSet = new HashSet<String>();
+			List<String> keywordList = List.of("测试", "白盒测试", "测试开发", "自动化测试");
 			
-//			collectJobInfoUrlByKeyWord(d, jobInfoUrlList, "测试");
-//			viewJobInfoUrl(d, jobInfoUrlList);
-//			jobInfoUrlList.clear();
-			
-			try {
-				d.get(clawingEventBO.getMainUrl());
-			} catch (TimeoutException e) {
-				jsUtil.windowStop(d);
+			for(String keyword : keywordList) {
+				collectJobInfoUrlByKeyWord(d, jobInfoUrlSubSet, keyword, clawingEventBO.getMainUrl());
+				jobInfoUrlSet.addAll(jobInfoUrlSubSet);
+				jobInfoUrlSubSet.clear();
 			}
-			collectJobInfoUrlByKeyWord(d, jobInfoUrlList, "白盒测试");
-			viewJobInfoUrl(d, jobInfoUrlList);
-			jobInfoUrlList.clear();
 			
-			try {
-				d.get(clawingEventBO.getMainUrl());
-			} catch (TimeoutException e) {
-				jsUtil.windowStop(d);
-			}
-			collectJobInfoUrlByKeyWord(d, jobInfoUrlList, "测试开发");
-			viewJobInfoUrl(d, jobInfoUrlList);
-			jobInfoUrlList.clear();
-			
-			try {
-				d.get(clawingEventBO.getMainUrl());
-			} catch (TimeoutException e) {
-				jsUtil.windowStop(d);
-			}
-			collectJobInfoUrlByKeyWord(d, jobInfoUrlList, "自动化测试");
-			viewJobInfoUrl(d, jobInfoUrlList);
-			jobInfoUrlList.clear();
-			
+			viewJobInfoUrl(d, jobInfoUrlSet);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -214,7 +193,13 @@ public class LaGouLocalClawingServiceImpl extends JobLocalClawingCommonService i
 		
 	}
 
-	private boolean inputSearch(WebDriver d, String keyword) {
+	private boolean inputSearch(WebDriver d, String keyword, String mainUrl) {
+		try {
+			d.get(mainUrl);
+		} catch (TimeoutException e) {
+			jsUtil.windowStop(d);
+		}
+		
 		XpathBuilderBO x = new XpathBuilderBO();
 		
 		x.start("input").addType("text").addId("search_input").addClass("search_input ui-autocomplete-input");
@@ -310,7 +295,7 @@ public class LaGouLocalClawingServiceImpl extends JobLocalClawingCommonService i
 		}
 	}
 
-	private void jobInfoPageHandle(WebDriver d, List<String> jobInfoUrlList) {
+	private void jobInfoPageHandle(WebDriver d, Set<String> jobInfoUrlList) {
 		XpathBuilderBO x = new XpathBuilderBO();
 		
 		x.start("div").addId("s_position_list").findChild("ul").addClass("item_con_list");
@@ -322,7 +307,7 @@ public class LaGouLocalClawingServiceImpl extends JobLocalClawingCommonService i
 			
 			WebElement tmpLi = null;
 			WebElement jobInfoA = null;
-			for(int i = 0; i < liList.size() && jobInfoUrlList.size() < keyworkClickIn; i++) {
+			for(int i = 0; i < liList.size() && jobInfoUrlList.size() < keyworkClickMaxCount; i++) {
 				x.setXpath(mainListXpath)
 				.findChild("li", i + 1)
 				;
@@ -374,17 +359,17 @@ public class LaGouLocalClawingServiceImpl extends JobLocalClawingCommonService i
 		}
 	}
 
-	private boolean collectJobInfoUrlByKeyWord(WebDriver d, List<String> jobInfoUrlList, String keyword) throws InterruptedException {
-		boolean operatorFlag = inputSearch(d, keyword);
+	private boolean collectJobInfoUrlByKeyWord(WebDriver d, Set<String> jobInfoUrlList, String keyword, String mainUrl) throws InterruptedException {
+		boolean operatorFlag = inputSearch(d, keyword, mainUrl);
 		if(!operatorFlag) {
 			return operatorFlag;
 		}
 		
 		threadSleepRandomTime();
 		
-		while(jobInfoUrlList.size() < keyworkClickIn && operatorFlag) {
+		while(jobInfoUrlList.size() < keyworkClickMaxCount && operatorFlag) {
 			jobInfoPageHandle(d, jobInfoUrlList);
-			if(jobInfoUrlList.size() < keyworkClickIn) {
+			if(jobInfoUrlList.size() < keyworkClickMaxCount) {
 				operatorFlag = clickNextPage(d);
 			}
 		}
@@ -392,7 +377,7 @@ public class LaGouLocalClawingServiceImpl extends JobLocalClawingCommonService i
 		return operatorFlag;
 	}
 	
-	private void viewJobInfoUrl(WebDriver d, List<String> jobInfoUrlList) throws InterruptedException {
+	private void viewJobInfoUrl(WebDriver d, Set<String> jobInfoUrlList) throws InterruptedException {
 		for(String url : jobInfoUrlList) {
 			d.get(url);
 			threadSleepRandomTime();
