@@ -307,7 +307,7 @@ public class LaGouLocalClawingServiceImpl extends JobLocalClawingCommonService i
 			
 			WebElement tmpLi = null;
 			WebElement jobInfoA = null;
-			for(int i = 0; i < liList.size() && jobInfoUrlList.size() < keyworkClickMaxCount; i++) {
+			for(int i = 0; i < liList.size() && jobInfoUrlList.size() < keywordClickMaxCount; i++) {
 				x.setXpath(mainListXpath)
 				.findChild("li", i + 1)
 				;
@@ -367,9 +367,9 @@ public class LaGouLocalClawingServiceImpl extends JobLocalClawingCommonService i
 		
 		threadSleepRandomTime();
 		
-		while(jobInfoUrlList.size() < keyworkClickMaxCount && operatorFlag) {
+		while(jobInfoUrlList.size() < keywordClickMaxCount && operatorFlag) {
 			jobInfoPageHandle(d, jobInfoUrlList);
-			if(jobInfoUrlList.size() < keyworkClickMaxCount) {
+			if(jobInfoUrlList.size() < keywordClickMaxCount) {
 				operatorFlag = clickNextPage(d);
 			}
 		}
