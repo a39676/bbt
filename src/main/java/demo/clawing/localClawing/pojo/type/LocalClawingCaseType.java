@@ -5,6 +5,9 @@ public enum LocalClawingCaseType {
 	/** bossZhiPin */
 	bossZhiPin(1L, "bossZhiPin"),
 	
+	/** laGou */
+	laGou(2L, "laGou"),
+	
 	;
 
 	private Long id;

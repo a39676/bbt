@@ -14,6 +14,8 @@ public class LocalClawingPrefixServiceImpl extends CommonService implements RunS
 
 	@Autowired
 	private BossZhiPinLocalClawingServiceImpl bossZhiPinLocalClawingServiceImpl;
+	@Autowired
+	private LaGouLocalClawingServiceImpl laGouLocalClawingServiceImpl;
 	
 	@Override
 	public CommonResultBBT runSubEvent(TestEvent te) {
@@ -21,6 +23,8 @@ public class LocalClawingPrefixServiceImpl extends CommonService implements RunS
 		
 		if (LocalClawingCaseType.bossZhiPin.getId().equals(caseId)) {
 			return bossZhiPinLocalClawingServiceImpl.localClawing(te);
+		} else if(LocalClawingCaseType.laGou.getId().equals(caseId)) {
+			return laGouLocalClawingServiceImpl.localClawing(te);
 		}
 		return new CommonResultBBT();
 	}

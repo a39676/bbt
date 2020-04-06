@@ -20,11 +20,10 @@ import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.localClawing.pojo.type.LocalClawingCaseType;
 import demo.clawing.localClawing.service.BossZhiPinLocalClawingService;
 import demo.selenium.pojo.bo.BuildTestEventBO;
-import demo.selenium.service.impl.SeleniumCommonService;
 import image.pojo.result.UploadImageToCloudinaryResult;
 
 @Service
-public class BossZhiPinLocalClawingServiceImpl extends SeleniumCommonService implements BossZhiPinLocalClawingService {
+public class BossZhiPinLocalClawingServiceImpl extends JobLocalClawingCommonService implements BossZhiPinLocalClawingService {
 
 	private String eventName = "bossZhiPinLocalClawing";
 	
