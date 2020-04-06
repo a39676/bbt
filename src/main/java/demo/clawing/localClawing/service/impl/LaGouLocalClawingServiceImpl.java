@@ -316,7 +316,8 @@ public class LaGouLocalClawingServiceImpl extends JobLocalClawingCommonService i
 				if(inFilter(tmpLi.getAttribute("data-company"))) {
 					continue;
 				} else {
-					
+					System.out.println("add: " + tmpLi.getAttribute("data-company"));
+//					TODO  可以完善信息
 				}
 				
 				x.setXpath(mainListXpath).findChild("li", i + 1)

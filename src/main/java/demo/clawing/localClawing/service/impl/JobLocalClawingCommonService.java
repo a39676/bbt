@@ -9,7 +9,7 @@ public abstract class JobLocalClawingCommonService extends SeleniumCommonService
 	/* 不察看的公司名(contain?) */
 	protected static List<String> filterName = List.of(
 			"联想利泰", "腾讯", "网易", "阿里", "合众", "蜜源", "华为", "东方思维", "三盟",
-			"新大陆金融", "网商微贷", "贷", "游戏"
+			"新大陆金融", "网商微贷", "贷", "游戏", "各有所爱", "大圣科技"
 			);
 	
 	/* 每个关键词, 进入点击条数 */
