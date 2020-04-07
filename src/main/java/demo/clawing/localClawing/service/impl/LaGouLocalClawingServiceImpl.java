@@ -38,6 +38,8 @@ public class LaGouLocalClawingServiceImpl extends JobLocalClawingCommonService i
 	private TestModuleType testModuleType = TestModuleType.localClawing;
 	private LocalClawingCaseType testCastType = LocalClawingCaseType.laGou;
 	
+	private int varifyButtonCount = 0;
+	
 	private TestEvent buildLocalClawingEvent() {
 		String paramterFolderPath = getParameterSaveingPath(eventName);
 		File paramterFile = new File(paramterFolderPath + File.separator + userDataFileName);
@@ -122,6 +124,8 @@ public class LaGouLocalClawingServiceImpl extends JobLocalClawingCommonService i
 			}
 			
 			viewJobInfoUrl(d, jobInfoUrlSet);
+			
+			System.out.println("varifyButtonCount: " + varifyButtonCount);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -384,8 +388,9 @@ public class LaGouLocalClawingServiceImpl extends JobLocalClawingCommonService i
 		return operatorFlag;
 	}
 	
-	private void viewJobInfoUrl(WebDriver d, Set<String> jobInfoUrlList) throws InterruptedException {
-		for(String url : jobInfoUrlList) {
+	private void viewJobInfoUrl(WebDriver d, Set<String> jobInfoUrlSet) throws InterruptedException {
+		int count = 0;
+		for(String url : jobInfoUrlSet) {
 			d.get(url);
 			threadSleepRandomTime();
 			
@@ -395,9 +400,11 @@ public class LaGouLocalClawingServiceImpl extends JobLocalClawingCommonService i
 				x.start("a").addId("btn");
 				WebElement varifyButton = d.findElement(By.xpath(x.getXpath()));
 				varifyButton.click();
-				System.out.println("varifyButton displayed !");
+				varifyButtonCount++;
 			} catch (Exception e) {
 			}
+			count++;
+			System.out.println(count + " : " + jobInfoUrlSet.size());
 		}
 	}
 }
