@@ -23,6 +23,8 @@ public class DailySignTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 				if(ThreadLocalRandom.current().nextInt(1, 4) <= 1) {
 					wuyiService.insertDailySignEvent();
 				}
+			} else {
+				wuyiService.insertDailySignEvent();
 			}
 			;
 		}
