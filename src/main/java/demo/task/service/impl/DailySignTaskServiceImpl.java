@@ -19,14 +19,13 @@ public class DailySignTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 	public void insertWuYiSign() {
 		if(!"dev".equals(constantService.getValByName("envName"))) {
 			LocalDateTime now = LocalDateTime.now();
-			if(now.getHour() >= 22 || now.getHour() <= 8) {
+			if(now.getHour() >= 8 && now.getHour() <= 22) {
+				wuyiService.insertDailySignEvent();
+			} else {
 				if(ThreadLocalRandom.current().nextInt(1, 4) <= 1) {
 					wuyiService.insertDailySignEvent();
 				}
-			} else {
-				wuyiService.insertDailySignEvent();
 			}
-			;
 		}
 	}
 }
