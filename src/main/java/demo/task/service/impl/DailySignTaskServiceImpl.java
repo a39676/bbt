@@ -15,7 +15,8 @@ public class DailySignTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 	@Autowired
 	private WuYiJobRefreshService wuyiService;
 	
-	@Scheduled(fixedRate = 1000L * 60 * 5)
+//	@Scheduled(fixedRate = 1000L * 60 * 5)
+	@Scheduled(cron="0 */5 * * * ?")
 	public void insertWuYiSign() {
 		if(!"dev".equals(constantService.getValByName("envName"))) {
 			LocalDateTime now = LocalDateTime.now();
