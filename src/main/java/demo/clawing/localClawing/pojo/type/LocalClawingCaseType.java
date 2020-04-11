@@ -8,6 +8,9 @@ public enum LocalClawingCaseType {
 	/** laGou */
 	laGou(2L, "laGou"),
 	
+	/** maiMai */
+	maiMai(3L, "maiMai"),
+	
 	;
 
 	private Long id;

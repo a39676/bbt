@@ -3,7 +3,9 @@ package demo.selenium.service.impl;
 import java.io.File;
 import java.time.LocalDateTime;
 
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import at.report.pojo.dto.JsonReportDTO;
@@ -120,5 +122,10 @@ public abstract class SeleniumCommonService extends CommonService {
 	
 	protected void threadSleepRandomTime() throws InterruptedException {
 		threadSleepRandomTime(3000L, 3000L);
+	}
+	
+	protected void skipToPageEnd(WebDriver d) {
+		Actions action = new Actions(d);
+		action.sendKeys(Keys.END).build().perform();
 	}
 }

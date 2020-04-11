@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import demo.baseCommon.controller.CommonController;
 import demo.clawing.localClawing.service.BossZhiPinLocalClawingService;
 import demo.clawing.localClawing.service.LaGouLocalClawingService;
+import demo.clawing.localClawing.service.impl.MaiMaiLocalClawingServiceImpl;
 
 @Controller
 @RequestMapping(value = "/localClawing")
@@ -15,9 +16,10 @@ public class LocalClawingController extends CommonController {
 
 	@Autowired
 	private BossZhiPinLocalClawingService bossZhiPinLocalClawingService;
-	
 	@Autowired
 	private LaGouLocalClawingService laGouLocalClawingService;
+	@Autowired
+	private MaiMaiLocalClawingServiceImpl maiMaiLocalClawingServiceImpl;
 	
 	@GetMapping(value = "/insertBossZhiPinLocalClawing")
 	public void insertBossZhiPinLocalClawing() {
@@ -27,6 +29,11 @@ public class LocalClawingController extends CommonController {
 	@GetMapping(value = "/insertLaGouLocalClawing")
 	public void insertLaGouLocalClawing() {
 		laGouLocalClawingService.insertLocalClawingEvent();
+	}
+	
+	@GetMapping(value = "/insertMaiMaiLocalClawing")
+	public void insertMaiMaiLocalClawing() {
+		maiMaiLocalClawingServiceImpl.insertLocalClawingEvent();
 	}
 	
 }
