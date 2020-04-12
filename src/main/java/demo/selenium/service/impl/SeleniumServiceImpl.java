@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import at.screenshot.pojo.dto.TakeScreenshotSaveDTO;
 import at.screenshot.service.ScreenshotService;
-import at.tool.web.WebATToolService;
+import at.tool.WebATToolService;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventDemoBO;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.service.TestEventService;

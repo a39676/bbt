@@ -50,6 +50,7 @@ repositories {
 dependencies {
 	// tools
 	compile project(':toolPacksG')
+	compile project(':WebATTool')
 	compile project(':ATTool')
 	compile project(':auxiliaryCommon')
 

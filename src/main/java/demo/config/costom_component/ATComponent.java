@@ -8,7 +8,7 @@ import at.report.service.ATJsonReportService;
 import at.report.service.ATWordReportService;
 import at.screenshot.service.ScreenshotService;
 import at.tess.service.Tess;
-import at.tool.web.WebATToolService;
+import at.tool.WebATToolService;
 
 @Component
 public class ATComponent {
