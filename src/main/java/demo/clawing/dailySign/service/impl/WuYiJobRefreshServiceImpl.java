@@ -29,7 +29,7 @@ import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.dailySign.mapper.WuyiWatchMeMapper;
 import demo.clawing.dailySign.pojo.bo.DailySignAccountBO;
-import demo.clawing.dailySign.pojo.bo.WuYiJobDailySignAccountBO;
+import demo.clawing.dailySign.pojo.bo.WuYiJobClawingBO;
 import demo.clawing.dailySign.pojo.po.WuyiWatchMe;
 import demo.clawing.dailySign.pojo.po.WuyiWatchMeExample;
 import demo.clawing.dailySign.pojo.type.DailySignCaseType;
@@ -102,10 +102,6 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			runCount = Integer.parseInt(runCountStr);
 		}
 		
-		if(runCount % 4 == 0) {
-			runCount = 0;
-		}
-		
 		JsonReportDTO reportDTO = new JsonReportDTO();
 		WebDriver d = null;
 		
@@ -122,22 +118,26 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 				throw new Exception();
 			}
 			
-			WuYiJobDailySignAccountBO dailySignBO = null;
+			WuYiJobClawingBO clawingOptionBO = null;
 			try {
-				dailySignBO = new Gson().fromJson(jsonStr, WuYiJobDailySignAccountBO.class);
+				clawingOptionBO = new Gson().fromJson(jsonStr, WuYiJobClawingBO.class);
 			} catch (Exception e) {
 				jsonReporter.appendContent(reportDTO, "参数文件结构异常");
 				throw new Exception();
 			}
 			
-			if(dailySignBO == null) {
+			if(clawingOptionBO == null) {
 				jsonReporter.appendContent(reportDTO, "参数文件结构异常");
 				throw new Exception();
+			}
+			
+			if(runCount % clawingOptionBO.getRefreshStep() == 0) {
+				runCount = 0;
 			}
 
 			d = webDriverService.buildFireFoxWebDriver();
 			
-			if(!login(d, reportDTO, dailySignBO)) {
+			if(!login(d, reportDTO, clawingOptionBO)) {
 				r.failWithMessage("登录失败");
 				throw new Exception();
 			}
@@ -145,8 +145,9 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			jsonReporter.appendContent(reportDTO, "完成登录");
 			
 			catchWatchMe(d, reportDTO);
-			if(runCount == 0 && "1".equals(dailySignBO.getRefreshCV())) {
-				if(!updateDetail(d, reportDTO, dailySignBO)) {
+			
+			if(runCount == 0 && "1".equals(clawingOptionBO.getRefreshCV())) {
+				if(!updateDetail(d, reportDTO, clawingOptionBO)) {
 					jsonReporter.appendContent(reportDTO, "刷新简历失败");
 					r.failWithMessage("更新失败");
 					throw new Exception();
@@ -287,7 +288,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 		}
 	}
 
-	private boolean updateDetail(WebDriver d, JsonReportDTO reportDTO, WuYiJobDailySignAccountBO dailySignBO) {
+	private boolean updateDetail(WebDriver d, JsonReportDTO reportDTO, WuYiJobClawingBO dailySignBO) {
 		XpathBuilderBO x = new XpathBuilderBO();
 		
 		try {
@@ -525,4 +526,5 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 		v.addObject("voList", voList);
 		return v;
 	}
+	
 }

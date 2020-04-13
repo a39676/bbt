@@ -117,7 +117,11 @@ public class MaiMaiLocalClawingServiceImpl extends JobLocalClawingCommonService 
 				System.out.println("in page: " + i);
 				clickLikes(d);
 				skipToPageEnd(d);
-				threadSleepRandomTime(1000L, 1500L);
+				operatorFlag = pageLoadSuccess(d);
+				if(!operatorFlag) {
+					throw new Exception("page loading time out");
+				}
+				threadSleepRandomTime(1500L, 2500L);
 			}
 			
 		} catch (Exception e) {
@@ -245,11 +249,49 @@ public class MaiMaiLocalClawingServiceImpl extends JobLocalClawingCommonService 
 		}
 	}
 	
-//	TODO
+	private boolean pageIsLoading(WebDriver d) {
+		XpathBuilderBO x = new XpathBuilderBO();
+		
+//		加载中 则是此元素
+//		<span class="loader-text">加载中...</span>
+		
+		x.start("span").addClass("loader-text");
+		
+		try {
+			WebElement loadingSpan = d.findElement(By.xpath(x.getXpath()));
+			if(loadingSpan.isDisplayed() && jsUtil.isVisibleInViewport(d, loadingSpan)) {
+				return true;
+			}
+			
+//			发现页可能会出现加载失败 
+//			<div class="cursor-pointer" style="padding: 20px; text-align: center; font-size: 14px; color: rgb(22, 65, 185); height: 40px;">加载失败，点击重试</div>
+			
+			x.start("div").addClass("cursor-pointer");
+			List<WebElement> cursorPointerDivList = d.findElements(By.xpath(x.getXpath()));
+			for(WebElement ele : cursorPointerDivList) {
+				if("加载失败，点击重试".equals(ele.getText())) {
+					ele.click();
+					return true;
+				}
+			}
+			
+			return false;
+		} catch (Exception e) {
+			return false;
+		}
+	}
 	
-//	加载中 则是此元素
-//	<span class="loader-text">加载中...</span>
-	
-//	发现页可能会出现加载失败 
-//	<div class="cursor-pointer" style="padding: 20px; text-align: center; font-size: 14px; color: rgb(22, 65, 185); height: 40px;">加载失败，点击重试</div>
+	private boolean pageLoadSuccess(WebDriver d) throws InterruptedException {
+		boolean flag = !pageIsLoading(d);
+		if(flag) {
+			return flag;
+		}
+		
+		for(int i = 0; i < 30 && !flag; i++) {
+			flag = !pageIsLoading(d);
+			Thread.sleep(1000L);
+		}
+		
+		return flag;
+	}
 }

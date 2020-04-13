@@ -3,6 +3,7 @@ package demo.selenium.service.impl;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 
 import demo.baseCommon.service.CommonService;
@@ -44,6 +45,23 @@ public class JavaScriptServiceImpl extends CommonService implements JavaScriptSe
 		JavascriptExecutor jse = (JavascriptExecutor) driver;
 		jse.executeScript("window.scrollTo(0, document.body.scrollHeight)");
 	}
+
+	@Override
+	public boolean isVisibleInViewport(WebDriver driver, WebElement element) {
+		JavascriptExecutor jse = (JavascriptExecutor) driver;
+		return (Boolean) jse.executeScript(
+			"var elem = arguments[0],                 " +
+			"  box = elem.getBoundingClientRect(),    " +
+			"  cx = box.left + box.width / 2,         " +
+			"  cy = box.top + box.height / 2,         " +
+			"  e = document.elementFromPoint(cx, cy); " +
+			"for (; e; e = e.parentElement) {         " +
+			"  if (e === elem)                        " +
+			"    return true;                         " +
+			"}                                        " +
+			"return false;                            "
+			, element);
+	}
 	
 	@Override
 	public void windowStop(WebDriver driver) {
@@ -56,4 +74,5 @@ public class JavaScriptServiceImpl extends CommonService implements JavaScriptSe
 		JavascriptExecutor jse = (JavascriptExecutor) driver;
 		jse.executeScript(js);
 	}
+	
 }
