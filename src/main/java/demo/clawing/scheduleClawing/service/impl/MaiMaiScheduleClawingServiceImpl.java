@@ -2,6 +2,7 @@ package demo.clawing.scheduleClawing.service.impl;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
@@ -93,6 +94,7 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 			}
 			
 			d = webDriverService.buildFireFoxWebDriver();
+			String mainWindowHandle = d.getWindowHandle();
 			
 			try {
 				d.get(clawingEventBO.getMainUrl());
@@ -102,6 +104,7 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 			
 			boolean operatorFlag = tryLogin(d, reportDTO, clawingEventBO);
 			if(!operatorFlag) {
+				jsonReporter.appendContent(reportDTO, "登录异常");
 				throw new Exception("登录异常");
 			}
 			
@@ -109,23 +112,33 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 			
 			operatorFlag = changeToExploer(d);
 			if(!operatorFlag) {
+				jsonReporter.appendContent(reportDTO, "查找'发现'按钮异常");
 				throw new Exception("查找'发现'按钮异常");
 			}
 			
 			threadSleepRandomTime(3000L, 5000L);
 			
+			jsonReporter.appendContent(reportDTO, "准备点赞");
+			int clickLikeCount = 0;
 			for(int i = 1; i <= clawingEventBO.getPageCount(); i++) {
-				System.out.println("in page: " + i);
-				clickLikes(d);
+				clickLikes(d, clickLikeCount);
 				skipToPageEnd(d);
 				operatorFlag = pageLoadSuccess(d);
 				if(!operatorFlag) {
+					jsonReporter.appendContent(reportDTO, "page loading time out");
 					throw new Exception("page loading time out");
 				}
 				threadSleepRandomTime(1500L, 2500L);
 			}
+			jsonReporter.appendContent(reportDTO, "本次点赞: " + clickLikeCount);
 			
-			System.out.println("end");
+			// TODO 需要增加 Redis 参数, 判断今日是否已经添加满人
+			jsonReporter.appendContent(reportDTO, "准备添加目标好友");
+			tryAddFriend(d, mainWindowHandle);
+			
+			jsonReporter.appendContent(reportDTO, "添加完毕");
+			
+			// TODO 未出现每日申请数量上限提示   
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -147,7 +160,6 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 		
 		return r;
 	}
-	
 
 	private boolean tryLogin(WebDriver d, JsonReportDTO reportDTO, MaiMaiClawingBO clawingEventBO) throws InterruptedException {
 		XpathBuilderBO x = new XpathBuilderBO();
@@ -211,16 +223,17 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 		}
 	}
 	
-	private boolean clickLikes(WebDriver d) throws InterruptedException {
+	private boolean clickLikes(WebDriver d, int clickCount) throws InterruptedException {
 		XpathBuilderBO x = new XpathBuilderBO();
 		try {
 			x.start("span").addClass("sc-ckVGcZ edsJEQ sc-kpOJdX bnTSGe");
 			String notLikeYetIconXPath = x.getXpath();
 			
-			
+			/* 未点赞图标 */
 			List<WebElement> notLikeYetIcons = null;
 			
-			for(int i = 0; i < 10 && notLikeYetIcons == null; i++ ) {
+			int waitCounting = 10;
+			for(int i = 0; i < waitCounting && notLikeYetIcons == null; i++ ) {
 				try {
 					notLikeYetIcons = d.findElements(By.xpath(notLikeYetIconXPath));
 				} catch (Exception e) {
@@ -230,7 +243,6 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 			}
 			
 			if(notLikeYetIcons == null) {
-				System.out.println("find like icon error");
 				return false;
 			}
 			
@@ -238,10 +250,9 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 			for(WebElement icon : notLikeYetIcons) {
 				try {
 					icon.click();
-					System.out.println("click one");
+					clickCount++;
 					threadSleepRandomTime(100L, 300L);
 				} catch (Exception e) {
-					// TODO: handle exception
 				}
 			}
 			
@@ -296,5 +307,134 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 		}
 		
 		return flag;
+	}
+
+	private List<WebElement> collectMessageShareButtons(WebDriver d) {
+		XpathBuilderBO x = new XpathBuilderBO();
+		
+		try {
+			x.start("span").addClass("sc-ckVGcZ bXRhMN sc-kpOJdX bnTSGe")
+			;
+			
+			return d.findElements(By.xpath(x.getXpath()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	/**
+	 * 此处已经点击打开分享框, 无论是否目标消息
+	 * 后续逻辑需要注意关闭分享框
+	 * @param d
+	 * @param messageShareButton
+	 * @return
+	 */
+	private boolean isTargetMessage(WebDriver d, WebElement messageShareButton) {
+		XpathBuilderBO x = new XpathBuilderBO();
+		
+		messageShareButton.click();
+		
+		x.start("div").addId("popup_container")
+		.findChild("div").addClass("popup_container ")
+		.findChild("div")
+		.findChild("div")
+		.findChild("div").addClass("sc-chPdSV ebdeJq")
+		;
+		
+		WebElement memberInfoDiv = null;
+		try {
+			memberInfoDiv = d.findElement(By.xpath(x.getXpath()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		String memberInfo = memberInfoDiv.getText();
+		return (inTargetTitleList(memberInfo) && !inJobBlackList(memberInfo));
+	}
+	
+	/**
+	 * 此处必须为已经打开分享框的状态 否则页面代码判断异常
+	 * @param d
+	 * @param mainWindowHandle
+	 * @throws InterruptedException
+	 */
+	private void targetMessageAddFriend(WebDriver d, String mainWindowHandle) throws InterruptedException {
+		XpathBuilderBO x = new XpathBuilderBO();
+		
+		x.start("div").addId("popup_container")
+		.findChild("div").addClass("popup_container ")
+		.findChild("div")
+		.findChild("div")
+		.findChild("div").addClass("sc-chPdSV ebdeJq")
+		;
+		
+		WebElement memberInfoDiv = null;
+		try {
+			memberInfoDiv = d.findElement(By.xpath(x.getXpath()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
+		
+		memberInfoDiv.click();
+		
+		Set<String> windowHandles = d.getWindowHandles();
+		if(windowHandles.size() < 2) {
+			return;
+		}
+		for(String handle : windowHandles) {
+			if(!handle.equals(mainWindowHandle)) {
+				d.switchTo().window(handle);
+			}
+		}
+		
+		threadSleepRandomTime();
+		
+		x.start("div").addClass("btn btn-xsm btn-secondary btn-block");
+		List<WebElement> elementList = d.findElements(By.xpath(x.getXpath()));
+		WebElement addFriendButton = null;
+		String tmpTitle = null;
+		for(int i = 0; i < elementList.size() && addFriendButton == null; i++) {
+			tmpTitle = elementList.get(i).getText();
+			if(tmpTitle != null && tmpTitle.contains("加好友")) {
+				addFriendButton = elementList.get(i);
+			}
+		}
+		
+		if(addFriendButton == null) {
+			return;
+		} else {
+			addFriendButton.click();
+		}
+		
+	}
+
+	private void tryCloseMemberInfoDiv(WebDriver d) {
+		XpathBuilderBO x = new XpathBuilderBO();
+		x.start("img").addClass("cursor-pointer").addAttribute("src", "/static/images/closed.png");
+		try {
+			d.findElement(By.xpath(x.getXpath())).click();
+		} catch (Exception e) {
+		}
+	}
+
+	private void tryAddFriend(WebDriver d, String mainWindowHandle) throws Exception {
+		List<WebElement> messageShareButtonList = collectMessageShareButtons(d);
+		if(messageShareButtonList == null) {
+			throw new Exception("找不到任何分享按钮");
+		}
+		WebElement tmpShareButton = null;
+		for(int i = 0; i < messageShareButtonList.size(); i++) {
+			tmpShareButton = messageShareButtonList.get(i);
+			if(isTargetMessage(d, tmpShareButton)) {
+				targetMessageAddFriend(d, mainWindowHandle);
+				threadSleepRandomTime();
+				closeOtherWindow(d, mainWindowHandle);
+			}
+			threadSleepRandomTime();
+			tryCloseMemberInfoDiv(d);
+		}
 	}
 }

@@ -5,14 +5,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import demo.clawing.scheduleClawing.pojo.constant.DailySignUrl;
+import demo.clawing.scheduleClawing.pojo.constant.ScheduleClawingUrl;
 import demo.clawing.scheduleClawing.service.CdBaoDailySignService;
 import demo.clawing.scheduleClawing.service.LiePinDailySignService;
 import demo.clawing.scheduleClawing.service.WuYiJobRefreshService;
+import demo.clawing.scheduleClawing.service.impl.MaiMaiScheduleClawingServiceImpl;
 
 @Controller
-@RequestMapping(value = DailySignUrl.root)
-public class DailySignController {
+@RequestMapping(value = ScheduleClawingUrl.root)
+public class ScheduleClawingController {
 
 	@Autowired
 	private WuYiJobRefreshService wuyiService;
@@ -20,19 +21,26 @@ public class DailySignController {
 	private LiePinDailySignService leiPinService;
 	@Autowired
 	private CdBaoDailySignService cdBaoService;
+	@Autowired
+	private MaiMaiScheduleClawingServiceImpl maiMaiLocalClawingServiceImpl;
 	
-	@GetMapping(value = DailySignUrl.insertWuYiSign)
+	@GetMapping(value = ScheduleClawingUrl.insertWuYiSign)
 	public void insertWuYiSign() {
 		wuyiService.insertDailySignEvent();
 	}
 	
-	@GetMapping(value = DailySignUrl.insertLiePinSign)
+	@GetMapping(value = ScheduleClawingUrl.insertLiePinSign)
 	public void insertLiePinSign() {
 		leiPinService.insertDailySignEvent();
 	}
 	
-	@GetMapping(value = DailySignUrl.insertCDBaoSign)
+	@GetMapping(value = ScheduleClawingUrl.insertCDBaoSign)
 	public void insertCDBaoSign() {
 		cdBaoService.insertDailySignEvent();
+	}
+	
+	@GetMapping(value = ScheduleClawingUrl.insertMaiMai)
+	public void insertMaiMaiLocalClawing() {
+		maiMaiLocalClawingServiceImpl.insertLocalClawingEvent();
 	}
 }

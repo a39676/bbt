@@ -2,6 +2,7 @@ package demo.selenium.service.impl;
 
 import java.io.File;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -127,5 +128,29 @@ public abstract class SeleniumCommonService extends CommonService {
 	protected void skipToPageEnd(WebDriver d) {
 		Actions action = new Actions(d);
 		action.sendKeys(Keys.END).build().perform();
+	}
+	
+	protected void backToPageStart(WebDriver d) {
+		Actions action = new Actions(d);
+		action.sendKeys(Keys.HOME).build().perform();
+	}
+	
+	protected boolean closeOtherWindow(WebDriver d, String windowKeep) {
+		Set<String> windowHandles = d.getWindowHandles();
+		
+		if(windowKeep == null) {
+			windowKeep = d.getWindowHandle();
+		} else if (!windowHandles.contains(windowKeep)) {
+			return false;
+		}
+		
+		for(String tmpWindowHandle : windowHandles) {
+			if(!tmpWindowHandle.equals(windowKeep)) {
+				d.switchTo().window(tmpWindowHandle);
+				d.close();
+			}
+		}
+		d.switchTo().window(windowKeep);
+		return true;
 	}
 }

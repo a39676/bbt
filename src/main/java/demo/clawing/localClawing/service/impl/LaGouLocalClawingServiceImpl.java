@@ -320,7 +320,7 @@ public class LaGouLocalClawingServiceImpl extends JobClawingCommonService implem
 				;
 				tmpLi = d.findElement(By.xpath(x.getXpath()));
 				
-				if(inFilter(tmpLi.getAttribute("data-company"))) {
+				if(inJobBlackList(tmpLi.getAttribute("data-company"))) {
 					continue;
 				} else {
 					System.out.println("add: " + tmpLi.getAttribute("data-company"));
