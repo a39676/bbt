@@ -136,7 +136,7 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 			}
 			jsonReporter.appendContent(reportDTO, "本次点赞: " + clickLikeCount);
 			
-			if(isAddFriendReachLimitToday()) {
+			if(!isAddFriendReachLimitToday()) {
 				jsonReporter.appendContent(reportDTO, "准备添加目标好友");
 				tryAddFriend(d, mainWindowHandle);
 				jsonReporter.appendContent(reportDTO, "添加完毕");
@@ -436,7 +436,7 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 		WebElement tmpShareButton = null;
 		for(int i = 0; i < messageShareButtonList.size(); i++) {
 			tmpShareButton = messageShareButtonList.get(i);
-			if(isTargetMessage(d, tmpShareButton)) {
+			if(isTargetMessage(d, tmpShareButton) && !isAddFriendReachLimitToday()) {
 				targetMessageAddFriend(d, mainWindowHandle);
 				threadSleepRandomTime();
 				closeOtherWindow(d, mainWindowHandle);
