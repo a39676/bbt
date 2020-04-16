@@ -1,8 +1,11 @@
 package demo.clawing.scheduleClawing.service.impl;
 
 import java.io.File;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
@@ -23,6 +26,7 @@ import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.common.service.JobClawingCommonService;
 import demo.clawing.localClawing.pojo.bo.MaiMaiClawingBO;
+import demo.clawing.scheduleClawing.pojo.constant.MaiMaiScheduleClawingConstant;
 import demo.clawing.scheduleClawing.pojo.type.ScheduleClawingType;
 import demo.clawing.scheduleClawing.service.MaiMaiScheduleClawingService;
 import demo.selenium.pojo.bo.BuildTestEventBO;
@@ -119,7 +123,7 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 			threadSleepRandomTime(3000L, 5000L);
 			
 			jsonReporter.appendContent(reportDTO, "准备点赞");
-			int clickLikeCount = 0;
+			Integer clickLikeCount = 0;
 			for(int i = 1; i <= clawingEventBO.getPageCount(); i++) {
 				clickLikes(d, clickLikeCount);
 				skipToPageEnd(d);
@@ -132,13 +136,11 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 			}
 			jsonReporter.appendContent(reportDTO, "本次点赞: " + clickLikeCount);
 			
-			// TODO 需要增加 Redis 参数, 判断今日是否已经添加满人
-			jsonReporter.appendContent(reportDTO, "准备添加目标好友");
-			tryAddFriend(d, mainWindowHandle);
-			
-			jsonReporter.appendContent(reportDTO, "添加完毕");
-			
-			// TODO 未出现每日申请数量上限提示   
+			if(isAddFriendReachLimitToday()) {
+				jsonReporter.appendContent(reportDTO, "准备添加目标好友");
+				tryAddFriend(d, mainWindowHandle);
+				jsonReporter.appendContent(reportDTO, "添加完毕");
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -223,7 +225,7 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 		}
 	}
 	
-	private boolean clickLikes(WebDriver d, int clickCount) throws InterruptedException {
+	private boolean clickLikes(WebDriver d, Integer clickCount) throws InterruptedException {
 		XpathBuilderBO x = new XpathBuilderBO();
 		try {
 			x.start("span").addClass("sc-ckVGcZ edsJEQ sc-kpOJdX bnTSGe");
@@ -250,7 +252,7 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 			for(WebElement icon : notLikeYetIcons) {
 				try {
 					icon.click();
-					clickCount++;
+					clickCount = clickCount + 1;
 					threadSleepRandomTime(100L, 300L);
 				} catch (Exception e) {
 				}
@@ -407,7 +409,13 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 			return;
 		} else {
 			addFriendButton.click();
+			if(isAlterAddFriendReachLimit(d)) {
+				addFriendReachLimitRreshKey();
+				return;
+			}
 		}
+		
+		addMoreFriend(d);
 		
 	}
 
@@ -433,8 +441,74 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 				threadSleepRandomTime();
 				closeOtherWindow(d, mainWindowHandle);
 			}
-			threadSleepRandomTime();
+			threadSleepRandomTime(200L, 400L);
 			tryCloseMemberInfoDiv(d);
 		}
+	}
+
+	private void addMoreFriend(WebDriver d) throws InterruptedException {
+		XpathBuilderBO x = new XpathBuilderBO();
+		
+		x.start("div").addClass("Tappable-inactive add_friend_list_item");
+		String moreFriendListXpath = x.getXpath();
+		
+		x.start("div").addClass("sc-bwzfXH kZacyY sc-bdVaJa iXEeCK");
+		String addFriendButtonListXpath = x.getXpath();
+		
+		List<WebElement> moreFriendsList = null;
+		List<WebElement> addFriendButtonList = null;
+		try {
+			moreFriendsList = d.findElements(By.xpath(moreFriendListXpath));
+			addFriendButtonList = d.findElements(By.xpath(addFriendButtonListXpath));
+		} catch (Exception e) {
+			return;
+		}
+
+		WebElement tmpElement = null;
+		String tmpTitle = null;
+		for(int i = 0; i < moreFriendsList.size(); i++) {
+			tmpElement = moreFriendsList.get(i);
+			tmpTitle = tmpElement.getText();
+			if(inTargetTitleList(tmpTitle) && !inJobBlackList(tmpTitle)) {
+				addFriendButtonList.get(i).click();
+				threadSleepRandomTime();
+				if(isAlterAddFriendReachLimit(d)) {
+					addFriendReachLimitRreshKey();
+					return;
+				}
+			}
+		}
+		
+	}
+	
+	private boolean isAlterAddFriendReachLimit(WebDriver d) {
+		XpathBuilderBO x = new XpathBuilderBO();
+		x.start("div").addClass("layerChoose");
+		
+		try {
+			WebElement layer = d.findElement(By.xpath(x.getXpath()));
+			String text = layer.getText();
+			if(layer.isDisplayed() && (text != null && text.contains("基础名额已用完"))) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			return true;
+		}
+	}
+	
+	private boolean isAddFriendReachLimitToday() {
+		String v = constantService.getValByName(MaiMaiScheduleClawingConstant.addFriendsLimitFlagRedisKey);
+		if("true".equals(v)) {
+			return true;
+		}
+		return false;
+	}
+	
+	private void addFriendReachLimitRreshKey() {
+		LocalDateTime endOfToday = localDateTimeHandler.atEndOfDay(LocalDateTime.now());
+		Long secondGap = ChronoUnit.SECONDS.between(LocalDateTime.now(), endOfToday);
+		constantService.setValByName(MaiMaiScheduleClawingConstant.addFriendsLimitFlagRedisKey, "true", secondGap, TimeUnit.SECONDS);
 	}
 }
