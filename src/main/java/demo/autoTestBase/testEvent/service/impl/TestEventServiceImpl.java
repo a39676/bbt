@@ -23,11 +23,11 @@ import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.badJoke.sms.service.impl.BadJokeCasePrefixServiceImpl;
 import demo.clawing.collecting.jandan.service.impl.ClawCollectPrefixServiceImpl;
-import demo.clawing.dailySign.service.impl.DailySignPrefixServiceImpl;
 import demo.clawing.demo.service.impl.SearchingDemoPrefixServiceImpl;
 import demo.clawing.localClawing.service.impl.LocalClawingPrefixServiceImpl;
 import demo.clawing.lottery.service.impl.LotteryPrefixServiceImpl;
 import demo.clawing.movie.service.impl.MovieClawingCasePrefixServiceImpl;
+import demo.clawing.scheduleClawing.service.impl.ScheduleClawingPrefixServiceImpl;
 import demo.tool.pojo.type.MailType;
 import demo.tool.service.MailService;
 
@@ -46,7 +46,7 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	@Autowired
 	private SearchingDemoPrefixServiceImpl searchingDemoService;
 	@Autowired
-	private DailySignPrefixServiceImpl dailySignPrefixService;
+	private ScheduleClawingPrefixServiceImpl scheduleClawingPrefixService;
 	@Autowired
 	private LotteryPrefixServiceImpl lotteryPrefixService;
 	@Autowired
@@ -136,8 +136,8 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 			return badJokeCasePrefixService.runSubEvent(te);
 		} else if (TestModuleType.ATDemo.getId().equals(moduleId)) {
 			return searchingDemoService.runSubEvent(te);
-		} else if (TestModuleType.dailySign.getId().equals(moduleId)) {
-			return dailySignPrefixService.runSubEvent(te);
+		} else if (TestModuleType.scheduleClawing.getId().equals(moduleId)) {
+			return scheduleClawingPrefixService.runSubEvent(te);
 		} else if(TestModuleType.lottery.getId().equals(moduleId)) {
 			return lotteryPrefixService.runSubEvent(te);
 		} else if(TestModuleType.collecting.getId().equals(moduleId)) {

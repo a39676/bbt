@@ -23,6 +23,7 @@ import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.baseCommon.pojo.result.CommonResultBBT;
+import demo.clawing.common.service.JobClawingCommonService;
 import demo.clawing.localClawing.pojo.bo.LaGouClawingBO;
 import demo.clawing.localClawing.pojo.type.LocalClawingCaseType;
 import demo.clawing.localClawing.service.LaGouLocalClawingService;
@@ -30,7 +31,7 @@ import demo.selenium.pojo.bo.BuildTestEventBO;
 import image.pojo.result.UploadImageToCloudinaryResult;
 
 @Service
-public class LaGouLocalClawingServiceImpl extends JobLocalClawingCommonService implements LaGouLocalClawingService {
+public class LaGouLocalClawingServiceImpl extends JobClawingCommonService implements LaGouLocalClawingService {
 
 	private String eventName = "laGouLocalClawing";
 	private String userDataFileName = "laGouSign.json";
