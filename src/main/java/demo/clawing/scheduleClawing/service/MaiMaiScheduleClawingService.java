@@ -6,8 +6,8 @@ import demo.baseCommon.pojo.result.CommonResultBBT;
 
 public interface MaiMaiScheduleClawingService {
 
-	InsertTestEventResult insertLocalClawingEvent();
+	InsertTestEventResult insertClawingEvent();
 
-	CommonResultBBT localClawing(TestEvent te);
+	CommonResultBBT clawing(TestEvent te);
 
 }

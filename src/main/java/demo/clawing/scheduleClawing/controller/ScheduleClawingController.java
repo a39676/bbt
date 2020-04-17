@@ -41,6 +41,6 @@ public class ScheduleClawingController {
 	
 	@GetMapping(value = ScheduleClawingUrl.insertMaiMai)
 	public void insertMaiMaiLocalClawing() {
-		maiMaiLocalClawingServiceImpl.insertLocalClawingEvent();
+		maiMaiLocalClawingServiceImpl.insertClawingEvent();
 	}
 }

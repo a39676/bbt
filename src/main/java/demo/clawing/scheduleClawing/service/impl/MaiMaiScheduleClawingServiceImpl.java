@@ -42,7 +42,7 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 	private ScheduleClawingType testCastType = ScheduleClawingType.maiMai;
 	
 	
-	private TestEvent buildLocalClawingEvent() {
+	private TestEvent buildClawingEvent() {
 		String paramterFolderPath = getParameterSaveingPath(eventName);
 		File paramterFile = new File(paramterFolderPath + File.separator + userDataFileName);
 		if (!paramterFile.exists()) {
@@ -59,13 +59,13 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 	}
 	
 	@Override
-	public InsertTestEventResult insertLocalClawingEvent() {
-		TestEvent te = buildLocalClawingEvent();
+	public InsertTestEventResult insertClawingEvent() {
+		TestEvent te = buildClawingEvent();
 		return testEventService.insertTestEvent(te);
 	}
 
 	@Override
-	public CommonResultBBT localClawing(TestEvent te) {
+	public CommonResultBBT clawing(TestEvent te) {
 		CommonResultBBT r = new CommonResultBBT();
 		
 		JsonReportDTO reportDTO = new JsonReportDTO();
@@ -140,7 +140,11 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 				jsonReporter.appendContent(reportDTO, "准备添加目标好友");
 				tryAddFriend(d, mainWindowHandle);
 				jsonReporter.appendContent(reportDTO, "添加完毕");
+			} else {
+				jsonReporter.appendContent(reportDTO, "本日添加好友已达上限");
 			}
+			
+			r.setIsSuccess();
 			
 		} catch (Exception e) {
 			e.printStackTrace();

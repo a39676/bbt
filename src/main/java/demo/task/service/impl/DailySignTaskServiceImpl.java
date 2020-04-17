@@ -36,7 +36,7 @@ public class DailySignTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 	@Scheduled(cron="0 */60 * * * ?")
 	public void insertMaiMai() {
 		if(!"dev".equals(constantService.getValByName("envName"))) {
-			maiMaiLocalClawingServiceImpl.insertLocalClawingEvent();
+			maiMaiLocalClawingServiceImpl.insertClawingEvent();
 		}
 	}
 }

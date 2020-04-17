@@ -69,11 +69,4 @@ public class TestController2 extends CommonController {
 		}
 	}
 	
-//	@Autowired
-//	private TmpClawingService tmpClawingService;
-//	
-//	@GetMapping(value = "/tmpClawing")
-//	public void tmpClawing() {
-//		tmpClawingService.tmpClawing();
-//	}
 }

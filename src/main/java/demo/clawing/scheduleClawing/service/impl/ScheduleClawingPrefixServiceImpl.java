@@ -35,7 +35,7 @@ public class ScheduleClawingPrefixServiceImpl extends CommonService implements R
 		} else if (ScheduleClawingType.cdBao.getId().equals(caseId)) {
 			return cdBao.dailySign(te);
 		} else if(ScheduleClawingType.maiMai.getId().equals(caseId)) {
-			return maiMaiLocalClawingServiceImpl.localClawing(te);
+			return maiMaiLocalClawingServiceImpl.clawing(te);
 		}
 		return new CommonResultBBT();
 	}
