@@ -83,13 +83,13 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 	}
 
 	@Override
-	public InsertTestEventResult insertDailySignEvent() {
+	public InsertTestEventResult insertClawingEvent() {
 		TestEvent te = buildDailySignEvent();
 		return testEventService.insertTestEvent(te);
 	}
 
 	@Override
-	public CommonResultBBT dailySign(TestEvent te) {
+	public CommonResultBBT clawing(TestEvent te) {
 		CommonResultBBT r = new CommonResultBBT();
 		
 		String wuYiRunCountKey = "wuYiRunCountKey";

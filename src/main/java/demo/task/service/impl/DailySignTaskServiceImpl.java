@@ -24,16 +24,16 @@ public class DailySignTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 		if(!"dev".equals(constantService.getValByName("envName"))) {
 			LocalDateTime now = LocalDateTime.now();
 			if(now.getHour() >= 8 && now.getHour() <= 22) {
-				wuyiService.insertDailySignEvent();
+				wuyiService.insertClawingEvent();
 			} else {
 				if(ThreadLocalRandom.current().nextInt(1, 4) <= 1) {
-					wuyiService.insertDailySignEvent();
+					wuyiService.insertClawingEvent();
 				}
 			}
 		}
 	}
 	
-	@Scheduled(cron="0 */60 * * * ?")
+	@Scheduled(cron="0 */20 * * * ?")
 	public void insertMaiMai() {
 		if(!"dev".equals(constantService.getValByName("envName"))) {
 			maiMaiLocalClawingServiceImpl.insertClawingEvent();

@@ -8,9 +8,9 @@ import demo.baseCommon.pojo.result.CommonResultBBT;
 
 public interface WuYiJobRefreshService {
 
-	InsertTestEventResult insertDailySignEvent();
+	InsertTestEventResult insertClawingEvent();
 
-	CommonResultBBT dailySign(TestEvent te);
+	CommonResultBBT clawing(TestEvent te);
 
 	ModelAndView watchMeList();
 

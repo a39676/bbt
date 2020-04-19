@@ -29,7 +29,7 @@ public class ScheduleClawingPrefixServiceImpl extends CommonService implements R
 		Long caseId = te.getCaseId();
 		
 		if (ScheduleClawingType.wuYiJob.getId().equals(caseId)) {
-			return wuYiSign.dailySign(te);
+			return wuYiSign.clawing(te);
 		} else if (ScheduleClawingType.liePin.getId().equals(caseId)) {
 			return liePinSign.dailySign(te);
 		} else if (ScheduleClawingType.cdBao.getId().equals(caseId)) {

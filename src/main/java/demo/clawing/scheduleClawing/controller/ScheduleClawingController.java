@@ -26,7 +26,7 @@ public class ScheduleClawingController {
 	
 	@GetMapping(value = ScheduleClawingUrl.insertWuYiSign)
 	public void insertWuYiSign() {
-		wuyiService.insertDailySignEvent();
+		wuyiService.insertClawingEvent();
 	}
 	
 	@GetMapping(value = ScheduleClawingUrl.insertLiePinSign)
