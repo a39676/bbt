@@ -3,6 +3,7 @@ package demo.clawing.scheduleClawing.service.impl;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -26,6 +27,7 @@ import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.common.service.JobClawingCommonService;
 import demo.clawing.localClawing.pojo.bo.MaiMaiClawingBO;
+import demo.clawing.scheduleClawing.pojo.bo.MaiMaiRunningBO;
 import demo.clawing.scheduleClawing.pojo.constant.MaiMaiScheduleClawingConstant;
 import demo.clawing.scheduleClawing.pojo.type.ScheduleClawingType;
 import demo.clawing.scheduleClawing.service.MaiMaiScheduleClawingService;
@@ -123,9 +125,17 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 			threadSleepRandomTime(3000L, 5000L);
 			
 			jsonReporter.appendContent(reportDTO, "准备点赞");
-			Integer clickLikeCount = 0;
+			
+			MaiMaiRunningBO runningBO = new MaiMaiRunningBO();
+			
+			runningBO.setShareAndLikeSpanClass(findClassOfShareAndLikeSpan(d));
+			if(runningBO.getShareAndLikeSpanClass() == null) {
+				jsonReporter.appendContent(reportDTO, "查找'分享'按钮的 class 属性异常");
+				throw new Exception("查找'分享'按钮的 class 属性异常");
+			}
+			
 			for(int i = 1; i <= clawingEventBO.getPageCount(); i++) {
-				clickLikes(d, clickLikeCount);
+				clickLikes(d, runningBO);
 				skipToPageEnd(d);
 				operatorFlag = pageLoadSuccess(d);
 				if(!operatorFlag) {
@@ -134,11 +144,11 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 				}
 				threadSleepRandomTime(1500L, 2500L);
 			}
-			jsonReporter.appendContent(reportDTO, "本次点赞: " + clickLikeCount);
+			jsonReporter.appendContent(reportDTO, "本次点赞: " + runningBO.getClickLikeCount());
 			
 			if(!isAddFriendReachLimitToday()) {
 				jsonReporter.appendContent(reportDTO, "准备添加目标好友");
-				tryAddFriend(d, mainWindowHandle);
+				tryAddFriend(d, mainWindowHandle, runningBO);
 				jsonReporter.appendContent(reportDTO, "添加完毕");
 			} else {
 				jsonReporter.appendContent(reportDTO, "本日添加好友已达上限");
@@ -229,34 +239,54 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 		}
 	}
 	
-	private boolean clickLikes(WebDriver d, Integer clickCount) throws InterruptedException {
+	private boolean clickLikes(WebDriver d, MaiMaiRunningBO classStoreBO) throws InterruptedException {
 		XpathBuilderBO x = new XpathBuilderBO();
 		try {
-			x.start("span").addClass("sc-ckVGcZ edsJEQ sc-kpOJdX bnTSGe");
-			String notLikeYetIconXPath = x.getXpath();
-			
-			/* 未点赞图标 */
-			List<WebElement> notLikeYetIcons = null;
+			x.start("span").addClass(classStoreBO.getShareAndLikeSpanClass());
+			String toolBarElementXPath = x.getXpath();
+
+			/* 工具栏, 文字描述元素 */
+			List<WebElement> toolBarElementList = null;
+			/* 未点赞数, 文字元素 */
+			List<WebElement> notLikeYetIcons = new ArrayList<>();
 			
 			int waitCounting = 10;
-			for(int i = 0; i < waitCounting && notLikeYetIcons == null; i++ ) {
+			for(int i = 0; i < waitCounting && toolBarElementList == null; i++ ) {
 				try {
-					notLikeYetIcons = d.findElements(By.xpath(notLikeYetIconXPath));
+					toolBarElementList = d.findElements(By.xpath(toolBarElementXPath));
 				} catch (Exception e) {
 					skipToPageEnd(d);
 					threadSleepRandomTime(2000L, 3000L);
 				}
 			}
 			
-			if(notLikeYetIcons == null) {
+			if(toolBarElementList == null) {
 				return false;
 			}
 			
+			/*
+			 * 暂时工具栏固定只有3个元素, 第三个肯定是点赞按钮;
+			 * 如果未点赞, style="color: rgb(157, 166, 191);"
+			 * 如果已点赞, style="color: rgb(59, 122, 255);"
+			 * 故 用蓝色 255 判断是否已经点赞
+			 */
+			try {
+				String tmpStyle = null;
+				WebElement tmpEle = null;
+				for(int i = 0; (i + 3) < toolBarElementList.size(); i = i + 3) {
+					tmpEle = toolBarElementList.get(i + 2);
+					tmpStyle = tmpEle.getAttribute("style");
+					if(!tmpStyle.contains("255")) {
+						notLikeYetIcons.add(toolBarElementList.get(i + 2));
+					}
+				}
+			} catch (Exception e) {
+			}
 			
 			for(WebElement icon : notLikeYetIcons) {
 				try {
 					icon.click();
-					clickCount = clickCount + 1;
+					classStoreBO.setClickLikeCount(classStoreBO.getClickLikeCount() + 1);
 					threadSleepRandomTime(100L, 300L);
 				} catch (Exception e) {
 				}
@@ -315,18 +345,23 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 		return flag;
 	}
 
-	private List<WebElement> collectMessageShareButtons(WebDriver d) {
+	private List<WebElement> collectMessageShareButtons(WebDriver d, MaiMaiRunningBO bo) {
 		XpathBuilderBO x = new XpathBuilderBO();
+		List<WebElement> resultSpanList = new ArrayList<>();
 		
 		try {
-			x.start("span").addClass("sc-ckVGcZ bXRhMN sc-kpOJdX bnTSGe")
-			;
+			x.start("span").addClass(bo.getShareAndLikeSpanClass());
+			List<WebElement> sourctSpanList = d.findElements(By.xpath(x.getXpath()));
 			
-			return d.findElements(By.xpath(x.getXpath()));
+			for(WebElement ele : sourctSpanList) {
+				if(ele.getText().contains("分享")) {
+					resultSpanList.add(ele);
+				}
+			}
+			
 		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
 		}
+		return resultSpanList;
 	}
 	
 	/**
@@ -345,7 +380,8 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 		.findChild("div").addClass("popup_container ")
 		.findChild("div")
 		.findChild("div")
-		.findChild("div").addClass("sc-chPdSV ebdeJq")
+		.findChild("div").addAttributeStartWith("class", "sc-")
+		.findChild("div").addAttributeStartWith("class", "sc-")
 		;
 		
 		WebElement memberInfoDiv = null;
@@ -373,7 +409,9 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 		.findChild("div").addClass("popup_container ")
 		.findChild("div")
 		.findChild("div")
-		.findChild("div").addClass("sc-chPdSV ebdeJq")
+		.findChild("div").addAttributeStartWith("class", "sc-")
+		.findChild("div").addAttributeStartWith("class", "sc-")
+		.findParent()
 		;
 		
 		WebElement memberInfoDiv = null;
@@ -395,6 +433,18 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 				d.switchTo().window(handle);
 			}
 		}
+		
+		/* 2020-04-23 非广东 or 广州区域, 不考虑添加 */
+		x.start("span").addAttributeStartWith("class", "icon_address_gray");
+		try {
+			WebElement addressEle = d.findElement(By.xpath(x.getXpath()));
+			if(!addressEle.getText().contains("广东") && !addressEle.getText().contains("广州")) {
+				return;
+			}
+		} catch (Exception e) {
+			return;
+		}
+		
 		
 		threadSleepRandomTime();
 		
@@ -432,8 +482,8 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 		}
 	}
 
-	private void tryAddFriend(WebDriver d, String mainWindowHandle) throws Exception {
-		List<WebElement> messageShareButtonList = collectMessageShareButtons(d);
+	private void tryAddFriend(WebDriver d, String mainWindowHandle, MaiMaiRunningBO bo) throws Exception {
+		List<WebElement> messageShareButtonList = collectMessageShareButtons(d, bo);
 		if(messageShareButtonList == null) {
 			throw new Exception("找不到任何分享按钮");
 		}
@@ -514,5 +564,59 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 		LocalDateTime endOfToday = localDateTimeHandler.atEndOfDay(LocalDateTime.now());
 		Long secondGap = ChronoUnit.SECONDS.between(LocalDateTime.now(), endOfToday);
 		constantService.setValByName(MaiMaiScheduleClawingConstant.addFriendsLimitFlagRedisKey, "true", secondGap, TimeUnit.SECONDS);
+	}
+	
+	private String findClassOfShareAndLikeSpan(WebDriver d) {
+		String targetClass = null;
+		
+		XpathBuilderBO x = new XpathBuilderBO();
+		x.start("div").addId("pingback-item-1");
+		
+		WebElement messageDiv = null;
+		try {
+			messageDiv = d.findElement(By.xpath(x.getXpath()));
+		} catch (Exception e) {
+			return targetClass;
+		}
+		
+		if(messageDiv == null) {
+			x.start("div").addId("pingback-item-2");
+			try {
+				messageDiv = d.findElement(By.xpath(x.getXpath()));
+			} catch (Exception e) {
+				return targetClass;
+			}
+		}
+		
+		if(messageDiv == null) {
+			return targetClass;
+		}
+		
+		/**
+		 * 根据相对路径, 锁定一批 span, 应该是 
+		 * 分享 评论 点赞 的工具栏
+		 * 但 此层 包含三个图标span + ("分享" + 评论数 + 点赞数(字符span))
+		 * 而且 共用一个 class , 获取其中之一即可
+		 * */
+		x.findChild("div")
+		.findChild("div")
+		.findChild("div")
+		.findChild("span")
+		;
+		
+		List<WebElement> sourceSpanList = null;
+		try {
+			sourceSpanList = d.findElements(By.xpath(x.getXpath()));
+			
+			for(int i = 0;i < sourceSpanList.size() && targetClass == null; i++) {
+				if(StringUtils.isNotBlank(sourceSpanList.get(i).getAttribute("class"))) {
+					targetClass = sourceSpanList.get(i).getAttribute("class");
+				}
+			}
+		} catch (Exception e) {
+			return targetClass;
+		}
+		
+		return targetClass;
 	}
 }

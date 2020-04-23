@@ -16,7 +16,7 @@ public abstract class JobClawingCommonService extends SeleniumCommonService {
 			);
 	
 	protected static List<String> targetJobTitle = List.of(
-			"猎头", "人事", "HR", "HRBP", "招聘", "测试"
+			"猎头", "人事", "HR", "HRBP", "招聘", "测试", "人力资源"
 			);
 	
 	/* 每个关键词, 进入点击条数 */
