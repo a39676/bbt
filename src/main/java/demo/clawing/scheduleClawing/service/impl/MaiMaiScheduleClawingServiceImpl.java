@@ -463,6 +463,7 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 			return;
 		} else {
 			addFriendButton.click();
+			threadSleepRandomTime();
 			if(isAlterAddFriendReachLimit(d)) {
 				addFriendReachLimitRreshKey();
 				return;
