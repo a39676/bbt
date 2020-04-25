@@ -49,7 +49,7 @@ public class ImageInteractionServiceImpl extends CommonService implements ImageI
 			JSONObject j = JSONObject.fromObject(dto);
 			j.put("validTime", localDateTimeHandler.dateToStr(dto.getValidTime()));
 	        
-			String url = ServerHost.localHost10001 + ImageInteractionUrl.root + ImageInteractionUrl.imageSaving;
+			String url = ServerHost.localHost10001 + ImageInteractionUrl.root + ImageInteractionUrl.imageSavingFromBBT;
 			String response = String.valueOf(httpUtil.sendPostRestful(url, j.toString()));
 			JSONObject resultJ = JSONObject.fromObject(response);
 			
