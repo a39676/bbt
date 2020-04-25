@@ -5,8 +5,6 @@ public enum ImageType {
 	/** zoo */
 	zoo("zoo", 2),
 	/** meizi */
-	meizi("meizi", 9),
-	/** moviePoster */
 	moviePoster("moviePoster", 10),
 	;
 	
