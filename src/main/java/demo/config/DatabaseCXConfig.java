@@ -40,8 +40,7 @@ public class DatabaseCXConfig {
 //    }
 
 	@Bean(name = "cxSqlSessionFactory")
-	public SqlSessionFactoryBean cxSqlSessionFactory(@Qualifier("cxDataSource") DataSource dataSource)
-			throws Exception {
+	public SqlSessionFactoryBean cxSqlSessionFactory(@Qualifier("cxDataSource") DataSource dataSource) {
 		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
 
 		Properties mybatisProperties = new Properties();
@@ -60,7 +59,7 @@ public class DatabaseCXConfig {
 
 	@Bean(name = "cxSqlSessionTemplate")
 	public SqlSessionTemplate cxSqlSessionTemplate(
-			@Qualifier("cxSqlSessionFactory") SqlSessionFactory sqlSessionFactory) throws Exception {
+			@Qualifier("cxSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
 		return new SqlSessionTemplate(sqlSessionFactory);
 	}
 

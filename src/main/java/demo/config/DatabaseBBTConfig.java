@@ -55,7 +55,7 @@ public class DatabaseBBTConfig {
 	
 	@Bean(name="bbtSqlSessionFactory")
 	@Primary
-	public SqlSessionFactoryBean bbtSqlSessionFactory(@Qualifier("bbtDataSource") DataSource dataSource) throws Exception{
+	public SqlSessionFactoryBean bbtSqlSessionFactory(@Qualifier("bbtDataSource") DataSource dataSource) {
 		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
 		
 		Properties mybatisProperties = new Properties();
@@ -78,7 +78,7 @@ public class DatabaseBBTConfig {
 	
 	@Bean(name = "bbtSqlSessionTemplate")
     @Primary
-    public SqlSessionTemplate bbtSqlSessionTemplate(@Qualifier("bbtSqlSessionFactory") SqlSessionFactory sqlSessionFactory) throws Exception {
+    public SqlSessionTemplate bbtSqlSessionTemplate(@Qualifier("bbtSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
 
