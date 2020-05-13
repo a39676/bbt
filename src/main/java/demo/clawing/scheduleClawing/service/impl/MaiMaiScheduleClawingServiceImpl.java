@@ -422,6 +422,7 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 			return;
 		}
 		
+		/* 点击个人信息页 打开新窗口 */
 		memberInfoDiv.click();
 		
 		Set<String> windowHandles = d.getWindowHandles();
@@ -433,6 +434,13 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 				d.switchTo().window(handle);
 			}
 		}
+		
+		/* 点击个人信息页 新开窗口之后 需要等待新窗口加载 */
+		x.start("div").addContainsText("立刻打通职场人脉:");
+		if(!auxTool.loadingCheck(d, x.getXpath())) {
+			return;
+		}
+		
 		
 		/* 2020-04-23 非广东 or 广州区域, 不考虑添加 */
 		x.start("span").addAttributeStartWith("class", "icon_address_gray");

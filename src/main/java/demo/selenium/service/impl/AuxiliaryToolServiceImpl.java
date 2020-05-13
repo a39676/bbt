@@ -114,7 +114,31 @@ public class AuxiliaryToolServiceImpl extends CommonService {
 				.release()
 				.build();
 		dragAndDrop.perform();
-		
+	}
+	
+	public boolean loadingCheck(WebDriver d, String xpath) throws InterruptedException {
+		return loadingCheck(d, xpath, 1000L, 10);
+	}
+	
+	public boolean loadingCheck(WebDriver d, String xpath, long waitGap, int findCount) throws InterruptedException {
+		if(waitGap < 0) {
+			waitGap = 1000L;
+		}
+		if(findCount < 0) {
+			findCount = 10;
+		}
+		WebElement tmpElemet = null;
+		for(int i = 0; i < findCount && tmpElemet == null; i++) {
+			try {
+				tmpElemet = d.findElement(By.xpath(xpath));
+			} catch (Exception e) {
+			} 
+			if(tmpElemet != null) {
+				return true;
+			}
+			Thread.sleep(waitGap);
+		}
+		return false;
 	}
 	
 	public static void main(String[] args) throws IOException {
