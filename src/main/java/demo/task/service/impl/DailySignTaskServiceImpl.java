@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import demo.clawing.scheduleClawing.service.WuYiJobRefreshService;
+import demo.clawing.scheduleClawing.service.impl.MaiMaiScheduleClawingServiceImpl;
 
 @Component
 public class DailySignTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
@@ -30,18 +31,13 @@ public class DailySignTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 		}
 	}
 	
-	/*
-	 * 未知原因导致 脉脉 任务偶发性异常
-	 * 不能正常退出 WebDriver 导致 vps 瘫痪
-	 * 待修复
-	 */
-//	@Autowired
-//	private MaiMaiScheduleClawingServiceImpl maiMaiLocalClawingServiceImpl;
-//	
-//	@Scheduled(cron="0 */20 * * * ?")
-//	public void insertMaiMai() {
-//		if(!"dev".equals(constantService.getValByName("envName"))) {
-//			maiMaiLocalClawingServiceImpl.insertClawingEvent();
-//		}
-//	}
+	@Autowired
+	private MaiMaiScheduleClawingServiceImpl maiMaiLocalClawingServiceImpl;
+	
+	@Scheduled(cron="0 */21 * * * ?")
+	public void insertMaiMai() {
+		if(!"dev".equals(constantService.getValByName("envName"))) {
+			maiMaiLocalClawingServiceImpl.insertClawingEvent();
+		}
+	}
 }
