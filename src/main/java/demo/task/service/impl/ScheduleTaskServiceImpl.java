@@ -15,6 +15,9 @@ public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 	
 	@Autowired
 	private WuYiJobRefreshService wuyiService;
+	@Autowired
+	private MaiMaiScheduleClawingServiceImpl maiMaiLocalClawingServiceImpl;
+	
 	
 //	@Scheduled(fixedRate = 1000L * 60 * 5)
 	@Scheduled(cron="0 */5 * * * ?")
@@ -30,9 +33,6 @@ public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 			}
 		}
 	}
-	
-	@Autowired
-	private MaiMaiScheduleClawingServiceImpl maiMaiLocalClawingServiceImpl;
 	
 	@Scheduled(cron="0 */21 * * * ?")
 	public void insertMaiMai() {
