@@ -11,7 +11,7 @@ import demo.clawing.scheduleClawing.service.WuYiJobRefreshService;
 import demo.clawing.scheduleClawing.service.impl.MaiMaiScheduleClawingServiceImpl;
 
 @Component
-public class DailySignTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
+public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 	
 	@Autowired
 	private WuYiJobRefreshService wuyiService;

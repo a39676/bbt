@@ -21,6 +21,8 @@ public abstract class TestEventCommonService extends CommonService {
 	@Autowired
 	protected FileUtilCustom fileUtil;
 	
+	protected String runningEventRedisKey = "runningEvent";
+
 	protected String findTestEventReportFolder() {
 		String windowFolder = TestEventOptionConstant.windowFolder;
 		String linuxFolder = TestEventOptionConstant.linuxFolder;
@@ -59,10 +61,12 @@ public abstract class TestEventCommonService extends CommonService {
 	
 	protected int startEvent(TestEvent te) {
 		te.setStartTime(LocalDateTime.now());
+		constantService.setValByName(runningEventRedisKey, "true");
 		return eventMapper.updateByPrimaryKeySelective(te);
 	}
 	
 	protected int endEvent(TestEvent te, boolean successFlag) {
+		constantService.setValByName(runningEventRedisKey, "false");
 		return endEvent(te, successFlag, null);
 	}
 	
@@ -85,9 +89,10 @@ public abstract class TestEventCommonService extends CommonService {
 	}
 	
 	protected boolean existsRuningEvent() {
-		if(eventMapper.existsRuningEvent() == 0) {
+		String runningEventStatus = constantService.getValByName(runningEventRedisKey);
+		if("false".equals(runningEventStatus)) {
 			return false;
-		} 
+		}
 		return true;
 	}
 

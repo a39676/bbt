@@ -92,7 +92,7 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 				return;
 			}
 		} else {
-			if(eventMapper.existsRuningEvent() > 0) {
+			if(existsRuningEvent()) {
 				return;
 			}
 		}
