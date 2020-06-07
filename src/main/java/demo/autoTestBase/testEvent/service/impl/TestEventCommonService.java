@@ -66,7 +66,6 @@ public abstract class TestEventCommonService extends CommonService {
 	}
 	
 	protected int endEvent(TestEvent te, boolean successFlag) {
-		constantService.setValByName(runningEventRedisKey, "false");
 		return endEvent(te, successFlag, null);
 	}
 	
@@ -80,7 +79,7 @@ public abstract class TestEventCommonService extends CommonService {
 				saveTestEventReport(te, folerPath, report);
 			}
 		}
-		
+		constantService.setValByName(runningEventRedisKey, "false");
 		return eventMapper.updateByPrimaryKeySelective(te);
 	}
 	
