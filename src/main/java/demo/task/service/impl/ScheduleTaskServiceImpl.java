@@ -8,15 +8,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import demo.clawing.scheduleClawing.service.WuYiJobRefreshService;
-import demo.clawing.scheduleClawing.service.impl.MaiMaiScheduleClawingServiceImpl;
 
 @Component
 public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 	
 	@Autowired
 	private WuYiJobRefreshService wuyiService;
-	@Autowired
-	private MaiMaiScheduleClawingServiceImpl maiMaiLocalClawingServiceImpl;
 	
 	
 //	@Scheduled(fixedRate = 1000L * 60 * 5)
@@ -34,10 +31,12 @@ public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 		}
 	}
 	
-	@Scheduled(cron="0 */21 * * * ?")
-	public void insertMaiMai() {
-		if(!"dev".equals(constantService.getValByName("envName"))) {
-			maiMaiLocalClawingServiceImpl.insertClawingEvent();
-		}
-	}
+//	@Autowired
+//	private MaiMaiScheduleClawingServiceImpl maiMaiLocalClawingServiceImpl;
+//	@Scheduled(cron="0 */21 * * * ?")
+//	public void insertMaiMai() {
+//		if(!"dev".equals(constantService.getValByName("envName"))) {
+//			maiMaiLocalClawingServiceImpl.insertClawingEvent();
+//		}
+//	}
 }
