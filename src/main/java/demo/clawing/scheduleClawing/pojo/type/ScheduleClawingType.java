@@ -17,6 +17,12 @@ public enum ScheduleClawingType {
 	/** maiMai */
 	maiMai(6L, "maiMai"),
 	
+	/** 
+	 * https://goldprice.org/gold-price-data.html
+	 * Precious metals price clawing 
+	 * */
+	preciousMetalPrice(7L, "preciousMetalPrice"),
+	
 	;
 
 	private Long id;

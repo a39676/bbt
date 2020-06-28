@@ -50,9 +50,9 @@
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="article_long">
-        	<property name="tableName" value="article_long"></property>
-        	<property name="domainObjectName" value="article_long" ></property>
+        <table tableName="metal_price">
+        	<property name="tableName" value="metal_price"></property>
+        	<property name="domainObjectName" value="metal_price" ></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>
