@@ -1,12 +1,17 @@
 package demo.clawing.scheduleClawing.service.impl;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import at.report.pojo.dto.JsonReportDTO;
@@ -16,18 +21,23 @@ import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.baseCommon.pojo.result.CommonResultBBT;
-import demo.clawing.scheduleClawing.pojo.result.CatchMetalPriceResult;
 import demo.clawing.scheduleClawing.pojo.type.ScheduleClawingType;
 import demo.clawing.scheduleClawing.service.PreciousMetalsPriceService;
+import demo.interaction.preicous_metal.service.PreciousMetalTransService;
 import demo.selenium.pojo.bo.BuildTestEventBO;
 import demo.selenium.service.impl.SeleniumCommonService;
-import metal.pojo.dto.PreciousMetailPriceDTO;
-import metal.pojo.type.MetalType;
+import precious_metal.pojo.dto.PreciousMetailPriceDTO;
+import precious_metal.pojo.dto.TransPreciousMetalPriceDTO;
+import precious_metal.pojo.result.CatchMetalPriceResult;
+import precious_metal.pojo.type.MetalType;
 import tool.pojo.type.UtilOfWeightType;
 
 @Service
 public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implements PreciousMetalsPriceService{
 
+	@Autowired
+	private PreciousMetalTransService preciousMetalTransService;
+	
 	private String clawingEventName = "preciousMetalPriceClawing";
 	
 	private TestModuleType testModuleType = TestModuleType.scheduleClawing;
@@ -51,7 +61,6 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 
 	@Override
 	public CommonResultBBT clawing(TestEvent te) {
-//		TODO
 		CommonResultBBT r = new CommonResultBBT();
 		
 		JsonReportDTO reportDTO = new JsonReportDTO();
@@ -71,26 +80,20 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 			
 			d = webDriverService.buildFireFoxWebDriver();
 			
-			/*
-			 * TODO
-			 * 未 catch 加载超时
-			 * 未 检验页面加载完成
-			 * 
-			 */
-			d.get(mainUrl);
+			try {
+				d.get(mainUrl);
+				jsonReporter.appendContent(reportDTO, "进入 main url");
+			} catch (TimeoutException e) {
+				jsUtil.windowStop(d);
+				jsonReporter.appendContent(reportDTO, "进入 main url but timeout");
+			}
 			
 			threadSleepRandomTime(1000L, 3000L);
 			
 			CatchMetalPriceResult goldPriceResult = catchGoldPrice(d, reportDTO);
 			CatchMetalPriceResult silverPriceResult = catchSilverPrice(d, reportDTO);
 			
-			/*
-			 * TODO
-			 * 如何传递至 cx 服务
-			 */
-			
-			sendPreciousMetalPrice(goldPriceResult);
-			sendPreciousMetalPrice(silverPriceResult);
+			sendPreciousMetalPrice(Arrays.asList(goldPriceResult, silverPriceResult));
 			
 			r.setIsSuccess();
 			
@@ -247,10 +250,18 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 		}
 	}
 
-	private void sendPreciousMetalPrice(CatchMetalPriceResult result) {
-		/*
-		 * TODO
-		 * 多个同时发送?逐个?
-		 */
+	private void sendPreciousMetalPrice(List<CatchMetalPriceResult> resultList) {
+		List<PreciousMetailPriceDTO> priceList = new ArrayList<>();
+		for(CatchMetalPriceResult result : resultList) {
+			if(result.isSuccess()) {
+				priceList.add(result.getPriceDTO());
+			}
+		}
+		if(priceList.isEmpty()) {
+			return;
+		}
+		TransPreciousMetalPriceDTO dto = new TransPreciousMetalPriceDTO();
+		dto.setPriceList(priceList);
+		preciousMetalTransService.transPreciousMetalPriceToCX(dto);
 	}
 }
