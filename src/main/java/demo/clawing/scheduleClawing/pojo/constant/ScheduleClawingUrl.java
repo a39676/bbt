@@ -12,4 +12,6 @@ public class ScheduleClawingUrl {
 	
 	public static final String insertMaiMai = "/insertMaiMai";
 	
+	public static final String insertPreciousMetal = "/insertPreciousMetal";
+	
 }

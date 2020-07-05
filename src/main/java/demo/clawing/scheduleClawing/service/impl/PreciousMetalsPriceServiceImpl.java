@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -71,12 +70,6 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 		reportDTO.setOutputReportPath(reportOutputFolderPath + File.separator + te.getId());
 		
 		try {
-			
-			String jsonStr = ioUtil.getStringFromFile(te.getParameterFilePath());
-			if(StringUtils.isBlank(jsonStr)) {
-				jsonReporter.appendContent(reportDTO, "参数文件读取异常");
-				throw new Exception();
-			}
 			
 			d = webDriverService.buildFireFoxWebDriver();
 			
@@ -160,7 +153,7 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 				WebElement goldPriceSpan = d.findElement(By.xpath(x.getXpath()));
 				
 				String priceStr = goldPriceSpan.getText();
-				Double price = Double.parseDouble(priceStr);
+				Double price = Double.parseDouble(priceStr.replaceAll("[^\\d\\+\\-\\.]", ""));
 				
 				priceDTO.setPrice(price);
 				priceDTO.setWeightUtilType(UtilOfWeightType.kiloGram.getCode());
@@ -228,7 +221,7 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 				WebElement goldPriceSpan = d.findElement(By.xpath(x.getXpath()));
 				
 				String priceStr = goldPriceSpan.getText();
-				Double price = Double.parseDouble(priceStr);
+				Double price = Double.parseDouble(priceStr.replaceAll("[^\\d\\+\\-\\.]", ""));
 				
 				priceDTO.setPrice(price);
 				priceDTO.setWeightUtilType(UtilOfWeightType.kiloGram.getCode());

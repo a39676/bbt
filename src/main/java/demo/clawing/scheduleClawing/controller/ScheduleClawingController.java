@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import demo.clawing.scheduleClawing.pojo.constant.ScheduleClawingUrl;
 import demo.clawing.scheduleClawing.service.CdBaoDailySignService;
 import demo.clawing.scheduleClawing.service.LiePinDailySignService;
+import demo.clawing.scheduleClawing.service.PreciousMetalsPriceService;
 import demo.clawing.scheduleClawing.service.WuYiJobRefreshService;
 import demo.clawing.scheduleClawing.service.impl.MaiMaiScheduleClawingServiceImpl;
 
@@ -23,6 +24,8 @@ public class ScheduleClawingController {
 	private CdBaoDailySignService cdBaoService;
 	@Autowired
 	private MaiMaiScheduleClawingServiceImpl maiMaiLocalClawingServiceImpl;
+	@Autowired
+	private PreciousMetalsPriceService preciousMetalsPriceService;
 	
 	@GetMapping(value = ScheduleClawingUrl.insertWuYiSign)
 	public void insertWuYiSign() {
@@ -42,5 +45,10 @@ public class ScheduleClawingController {
 	@GetMapping(value = ScheduleClawingUrl.insertMaiMai)
 	public void insertMaiMaiLocalClawing() {
 		maiMaiLocalClawingServiceImpl.insertClawingEvent();
+	}
+	
+	@GetMapping(value = ScheduleClawingUrl.insertPreciousMetal)
+	public void insertPreciousMetal() {
+		preciousMetalsPriceService.insertClawingEvent();
 	}
 }

@@ -10,6 +10,7 @@ import demo.baseCommon.service.CommonService;
 import demo.clawing.scheduleClawing.pojo.type.ScheduleClawingType;
 import demo.clawing.scheduleClawing.service.CdBaoDailySignService;
 import demo.clawing.scheduleClawing.service.LiePinDailySignService;
+import demo.clawing.scheduleClawing.service.PreciousMetalsPriceService;
 import demo.clawing.scheduleClawing.service.WuYiJobRefreshService;
 
 @Service
@@ -23,6 +24,8 @@ public class ScheduleClawingPrefixServiceImpl extends CommonService implements R
 	private CdBaoDailySignService cdBao;
 	@Autowired
 	private MaiMaiScheduleClawingServiceImpl maiMaiLocalClawingServiceImpl;
+	@Autowired
+	private PreciousMetalsPriceService preciousMetalsPriceService;
 	
 	@Override
 	public CommonResultBBT runSubEvent(TestEvent te) {
@@ -36,6 +39,8 @@ public class ScheduleClawingPrefixServiceImpl extends CommonService implements R
 			return cdBao.dailySign(te);
 		} else if(ScheduleClawingType.maiMai.getId().equals(caseId)) {
 			return maiMaiLocalClawingServiceImpl.clawing(te);
+		} else if(ScheduleClawingType.preciousMetalPrice.getId().equals(caseId)) {
+			return preciousMetalsPriceService.clawing(te);
 		}
 		return new CommonResultBBT();
 	}
