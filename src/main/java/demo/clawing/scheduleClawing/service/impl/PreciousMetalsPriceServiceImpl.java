@@ -217,7 +217,7 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 			}
 			
 			try {
-				x.start("span").addId("gpxtickerLeft_price");
+				x.start("span").addId("gpxtickerMiddle_price");
 				WebElement goldPriceSpan = d.findElement(By.xpath(x.getXpath()));
 				
 				String priceStr = goldPriceSpan.getText();
