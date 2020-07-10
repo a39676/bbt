@@ -1,8 +1,4 @@
-﻿maimai 定时任务bug
-	WebDriver 退出异常, 经常导致服务器 cpu 使用暴增 & 崩溃; 原因未明;
-	严重怀疑服务器内存不足导致崩溃	
-
-﻿因 localClawing 类项目
+﻿﻿因 localClawing 类项目
 考虑部分任务, 执行后应该处于等待状态
 	间隔轮询 redis 等待参数, 进行下一步或彻底退出
 

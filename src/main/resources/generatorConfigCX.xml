@@ -6,7 +6,11 @@
 <generatorConfiguration>    
 	<!-- 数据库驱动-->    
     <classPathEntry  location="D:/jar/sql/mysql-connector-java-8.0.17.jar"/>    
-    <context id="DB2Tables"  targetRuntime="MyBatis3">    
+    <context id="DB2Tables"  targetRuntime="MyBatis3">
+
+		<!-- limit 用 -->
+		<plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"></plugin>
+		
         <commentGenerator>    
             <property name="suppressDate" value="true"/>    
             <!-- 是否去除自动生成的注释 true：是 ： false:否 -->

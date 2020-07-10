@@ -40,7 +40,7 @@ public class ScheduleClawingPrefixServiceImpl extends CommonService implements R
 		} else if(ScheduleClawingType.maiMai.getId().equals(caseId)) {
 			return maiMaiLocalClawingServiceImpl.clawing(te);
 		} else if(ScheduleClawingType.preciousMetalPrice.getId().equals(caseId)) {
-			return preciousMetalsPriceService.clawing(te);
+			return preciousMetalsPriceService.goldPriceOrgAPI(te);
 		}
 		return new CommonResultBBT();
 	}

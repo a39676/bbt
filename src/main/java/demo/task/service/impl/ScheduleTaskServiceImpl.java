@@ -34,14 +34,14 @@ public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 		}
 	}
 
-	@Scheduled(cron = "0 */30 * * * ?")
+	@Scheduled(cron = "*/30 * * * * ?")
 	public void insertMetalsPriceClaw() {
 		if (!"dev".equals(constantService.getValByName("envName"))
 				&& isPreciousMetalsTransTime()) {
 			preciousMetalsPriceService.insertClawingEvent();
 		}
 	}
-
+	
 	private boolean isPreciousMetalsTransTime() {
 		LocalDateTime beiJingNow = LocalDateTime.now();
 		LocalDateTime washtonNow = beiJingNow.minusHours(12);

@@ -11,7 +11,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.baseCommon.service.CommonService;
 import demo.interaction.preicous_metal.service.PreciousMetalTransService;
 import net.sf.json.JSONObject;
-import precious_metal.pojo.constant.PreciousMetalPriceUrl;
+import precious_metal.pojo.constant.PreciousMetalPriceCommonUrl;
 import precious_metal.pojo.dto.TransPreciousMetalPriceDTO;
 import toolPack.httpHandel.HttpUtil;
 
@@ -27,7 +27,7 @@ public class PreicousMetalTransServiceImpl extends CommonService implements Prec
 		try {
 			JSONObject j = JSONObject.fromObject(dto);
 	        
-			String url = ServerHost.localHost10001 + PreciousMetalPriceUrl.root + PreciousMetalPriceUrl.transPreciousMetalPrice;
+			String url = ServerHost.localHost10001 + PreciousMetalPriceCommonUrl.root + PreciousMetalPriceCommonUrl.transPreciousMetalPrice;
 			String response = String.valueOf(httpUtil.sendPostRestful(url, j.toString()));
 			JSONObject resultJ = JSONObject.fromObject(response);
 			

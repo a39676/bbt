@@ -8,6 +8,15 @@ public interface PreciousMetalsPriceService {
 
 	InsertTestEventResult insertClawingEvent();
 
+	/**
+	 * 2020-07-10
+	 * 改用 goldPriceOrgAPI 查询
+	 * 暂时保留页面查询功能代码
+	 * @param te
+	 * @return
+	 */
 	CommonResultBBT clawing(TestEvent te);
+
+	CommonResultBBT goldPriceOrgAPI(TestEvent te);
 
 }
