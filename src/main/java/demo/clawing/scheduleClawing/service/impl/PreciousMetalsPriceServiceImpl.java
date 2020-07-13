@@ -118,6 +118,8 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 				sendPreciousMetalPriceByDTO(Arrays.asList(goldPriceDTO, silverPriceDTO));
 			}
 			
+			r.setIsSuccess();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			jsonReporter.appendContent(reportDTO, "异常: " + e);
