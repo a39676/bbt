@@ -41,14 +41,14 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 	@Autowired
 	private PreciousMetalTransService preciousMetalTransService;
 
-	private String clawingEventName = "preciousMetalPriceClawing";
+	private String testEventName = "preciousMetalPriceClawing";
 
 	private TestModuleType testModuleType = TestModuleType.scheduleClawing;
 	private ScheduleClawingType testCastType = ScheduleClawingType.preciousMetalPrice;
 
-	private String mainUrl = "https://goldprice.org/gold-price-data.html";
+	private String apiUrl = "https://goldprice.org/gold-price-data.html";
 
-	private TestEvent buildDailySignEvent() {
+	private TestEvent buildTestEvent() {
 		BuildTestEventBO bo = new BuildTestEventBO();
 		bo.setTestModuleType(testModuleType);
 		bo.setCaseId(testCastType.getId());
@@ -58,7 +58,7 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 
 	@Override
 	public InsertTestEventResult insertClawingEvent() {
-		TestEvent te = buildDailySignEvent();
+		TestEvent te = buildTestEvent();
 		return testEventService.insertTestEvent(te);
 	}
 
@@ -68,7 +68,7 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 		LocalDateTime now = LocalDateTime.now();
 		CommonResultBBT r = new CommonResultBBT();
 		JsonReportDTO reportDTO = new JsonReportDTO();
-		String reportOutputFolderPath = getReportOutputPath(clawingEventName);
+		String reportOutputFolderPath = getReportOutputPath(testEventName);
 		reportDTO.setOutputReportPath(reportOutputFolderPath + File.separator + te.getId());
 
 		/*
@@ -141,7 +141,7 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 		JsonReportDTO reportDTO = new JsonReportDTO();
 		WebDriver d = null;
 
-		String reportOutputFolderPath = getReportOutputPath(clawingEventName);
+		String reportOutputFolderPath = getReportOutputPath(testEventName);
 
 		reportDTO.setOutputReportPath(reportOutputFolderPath + File.separator + te.getId());
 
@@ -150,7 +150,7 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 			d = webDriverService.buildFireFoxWebDriver();
 
 			try {
-				d.get(mainUrl);
+				d.get(apiUrl);
 				jsonReporter.appendContent(reportDTO, "进入 main url");
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);

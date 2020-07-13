@@ -34,7 +34,17 @@ public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 		}
 	}
 
-	@Scheduled(cron = "*/30 * * * * ?")
+	
+	/*
+	 * TODO
+	 * 2020 07 13
+	 * 一时大意, 忽略了testEvent 外边是5分钟运行一次
+	 * 需要接入MQ 后再行解决
+	 * 暂定6分钟运行一次
+	 * 否则一堆重复数据
+	 */
+//  */30 * * * * ?
+	@Scheduled(cron = "0 */6 * * * ?")
 	public void insertMetalsPriceClaw() {
 		if (!"dev".equals(constantService.getValByName("envName"))
 				&& isPreciousMetalsTransTime()) {
