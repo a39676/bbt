@@ -32,6 +32,11 @@ spring:
     pool.max-idle: 8
     pool.min-idle: 0
     timeout: 2000
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: u1
+    password: something
 
 logging:
   level:
