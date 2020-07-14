@@ -3,7 +3,6 @@ package demo.autoTestBase.testEvent.service.impl;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import demo.autoTestBase.testEvent.mapper.TestEventMapper;
 import demo.autoTestBase.testEvent.pojo.constant.TestEventOptionConstant;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
+import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.baseCommon.service.CommonService;
 import toolPack.ioHandle.FileUtilCustom;
 
@@ -46,41 +46,43 @@ public abstract class TestEventCommonService extends CommonService {
 				return linuxFolder;
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 		}
 		return null;
 	}
 	
-	protected int insertEventQueue(TestEvent te) {
-		return eventMapper.insertSelective(te);
-	}
-	
-	protected List<TestEvent> findTestEventNotRunYet() {
-		return eventMapper.findTestEventNotRunYet();
-	}
-	
-	protected int startEvent(TestEvent te) {
+	protected void startEvent(TestEvent te) {
 		te.setStartTime(LocalDateTime.now());
 		constantService.setValByName(runningEventRedisKey, "true");
-		return eventMapper.updateByPrimaryKeySelective(te);
 	}
 	
-	protected int endEvent(TestEvent te, boolean successFlag) {
+	protected CommonResultBBT endEvent(TestEvent te, boolean successFlag) {
 		return endEvent(te, successFlag, null);
 	}
 	
-	protected int endEvent(TestEvent te, boolean successFlag, String report) {
-		te.setEndTime(LocalDateTime.now());
-		te.setIsPass(successFlag);
+	protected CommonResultBBT endEvent(TestEvent te, boolean successFlag, String report) {
 		
-		if(StringUtils.isNotBlank(report)) {
-			String folerPath = findTestEventReportFolder();
-			if(folerPath != null) {
-				saveTestEventReport(te, folerPath, report);
+		CommonResultBBT endEventResult = new CommonResultBBT();
+		
+		try {
+			te.setEndTime(LocalDateTime.now());
+			te.setIsPass(successFlag);
+			
+			if(StringUtils.isNotBlank(report)) {
+				String folerPath = findTestEventReportFolder();
+				if(folerPath != null) {
+					saveTestEventReport(te, folerPath, report);
+				}
 			}
+			constantService.setValByName(runningEventRedisKey, "false");
+			int insertCount = eventMapper.insertSelective(te);
+			
+			if(insertCount > 0) {
+				endEventResult.setIsSuccess();
+			}
+		} catch (Exception e) {
 		}
-		constantService.setValByName(runningEventRedisKey, "false");
-		return eventMapper.updateByPrimaryKeySelective(te);
+		
+		return endEventResult;
 	}
 	
 	private void saveTestEventReport(TestEvent te, String folerPath, String report) {

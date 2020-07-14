@@ -15,11 +15,11 @@ public interface TestEventService {
 
 	/**
 	 * 个别异常情况下, testEvent 数据表未记录正常结束, 会导致其他 event 无法进行, 需要手动修正状态
-	 * @return 
+	 * TODO
+	 * 2020-07-14
+	 * 采用MQ后, 可能修改/删除方法
 	 */
 	int fixMovieClawingTestEventStatus();
-
-	void findTestEventAndRun();
 
 	int countWaitingEvent();
 
@@ -28,5 +28,7 @@ public interface TestEventService {
 	CommonResultBBT sendFailReports();
 
 	CommonResultBBT sendFailReports(LocalDateTime startTime, LocalDateTime endTime);
+
+	CommonResultBBT reciveTestEventAndRun(TestEvent te);
 
 }

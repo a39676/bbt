@@ -13,8 +13,8 @@ import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.autoTestBase.testCase.pojo.po.TestCase;
 import demo.autoTestBase.testCase.service.TestCaseService;
+import demo.autoTestBase.testEvent.mq.TestEventAckProducer;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
-import demo.autoTestBase.testEvent.pojo.constant.TestEventOptionConstant;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.po.TestEventExample;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
@@ -38,6 +38,8 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	private MailService mailService;
 	@Autowired
 	private TestCaseService caseService;
+	@Autowired
+	private TestEventAckProducer testEventAckProducer;
 	
 	@Autowired
 	private MovieClawingCasePrefixServiceImpl movieClawingCasePrefixService;
@@ -64,64 +66,52 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	@Override
 	public InsertTestEventResult insertTestEvent(TestEvent po) {
 		InsertTestEventResult r = new InsertTestEventResult();
-		if(po == null || po.getCaseId() == null || po.getModuleId() == null) {
+		if(po == null || po.getId() == null || po.getCaseId() == null || po.getModuleId() == null) {
 			return r;
 		}
+		r.setNewTestEventId(po.getId());
 		r.setCode(po.getEventName());
 		r.setModuleId(po.getModuleId());
 		r.setCaseId(po.getCaseId());
-		r.setInsertCount(eventMapper.insertSelective(po));
-		if(r.getInsertCount() > 0) {
-			r.setIsSuccess();
-		}
-		r.setNewTestEventId(po.getId());
+		
+		testEventAckProducer.send(po);
+		
+		r.setIsSuccess();
 		return r;
 	}
 	
 	@Override
-	public void findTestEventAndRun() {
+	public CommonResultBBT reciveTestEventAndRun(TestEvent te) {
 		
-		List<TestEvent> events = findTestEventNotRunYet();
-		if(events == null || events.size() < 1) {
-			return;
+		if(te == null) {
+			return new CommonResultBBT();
 		}
 		
-		if(TestEventOptionConstant.enableMultipleTestEvent) {
-			int runingEventCount = eventMapper.countRuningEvent();
-			if(runingEventCount >= TestEventOptionConstant.multipleRunTestEventCount) {
-				return;
-			}
-		} else {
-			if(existsRuningEvent()) {
-				return;
-			}
+		if(existsRuningEvent()) {
+			return new CommonResultBBT();
 		}
-		runEventQueue(events);
+		
+		return runEvent(te);
 	}
 	
-	private void runEventQueue(List<TestEvent> events) {
-		/*
-		 * 2019/10/15
-		 * 未处理 如果允许多个 testEvent 同时运行的情况
-		 */
-		CommonResultBBT r = null;
-		for(TestEvent te : events) {
-			
-			String breakWord = findPauseWord();
-			if(safeWord.equals(breakWord)) {
-				return;
-			}
-			
-			if(te.getAppointment() == null || te.getAppointment().isBefore(LocalDateTime.now())) {
-				startEvent(te);
-				try {
-					r = runSubEvent(te);
-				} catch (Exception e) {
-					r = new CommonResultBBT();
-				}
-				endEvent(te, r.isSuccess(), r.getMessage());
-			}
+	private CommonResultBBT runEvent(TestEvent event) {
+		String breakWord = findPauseWord();
+		if(safeWord.equals(breakWord)) {
+			return new CommonResultBBT();
 		}
+		
+		CommonResultBBT runResult = null;
+		if(event.getAppointment() == null || event.getAppointment().isBefore(LocalDateTime.now())) {
+			startEvent(event);
+			try {
+				runResult = runSubEvent(event);
+			} catch (Exception e) {
+				runResult = new CommonResultBBT();
+			}
+			endEvent(event, runResult.isSuccess(), runResult.getMessage());
+		}
+		
+		return runResult;
 	}
 	
 	private CommonResultBBT runSubEvent(TestEvent te) {

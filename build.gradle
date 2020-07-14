@@ -112,4 +112,7 @@ dependencies {
 	
 	// 富文本输入内容过滤/防御
 	compile group: 'com.googlecode.owasp-java-html-sanitizer', name: 'owasp-java-html-sanitizer', version: '20191001.1'
+	
+	// rabbitMQ
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-amqp', version: '2.0.9.RELEASE'
 }
