@@ -1,10 +1,10 @@
 package demo.interaction.preicous_metal.service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import precious_metal.pojo.dto.TransPreciousMetalPriceDTO;
+import precious_metal.pojo.dto.TransmissionPreciousMetalPriceDTO;
 
 public interface PreciousMetalTransService {
 
-	CommonResult transPreciousMetalPriceToCX(TransPreciousMetalPriceDTO dto);
+	CommonResult transPreciousMetalPriceToCX(TransmissionPreciousMetalPriceDTO dto);
 
 }

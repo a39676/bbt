@@ -12,7 +12,7 @@ import demo.baseCommon.service.CommonService;
 import demo.interaction.preicous_metal.service.PreciousMetalTransService;
 import net.sf.json.JSONObject;
 import precious_metal.pojo.constant.PreciousMetalPriceCommonUrl;
-import precious_metal.pojo.dto.TransPreciousMetalPriceDTO;
+import precious_metal.pojo.dto.TransmissionPreciousMetalPriceDTO;
 import toolPack.httpHandel.HttpUtil;
 
 @Service
@@ -22,7 +22,7 @@ public class PreicousMetalTransServiceImpl extends CommonService implements Prec
 	private HttpUtil httpUtil;
 	
 	@Override
-	public CommonResult transPreciousMetalPriceToCX(@RequestBody TransPreciousMetalPriceDTO dto) {
+	public CommonResult transPreciousMetalPriceToCX(@RequestBody TransmissionPreciousMetalPriceDTO dto) {
 		CommonResult r = new CommonResult();
 		try {
 			JSONObject j = JSONObject.fromObject(dto);

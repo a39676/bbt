@@ -2,9 +2,11 @@ package demo.clawing.scheduleClawing.service.impl;
 
 import java.io.File;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
@@ -29,7 +31,7 @@ import demo.selenium.service.impl.SeleniumCommonService;
 import net.sf.json.JSONObject;
 import precious_metal.pojo.constant.PreciousMetalConstant;
 import precious_metal.pojo.dto.PreciousMetailPriceDTO;
-import precious_metal.pojo.dto.TransPreciousMetalPriceDTO;
+import precious_metal.pojo.dto.TransmissionPreciousMetalPriceDTO;
 import precious_metal.pojo.result.CatchMetalPriceResult;
 import precious_metal.pojo.type.MetalType;
 import tool.pojo.type.UtilOfWeightType;
@@ -87,7 +89,6 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 		
 		try {
 			String result = h.sendGet(url);
-			System.out.println(result);
 			JSONObject json = JSONObject.fromObject(result);
 			JSONObject cnyPriceJson = json.getJSONArray("items").getJSONObject(0);
 			String auPriceStr = cnyPriceJson.getString("xauPrice");
@@ -99,7 +100,8 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 			double agOZPrice = Double.parseDouble(agPriceStr);
 			double agKgPrice = agOZPrice / PreciousMetalConstant.goleOunceToGram.doubleValue() * 1000;
 			
-			
+			String dateStr = json.getString("date");
+			LocalDateTime date = strToLocalDateTime(dateStr);
 
 			/*
 			 * 定时任务每30秒执行一次, 每10分钟保存1~2次数值
@@ -114,6 +116,12 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 				silverPriceDTO.setPrice(agKgPrice);
 				silverPriceDTO.setMetalType(MetalType.silver.getCode());
 				silverPriceDTO.setWeightUtilType(UtilOfWeightType.kiloGram.getCode());
+				
+				if(date != null) {
+					String transDateStr = localDateTimeHandler.dateToStr(date);
+					goldPriceDTO.setTransactionDateTime(transDateStr);
+					silverPriceDTO.setTransactionDateTime(transDateStr);
+				}
 				
 				sendPreciousMetalPriceByDTO(Arrays.asList(goldPriceDTO, silverPriceDTO));
 			}
@@ -131,8 +139,42 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 		}
 
 		return r;
-
 	}
+	
+	/**
+	 * 
+	 * 为了将参数中的特殊格式时间转换为 LocalDateTime
+	 * @param dateStr eg:Jul 9th 2020, 10:01:46 pm NY
+	 * @return
+	 */
+	private LocalDateTime strToLocalDateTime(String dateStr) {
+		dateStr = dateStr.replaceAll("(st|nd|rd|th)", "");
+		dateStr = dateStr.replaceAll(" NY", "");
+		
+		boolean pmFlag = dateStr.toLowerCase().contains("pm");
+		dateStr = dateStr.replaceAll("( am| pm)", "");
+		
+		DateTimeFormatter dateFormat = null;
+		if(dateStr.matches("^[a-zA-Z]{3}\\s\\d{1}\\s\\d{4}\\,\\s\\d{1,2}:\\d{2}:\\d{2}$")) {
+			dateFormat = DateTimeFormatter.ofPattern("MMM d yyyy, HH:mm:ss", Locale.US);
+		} else {
+			dateFormat = DateTimeFormatter.ofPattern("MMM dd yyyy, HH:mm:ss", Locale.US);
+		}
+		
+	    LocalDateTime date = null;
+	    try {
+			date = LocalDateTime.parse(dateStr, dateFormat);
+		} catch (Exception e) {
+			return null;
+		}
+	    
+	    if(pmFlag) {
+	    	date = date.plusHours(12);
+	    }
+	    
+	    return date;
+	}
+	
 
 	@Override
 	public CommonResultBBT clawing(TestEvent te) {
@@ -323,7 +365,7 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 		if (priceList.isEmpty()) {
 			return;
 		}
-		TransPreciousMetalPriceDTO dto = new TransPreciousMetalPriceDTO();
+		TransmissionPreciousMetalPriceDTO dto = new TransmissionPreciousMetalPriceDTO();
 		dto.setPriceList(priceList);
 		preciousMetalTransService.transPreciousMetalPriceToCX(dto);
 	}
