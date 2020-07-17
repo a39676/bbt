@@ -3,7 +3,6 @@ package demo.clawing.scheduleClawing.service.impl;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -23,15 +22,14 @@ import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.baseCommon.pojo.result.CommonResultBBT;
+import demo.clawing.scheduleClawing.mq.sender.MetalPriceTransmissionAckProducer;
 import demo.clawing.scheduleClawing.pojo.type.ScheduleClawingType;
 import demo.clawing.scheduleClawing.service.PreciousMetalsPriceService;
-import demo.interaction.preicous_metal.service.PreciousMetalTransService;
 import demo.selenium.pojo.bo.BuildTestEventBO;
 import demo.selenium.service.impl.SeleniumCommonService;
 import net.sf.json.JSONObject;
 import precious_metal.pojo.constant.PreciousMetalConstant;
 import precious_metal.pojo.dto.PreciousMetailPriceDTO;
-import precious_metal.pojo.dto.TransmissionPreciousMetalPriceDTO;
 import precious_metal.pojo.result.CatchMetalPriceResult;
 import precious_metal.pojo.type.MetalType;
 import tool.pojo.type.UtilOfWeightType;
@@ -41,8 +39,8 @@ import toolPack.httpHandel.HttpUtil;
 public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implements PreciousMetalsPriceService {
 
 	@Autowired
-	private PreciousMetalTransService preciousMetalTransService;
-
+	private MetalPriceTransmissionAckProducer metalPriceTransmissionAckProducer;
+	
 	private String testEventName = "preciousMetalPriceClawing";
 
 	private TestModuleType testModuleType = TestModuleType.scheduleClawing;
@@ -82,6 +80,11 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 		 * "chgXau":0.0875,"chgXag":0.0295,"pcXau":0.0049,"pcXag":0.1582,"xauClose":1803
 		 * .37,"xagClose":18.6465}]}
 		 * 
+		 */
+		
+		/*
+		 * TODO
+		 * json.date 是否交易时间?  只是通讯时的时间?
 		 */
 		String url = "https://data-asg.goldprice.org/dbXRates/USD,CNY";
 		HttpUtil h = new HttpUtil();
@@ -123,7 +126,8 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 					silverPriceDTO.setTransactionDateTime(transDateStr);
 				}
 				
-				sendPreciousMetalPriceByDTO(Arrays.asList(goldPriceDTO, silverPriceDTO));
+				transPreciousMetalPriceToCX(goldPriceDTO);
+				transPreciousMetalPriceToCX(silverPriceDTO);
 			}
 			
 			r.setIsSuccess();
@@ -175,7 +179,6 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 	    return date;
 	}
 	
-
 	@Override
 	public CommonResultBBT clawing(TestEvent te) {
 		CommonResultBBT r = new CommonResultBBT();
@@ -349,24 +352,14 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 	}
 
 	private void sendPreciousMetalPrice(List<CatchMetalPriceResult> resultList) {
-		List<PreciousMetailPriceDTO> priceList = new ArrayList<>();
 		for (CatchMetalPriceResult result : resultList) {
 			if (result.isSuccess()) {
-				priceList.add(result.getPriceDTO());
+				transPreciousMetalPriceToCX(result.getPriceDTO());
 			}
 		}
-		if (priceList.isEmpty()) {
-			return;
-		}
-		sendPreciousMetalPriceByDTO(priceList);
 	}
 
-	private void sendPreciousMetalPriceByDTO(List<PreciousMetailPriceDTO> priceList) {
-		if (priceList.isEmpty()) {
-			return;
-		}
-		TransmissionPreciousMetalPriceDTO dto = new TransmissionPreciousMetalPriceDTO();
-		dto.setPriceList(priceList);
-		preciousMetalTransService.transPreciousMetalPriceToCX(dto);
+	private void transPreciousMetalPriceToCX(PreciousMetailPriceDTO dto) {
+		metalPriceTransmissionAckProducer.send(dto);
 	}
 }

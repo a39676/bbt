@@ -33,26 +33,32 @@ public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 			}
 		}
 	}
-
 	
-	/*
-	 * TODO
-	 * 2020 07 13
-	 * 一时大意, 忽略了testEvent 外边是5分钟运行一次
-	 * 需要接入MQ 后再行解决
-	 * 暂定6分钟运行一次
-	 * 否则一堆重复数据
-	 */
-//  */30 * * * * ?
-	@Scheduled(cron = "0 */6 * * * ?")
+	@Scheduled(cron = "*/11 * * * * ?")
 	public void insertMetalsPriceClaw() {
+		/*
+		 * TODO
+		 * 2020-07-16
+		 * 大概率损失 每周 开盘 & 收盘价, 
+		 * 交给cx 通过api 加入任务?
+		 * 需要设法捕捉
+		 */
 		if (!"dev".equals(constantService.getValByName("envName"))
-				&& isPreciousMetalsTransTime()) {
+				&& isPreciousMetalsTransactionTime()) {
 			preciousMetalsPriceService.insertClawingEvent();
 		}
 	}
 	
-	private boolean isPreciousMetalsTransTime() {
+	/*
+	 * TODO
+	 * 2020-07-16
+	 * 需要解耦
+	 * 以下"时间" 统一为北京时间
+	 * 
+	 * 1. 输入时间, 判断是否交易时间
+	 * 2. 交易时间, 
+	 */
+	private boolean isPreciousMetalsTransactionTime() {
 		LocalDateTime beiJingNow = LocalDateTime.now();
 		LocalDateTime washtonNow = beiJingNow.minusHours(12);
 		int dayOfWeek = beiJingNow.getDayOfWeek().getValue();
