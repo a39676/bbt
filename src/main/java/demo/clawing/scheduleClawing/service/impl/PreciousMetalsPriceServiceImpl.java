@@ -65,7 +65,6 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 	@Override
 	public CommonResultBBT goldPriceOrgAPI(TestEvent te) {
 
-		LocalDateTime now = LocalDateTime.now();
 		CommonResultBBT r = new CommonResultBBT();
 		JsonReportDTO reportDTO = new JsonReportDTO();
 		String reportOutputFolderPath = getReportOutputPath(testEventName);
@@ -106,29 +105,24 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 			String dateStr = json.getString("date");
 			LocalDateTime date = strToLocalDateTime(dateStr);
 
-			/*
-			 * 定时任务每30秒执行一次, 每10分钟保存1~2次数值
-			 */
-			if((now.getMinute() % 10 == 0)) {
-				PreciousMetailPriceDTO goldPriceDTO = new PreciousMetailPriceDTO();
-				goldPriceDTO.setPrice(auKgPrice);
-				goldPriceDTO.setMetalType(MetalType.gold.getCode());
-				goldPriceDTO.setWeightUtilType(UtilOfWeightType.kiloGram.getCode());
-				
-				PreciousMetailPriceDTO silverPriceDTO = new PreciousMetailPriceDTO();
-				silverPriceDTO.setPrice(agKgPrice);
-				silverPriceDTO.setMetalType(MetalType.silver.getCode());
-				silverPriceDTO.setWeightUtilType(UtilOfWeightType.kiloGram.getCode());
-				
-				if(date != null) {
-					String transDateStr = localDateTimeHandler.dateToStr(date);
-					goldPriceDTO.setTransactionDateTime(transDateStr);
-					silverPriceDTO.setTransactionDateTime(transDateStr);
-				}
-				
-				transPreciousMetalPriceToCX(goldPriceDTO);
-				transPreciousMetalPriceToCX(silverPriceDTO);
+			PreciousMetailPriceDTO goldPriceDTO = new PreciousMetailPriceDTO();
+			goldPriceDTO.setPrice(auKgPrice);
+			goldPriceDTO.setMetalType(MetalType.gold.getCode());
+			goldPriceDTO.setWeightUtilType(UtilOfWeightType.kiloGram.getCode());
+			
+			PreciousMetailPriceDTO silverPriceDTO = new PreciousMetailPriceDTO();
+			silverPriceDTO.setPrice(agKgPrice);
+			silverPriceDTO.setMetalType(MetalType.silver.getCode());
+			silverPriceDTO.setWeightUtilType(UtilOfWeightType.kiloGram.getCode());
+			
+			if(date != null) {
+				String transDateStr = localDateTimeHandler.dateToStr(date);
+				goldPriceDTO.setTransactionDateTime(transDateStr);
+				silverPriceDTO.setTransactionDateTime(transDateStr);
 			}
+			
+			transPreciousMetalPriceToCX(goldPriceDTO);
+			transPreciousMetalPriceToCX(silverPriceDTO);
 			
 			r.setIsSuccess();
 			
