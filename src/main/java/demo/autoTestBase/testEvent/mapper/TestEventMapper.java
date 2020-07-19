@@ -44,11 +44,6 @@ public interface TestEventMapper {
 	int countWaitingEvent();
 
 	/**
-	 * 个别异常情况�?, testEvent 数据表未记录正常结束, 会导致其�? event 无法进行, �?要手动修正状�?
-	 */
-	int fixMovieClawingTestEventStatus();
-
-	/**
 	 * 2020-07-14
 	 * 采用mq 之后, 准备废弃此方法
 	 * @return

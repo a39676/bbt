@@ -2,9 +2,7 @@ package demo.autoTestBase.testEvent.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.autoTestBase.testEvent.service.TestEventService;
 
@@ -12,13 +10,8 @@ import demo.autoTestBase.testEvent.service.TestEventService;
 @RequestMapping(value = "/testEvent")
 public class TestEventController {
 	
+	@SuppressWarnings("unused")
 	@Autowired
 	private TestEventService teService;
 
-	@GetMapping(value = "/fixMovieClawingTestEventStatus")
-	@ResponseBody
-	public String fixMovieClawingTestEventStatus() {
-		int c = teService.fixMovieClawingTestEventStatus();
-		return String.valueOf(c);
-	}
 }

@@ -402,18 +402,6 @@
       and start_time is null 
   </select>
 
-  <update id="fixMovieClawingTestEventStatus">
-    update 
-      test_event 
-    set 
-      end_time = now(), 
-      is_pass = false 
-    where 
-      is_delete = false 
-      and start_time is not null 
-      and end_time is null
-  </update>
-
   <select id="findTestEventNotRunYet" resultMap="BaseResultMap">
     select 
       * 

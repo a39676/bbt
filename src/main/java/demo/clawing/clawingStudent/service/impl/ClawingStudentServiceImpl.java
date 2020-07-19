@@ -156,7 +156,6 @@ public class ClawingStudentServiceImpl extends SeleniumCommonService implements 
 		try {
 			Thread.sleep(200L);
 		} catch (Exception e) {
-			// TODO: handle exception
 		}
 		WebElement verifyCodeImg = d.findElement(verifyCodeImgBy);
 		verifyCodeImg.click();

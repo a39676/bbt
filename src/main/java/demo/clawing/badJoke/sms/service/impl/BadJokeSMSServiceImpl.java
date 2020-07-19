@@ -67,7 +67,7 @@ public class BadJokeSMSServiceImpl extends SeleniumCommonService implements BadJ
 	}
 	
 	/*
-	 * TODO
+	 * TODO BadJokeSMSServiceImpl
 	 * 是否统计最近10次的成功率? 根据网站?
 	 * 申请插入任务队列, 此处必须附加目标号码(并校验), 可附带执行的号码数量, 执行url数量
 	 * 是否加入定时任务?...
@@ -125,7 +125,7 @@ public class BadJokeSMSServiceImpl extends SeleniumCommonService implements BadJ
 		}
 		
 		if(!result.isSuccess()) {
-//			TODO
+//			TODO BadJokeSMSServiceImpl
 		}
 	}
 	
@@ -228,7 +228,7 @@ public class BadJokeSMSServiceImpl extends SeleniumCommonService implements BadJ
 		try {
 			d.get(url);
 			
-//			TODO
+//			TODO BadJokeSMSServiceImpl yinXiang 
 			
 			r.setIsSuccess();
 			
@@ -511,7 +511,7 @@ public class BadJokeSMSServiceImpl extends SeleniumCommonService implements BadJ
 			
 			auxTool.swipeCaptchaHadle(d, swipeButton, chuteDiv);
 			/*
-			 * TODO
+			 * TODO BadJokeSMSServiceImpl ctrip
 			 */
 			
 			
@@ -551,8 +551,7 @@ public class BadJokeSMSServiceImpl extends SeleniumCommonService implements BadJ
 			d.findElement(By.xpath(x.getXpath())).click();
 			
 			/*
-			 * TODO
-			 * 考虑补充极验拖动验证
+			 * TODO BadJokeSMSServiceImpl 考虑补充极验拖动验证
 			 */
 			
 			r.setIsSuccess();

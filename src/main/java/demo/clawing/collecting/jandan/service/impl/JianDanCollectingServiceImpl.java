@@ -47,7 +47,7 @@ public class JianDanCollectingServiceImpl extends SeleniumCommonService implemen
 		CommonResultBBT r = new CommonResultBBT();
 		
 		/*
-		 * TODO
+		 * TODO JianDanCollectingServiceImpl collecting
 		 */
 		
 		String screenshotPath = getScreenshotSaveingPath(COLLECT_EVENT_NAME);

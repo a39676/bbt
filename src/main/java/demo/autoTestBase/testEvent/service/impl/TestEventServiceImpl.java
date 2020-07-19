@@ -139,11 +139,6 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	}
 	
 	@Override
-	public int fixMovieClawingTestEventStatus() {
-		return eventMapper.fixMovieClawingTestEventStatus();
-	}
-	
-	@Override
 	public TestEvent runNewTestEvent(TestEventBO bo) {
 		TestCase casePO = caseService.findByCaseCode(bo.getCaseCode());
 		Long newEventId = snowFlake.getNextId();
