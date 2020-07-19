@@ -40,7 +40,7 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 
 	@Autowired
 	private MetalPriceTransmissionAckProducer metalPriceTransmissionAckProducer;
-	
+
 	private String testEventName = "preciousMetalPriceClawing";
 
 	private TestModuleType testModuleType = TestModuleType.scheduleClawing;
@@ -71,7 +71,8 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 		reportDTO.setOutputReportPath(reportOutputFolderPath + File.separator + te.getId());
 
 		/*
-		 * response json eg:
+		 * json.date 只是通讯时的时间
+		 * response json eg: 
 		 * {"ts":1594346507885,"tsj":1594346506249,"date":"Jul 9th 2020, 10:01:46 pm NY"
 		 * ,"items":[{"curr":"CNY","xauPrice":12625.2846,"xagPrice":130.7432,"chgXau":42
 		 * .4616,"chgXag":0.7666,"pcXau":0.3375,"pcXag":0.5898,"xauClose":12582.82303,
@@ -80,15 +81,9 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 		 * .37,"xagClose":18.6465}]}
 		 * 
 		 */
-		
-		/*
-		 * TODO
-		 * json.date 是否交易时间?  只是通讯时的时间?
-		 */
 		String url = "https://data-asg.goldprice.org/dbXRates/USD,CNY";
 		HttpUtil h = new HttpUtil();
-		
-		
+
 		try {
 			String result = h.sendGet(url);
 			JSONObject json = JSONObject.fromObject(result);
@@ -101,7 +96,7 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 
 			double agOZPrice = Double.parseDouble(agPriceStr);
 			double agKgPrice = agOZPrice / PreciousMetalConstant.goleOunceToGram.doubleValue() * 1000;
-			
+
 			String dateStr = json.getString("date");
 			LocalDateTime date = strToLocalDateTime(dateStr);
 
@@ -109,23 +104,23 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 			goldPriceDTO.setPrice(auKgPrice);
 			goldPriceDTO.setMetalType(MetalType.gold.getCode());
 			goldPriceDTO.setWeightUtilType(UtilOfWeightType.kiloGram.getCode());
-			
+
 			PreciousMetailPriceDTO silverPriceDTO = new PreciousMetailPriceDTO();
 			silverPriceDTO.setPrice(agKgPrice);
 			silverPriceDTO.setMetalType(MetalType.silver.getCode());
 			silverPriceDTO.setWeightUtilType(UtilOfWeightType.kiloGram.getCode());
-			
-			if(date != null) {
+
+			if (date != null) {
 				String transDateStr = localDateTimeHandler.dateToStr(date);
 				goldPriceDTO.setTransactionDateTime(transDateStr);
 				silverPriceDTO.setTransactionDateTime(transDateStr);
 			}
-			
+
 			transPreciousMetalPriceToCX(goldPriceDTO);
 			transPreciousMetalPriceToCX(silverPriceDTO);
-			
+
 			r.setIsSuccess();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			jsonReporter.appendContent(reportDTO, "异常: " + e);
@@ -138,41 +133,42 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 
 		return r;
 	}
-	
+
 	/**
 	 * 
 	 * 为了将参数中的特殊格式时间转换为 LocalDateTime
+	 * 
 	 * @param dateStr eg:Jul 9th 2020, 10:01:46 pm NY
 	 * @return
 	 */
 	private LocalDateTime strToLocalDateTime(String dateStr) {
 		dateStr = dateStr.replaceAll("(st|nd|rd|th)", "");
 		dateStr = dateStr.replaceAll(" NY", "");
-		
+
 		boolean pmFlag = dateStr.toLowerCase().contains("pm");
 		dateStr = dateStr.replaceAll("( am| pm)", "");
-		
+
 		DateTimeFormatter dateFormat = null;
-		if(dateStr.matches("^[a-zA-Z]{3}\\s\\d{1}\\s\\d{4}\\,\\s\\d{1,2}:\\d{2}:\\d{2}$")) {
+		if (dateStr.matches("^[a-zA-Z]{3}\\s\\d{1}\\s\\d{4}\\,\\s\\d{1,2}:\\d{2}:\\d{2}$")) {
 			dateFormat = DateTimeFormatter.ofPattern("MMM d yyyy, HH:mm:ss", Locale.US);
 		} else {
 			dateFormat = DateTimeFormatter.ofPattern("MMM dd yyyy, HH:mm:ss", Locale.US);
 		}
-		
-	    LocalDateTime date = null;
-	    try {
+
+		LocalDateTime date = null;
+		try {
 			date = LocalDateTime.parse(dateStr, dateFormat);
 		} catch (Exception e) {
 			return null;
 		}
-	    
-	    if(pmFlag) {
-	    	date = date.plusHours(12);
-	    }
-	    
-	    return date;
+
+		if (pmFlag) {
+			date = date.plusHours(12);
+		}
+
+		return date;
 	}
-	
+
 	@Override
 	public CommonResultBBT clawing(TestEvent te) {
 		CommonResultBBT r = new CommonResultBBT();
