@@ -34,7 +34,7 @@ public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 		}
 	}
 	
-	@Scheduled(cron = "*/11 * * * * ?")
+	@Scheduled(cron = "*/30 * * * * ?")
 	public void insertMetalsPriceClaw() {
 		/*
 		 * TODO
