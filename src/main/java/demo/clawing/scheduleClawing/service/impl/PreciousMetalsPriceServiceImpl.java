@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
@@ -46,7 +47,7 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 	private TestModuleType testModuleType = TestModuleType.scheduleClawing;
 	private ScheduleClawingType testCastType = ScheduleClawingType.preciousMetalPrice;
 
-	private String apiUrl = "https://goldprice.org/gold-price-data.html";
+	private String goldPricePageUrl = "https://goldprice.org/gold-price-data.html";
 
 	private TestEvent buildTestEvent() {
 		BuildTestEventBO bo = new BuildTestEventBO();
@@ -65,14 +66,30 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 	@Override
 	public CommonResultBBT goldPriceOrgAPI(TestEvent te) {
 
-		CommonResultBBT r = new CommonResultBBT();
 		JsonReportDTO reportDTO = new JsonReportDTO();
 		String reportOutputFolderPath = getReportOutputPath(testEventName);
 		reportDTO.setOutputReportPath(reportOutputFolderPath + File.separator + te.getId());
 
+		CommonResultBBT r = goldPriceApi(te, reportDTO);
+		
+		long minMS = 1;
+		long maxMS = 11;
+		Long l = ThreadLocalRandom.current().nextLong(minMS, maxMS);
+		
+		if(l > 5) {
+			r = goldPriceApi(te, reportDTO);
+		} else {
+			r = nfusionsolutionApi(te, reportDTO);
+		}
+
+		return r;
+	}
+
+	private CommonResultBBT goldPriceApi(TestEvent te, JsonReportDTO reportDTO) {
+		CommonResultBBT r = new CommonResultBBT();
+
 		/*
-		 * json.date 只是通讯时的时间
-		 * response json eg: 
+		 * json.date 只是通讯时的时间 response json example:
 		 * {"ts":1594346507885,"tsj":1594346506249,"date":"Jul 9th 2020, 10:01:46 pm NY"
 		 * ,"items":[{"curr":"CNY","xauPrice":12625.2846,"xagPrice":130.7432,"chgXau":42
 		 * .4616,"chgXag":0.7666,"pcXau":0.3375,"pcXag":0.5898,"xauClose":12582.82303,
@@ -81,11 +98,11 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 		 * .37,"xagClose":18.6465}]}
 		 * 
 		 */
-		String url = "https://data-asg.goldprice.org/dbXRates/USD,CNY";
+		String goldPriceApiUrl = "https://data-asg.goldprice.org/dbXRates/USD,CNY";
 		HttpUtil h = new HttpUtil();
 
 		try {
-			String result = h.sendGet(url);
+			String result = h.sendGet(goldPriceApiUrl);
 			JSONObject json = JSONObject.fromObject(result);
 			JSONObject cnyPriceJson = json.getJSONArray("items").getJSONObject(0);
 			String auPriceStr = cnyPriceJson.getString("xauPrice");
@@ -134,11 +151,86 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 		return r;
 	}
 
+	private CommonResultBBT nfusionsolutionApi(TestEvent te, JsonReportDTO reportDTO) {
+		CommonResultBBT goldResult = nfusionsolutionApi(te, reportDTO, MetalType.gold);
+		CommonResultBBT silverResult = nfusionsolutionApi(te, reportDTO, MetalType.silver);
+		
+		CommonResultBBT r = new CommonResultBBT();
+		if(goldResult.isFail()) {
+			r.addMessage(goldResult.getMessage());
+		}
+		if(silverResult.isFail()) {
+			r.addMessage(silverResult.getMessage());
+		}
+		
+		if(goldResult.isSuccess() && silverResult.isSuccess()) {
+			r.setIsSuccess();
+		}
+		
+		return r;
+	}
+	private CommonResultBBT nfusionsolutionApi(TestEvent te, JsonReportDTO reportDTO, MetalType metalType) {
+		CommonResultBBT r = new CommonResultBBT();
+
+		/*
+		 * json example: { "metal": "Silver", "currency": "CNY",
+		 * "currencySize": "medium", "price": 193.55, "change": 5.7, "changePercent":
+		 * 3.04903, "timestamp": "Aug 06, 2020 at 5:56 am EDT", "currencySymbol":
+		 * "&#xa5;", "showCurrencySymbol": false, "intradayOffset": -4 }
+		 * 
+		 */
+		String nfusionsolutionsApiSilverUrl = "https://redist.nfusionsolutions.biz/client/jmbullion/Ajax/SmallHistorical?metal=" + metalType.getName() + "&currency=cny";
+		HttpUtil h = new HttpUtil();
+
+		try {
+			String result = h.sendGet(nfusionsolutionsApiSilverUrl);
+			
+			JSONObject json = JSONObject.fromObject(result);
+			
+			String silverPriceStr = json.getString("price");
+
+			double ozPrice = Double.parseDouble(silverPriceStr);
+			double kgPrice = ozPrice / PreciousMetalConstant.goleOunceToGram.doubleValue() * 1000;
+
+			/* 
+			 * TODO
+			 * dateStr example: Aug 06, 2020 at 5:56 am EDT */
+			String dateStr = json.getString("timestamp");
+			LocalDateTime date = strToLocalDateTime(dateStr);
+
+			PreciousMetailPriceDTO priceDTO = new PreciousMetailPriceDTO();
+			priceDTO.setPrice(kgPrice);
+			priceDTO.setMetalType(metalType.getCode());
+			priceDTO.setWeightUtilType(UtilOfWeightType.kiloGram.getCode());
+
+
+			if (date != null) {
+				String transDateStr = localDateTimeHandler.dateToStr(date);
+				priceDTO.setTransactionDateTime(transDateStr);
+			}
+
+			transPreciousMetalPriceToCX(priceDTO);
+
+			r.setIsSuccess();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			jsonReporter.appendContent(reportDTO, "异常: " + e);
+
+		} finally {
+			if (jsonReporter.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
+				updateTestEventReportPath(te, reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json");
+			}
+		}
+
+		return r;
+	}
+
 	/**
 	 * 
 	 * 为了将参数中的特殊格式时间转换为 LocalDateTime
 	 * 
-	 * @param dateStr eg:Jul 9th 2020, 10:01:46 pm NY
+	 * @param dateStr example:Jul 9th 2020, 10:01:46 pm NY
 	 * @return
 	 */
 	private LocalDateTime strToLocalDateTime(String dateStr) {
@@ -185,7 +277,7 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 			d = webDriverService.buildFireFoxWebDriver();
 
 			try {
-				d.get(apiUrl);
+				d.get(goldPricePageUrl);
 				jsonReporter.appendContent(reportDTO, "进入 main url");
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);

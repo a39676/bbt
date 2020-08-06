@@ -1,4 +1,4 @@
-﻿﻿因 localClawing 类项目
+﻿﻿﻿因 localClawing 类项目
 考虑部分任务, 执行后应该处于等待状态
 	间隔轮询 redis 等待参数, 进行下一步或彻底退出
 
