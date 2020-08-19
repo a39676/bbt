@@ -131,7 +131,7 @@
   <%@ include file="../baseElementJSP/bonaFooter.jsp" %>
 
   <!-- SCIPTS -->
-  <%@ include file="../baseElementJSP/normalFooter.jsp" %>
+  <%@ include file="../baseElementJSP/normalJSPart.jsp" %>
   <script src="https://cdn.bootcss.com/sockjs-client/1.1.0/sockjs.min.js"></script>
   <script src="https://cdn.bootcss.com/stomp.js/2.3.3/stomp.min.js"></script>
   <script src="common-js/swiper.js"></script>

@@ -73,7 +73,7 @@
   <!-- section end-->
 
   <!-- SCIPTS -->
-  <%@ include file="../baseElementJSP/normalFooter.jsp" %>
+  <%@ include file="../baseElementJSP/normalJSPart.jsp" %>
   <!-- <script src="https://cdn.bootcss.com/sockjs-client/1.1.0/sockjs.min.js"></script> -->
   <!-- <script src="https://cdn.bootcss.com/stomp.js/2.3.3/stomp.min.js"></script> -->
   <script type="text/javascript" src="<c:url value='/static_resources/js/home/homeV3.js'/>"></script>
