@@ -24,7 +24,7 @@
   <!-- main container -->
 
   <!-- SCIPTS -->
-  <%@ include file="../baseElementJSP/normalFooter.jsp" %>
+  <%@ include file="../baseElementJSP/normalJSPart.jsp" %>
 
 </body>
 </html>
