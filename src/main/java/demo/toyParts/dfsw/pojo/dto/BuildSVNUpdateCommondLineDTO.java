@@ -20,7 +20,6 @@ public class BuildSVNUpdateCommondLineDTO {
 	public void setInput(String input) {
 		this.input = input;
 	}
-
 	@Override
 	public String toString() {
 		return "BuildSVNUpdateCommondLineDTO [localPathPrefix=" + localPathPrefix + ", input=" + input + "]";
