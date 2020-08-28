@@ -16,7 +16,7 @@ public class ErrorController extends ExceptionController {
 		ModelAndView view = new ModelAndView("baseJSP/errorCustom");
 		
 		view.addObject("message", "accesssDenied");
-		view.addObject("urlRedirect", foundHostNameFromRequst(request));
+		view.addObject("urlRedirect", "/");
 		return view;
 	}
 	

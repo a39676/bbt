@@ -1,7 +1,5 @@
 package demo.tool.pojo.param;
 
-import net.sf.json.JSONObject;
-
 public class SetMailBaseParam {
 	
 	private String mailName;
@@ -23,11 +21,4 @@ public class SetMailBaseParam {
 		this.mailPasswod = mailPasswod;
 	}
 	
-	public SetMailBaseParam fromJson(JSONObject json) {
-		SetMailBaseParam param = new SetMailBaseParam();
-		param.setMailName(json.getString("mailName"));
-		param.setMailPasswod(json.getString("mailPassword"));
-		return param;
-	}
-
 }

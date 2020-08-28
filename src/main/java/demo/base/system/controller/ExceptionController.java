@@ -38,7 +38,7 @@ public class ExceptionController extends CommonController implements HandlerExce
 		} else {
 			view.addObject("message", "很抱歉,居然出现了异常");
 		}
-		view.addObject("urlRedirect", foundHostNameFromRequst(request));
+		view.addObject("urlRedirect", "/");
 
 		e.printStackTrace();
 		return view;
@@ -53,7 +53,7 @@ public class ExceptionController extends CommonController implements HandlerExce
 		} else {
 			view.addObject("message", "IOException");
 		}
-		view.addObject("urlRedirect", foundHostNameFromRequst(request));
+		view.addObject("urlRedirect", "/");
 		e.printStackTrace();
 		return view;
 	}
@@ -67,7 +67,7 @@ public class ExceptionController extends CommonController implements HandlerExce
 		} else {
 			view.addObject("message", "NoHandlerFoundException");
 		}
-		view.addObject("urlRedirect", foundHostNameFromRequst(request));
+		view.addObject("urlRedirect", "/");
 
 		e.printStackTrace();
 		return view;
@@ -82,7 +82,7 @@ public class ExceptionController extends CommonController implements HandlerExce
 		} else {
 			view.addObject("message", "SQLException");
 		}
-		view.addObject("urlRedirect", foundHostNameFromRequst(request));
+		view.addObject("urlRedirect", "/");
 		e.printStackTrace();
 		return view;
 	}
@@ -96,7 +96,7 @@ public class ExceptionController extends CommonController implements HandlerExce
 		} else {
 			view.addObject("message", "RuntimeException");
 		}
-		view.addObject("urlRedirect", foundHostNameFromRequst(request));
+		view.addObject("urlRedirect", "/");
 		e.printStackTrace();
 		return view;
 	}

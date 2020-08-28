@@ -25,9 +25,7 @@ public class ComplexToolController extends CommonController {
 	private ComplexToolServiceImpl complexToolServiceImpl;
 
 	@PostMapping(value = "/cleanTmpFiles")
-	public void cleanTmpFiles(@RequestBody String data, HttpServletResponse response) {
-		JSONObject jsonInput = getJson(data);
-		
+	public void cleanTmpFiles(@RequestBody JSONObject jsonInput, HttpServletResponse response) {
 		// TODO 已经有几个临时文件夹,请参照 ToolPathConstant
 		JSONObject jsonOutput = JSONObject.fromObject(complexToolServiceImpl.cleanTmpFiles(jsonInput));
 		try {

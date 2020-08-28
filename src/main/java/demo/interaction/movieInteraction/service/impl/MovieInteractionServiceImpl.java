@@ -40,7 +40,7 @@ import demo.clawing.movie.pojo.result.FindMovieSummaryListResult;
 import demo.interaction.image.mapper.ImageStoreMapper;
 import demo.interaction.image.pojo.po.ImageStore;
 import demo.interaction.image.pojo.po.ImageStoreExample;
-import demo.interaction.movieInteraction.MovieInteractionRedisKey;
+import demo.interaction.movieInteraction.pojo.constant.MovieInteractionRedisKey;
 import demo.interaction.movieInteraction.pojo.dto.FindLastHotClickDTO;
 import demo.interaction.movieInteraction.pojo.dto.FindPosterIdByMovieIdListDTO;
 import demo.interaction.movieInteraction.pojo.result.FindMovieRecommendResult;

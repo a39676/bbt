@@ -1,4 +1,4 @@
-package demo.interaction.movieInteraction;
+package demo.interaction.movieInteraction.pojo.constant;
 
 public class MovieInteractionRedisKey {
 	
