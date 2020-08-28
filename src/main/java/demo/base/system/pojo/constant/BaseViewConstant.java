@@ -18,11 +18,6 @@ public class BaseViewConstant {
 	public static final String financeclearNavigationNotLogin = "baseElementJSP/financeclearNavigationNotLogin";
 	public static final String financeclearNavigationRoleUser = "baseElementJSP/financeclearNavigationRoleUser";
 	
-	public static final String navigationMain = "baseElementJSP/navigationMain";
-	public static final String navigationAdmin = "baseElementJSP/navigationAdminV3";
-	public static final String navigationNotLogin = "baseElementJSP/navigationNotLogin";
-	public static final String navigationRoleUser = "baseElementJSP/navigationRoleUser";
-	
 	public static final String tempViewHome = "tempViewJSP/home";
 	
 }

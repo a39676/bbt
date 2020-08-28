@@ -2,7 +2,6 @@ package demo.base.system.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.concurrent.ThreadLocalRandom;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,17 +25,8 @@ public class ExceptionController extends CommonController implements HandlerExce
 	
 	private static final Logger log = LoggerFactory.getLogger(ExceptionController.class);
 
-//	@Autowired
-//	private MailService mailService;
-
 	@Autowired
 	protected SystemConstantService systemConstantService;
-
-	protected static final String[] description = { "神奇", "野生", "迷幻", "抽象", "清奇", "脱俗", "清新", "艳丽"};
-
-	protected int getRan() {
-		return ThreadLocalRandom.current().nextInt(0, description.length - 1);
-	}
 
 	@ExceptionHandler({ Exception.class })
 	public ModelAndView handleException(HttpServletRequest request, Exception e, String message) {
@@ -46,10 +36,9 @@ public class ExceptionController extends CommonController implements HandlerExce
 		if(findDebugStatus()) {
 			view.addObject("message", e.toString());
 		} else {
-			view.addObject("message", "很抱歉,居然出现了" + description[getRan()] + "的异常");
+			view.addObject("message", "很抱歉,居然出现了异常");
 		}
 		view.addObject("urlRedirect", foundHostNameFromRequst(request));
-//		mailService.sendErrorMail(e.toString());
 
 		e.printStackTrace();
 		return view;
@@ -62,10 +51,9 @@ public class ExceptionController extends CommonController implements HandlerExce
 		if(findDebugStatus()) {
 			view.addObject("message", e.toString());
 		} else {
-			view.addObject("message", "很抱歉,居然出现了" + description[getRan()] + "的异常");
+			view.addObject("message", "IOException");
 		}
 		view.addObject("urlRedirect", foundHostNameFromRequst(request));
-//		mailService.sendErrorMail(e.toString());
 		e.printStackTrace();
 		return view;
 	}
@@ -77,7 +65,7 @@ public class ExceptionController extends CommonController implements HandlerExce
 		if(findDebugStatus()) {
 			view.addObject("message", e.toString());
 		} else {
-			view.addObject("message", "很抱歉,居然出现了" + description[getRan()] + "的异常");
+			view.addObject("message", "NoHandlerFoundException");
 		}
 		view.addObject("urlRedirect", foundHostNameFromRequst(request));
 
@@ -92,10 +80,9 @@ public class ExceptionController extends CommonController implements HandlerExce
 		if(findDebugStatus()) {
 			view.addObject("message", e.toString());
 		} else {
-			view.addObject("message", "很抱歉,居然出现了" + description[getRan()] + "的异常");
+			view.addObject("message", "SQLException");
 		}
 		view.addObject("urlRedirect", foundHostNameFromRequst(request));
-//		mailService.sendErrorMail(e.toString());
 		e.printStackTrace();
 		return view;
 	}
@@ -107,10 +94,9 @@ public class ExceptionController extends CommonController implements HandlerExce
 		if(findDebugStatus()) {
 			view.addObject("message", e.toString());
 		} else {
-			view.addObject("message", "很抱歉,居然出现了" + description[getRan()] + "的异常");
+			view.addObject("message", "RuntimeException");
 		}
 		view.addObject("urlRedirect", foundHostNameFromRequst(request));
-//		mailService.sendErrorMail(e.toString());
 		e.printStackTrace();
 		return view;
 	}
