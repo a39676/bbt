@@ -34,11 +34,11 @@ public class MailToolController extends CommonController {
 	 */
 	@PostMapping(value = ToolUrlConstant.setMailBase)
 	@ResponseBody
-	public CommonResult setMailBase(@RequestBody SetMailBaseParam param, HttpServletResponse response) {
+	public CommonResult setMailBase(@RequestBody SetMailBaseParam dto, HttpServletResponse response) {
 		CommonResult r = new CommonResult();
-		if(StringUtils.isNotBlank(param.getMailName()) && StringUtils.isNotBlank(param.getMailPasswod())) {
-			systemConstantService.setValByName(SystemConstantStore.adminMailName, param.getMailName());
-			systemConstantService.setValByName(SystemConstantStore.adminMailPwd, param.getMailPasswod());
+		if(StringUtils.isNotBlank(dto.getMailName()) && StringUtils.isNotBlank(dto.getMailPasswod())) {
+			systemConstantService.setValByName(SystemConstantStore.adminMailName, dto.getMailName());
+			systemConstantService.setValByName(SystemConstantStore.adminMailPwd, dto.getMailPasswod());
 			r.setIsSuccess();
 		}
 		return r;
