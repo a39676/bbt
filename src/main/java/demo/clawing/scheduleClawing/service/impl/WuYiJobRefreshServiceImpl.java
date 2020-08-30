@@ -487,7 +487,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 	
 	@Override
 	public ModelAndView watchMeList() {
-		ModelAndView v = new ModelAndView("tmpJSP/51JobWatchMe");
+		ModelAndView v = new ModelAndView("showData/51JobWatchMe");
 		WuyiWatchMeExample example = new WuyiWatchMeExample();
 		example.createCriteria().andIsDeleteEqualTo(false).andCreateTimeGreaterThan(LocalDateTime.now().minusMonths(12));
 		example.setOrderByClause("watch_time");
