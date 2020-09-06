@@ -42,4 +42,27 @@ public class TestController extends CommonController {
 			@RequestParam(value = "prefix") String prefix) {
 		twCollectService.equipmentCollecting2(sub, prefix);
 	}
+	
+	@GetMapping(value = "/equipmentCollecting3")
+	public void equipmentCollecting3(@RequestParam(value = "url") String url, @RequestParam(value = "flag", required = false) String flag) {
+		boolean itemNameFirst = false;
+		if("1".equals(flag)) {
+			itemNameFirst = true;
+		}
+		twCollectService.equipmentCollecting3(url, itemNameFirst);
+	}
+	
+	@GetMapping(value = "/equipmentCollectingImgOnly")
+	public void equipmentCollectingImgOnly(@RequestParam(value = "url") String url) {
+		twCollectService.equipmentCollectingImgOnly(url);
+	}
+	
+	@GetMapping(value = "/itemCollectHandle")
+	public void itemCollectHandle(@RequestParam(value = "url") String url, @RequestParam(value = "flag", required = false) String flag) {
+		boolean togetherTD = false;
+		if("1".equals(flag)) {
+			togetherTD = true;
+		}
+		twCollectService.itemCollecting(url, togetherTD);
+	}
 }
