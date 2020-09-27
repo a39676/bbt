@@ -18,19 +18,19 @@ import demo.autoTestBase.JsonReport.service.JsonReportService;
 import demo.baseCommon.controller.CommonController;
 
 @Controller
-@RequestMapping(value = {AutoTestInteractionUrl.root})
+@RequestMapping(value = {AutoTestInteractionUrl.ROOT})
 public class JsonReportInteractionController extends CommonController {
 
 	@Autowired
 	private JsonReportService jsonReportService;
 	
-	@PostMapping(value = AutoTestInteractionUrl.findReportsByCondition)
+	@PostMapping(value = AutoTestInteractionUrl.FIND_REPORTS_BY_CONDITION)
 	@ResponseBody
 	public List<TestReportBO> findReportsByCondition(@RequestBody FindTestEventPageByConditionDTO dto) {
 		return jsonReportService.findReportsByCondition(dto);
 	}
 	
-	@PostMapping(value = AutoTestInteractionUrl.findReportByTestEventId)
+	@PostMapping(value = AutoTestInteractionUrl.FIND_REPORT_BY_TEST_EVENT_ID)
 	@ResponseBody
 	public FindReportByTestEventIdResult findReportByTestEventId(@RequestBody FindReportByTestEventIdDTO dto) {
 		return jsonReportService.findReportByTestEventId(dto);
