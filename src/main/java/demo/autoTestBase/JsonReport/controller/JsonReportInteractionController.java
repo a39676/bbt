@@ -19,7 +19,7 @@ import demo.baseCommon.controller.CommonController;
 
 @Controller
 @RequestMapping(value = {AutoTestInteractionUrl.root})
-public class JsonReportController extends CommonController {
+public class JsonReportInteractionController extends CommonController {
 
 	@Autowired
 	private JsonReportService jsonReportService;
