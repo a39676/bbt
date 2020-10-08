@@ -169,8 +169,8 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 			options = new ChromeOptions();
 		}
 		
+		options.addArguments(WebDriverConstant.headLess);
 		if("dev".equals(envName)) {
-			options.addArguments(WebDriverConstant.headLess);
 		}
 		
 		Map<String, String> mobileEmulation = new HashMap<>();
