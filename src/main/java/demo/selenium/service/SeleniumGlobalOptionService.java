@@ -8,7 +8,7 @@ public interface SeleniumGlobalOptionService {
 	String getReportOutputFolder();
 	String getParameterSavingFolder();
 
-	String getChrome80Path();
+	String getChrome8xPath();
 	String getChrome45Path();
 
 	String getGeckoPath();

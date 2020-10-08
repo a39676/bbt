@@ -31,4 +31,8 @@ public interface WebDriverService {
 
 	WebDriver buildFireFoxWebDriverMobileEmulation();
 
+	WebDriver buildChromeWebDriverMobileEmulation();
+
+	WebDriver buildChromeWebDriverMobileEmulation(ChromeOptions options);
+
 }

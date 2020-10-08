@@ -35,12 +35,15 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 
 	private String winSeleniumWebDriverFolder = "d:/auxiliary/seleniumWebDriver";
 	private String linuxSeleniumWebDriverFolder = "/home/u2/seleniumWebDriver";
-	private String chrome80Path_win = winSeleniumWebDriverFolder + "/chrome80Driver.exe";
+	
+	private String chrome85Path_win = winSeleniumWebDriverFolder + "/chrome85Driver.exe";
 	private String chrome45Path_win = winSeleniumWebDriverFolder + "/chrome45Driver.exe";
-	private String chrome80Path_linux = linuxSeleniumWebDriverFolder + "/chrome80Driver";
+	private String chrome86Path_linux = linuxSeleniumWebDriverFolder + "/chrome86Driver";
 	private String chrome45Path_linux = linuxSeleniumWebDriverFolder + "/chrome45Driver";
+	
 	private String geckoPath_win = winSeleniumWebDriverFolder + "/geckodriver-v0.27.0-win64.exe";
 	private String geckoPath_linux = linuxSeleniumWebDriverFolder + "/geckodriver-v0.27.0-linux";
+	
 	private String edgePath = winSeleniumWebDriverFolder + "/MicrosoftWebDriver.exe";
 	private String iePath = winSeleniumWebDriverFolder + "/IEDriverServer.exe";
 	private String operaPath = winSeleniumWebDriverFolder + "/operadriver.exe";
@@ -194,12 +197,12 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 	}
 	
 	@Override
-	public String getChrome80Path() {
+	public String getChrome8xPath() {
 		String path = null;
 		if (isWindows()) {
-			path = chrome80Path_win;
+			path = chrome85Path_win;
 		} else {
-			path = chrome80Path_linux;
+			path = chrome86Path_linux;
 		}
 		
 		return pathChangeByDetectOS(path);

@@ -135,7 +135,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 				runCount = 0;
 			}
 
-			d = webDriverService.buildFireFoxWebDriverMobileEmulation();
+			d = webDriverService.buildChromeWebDriverMobileEmulation();
 			
 			if(!login(d, reportDTO, clawingOptionBO)) {
 				r.failWithMessage("登录失败");

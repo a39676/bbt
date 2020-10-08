@@ -1,6 +1,7 @@
 package demo.selenium.service.impl;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -152,8 +153,41 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 	}
 
 	@Override
+	public WebDriver buildChromeWebDriverMobileEmulation() {
+		return buildChromeWebDriverMobileEmulation(null);
+	}
+	
+	@Override
+	public WebDriver buildChromeWebDriverMobileEmulation(ChromeOptions options) {
+		String path = globalOptionService.getChrome8xPath();
+		String driverType = WebDriverConstant.chromeDriver;
+		System.setProperty(driverType, path);
+		WebDriver driver = null;
+		
+		String envName = constantService.getValByName("envName");
+		if(options == null) {
+			options = new ChromeOptions();
+		}
+		
+		if("dev".equals(envName)) {
+			options.addArguments(WebDriverConstant.headLess);
+		}
+		
+		Map<String, String> mobileEmulation = new HashMap<>();
+
+		mobileEmulation.put("deviceName", "Nexus 5");
+
+		options.setExperimentalOption("mobileEmulation", mobileEmulation);
+
+		driver = new ChromeDriver(options);
+		
+		return driver;
+		
+	}
+	
+	@Override
 	public WebDriver buildChromeWebDriver(ChromeOptions options) {
-		String path = globalOptionService.getChrome80Path();
+		String path = globalOptionService.getChrome8xPath();
 		String driverType = WebDriverConstant.chromeDriver;
 		System.setProperty(driverType, path);
 		WebDriver driver = null;
