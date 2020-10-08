@@ -142,6 +142,8 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 				throw new Exception();
 			}
 			
+			threadSleepRandomTime();
+			
 			jsonReporter.appendContent(reportDTO, "完成登录");
 			
 			catchWatchMe(d, reportDTO);
@@ -186,7 +188,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 		return r;
 	}
 	
-	private void findAndCloseLeadDiv(WebDriver d) {
+	private void findAndCloseLeadDiv(WebDriver d, JsonReportDTO reportDTO) {
 		XpathBuilderBO x = new XpathBuilderBO();
 		
 		x.start("div").addClass("lead");
@@ -194,7 +196,10 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 		try {
 			WebElement leadDiv = d.findElement(By.xpath(x.getXpath()));
 			if(leadDiv == null || !leadDiv.isDisplayed()) {
+				jsonReporter.appendContent(reportDTO, "can not find lead div");
 				return;
+			} else {
+				jsonReporter.appendContent(reportDTO, "find lead div");
 			}
 			
 			x.findChild("div").addClass("close");
@@ -202,12 +207,15 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			
 			WebElement leadCloseDiv = d.findElement(By.xpath(x.getXpath()));
 			leadCloseDiv.click();
+			jsonReporter.appendContent(reportDTO, "close lead div");
+			
 		} catch (Exception e) {
-			e.printStackTrace();
+			jsonReporter.appendContent(reportDTO, "close lead div exception");
+			jsonReporter.appendContent(reportDTO, e.getLocalizedMessage());
 		}
 	}
 	
-	private void findAndCloseGoAppDiv(WebDriver d) {
+	private void findAndCloseGoAppDiv(WebDriver d, JsonReportDTO reportDTO) {
 		XpathBuilderBO x = new XpathBuilderBO();
 		
 		x.start("div").addClass("goApp");
@@ -215,7 +223,10 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 		try {
 			WebElement goAppDiv = d.findElement(By.xpath(x.getXpath()));
 			if(goAppDiv == null || !goAppDiv.isDisplayed()) {
+				jsonReporter.appendContent(reportDTO, "can not find go app div");
 				return;
+			} else {
+				jsonReporter.appendContent(reportDTO, "find go app div");
 			}
 			
 			x.findChild("em").addClass("close");
@@ -223,8 +234,11 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			
 			WebElement goAppCloseButton = d.findElement(By.xpath(x.getXpath()));
 			goAppCloseButton.click();
+			jsonReporter.appendContent(reportDTO, "close go app div");
+			
 		} catch (Exception e) {
-			e.printStackTrace();
+			jsonReporter.appendContent(reportDTO, "close go app div exception");
+			jsonReporter.appendContent(reportDTO, e.getLocalizedMessage());
 		}
 	}
 	
@@ -240,11 +254,14 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 				jsonReporter.appendContent(reportDTO, "get home page but timeout");
 			}
 			
-			findAndCloseLeadDiv(d);
-			findAndCloseGoAppDiv(d);
+			jsonReporter.appendContent(reportDTO, "try find lead div and go app div");
+			findAndCloseLeadDiv(d, reportDTO);
+			findAndCloseGoAppDiv(d, reportDTO);
+			jsonReporter.appendContent(reportDTO, "after close lead and go app div");
 			
 			// 向下翻动一下页面, 以使登录按钮出现在页面顶部
 			jsUtil.scroll(d, 200);
+			jsonReporter.appendContent(reportDTO, "after scroll");
 			
 			x.start("div").addAttribute("id", "pageTop")
 			.findChild("header")
@@ -252,6 +269,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			;
 			WebElement loginPageButton = d.findElement(By.xpath(x.getXpath()));
 			loginPageButton.click();
+			jsonReporter.appendContent(reportDTO, "click login page button");
 			
 			x.start("input").addAttribute("id", "loginname");
 			WebElement usernameInput = null;
@@ -264,6 +282,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			usernameInput.click();
 			usernameInput.clear();
 			usernameInput.sendKeys(dailySignBO.getUsername());
+			jsonReporter.appendContent(reportDTO, "input username");
 			
 			threadSleepRandomTime(1000L, 3000L);
 			
@@ -272,6 +291,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			try {
 				logoClick = d.findElement(By.xpath(x.getXpath()));
 				logoClick.click();
+				jsonReporter.appendContent(reportDTO, "close logo");
 				/*
 				 * 有时候 输入完用户帐号, 会遮挡住密码输入框, 引起报错
 				 */
@@ -290,6 +310,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			pwdInput.click();
 			pwdInput.clear();
 			pwdInput.sendKeys(dailySignBO.getPwd());
+			jsonReporter.appendContent(reportDTO, "input pwd");
 			
 			threadSleepRandomTime(1000L, 3000L);
 			
@@ -301,11 +322,13 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 				jsonReporter.appendContent(reportDTO, "找不到登录按钮");
 			}
 			loginButton.click();
-			
-			threadSleepRandomTime(1000L, 3000L);
+			jsonReporter.appendContent(reportDTO, "click login button");
 			
 			return true;
 		} catch (Exception e) {
+			
+			jsonReporter.appendContent(reportDTO, "login exception");
+			jsonReporter.appendContent(reportDTO, e.getLocalizedMessage());
 			return false;
 		}
 	}
