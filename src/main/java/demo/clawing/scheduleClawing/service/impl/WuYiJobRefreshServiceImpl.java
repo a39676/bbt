@@ -161,7 +161,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			}
 			
 			constantService.setValByName(wuYiRunCountKey, String.valueOf(runCount + 1));
-			jsonReporter.appendContent(reportDTO, "更新 redis 计数");
+			jsonReporter.appendContent(reportDTO, "更新 redis 计数: " + (runCount));
 			
 			r.setIsSuccess();
 			
