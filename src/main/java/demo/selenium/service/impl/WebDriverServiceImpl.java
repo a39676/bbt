@@ -5,6 +5,8 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -80,6 +82,49 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 //			Dimension targetSize = new Dimension(1024, 800);
 //			driver.manage().window().setSize(targetSize);
 			driver.manage().window().maximize();
+		}
+		return driver;
+	}
+	
+	@Override
+	public WebDriver buildFireFoxWebDriverMobileEmulation() {
+		return buildFireFoxWebDriverMobileEmulation(null);
+	}
+	
+	@Override
+	public WebDriver buildFireFoxWebDriverMobileEmulation(FirefoxOptions options) {
+		String envName = constantService.getValByName("envName", true);
+		String path = globalOptionService.getGeckoPath();
+		String driverType = WebDriverConstant.geckoDriver;
+		System.setProperty(driverType, path);
+		if (options == null) {
+			options = new FirefoxOptions();
+			if (!"dev".equals(envName) || !isWindows()) {
+				options.addArguments(WebDriverConstant.headLess);
+			}
+		}
+		
+
+		if (options.getProfile() == null) {
+			FirefoxProfile profile = new FirefoxProfile();
+			profile.setPreference(FireFoxConstant.folderList, 2);
+			profile.setPreference(FireFoxConstant.downloadDir, globalOptionService.getDownloadDir());
+			profile.setPreference(FireFoxConstant.downloadShowWhenStarting, false);
+			StringBuffer sb = new StringBuffer();
+			for (HtmlMimeType i : HtmlMimeType.values()) {
+				sb.append(i.getCode() + ",");
+			}
+			profile.setPreference(FireFoxConstant.neverAskSaveToDisk, sb.toString());
+			options.setProfile(profile);
+		}
+
+		FirefoxDriver driver = new FirefoxDriver(options);
+		driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS);
+		if ("dev".equals(envName) ) {
+			Point p = new Point(0, 0);
+			driver.manage().window().setPosition(p);
+			Dimension targetSize = new Dimension(360, 640);
+			driver.manage().window().setSize(targetSize);
 		}
 		return driver;
 	}

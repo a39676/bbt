@@ -24,7 +24,7 @@ import demo.selenium.service.SeleniumService;
 import demo.selenium.service.WebDriverService;
 
 @Service
-public class SeleniumServiceImpl extends CommonService implements SeleniumService {
+public class SeleniumDemoServiceImpl extends CommonService implements SeleniumService {
 
 	@Autowired
 	private WebDriverService webDriverService;

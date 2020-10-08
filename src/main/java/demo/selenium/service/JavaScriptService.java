@@ -19,4 +19,11 @@ public interface JavaScriptService {
 
 	boolean isVisibleInViewport(WebDriver driver, WebElement element);
 
+	/**
+	 * if pix > 0 scroll down, else scroll up
+	 * @param driver
+	 * @param pix 
+	 */
+	void scroll(WebDriver driver, int pix);
+
 }

@@ -135,7 +135,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 				runCount = 0;
 			}
 
-			d = webDriverService.buildFireFoxWebDriver();
+			d = webDriverService.buildFireFoxWebDriverMobileEmulation();
 			
 			if(!login(d, reportDTO, clawingOptionBO)) {
 				r.failWithMessage("登录失败");
@@ -189,7 +189,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 	private void findAndCloseLeadDiv(WebDriver d) {
 		XpathBuilderBO x = new XpathBuilderBO();
 		
-		x.start("div").addAttribute("id", "lead");
+		x.start("div").addClass("lead");
 		
 		try {
 			WebElement leadDiv = d.findElement(By.xpath(x.getXpath()));
@@ -197,15 +197,34 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 				return;
 			}
 			
-			x.start("div").addAttribute("id", "lead")
-			.findChild("div").addAttribute("class", "img")
-			.findChild("div").addAttribute("class", "close closeloginpop")
+			x.findChild("div").addClass("close");
 			;
 			
-			WebElement leadCloseButton = d.findElement(By.xpath(x.getXpath()));
-			leadCloseButton.click();
+			WebElement leadCloseDiv = d.findElement(By.xpath(x.getXpath()));
+			leadCloseDiv.click();
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void findAndCloseGoAppDiv(WebDriver d) {
+		XpathBuilderBO x = new XpathBuilderBO();
+		
+		x.start("div").addClass("goApp");
+		
+		try {
+			WebElement goAppDiv = d.findElement(By.xpath(x.getXpath()));
+			if(goAppDiv == null || !goAppDiv.isDisplayed()) {
+				return;
+			}
 			
+			x.findChild("em").addClass("close");
+			;
+			
+			WebElement goAppCloseButton = d.findElement(By.xpath(x.getXpath()));
+			goAppCloseButton.click();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -222,14 +241,17 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			}
 			
 			findAndCloseLeadDiv(d);
+			findAndCloseGoAppDiv(d);
+			
+			// 向下翻动一下页面, 以使登录按钮出现在页面顶部
+			jsUtil.scroll(d, 200);
 			
 			x.start("div").addAttribute("id", "pageTop")
 			.findChild("header")
-			.findChild("p").addAttribute("class", "links")
-			.findChild("a", 1)
+			.findChild("a", 2)
 			;
-			
-			d.findElement(By.xpath(x.getXpath())).click();
+			WebElement loginPageButton = d.findElement(By.xpath(x.getXpath()));
+			loginPageButton.click();
 			
 			x.start("input").addAttribute("id", "loginname");
 			WebElement usernameInput = null;

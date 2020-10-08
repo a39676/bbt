@@ -27,4 +27,8 @@ public interface WebDriverService {
 
 	WebDriver buildOperaWebDriver();
 
+	WebDriver buildFireFoxWebDriverMobileEmulation(FirefoxOptions options);
+
+	WebDriver buildFireFoxWebDriverMobileEmulation();
+
 }

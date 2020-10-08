@@ -45,6 +45,12 @@ public class JavaScriptServiceImpl extends CommonService implements JavaScriptSe
 		JavascriptExecutor jse = (JavascriptExecutor) driver;
 		jse.executeScript("window.scrollTo(0, document.body.scrollHeight)");
 	}
+	
+	@Override
+	public void scroll(WebDriver driver, int pix) {
+		JavascriptExecutor jse = (JavascriptExecutor) driver;
+		jse.executeScript("window.scrollBy(0,"+ pix +")");
+	}
 
 	@Override
 	public boolean isVisibleInViewport(WebDriver driver, WebElement element) {

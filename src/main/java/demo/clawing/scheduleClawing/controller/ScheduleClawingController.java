@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.clawing.scheduleClawing.pojo.constant.ScheduleClawingUrl;
 import demo.clawing.scheduleClawing.service.CdBaoDailySignService;
 import demo.clawing.scheduleClawing.service.LiePinDailySignService;
@@ -28,27 +30,32 @@ public class ScheduleClawingController {
 	private PreciousMetalsPriceService preciousMetalsPriceService;
 	
 	@GetMapping(value = ScheduleClawingUrl.insertWuYiSign)
-	public void insertWuYiSign() {
-		wuyiService.insertClawingEvent();
+	@ResponseBody
+	public InsertTestEventResult insertWuYiSign() {
+		return wuyiService.insertClawingEvent();
 	}
 	
 	@GetMapping(value = ScheduleClawingUrl.insertLiePinSign)
-	public void insertLiePinSign() {
-		leiPinService.insertDailySignEvent();
+	@ResponseBody
+	public InsertTestEventResult insertLiePinSign() {
+		return leiPinService.insertDailySignEvent();
 	}
 	
 	@GetMapping(value = ScheduleClawingUrl.insertCDBaoSign)
-	public void insertCDBaoSign() {
-		cdBaoService.insertDailySignEvent();
+	@ResponseBody
+	public InsertTestEventResult insertCDBaoSign() {
+		return cdBaoService.insertDailySignEvent();
 	}
 	
 	@GetMapping(value = ScheduleClawingUrl.insertMaiMai)
-	public void insertMaiMaiLocalClawing() {
-		maiMaiLocalClawingServiceImpl.insertClawingEvent();
+	@ResponseBody
+	public InsertTestEventResult insertMaiMaiLocalClawing() {
+		return maiMaiLocalClawingServiceImpl.insertClawingEvent();
 	}
 	
 	@GetMapping(value = ScheduleClawingUrl.insertPreciousMetal)
-	public void insertPreciousMetal() {
-		preciousMetalsPriceService.insertClawingEvent();
+	@ResponseBody
+	public InsertTestEventResult insertPreciousMetal() {
+		return preciousMetalsPriceService.insertClawingEvent();
 	}
 }
