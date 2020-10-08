@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import demo.clawing.scheduleClawing.service.PreciousMetalsPriceService;
 import demo.clawing.scheduleClawing.service.WuYiJobRefreshService;
 
 @Component
@@ -16,8 +15,8 @@ public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 	@Autowired
 	private WuYiJobRefreshService wuyiService;
 
-	@Autowired
-	private PreciousMetalsPriceService preciousMetalsPriceService;
+//	@Autowired
+//	private PreciousMetalsPriceService preciousMetalsPriceService;
 
 //	@Scheduled(fixedRate = 1000L * 60 * 5)
 	@Scheduled(cron = "0 */5 * * * ?")
@@ -34,20 +33,23 @@ public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 		}
 	}
 	
-	@Scheduled(cron = "*/30 * * * * ?")
-	public void insertMetalsPriceClaw() {
-		/*
-		 * TODO
-		 * 2020-07-16
-		 * 大概率损失 每周 开盘 & 收盘价, 
-		 * 交给cx 通过api 加入任务?
-		 * 需要设法捕捉
-		 */
-		if (!"dev".equals(constantService.getValByName("envName"))
-				&& isPreciousMetalsTransactionTime()) {
-			preciousMetalsPriceService.insertClawingEvent();
-		}
-	}
+	/*
+	 * 暂时放弃贵金属价格收集
+	 */
+//	@Scheduled(cron = "*/30 * * * * ?")
+//	public void insertMetalsPriceClaw() {
+//		/*
+//		 * TODO
+//		 * 2020-07-16
+//		 * 大概率损失 每周 开盘 & 收盘价, 
+//		 * 交给cx 通过api 加入任务?
+//		 * 需要设法捕捉
+//		 */
+//		if (!"dev".equals(constantService.getValByName("envName"))
+//				&& isPreciousMetalsTransactionTime()) {
+//			preciousMetalsPriceService.insertClawingEvent();
+//		}
+//	}
 	
 	/*
 	 * TODO
@@ -58,34 +60,34 @@ public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 	 * 1. 输入时间, 判断是否交易时间
 	 * 2. 交易时间, 
 	 */
-	private boolean isPreciousMetalsTransactionTime() {
-		LocalDateTime beiJingNow = LocalDateTime.now();
-		LocalDateTime washtonNow = beiJingNow.minusHours(12);
-		int dayOfWeek = beiJingNow.getDayOfWeek().getValue();
-		
-		/*
-		 * 2020-07-06
-		 * 理论上美国黄金交易时间为: 
-		 * (北京时间) 周一06:60 ~ 周六 03:30
-		 * 冬令时期间 延后半小时
-		 */
-		boolean isUSWinterTime = localDateTimeHandler.isUSWinterTime(washtonNow.toLocalDate());
-		if(isUSWinterTime) {
-			beiJingNow = beiJingNow.minusMinutes(30);
-		}
-		
-		if (dayOfWeek == 1) {
-			return (beiJingNow.getHour() >= 6 && beiJingNow.getMinute() >= 30);
-		} else if (dayOfWeek > 1 && dayOfWeek < 6) {
-			return true;
-		} else if (dayOfWeek == 6) {
-			return (beiJingNow.getHour() <= 3 && beiJingNow.getMinute() <= 30);
-		} else if (dayOfWeek > 6) {
-			return false;
-		}
-
-		return false;
-	}
+//	private boolean isPreciousMetalsTransactionTime() {
+//		LocalDateTime beiJingNow = LocalDateTime.now();
+//		LocalDateTime washtonNow = beiJingNow.minusHours(12);
+//		int dayOfWeek = beiJingNow.getDayOfWeek().getValue();
+//		
+//		/*
+//		 * 2020-07-06
+//		 * 理论上美国黄金交易时间为: 
+//		 * (北京时间) 周一06:60 ~ 周六 03:30
+//		 * 冬令时期间 延后半小时
+//		 */
+//		boolean isUSWinterTime = localDateTimeHandler.isUSWinterTime(washtonNow.toLocalDate());
+//		if(isUSWinterTime) {
+//			beiJingNow = beiJingNow.minusMinutes(30);
+//		}
+//		
+//		if (dayOfWeek == 1) {
+//			return (beiJingNow.getHour() >= 6 && beiJingNow.getMinute() >= 30);
+//		} else if (dayOfWeek > 1 && dayOfWeek < 6) {
+//			return true;
+//		} else if (dayOfWeek == 6) {
+//			return (beiJingNow.getHour() <= 3 && beiJingNow.getMinute() <= 30);
+//		} else if (dayOfWeek > 6) {
+//			return false;
+//		}
+//
+//		return false;
+//	}
 
 //	@Autowired
 //	private MaiMaiScheduleClawingServiceImpl maiMaiLocalClawingServiceImpl;
