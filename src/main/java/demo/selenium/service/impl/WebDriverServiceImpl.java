@@ -123,7 +123,7 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 		if ("dev".equals(envName) ) {
 			Point p = new Point(0, 0);
 			driver.manage().window().setPosition(p);
-			Dimension targetSize = new Dimension(360, 640);
+			Dimension targetSize = new Dimension(360, 1200);
 			driver.manage().window().setSize(targetSize);
 		}
 		return driver;
