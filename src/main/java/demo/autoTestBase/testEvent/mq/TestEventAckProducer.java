@@ -4,7 +4,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import demo.autoTestBase.testEvent.pojo.constant.TestEventOptionConstant;
+import demo.autoTestBase.testEvent.pojo.constant.TestEventMQConstant;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.baseCommon.service.CommonService;
 import net.sf.json.JSONObject;
@@ -20,7 +20,7 @@ public class TestEventAckProducer extends CommonService {
 			return;
 		}
 		JSONObject json = testEventPOToJSON(te);
-		rabbitTemplate.convertAndSend(TestEventOptionConstant.testEventQueue, json.toString());
+		rabbitTemplate.convertAndSend(TestEventMQConstant.TEST_EVENT_QUEUE, json.toString());
 	}
 
 	private JSONObject testEventPOToJSON(TestEvent te) {

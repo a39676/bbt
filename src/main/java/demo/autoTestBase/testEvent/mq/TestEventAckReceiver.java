@@ -10,14 +10,14 @@ import org.springframework.stereotype.Component;
 
 import com.rabbitmq.client.Channel;
 
-import demo.autoTestBase.testEvent.pojo.constant.TestEventOptionConstant;
+import demo.autoTestBase.testEvent.pojo.constant.TestEventMQConstant;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.baseCommon.service.CommonService;
 import net.sf.json.JSONObject;
 
 @Component
-@RabbitListener(queues = TestEventOptionConstant.testEventQueue)
+@RabbitListener(queues = TestEventMQConstant.TEST_EVENT_QUEUE)
 public class TestEventAckReceiver extends CommonService {
 
 	@Autowired
