@@ -140,7 +140,7 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			jsonReporter.appendContent(reportDTO, "异常: " + e);
+			jsonReporter.appendContent(reportDTO, "异常(goldPriceApi): " + e);
 
 		} finally {
 			if (jsonReporter.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
@@ -215,7 +215,7 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			jsonReporter.appendContent(reportDTO, "异常: " + e);
+			jsonReporter.appendContent(reportDTO, "异常(nfusionsolutionApi): " + e);
 
 		} finally {
 			if (jsonReporter.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
@@ -263,6 +263,9 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 
 	@Override
 	public CommonResultBBT clawing(TestEvent te) {
+		/*
+		 * 页面不稳定, 亦不适合高强度访问, 搁置;
+		 */
 		CommonResultBBT r = new CommonResultBBT();
 
 		JsonReportDTO reportDTO = new JsonReportDTO();

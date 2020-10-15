@@ -299,7 +299,7 @@ public class MovieInteractionServiceImpl extends CommonService implements MovieI
 		imageStoreExample.createCriteria().andIsDeleteEqualTo(false).andIdIn(imgIdList);
 		List<ImageStore> imgPOList = imageStoreMapper.selectByExample(imageStoreExample);
 		Map<Long, ImageStore> imgPOMap = imgPOList.stream().collect(Collectors.toMap(ImageStore::getId, Function.identity()));
-		
+			
 		Map<Long, ImageStore> movieIdMapImage = new HashMap<Long, ImageStore>();
 		Long tmpImgId = null;
 		for(Entry<Long, Long> movieIdMapImgIdEntry : movieIdMapImageId.entrySet()) {

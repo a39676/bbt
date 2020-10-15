@@ -9,6 +9,7 @@ import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.baseCommon.service.CommonService;
 import demo.clawing.scheduleClawing.pojo.type.ScheduleClawingType;
 import demo.clawing.scheduleClawing.service.CdBaoDailySignService;
+import demo.clawing.scheduleClawing.service.CryptoCoinPriceService;
 import demo.clawing.scheduleClawing.service.LiePinDailySignService;
 import demo.clawing.scheduleClawing.service.PreciousMetalsPriceService;
 import demo.clawing.scheduleClawing.service.WuYiJobRefreshService;
@@ -26,6 +27,8 @@ public class ScheduleClawingPrefixServiceImpl extends CommonService implements R
 	private MaiMaiScheduleClawingServiceImpl maiMaiLocalClawingServiceImpl;
 	@Autowired
 	private PreciousMetalsPriceService preciousMetalsPriceService;
+	@Autowired
+	private CryptoCoinPriceService cryptoCoinPriceService;
 	
 	@Override
 	public CommonResultBBT runSubEvent(TestEvent te) {
@@ -41,6 +44,8 @@ public class ScheduleClawingPrefixServiceImpl extends CommonService implements R
 			return maiMaiLocalClawingServiceImpl.clawing(te);
 		} else if(ScheduleClawingType.preciousMetalPrice.getId().equals(caseId)) {
 			return preciousMetalsPriceService.goldPriceOrgAPI(te);
+		} else if(ScheduleClawingType.cryptoCoinPrice.getId().equals(caseId)) {
+			return cryptoCoinPriceService.cryptoCoinAPI(te);
 		}
 		return new CommonResultBBT();
 	}

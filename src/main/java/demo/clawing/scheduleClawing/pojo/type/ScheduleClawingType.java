@@ -23,6 +23,8 @@ public enum ScheduleClawingType {
 	 * */
 	preciousMetalPrice(7L, "preciousMetalPrice"),
 	
+	cryptoCoinPrice(8L, "cryptoCoinPrice"),
+	
 	;
 
 	private Long id;
