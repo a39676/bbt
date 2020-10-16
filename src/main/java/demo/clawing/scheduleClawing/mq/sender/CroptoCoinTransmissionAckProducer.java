@@ -4,9 +4,9 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import cryptoCoin.pojo.constant.CryptoCoinMQConstant;
-import cryptoCoin.pojo.dto.CryptoCoinPriceDTO;
 import demo.baseCommon.service.CommonService;
+import finance.cryptoCoin.pojo.constant.CryptoCoinMQConstant;
+import finance.cryptoCoin.pojo.dto.CryptoCoinPriceDTO;
 import net.sf.json.JSONObject;
 
 @Component

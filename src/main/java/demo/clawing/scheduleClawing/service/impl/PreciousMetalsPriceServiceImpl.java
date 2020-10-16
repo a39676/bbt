@@ -28,11 +28,11 @@ import demo.clawing.scheduleClawing.pojo.type.ScheduleClawingType;
 import demo.clawing.scheduleClawing.service.PreciousMetalsPriceService;
 import demo.selenium.pojo.bo.BuildTestEventBO;
 import demo.selenium.service.impl.SeleniumCommonService;
+import finance.precious_metal.pojo.constant.PreciousMetalConstant;
+import finance.precious_metal.pojo.dto.PreciousMetailPriceDTO;
+import finance.precious_metal.pojo.result.CatchMetalPriceResult;
+import finance.precious_metal.pojo.type.MetalType;
 import net.sf.json.JSONObject;
-import precious_metal.pojo.constant.PreciousMetalConstant;
-import precious_metal.pojo.dto.PreciousMetailPriceDTO;
-import precious_metal.pojo.result.CatchMetalPriceResult;
-import precious_metal.pojo.type.MetalType;
 import tool.pojo.type.UtilOfWeightType;
 import toolPack.httpHandel.HttpUtil;
 

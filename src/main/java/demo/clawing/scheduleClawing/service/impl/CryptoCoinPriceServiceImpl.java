@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import at.report.pojo.dto.JsonReportDTO;
 import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.type.CurrencyType;
-import cryptoCoin.pojo.dto.CryptoCoinPriceDTO;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.baseCommon.pojo.result.CommonResultBBT;
@@ -17,6 +16,7 @@ import demo.clawing.scheduleClawing.pojo.type.ScheduleClawingType;
 import demo.clawing.scheduleClawing.service.CryptoCoinPriceService;
 import demo.selenium.pojo.bo.BuildTestEventBO;
 import demo.selenium.service.impl.SeleniumCommonService;
+import finance.cryptoCoin.pojo.dto.CryptoCoinPriceDTO;
 import net.sf.json.JSONObject;
 import toolPack.httpHandel.HttpUtil;
 

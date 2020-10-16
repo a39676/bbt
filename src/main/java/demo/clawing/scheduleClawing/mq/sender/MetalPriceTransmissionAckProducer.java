@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import demo.baseCommon.service.CommonService;
+import finance.precious_metal.pojo.constant.PreciousMetalMQConstant;
+import finance.precious_metal.pojo.dto.PreciousMetailPriceDTO;
 import net.sf.json.JSONObject;
-import precious_metal.pojo.constant.PreciousMetalMQConstant;
-import precious_metal.pojo.dto.PreciousMetailPriceDTO;
 
 @Component
 public class MetalPriceTransmissionAckProducer extends CommonService {
