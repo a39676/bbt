@@ -43,7 +43,8 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 	private String historyCryptoCoinPriceCollectingParam = "historyCryptoCoinPriceCollectingParam.json";
 
 	private TestModuleType testModuleType = TestModuleType.scheduleClawing;
-	private ScheduleClawingType testCastType = ScheduleClawingType.cryptoCoinPrice;
+	private ScheduleClawingType cryptoCoinNewPrice = ScheduleClawingType.cryptoCoinNewPrice;
+	private ScheduleClawingType cryptoCoinHistoryPrice = ScheduleClawingType.cryptoCoinHistoryPrice;
 
 	private TestEvent buildNewPriceCollectingEvent() {
 		String paramterFolderPath = getParameterSaveingPath(cryptoCoinNewPriceCollect);
@@ -55,8 +56,8 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 		
 		BuildTestEventBO bo = new BuildTestEventBO();
 		bo.setTestModuleType(testModuleType);
-		bo.setCaseId(testCastType.getId());
-		bo.setEventName(testCastType.getEventName());
+		bo.setCaseId(cryptoCoinNewPrice.getId());
+		bo.setEventName(cryptoCoinNewPrice.getEventName());
 		bo.setParameterFilePath(paramterFile.getAbsolutePath());
 		return buildTestEvent(bo);
 	}
@@ -77,8 +78,8 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 		
 		BuildTestEventBO bo = new BuildTestEventBO();
 		bo.setTestModuleType(testModuleType);
-		bo.setCaseId(testCastType.getId());
-		bo.setEventName(testCastType.getEventName());
+		bo.setCaseId(cryptoCoinHistoryPrice.getId());
+		bo.setEventName(cryptoCoinHistoryPrice.getEventName());
 		bo.setParameterFilePath(paramterFile.getAbsolutePath());
 		return buildTestEvent(bo);
 	}

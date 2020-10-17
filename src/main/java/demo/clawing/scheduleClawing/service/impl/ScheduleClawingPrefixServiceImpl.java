@@ -29,23 +29,25 @@ public class ScheduleClawingPrefixServiceImpl extends CommonService implements R
 	private PreciousMetalsPriceService preciousMetalsPriceService;
 	@Autowired
 	private CryptoCoinPriceService cryptoCoinPriceService;
-	
+
 	@Override
 	public CommonResultBBT runSubEvent(TestEvent te) {
 		Long caseId = te.getCaseId();
-		
+
 		if (ScheduleClawingType.wuYiJob.getId().equals(caseId)) {
 			return wuYiSign.clawing(te);
 		} else if (ScheduleClawingType.liePin.getId().equals(caseId)) {
 			return liePinSign.dailySign(te);
 		} else if (ScheduleClawingType.cdBao.getId().equals(caseId)) {
 			return cdBao.dailySign(te);
-		} else if(ScheduleClawingType.maiMai.getId().equals(caseId)) {
+		} else if (ScheduleClawingType.maiMai.getId().equals(caseId)) {
 			return maiMaiLocalClawingServiceImpl.clawing(te);
-		} else if(ScheduleClawingType.preciousMetalPrice.getId().equals(caseId)) {
+		} else if (ScheduleClawingType.preciousMetalPrice.getId().equals(caseId)) {
 			return preciousMetalsPriceService.goldPriceOrgAPI(te);
-		} else if(ScheduleClawingType.cryptoCoinPrice.getId().equals(caseId)) {
+		} else if (ScheduleClawingType.cryptoCoinNewPrice.getId().equals(caseId)) {
 			return cryptoCoinPriceService.cryptoCoinNewPriceAPI(te);
+		} else if (ScheduleClawingType.cryptoCoinHistoryPrice.getId().equals(caseId)) {
+			return cryptoCoinPriceService.cryptoCoinHistoryPriceAPI(te);
 		}
 		return new CommonResultBBT();
 	}
