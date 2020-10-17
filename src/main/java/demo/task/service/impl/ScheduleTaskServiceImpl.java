@@ -38,10 +38,19 @@ public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 	}
 	
 	@Scheduled(cron = "*/30 * * * * ?")
-	public void insertCryptoCoinPriceCollect() {
+	public void insertCryptoCoinNewPriceCollect() {
+//		TODO
 //		if (!"dev".equals(constantService.getValByName("envName"))) {
 //		}
-		cryptoCoinPriceService.insertClawingEvent();
+		cryptoCoinPriceService.insertNewCryptoCoinPriceEvent();
+	}
+	
+	@Scheduled(cron = "0 */8 * * * ?")
+	public void insertCryptoCoinHistoryPriceCollect() {
+//		TODO
+//		if (!"dev".equals(constantService.getValByName("envName"))) {
+//		}
+		cryptoCoinPriceService.insertHistoryCryptoCoinPriceEvent();
 	}
 	
 	@Scheduled(cron = "*/30 * * * * ?")
