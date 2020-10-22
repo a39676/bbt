@@ -232,7 +232,6 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 
 		return r;
 	}
-
 	
 	private List<CryptoCoinHistoryPriceSubDTO> handleCryptoCoinHistoryResponse(String response, String coinName, String currencyName) {
 		List<CryptoCoinHistoryPriceSubDTO> list = new ArrayList<>();
