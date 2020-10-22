@@ -214,6 +214,8 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 					
 					subDataList = handleCryptoCoinHistoryResponse(httpResponse, coinTypeName, currencyName);
 					mainDTO.setPriceHistoryData(subDataList);
+					mainDTO.setCryptoCoinTypeName(coinTypeName);
+					mainDTO.setCurrencyName(currencyName);
 					
 					croptoCoinTransmissionAckProducer.sendHistoryPrice(mainDTO);
 				}
@@ -245,16 +247,18 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 		JSONObject subJson = null;
 		CryptoCoinHistoryPriceSubDTO priceDataDTO = null;
 		
+		Date tmpDate = null;
 		for(int i = 0; i < dataArray.size(); i++) {
 			subJson = (JSONObject) dataArray.get(i);
 			priceDataDTO = new CryptoCoinHistoryPriceSubDTO();
-			priceDataDTO.setTime(localDateTimeHandler.dateToLocalDateTime(new Date(subJson.getLong("time") * 1000L)));
 			priceDataDTO.setCoinType(coinName);
 			priceDataDTO.setCurrencyType(currencyName);
 			priceDataDTO.setStart(subJson.getDouble("open"));
 			priceDataDTO.setEnd(subJson.getDouble("close"));
 			priceDataDTO.setHigh(subJson.getDouble("high"));
 			priceDataDTO.setLow(subJson.getDouble("low"));
+			tmpDate = new Date(subJson.getLong("time") + 1000L);
+			priceDataDTO.setTime(localDateTimeHandler.dateToStr(localDateTimeHandler.dateToLocalDateTime(tmpDate)));
 			list.add(priceDataDTO);
 		}
 		
