@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.clawing.scheduleClawing.pojo.constant.ScheduleClawingUrl;
 import demo.clawing.scheduleClawing.service.CdBaoDailySignService;
+import demo.clawing.scheduleClawing.service.CryptoCoinPriceService;
 import demo.clawing.scheduleClawing.service.LiePinDailySignService;
 import demo.clawing.scheduleClawing.service.PreciousMetalsPriceService;
 import demo.clawing.scheduleClawing.service.WuYiJobRefreshService;
@@ -57,5 +58,14 @@ public class ScheduleClawingController {
 	@ResponseBody
 	public InsertTestEventResult insertPreciousMetal() {
 		return preciousMetalsPriceService.insertClawingEvent();
+	}
+	
+	@Autowired
+	private CryptoCoinPriceService cryptoCoinPriceService;
+	
+	@GetMapping(value = "/insertHistoryCryptoCoinPriceEvent")
+	@ResponseBody
+	public InsertTestEventResult insertHistoryCryptoCoinPriceEvent() {
+		return cryptoCoinPriceService.insertHistoryCryptoCoinPriceEvent();
 	}
 }

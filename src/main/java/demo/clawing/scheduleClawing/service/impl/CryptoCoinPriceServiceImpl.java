@@ -257,7 +257,7 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 			priceDataDTO.setEnd(subJson.getDouble("close"));
 			priceDataDTO.setHigh(subJson.getDouble("high"));
 			priceDataDTO.setLow(subJson.getDouble("low"));
-			tmpDate = new Date(subJson.getLong("time") + 1000L);
+			tmpDate = new Date(subJson.getLong("time") * 1000L);
 			priceDataDTO.setTime(localDateTimeHandler.dateToStr(localDateTimeHandler.dateToLocalDateTime(tmpDate)));
 			list.add(priceDataDTO);
 		}
