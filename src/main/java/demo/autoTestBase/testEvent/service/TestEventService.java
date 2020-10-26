@@ -23,4 +23,8 @@ public interface TestEventService {
 
 	CommonResultBBT reciveTestEventAndRun(TestEvent te);
 
+	boolean checkExistsRuningEvent();
+
+	void fixRuningEventStatusManual();
+
 }

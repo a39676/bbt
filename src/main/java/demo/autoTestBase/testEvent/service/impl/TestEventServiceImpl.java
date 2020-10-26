@@ -218,4 +218,14 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		}
 		return sb.toString();
 	}
+
+	@Override
+	public boolean checkExistsRuningEvent() {
+		return existsRuningEvent();
+	}
+	
+	@Override
+	public void fixRuningEventStatusManual() {
+		constantService.setValByName(runningEventRedisKey, "false");
+	}
 }
