@@ -193,7 +193,7 @@ public class BadJokeSMSServiceImpl extends SeleniumCommonService implements BadJ
 			while(captchaIsNotCorrect.isDisplayed() && captchaCount < maxCaptchaCount) {
 				captchaImg.click();
 				try {
-					captchaCode = auxTool.captchaHandle(d, captchaImg, te);
+					captchaCode = captchaHandleService.captchaHandle(d, captchaImg, te);
 					captchaInput.clear();
 					captchaInput.sendKeys(captchaCode);
 					pwdInput.click();
@@ -594,7 +594,7 @@ public class BadJokeSMSServiceImpl extends SeleniumCommonService implements BadJ
 			WebElement captchaImg = d.findElement(captchaImgBy);
 			captchaImg.click();
 			
-			String captchaCode = auxTool.captchaHandle(d, captchaImg, te);
+			String captchaCode = captchaHandleService.captchaHandle(d, captchaImg, te);
 			
 			x.start("input").addAttribute("type", "text").addAttribute("id", "imgcode");
 			WebElement captchaCodeInput = d.findElement(By.xpath(x.getXpath()));
@@ -614,7 +614,7 @@ public class BadJokeSMSServiceImpl extends SeleniumCommonService implements BadJ
 					mobileInput.click();
 					captchaImg = d.findElement(captchaImgBy);
 					captchaImg.click();
-					captchaCode = auxTool.captchaHandle(d, captchaImg, te);
+					captchaCode = captchaHandleService.captchaHandle(d, captchaImg, te);
 					captchaCodeInput.click();
 					captchaCodeInput.clear();
 					captchaCodeInput.sendKeys(captchaCode);
@@ -701,7 +701,7 @@ public class BadJokeSMSServiceImpl extends SeleniumCommonService implements BadJ
 				captchaImg = d.findElement(imgCaptchaBy);
 				captchaImg.click();
 				Thread.sleep(520L);
-				captchaCode = auxTool.captchaHandle(d, captchaImg, te);
+				captchaCode = captchaHandleService.captchaHandle(d, captchaImg, te);
 				Thread.sleep(520L);
 				smsCodeInput.click();
 				smsCodeInput.clear();
@@ -808,7 +808,7 @@ public class BadJokeSMSServiceImpl extends SeleniumCommonService implements BadJ
 				}
 				
 				captchaImg.click();
-				captchaCode = auxTool.captchaHandle(d, captchaImg, te);
+				captchaCode = captchaHandleService.captchaHandle(d, captchaImg, te);
 				captchaInput.click();
 				captchaInput.clear();
 				captchaInput.sendKeys(captchaCode);

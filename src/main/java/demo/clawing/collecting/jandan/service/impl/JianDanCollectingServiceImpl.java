@@ -7,7 +7,6 @@ import org.openqa.selenium.WebDriver;
 import org.springframework.stereotype.Service;
 
 import at.report.pojo.dto.JsonReportDTO;
-import at.screenshot.pojo.dto.TakeScreenshotSaveDTO;
 import at.screenshot.pojo.result.ScreenshotSaveResult;
 import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
@@ -50,7 +49,6 @@ public class JianDanCollectingServiceImpl extends SeleniumCommonService implemen
 		 * TODO JianDanCollectingServiceImpl collecting
 		 */
 		
-		String screenshotPath = getScreenshotSaveingPath(COLLECT_EVENT_NAME);
 		String reportOutputFolderPath = getReportOutputPath(COLLECT_EVENT_NAME);
 		
 		JsonReportDTO reportDTO = new JsonReportDTO();
@@ -64,10 +62,7 @@ public class JianDanCollectingServiceImpl extends SeleniumCommonService implemen
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			TakeScreenshotSaveDTO screenshotDTO = new TakeScreenshotSaveDTO();
-			screenshotDTO.setDriver(d);
-			ScreenshotSaveResult screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath,
-					null);
+			ScreenshotSaveResult screenSaveResult = screenshot(d, te.getEventName());
 			
 			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());

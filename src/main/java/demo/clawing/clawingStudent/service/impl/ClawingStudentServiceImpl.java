@@ -15,8 +15,6 @@ import org.springframework.stereotype.Service;
 import at.xpath.pojo.bo.XpathBuilderBO;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.clawing.clawingStudent.service.ClawingStudentService;
-import demo.selenium.service.WebDriverService;
-import demo.selenium.service.impl.AuxiliaryToolServiceImpl;
 import demo.selenium.service.impl.SeleniumCommonService;
 import toolPack.ioHandle.FileUtilCustom;
 
@@ -25,10 +23,6 @@ public class ClawingStudentServiceImpl extends SeleniumCommonService implements 
 
 	@Autowired
 	private FileUtilCustom fileUtil;
-	@Autowired
-	private WebDriverService webDriverService;
-	@Autowired
-	private AuxiliaryToolServiceImpl auxTool;
 //	@Autowired
 //	private JavaScriptService jsUtil;
 	
@@ -163,7 +157,7 @@ public class ClawingStudentServiceImpl extends SeleniumCommonService implements 
 		String vcode = null;
 
 		try {
-			vcode = auxTool.captchaHandle(d, verifyCodeImg, te);
+			vcode = captchaHandleService.captchaHandle(d, verifyCodeImg, te);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

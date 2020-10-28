@@ -11,20 +11,17 @@ import org.openqa.selenium.support.ui.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import at.screenshot.pojo.dto.TakeScreenshotSaveDTO;
-import at.screenshot.service.ScreenshotService;
 import at.tool.WebATToolService;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventDemoBO;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.service.TestEventService;
-import demo.baseCommon.service.CommonService;
 import demo.selenium.pojo.result.TestEventResult;
 import demo.selenium.service.JavaScriptService;
 import demo.selenium.service.SeleniumService;
 import demo.selenium.service.WebDriverService;
 
 @Service
-public class SeleniumDemoServiceImpl extends CommonService implements SeleniumService {
+public class SeleniumDemoServiceImpl extends SeleniumCommonService implements SeleniumService {
 
 	@Autowired
 	private WebDriverService webDriverService;
@@ -32,8 +29,6 @@ public class SeleniumDemoServiceImpl extends CommonService implements SeleniumSe
 	private AuxiliaryToolServiceImpl auxiliaryToolService;
 	@Autowired
 	private WebATToolService webATToolService;
-	@Autowired
-	private ScreenshotService screenshotService;
 	@Autowired
 	private JavaScriptService jsUtil;
 	@Autowired
@@ -72,8 +67,8 @@ public class SeleniumDemoServiceImpl extends CommonService implements SeleniumSe
 			uploadEle.clear();
 			uploadEle.sendKeys("/path/to/target/file");
 
-			WebElement recaptcha = driver.findElement(By.id("demoId"));
-			String src = recaptcha.getAttribute("src");
+			WebElement recaptchaEle = driver.findElement(By.id("demoId"));
+			String src = recaptchaEle.getAttribute("src");
 			System.out.println(src);
 			
 			auxiliaryToolService.fluentWait(driver, b);
@@ -94,10 +89,8 @@ public class SeleniumDemoServiceImpl extends CommonService implements SeleniumSe
 			WebElement radioElement = driver.findElement(By.id("demoRadioId"));
 			radioElement.click();
 			
-			TakeScreenshotSaveDTO dto = new TakeScreenshotSaveDTO();
-			dto.setDriver(driver);
-			screenshotService.screenshotSave(dto, "/scrSavingFolder", null);
-			String ocrResult = auxiliaryToolService.captchaHandle(driver, recaptcha, testEvent);
+			screenshot(driver, "demo");
+			String ocrResult = captchaHandleService.captchaHandle(driver, recaptchaEle, testEvent);
 			System.out.println(ocrResult);
 			
 			r.setIsSuccess();

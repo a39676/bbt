@@ -11,7 +11,6 @@ import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 
 import at.report.pojo.dto.JsonReportDTO;
-import at.screenshot.pojo.dto.TakeScreenshotSaveDTO;
 import at.screenshot.pojo.result.ScreenshotSaveResult;
 import at.xpath.pojo.bo.XpathBuilderBO;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
@@ -26,10 +25,6 @@ public class BaiduDemoServiceImpl extends SeleniumCommonService implements Baidu
 	
 	private String eventName = "baidu_search_demo";
 	
-	private String getScreenshotSaveingPath() {
-		return globalOptionService.getScreenshotSavingFolder() + File.separator + eventName;
-	}
-	
 	private String getReportOutputPath() {
 		return globalOptionService.getReportOutputFolder() + File.separator + eventName;
 	}
@@ -39,7 +34,6 @@ public class BaiduDemoServiceImpl extends SeleniumCommonService implements Baidu
 		CommonResultBBT r = new CommonResultBBT();
 		JsonReportDTO reportDTO = new JsonReportDTO();
 		
-		String screenshotPath = getScreenshotSaveingPath();
 		String reportOutputFolderPath = getReportOutputPath();
 		
 		reportDTO.setOutputReportPath(reportOutputFolderPath + File.separator + te.getId());
@@ -60,9 +54,7 @@ public class BaiduDemoServiceImpl extends SeleniumCommonService implements Baidu
 			
 			XpathBuilderBO x = new XpathBuilderBO();
 			
-			TakeScreenshotSaveDTO screenshotDTO = new TakeScreenshotSaveDTO();
-			screenshotDTO.setDriver(d);
-			ScreenshotSaveResult screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
+			ScreenshotSaveResult screenSaveResult = screenshot(d, te.getEventName());
 			LocalDateTime screenshotImageValidTime = LocalDateTime.now().plusMonths(SeleniumConstant.maxHistoryMonth);
 			
 //			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
@@ -81,7 +73,7 @@ public class BaiduDemoServiceImpl extends SeleniumCommonService implements Baidu
 				jsonReporter.appendContent(reportDTO, "输入关键词: " + te.getRemark());
 			}
 			
-			screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
+			screenSaveResult = screenshot(d, te.getEventName());
 			uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName(), screenshotImageValidTime);
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
 			
@@ -91,7 +83,7 @@ public class BaiduDemoServiceImpl extends SeleniumCommonService implements Baidu
 			
 			jsonReporter.appendContent(reportDTO, "点击搜索");
 			
-			screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
+			screenSaveResult = screenshot(d, te.getEventName());
 			uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName(), screenshotImageValidTime);
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
 			

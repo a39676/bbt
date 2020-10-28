@@ -71,7 +71,6 @@ public class LiePinDailySignServiceImpl extends SeleniumCommonService implements
 		JsonReportDTO reportDTO = new JsonReportDTO();
 		WebDriver d = null;
 		
-		String screenshotPath = getScreenshotSaveingPath(dailySignEventName);
 		String reportOutputFolderPath = getReportOutputPath(dailySignEventName);
 		
 		reportDTO.setOutputReportPath(reportOutputFolderPath + File.separator + te.getId());
@@ -208,8 +207,7 @@ public class LiePinDailySignServiceImpl extends SeleniumCommonService implements
 			e.printStackTrace();
 			TakeScreenshotSaveDTO screenshotDTO = new TakeScreenshotSaveDTO();
 			screenshotDTO.setDriver(d);
-			ScreenshotSaveResult screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath,
-					null);
+			ScreenshotSaveResult screenSaveResult = screenshot(d, dailySignEventName);
 			
 			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());

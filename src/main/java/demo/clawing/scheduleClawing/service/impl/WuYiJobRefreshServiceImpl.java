@@ -20,7 +20,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.gson.Gson;
 
 import at.report.pojo.dto.JsonReportDTO;
-import at.screenshot.pojo.dto.TakeScreenshotSaveDTO;
 import at.screenshot.pojo.result.ScreenshotSaveResult;
 import at.xpath.pojo.bo.XpathBuilderBO;
 import autoTest.testModule.pojo.type.TestModuleType;
@@ -37,7 +36,8 @@ import demo.clawing.scheduleClawing.pojo.vo.WuyiWatchMeVO;
 import demo.clawing.scheduleClawing.service.WuYiJobRefreshService;
 import demo.selenium.pojo.bo.BuildTestEventBO;
 import demo.selenium.service.impl.SeleniumCommonService;
-import image.pojo.result.UploadImageToCloudinaryResult;
+import image.pojo.result.ImageSavingResult;
+import selenium.pojo.constant.SeleniumConstant;
 
 @Service
 public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements WuYiJobRefreshService {
@@ -105,8 +105,8 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 		JsonReportDTO reportDTO = new JsonReportDTO();
 		WebDriver d = null;
 		
-		String screenshotPath = getScreenshotSaveingPath(dailySignEventName);
 		String reportOutputFolderPath = getReportOutputPath(dailySignEventName);
+		LocalDateTime screenshotImageValidTime = LocalDateTime.now().plusMonths(SeleniumConstant.maxHistoryMonth);
 		
 		reportDTO.setOutputReportPath(reportOutputFolderPath + File.separator + te.getId());
 		
@@ -168,12 +168,10 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 		} catch (Exception e) {
 			e.printStackTrace();
 //			String htmlStr = jsUtil.getHtmlSource(d);
-			TakeScreenshotSaveDTO screenshotDTO = new TakeScreenshotSaveDTO();
-			screenshotDTO.setDriver(d);
-			ScreenshotSaveResult screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath,
-					null);
 			
-			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
+			ScreenshotSaveResult screenSaveResult = screenshot(d, te.getEventName());
+			
+			ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName(), screenshotImageValidTime);
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
 			jsonReporter.appendContent(reportDTO, "异常: " + e.toString());
 //			jsonReporter.appendContent(reportDTO, htmlStr);

@@ -26,10 +26,6 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 	
 	private String eventName = "bing_search_demo";
 	
-	private String getScreenshotSaveingPath() {
-		return globalOptionService.getScreenshotSavingFolder() + File.separator + eventName;
-	}
-	
 	private String getReportOutputPath() {
 		return globalOptionService.getReportOutputFolder() + File.separator + eventName;
 	}
@@ -39,7 +35,6 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 		CommonResultBBT r = new CommonResultBBT();
 		JsonReportDTO reportDTO = new JsonReportDTO();
 		
-		String screenshotPath = getScreenshotSaveingPath();
 		String reportOutputFolderPath = getReportOutputPath();
 		
 		reportDTO.setOutputReportPath(reportOutputFolderPath + File.separator + te.getId());
@@ -62,7 +57,7 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 			
 			TakeScreenshotSaveDTO screenshotDTO = new TakeScreenshotSaveDTO();
 			screenshotDTO.setDriver(d);
-			ScreenshotSaveResult screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
+			ScreenshotSaveResult screenSaveResult = screenshot(d, te.getEventName());
 			LocalDateTime screenshotImageValidTime = LocalDateTime.now().plusMonths(SeleniumConstant.maxHistoryMonth);
 //			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
 			ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName(), screenshotImageValidTime);
@@ -80,7 +75,7 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 				jsonReporter.appendContent(reportDTO, "输入关键词: " + te.getRemark());
 			}
 			
-			screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
+			screenSaveResult = screenshot(d, te.getEventName());
 			uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName(), screenshotImageValidTime);
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
 			
@@ -90,7 +85,7 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 			
 			jsonReporter.appendContent(reportDTO, "点击搜索");
 			
-			screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
+			screenSaveResult = screenshot(d, te.getEventName());
 			uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName(), screenshotImageValidTime);
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
 			

@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.clawing.scheduleClawing.pojo.constant.ScheduleClawingUrl;
-import demo.clawing.scheduleClawing.service.CdBaoDailySignService;
 import demo.clawing.scheduleClawing.service.CryptoCoinPriceService;
 import demo.clawing.scheduleClawing.service.LiePinDailySignService;
 import demo.clawing.scheduleClawing.service.PreciousMetalsPriceService;
@@ -24,8 +23,6 @@ public class ScheduleClawingController {
 	@Autowired
 	private LiePinDailySignService leiPinService;
 	@Autowired
-	private CdBaoDailySignService cdBaoService;
-	@Autowired
 	private MaiMaiScheduleClawingServiceImpl maiMaiLocalClawingServiceImpl;
 	@Autowired
 	private PreciousMetalsPriceService preciousMetalsPriceService;
@@ -40,12 +37,6 @@ public class ScheduleClawingController {
 	@ResponseBody
 	public InsertTestEventResult insertLiePinSign() {
 		return leiPinService.insertDailySignEvent();
-	}
-	
-	@GetMapping(value = ScheduleClawingUrl.insertCDBaoSign)
-	@ResponseBody
-	public InsertTestEventResult insertCDBaoSign() {
-		return cdBaoService.insertDailySignEvent();
 	}
 	
 	@GetMapping(value = ScheduleClawingUrl.insertMaiMai)

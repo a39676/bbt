@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import at.report.pojo.dto.JsonReportDTO;
-import at.screenshot.pojo.dto.TakeScreenshotSaveDTO;
 import at.screenshot.pojo.result.ScreenshotSaveResult;
 import at.xpath.pojo.bo.XpathBuilderBO;
 import autoTest.testModule.pojo.type.TestModuleType;
@@ -65,7 +64,6 @@ public class LotterySixServiceImpl extends SeleniumCommonService implements Lott
 		JsonReportDTO reportDTO = new JsonReportDTO();
 		WebDriver d = null;
 
-		String screenshotPath = getScreenshotSaveingPath(clawEventName);
 		String reportOutputFolderPath = getReportOutputPath(clawEventName);
 
 		reportDTO.setOutputReportPath(reportOutputFolderPath + File.separator + te.getId());
@@ -103,10 +101,7 @@ public class LotterySixServiceImpl extends SeleniumCommonService implements Lott
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			TakeScreenshotSaveDTO screenshotDTO = new TakeScreenshotSaveDTO();
-			screenshotDTO.setDriver(d);
-			ScreenshotSaveResult screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath,
-					null);
+			ScreenshotSaveResult screenSaveResult = screenshot(d, te.getEventName());
 			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
 

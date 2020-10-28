@@ -20,7 +20,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.gson.Gson;
 
 import at.report.pojo.dto.JsonReportDTO;
-import at.screenshot.pojo.dto.TakeScreenshotSaveDTO;
 import at.screenshot.pojo.result.ScreenshotSaveResult;
 import at.xpath.pojo.bo.XpathBuilderBO;
 import autoTest.testModule.pojo.type.TestModuleType;
@@ -99,7 +98,6 @@ public class ZhiLianDailySignServiceImpl extends SeleniumCommonService implement
 		JsonReportDTO reportDTO = new JsonReportDTO();
 		WebDriver d = null;
 		
-		String screenshotPath = getScreenshotSaveingPath(dailySignEventName);
 		String reportOutputFolderPath = getReportOutputPath(dailySignEventName);
 		
 		reportDTO.setOutputReportPath(reportOutputFolderPath + File.separator + te.getId());
@@ -155,10 +153,7 @@ public class ZhiLianDailySignServiceImpl extends SeleniumCommonService implement
 		} catch (Exception e) {
 			e.printStackTrace();
 //			String htmlStr = jsUtil.getHtmlSource(d);
-			TakeScreenshotSaveDTO screenshotDTO = new TakeScreenshotSaveDTO();
-			screenshotDTO.setDriver(d);
-			ScreenshotSaveResult screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath,
-					null);
+			ScreenshotSaveResult screenSaveResult = screenshot(d, dailySignEventName);
 			
 			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());

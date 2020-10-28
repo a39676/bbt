@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import at.screenshot.pojo.dto.TakeScreenshotSaveDTO;
-import at.screenshot.service.ScreenshotService;
 import at.xpath.pojo.bo.XpathBuilderBO;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.clawing.neobux.service.NeobuxOptionService;
@@ -28,8 +27,6 @@ public class NeobuxServiceImpl extends SeleniumCommonService implements NeobuxSe
 	private AuxiliaryToolServiceImpl auxTool;
 	@Autowired
 	private NeobuxOptionService optionService;
-	@Autowired
-	private ScreenshotService screenshotService;
 
 	private String mainUrl = "https://www.neobux.com";
 	
@@ -44,17 +41,13 @@ public class NeobuxServiceImpl extends SeleniumCommonService implements NeobuxSe
 	public void test1() {
 		WebDriver d = webDriverService.buildFireFoxWebDriver();
 		
-		String scrSavePath = globalOptionService.getScreenshotSavingFolder();
-
 		String mainWindow = d.getWindowHandle();
 		
 		System.out.println(mainWindow);
 		
-		TakeScreenshotSaveDTO dto = new TakeScreenshotSaveDTO();
-		dto.setDriver(d);
 		try {
 			d.get(mainUrl);
-			screenshotService.screenshotSave(dto, scrSavePath, null);
+			screenshot(d, t.getEventName());
 			
 			int loginCountdown = 10;
 			while(findLoginButton(d) != null && loginCountdown >= 0 ) {
@@ -62,32 +55,32 @@ public class NeobuxServiceImpl extends SeleniumCommonService implements NeobuxSe
 				loginCountdown--;
 			}
 			if(loginCountdown < 0) {
-				screenshotService.screenshotSave(dto, scrSavePath, null);
+				screenshot(d, t.getEventName());
 				log.debug("login failed to many");
 				return;
 			}
 			
 			if(!clickViewADList(d)) {
-				screenshotService.screenshotSave(dto, scrSavePath, null);
+				screenshot(d, t.getEventName());
 				log.debug("can not find ad list button");
 				return;
 			}
 			
 			List<WebElement> adList = findADList(d);
 			if(adList == null) {
-				screenshotService.screenshotSave(dto, scrSavePath, null);
+				screenshot(d, t.getEventName());
 				log.debug("can not find ad list not click");
 				return;
 			} else {
-				screenshotService.screenshotSave(dto, scrSavePath, null);
+				screenshot(d, t.getEventName());
 				log.debug("find ad list not click");
 			}
 			
-			screenshotService.screenshotSave(dto, scrSavePath, null);
+			screenshot(d, t.getEventName());
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			screenshotService.screenshotSave(dto, scrSavePath, null);
+			screenshot(d, t.getEventName());
 		} finally {
 			tryQuitWebDriver(d);
 		}
@@ -108,14 +101,13 @@ public class NeobuxServiceImpl extends SeleniumCommonService implements NeobuxSe
 	}
 	
 	private boolean login(WebDriver d) {
-		String scrSavePath = globalOptionService.getScreenshotSavingFolder();
 		XpathBuilderBO xpathBuilder = new XpathBuilderBO();
 		List<WebElement> spans = d.findElements(By.tagName("span"));
 		WebElement loginButton = findLoginButton(d);
 		TakeScreenshotSaveDTO dto = new TakeScreenshotSaveDTO();
 		dto.setDriver(d);
 		if(loginButton == null) {
-			screenshotService.screenshotSave(dto, scrSavePath, null);
+			screenshot(d, t.getEventName());
 			return false;
 		}
 		
@@ -146,7 +138,7 @@ public class NeobuxServiceImpl extends SeleniumCommonService implements NeobuxSe
 			}
 		}
 		if(sendButton == null) {
-			screenshotService.screenshotSave(dto, scrSavePath, null);
+			screenshot(d, t.getEventName());
 			return false;
 		}
 		
@@ -178,7 +170,7 @@ public class NeobuxServiceImpl extends SeleniumCommonService implements NeobuxSe
 	
 	private String tryReadVcode(WebDriver d, WebElement ele) throws IOException {
 		
-		String captchaCode = auxTool.captchaHandle(d, ele, t);
+		String captchaCode = captchaHandleService.captchaHandle(d, ele, t);
 		return captchaCode;
 	}
 

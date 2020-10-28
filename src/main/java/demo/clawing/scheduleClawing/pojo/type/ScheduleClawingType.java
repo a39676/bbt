@@ -9,7 +9,7 @@ public enum ScheduleClawingType {
 	liePin(3L, "liePin"),
 	
 	/** cdBao */
-	cdBao(4L, "cdBao"),
+//	cdBao(4L, "cdBao"),
 	
 	/** zhiLian */
 	zhiLian(5L, "zhiLian"),

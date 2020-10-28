@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import at.report.pojo.dto.JsonReportDTO;
-import at.screenshot.pojo.dto.TakeScreenshotSaveDTO;
 import at.screenshot.pojo.result.ScreenshotSaveResult;
 import at.xpath.pojo.bo.XpathBuilderBO;
 import autoTest.testModule.pojo.type.TestModuleType;
@@ -54,10 +53,6 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 	private String newMovie = mainUrl + "/html/gndy/dyzz/index.html";
 
 	private String eventName = "dytt";
-	
-	private String getScreenshotSaveingPath() {
-		return globalOptionService.getScreenshotSavingFolder() + File.separator + eventName;
-	}
 	
 	private String getReportOutputPath() {
 		return globalOptionService.getReportOutputFolder() + File.separator + eventName;
@@ -168,8 +163,6 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 			return;
 		}
 		
-		String screenshotPath = getScreenshotSaveingPath();
-		
 		String subUrl = ele.getAttribute("href");
 		jsonReporter.appendContent(reportDTO, "正在处理: " + subUrl);
 		MovieRecordFindByConditionDTO findMovieRecordDTO = new MovieRecordFindByConditionDTO();
@@ -246,9 +239,7 @@ public final class DyttClawingServiceImpl extends MovieClawingCommonService impl
 		} catch (Exception e) {
 			e.printStackTrace();
 			jsonReporter.appendContent(reportDTO, e.toString());
-			TakeScreenshotSaveDTO screenshotDTO = new TakeScreenshotSaveDTO();
-			screenshotDTO.setDriver(d);
-			ScreenshotSaveResult screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath, null);
+			ScreenshotSaveResult screenSaveResult = screenshot(d, te.getEventName());
 			
 			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());

@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 
 import at.report.pojo.dto.JsonReportDTO;
-import at.screenshot.pojo.dto.TakeScreenshotSaveDTO;
 import at.screenshot.pojo.result.ScreenshotSaveResult;
 import at.xpath.pojo.bo.XpathBuilderBO;
 import autoTest.testModule.pojo.type.TestModuleType;
@@ -70,7 +69,6 @@ public class LaGouLocalClawingServiceImpl extends JobClawingCommonService implem
 		JsonReportDTO reportDTO = new JsonReportDTO();
 		WebDriver d = null;
 		
-		String screenshotPath = getScreenshotSaveingPath(eventName);
 		String reportOutputFolderPath = getReportOutputPath(eventName);
 		
 		reportDTO.setOutputReportPath(reportOutputFolderPath + File.separator + te.getId());
@@ -130,10 +128,7 @@ public class LaGouLocalClawingServiceImpl extends JobClawingCommonService implem
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			TakeScreenshotSaveDTO screenshotDTO = new TakeScreenshotSaveDTO();
-			screenshotDTO.setDriver(d);
-			ScreenshotSaveResult screenSaveResult = screenshotService.screenshotSave(screenshotDTO, screenshotPath,
-					null);
+			ScreenshotSaveResult screenSaveResult = screenshot(d, te.getEventName());
 			
 			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
 			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
