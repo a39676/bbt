@@ -537,9 +537,14 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 		List<WuyiWatchMe> poList = wuyiWatcheMeMapper.selectByExample(example);
 		
 		WuyiWatchMeVO vo = null;
-		Map<String, WuyiWatchMeVO> voMap = new HashMap<String, WuyiWatchMeVO>();
+		WuyiWatchMeVO keyVO = null;
+		Map<WuyiWatchMeVO, WuyiWatchMeVO> voMap = new HashMap<WuyiWatchMeVO, WuyiWatchMeVO>();
 		for(WuyiWatchMe i : poList) {
-			vo = voMap.get(i.getCompanyLink() + i.getCompanyName());
+			keyVO = new WuyiWatchMeVO();
+			keyVO.setCompanyLink(i.getCompanyLink());
+			keyVO.setCompanyName(i.getCompanyName());
+			keyVO.setMyResumeName(i.getMyResumeName());
+			vo = voMap.get(keyVO);
 			if(vo == null) {
 				vo = new WuyiWatchMeVO();
 				vo.setCompanyLink(i.getCompanyLink());
@@ -561,7 +566,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 				vo.setWatchCount(vo.getWatchCount() + 1);
 			}
 			
-			voMap.put(i.getCompanyLink() + i.getCompanyName(), vo);
+			voMap.put(keyVO, vo);
 		}
 		
 		List<WuyiWatchMeVO> voList = new ArrayList<WuyiWatchMeVO>(voMap.values());
