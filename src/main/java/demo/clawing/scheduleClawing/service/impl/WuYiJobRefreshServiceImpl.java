@@ -53,7 +53,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 	private ScheduleClawingType testCastType = ScheduleClawingType.wuYiJob;
 
 	/*
-	 * TODO 
+	 * TODO
 	 * 
 	 * 已经新建 test_process 表, 但批量增加 test_event 并有顺序要求的情况, 难以封装, 后期可能视具体情况, 固定代码实现
 	 * 
