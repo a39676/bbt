@@ -104,7 +104,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 		JsonReportDTO reportDTO = new JsonReportDTO();
 		WebDriver d = null;
 
-		String reportOutputFolderPath = getReportOutputPath(dailySignEventName);
+		String reportOutputFolderPath = getReportOutputPath(te.getEventName());
 		LocalDateTime screenshotImageValidTime = LocalDateTime.now().plusMonths(SeleniumConstant.maxHistoryMonth);
 
 		reportDTO.setOutputReportPath(reportOutputFolderPath + File.separator + te.getId());

@@ -8,9 +8,6 @@ public enum ScheduleClawingType {
 	/** liePin */
 	liePin(3L, "liePin"),
 	
-	/** cdBao */
-//	cdBao(4L, "cdBao"),
-	
 	/** zhiLian */
 	zhiLian(5L, "zhiLian"),
 	
@@ -26,6 +23,7 @@ public enum ScheduleClawingType {
 	cryptoCoinNewPrice(8L, "cryptoCoinNewPrice"),
 	cryptoCoinHistoryPrice(9L, "cryptoCoinHistoryPrice"),
 	
+	wawawiwaComic(10L, "wawawiwaComic"),
 	;
 
 	private Long id;
