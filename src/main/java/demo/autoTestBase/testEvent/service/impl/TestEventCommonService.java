@@ -8,7 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import demo.autoTestBase.testEvent.mapper.TestEventMapper;
-import demo.autoTestBase.testEvent.pojo.constant.TestEventOptionConstant;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.baseCommon.service.CommonService;
@@ -23,33 +22,6 @@ public abstract class TestEventCommonService extends CommonService {
 	
 	protected String runningEventRedisKey = "runningEvent";
 
-	protected String findTestEventReportFolder() {
-		String windowFolder = TestEventOptionConstant.windowFolder;
-		String linuxFolder = TestEventOptionConstant.linuxFolder;
-		File f = null;
-		try {
-			if(isWindows()) {
-				f = new File(windowFolder);
-				if(!f.exists()) {
-					if(!f.mkdirs()) {
-						return null;
-					}
-				}
-				return windowFolder;
-			} else if(isLinux()) {
-				f = new File(linuxFolder);
-				if(!f.exists()) {
-					if(!f.mkdirs()) {
-						return null;
-					}
-				}
-				return linuxFolder;
-			}
-		} catch (Exception e) {
-		}
-		return null;
-	}
-	
 	protected void startEvent(TestEvent te) {
 		te.setStartTime(LocalDateTime.now());
 		constantService.setValByName(runningEventRedisKey, "true");
@@ -68,9 +40,10 @@ public abstract class TestEventCommonService extends CommonService {
 			te.setIsPass(successFlag);
 			
 			if(StringUtils.isNotBlank(report)) {
-				String folerPath = findTestEventReportFolder();
-				if(folerPath != null) {
-					saveTestEventReport(te, folerPath, report);
+				String folerPathStr = te.getReportPath();
+				File folder = new File(folerPathStr);
+				if(folder.exists() && folder.isDirectory()) {
+					saveTestEventReport(te, folerPathStr, report);
 				}
 			}
 			constantService.setValByName(runningEventRedisKey, "false");
