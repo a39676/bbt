@@ -6,6 +6,8 @@ public class CryptoCoinHistoryPriceParamBO {
 
 	private List<String> coinType;
 	private List<String> currency;
+	private Integer limit;
+	private String apiKey;
 
 	public List<String> getCoinType() {
 		return coinType;
@@ -23,9 +25,26 @@ public class CryptoCoinHistoryPriceParamBO {
 		this.currency = currency;
 	}
 
+	public Integer getLimit() {
+		return limit;
+	}
+
+	public void setLimit(Integer limit) {
+		this.limit = limit;
+	}
+
+	public String getApiKey() {
+		return apiKey;
+	}
+
+	public void setApiKey(String apiKey) {
+		this.apiKey = apiKey;
+	}
+
 	@Override
 	public String toString() {
-		return "CryptoCoinNewPriceParamBO [coinType=" + coinType + ", currency=" + currency + "]";
+		return "CryptoCoinHistoryPriceParamBO [coinType=" + coinType + ", currency=" + currency + ", limit=" + limit
+				+ ", apiKey=" + apiKey + "]";
 	}
 
 }

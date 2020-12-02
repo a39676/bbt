@@ -176,7 +176,7 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 		CommonResultBBT r = new CommonResultBBT();
 		
 		// example: https://min-api.cryptocompare.com/data/v2/histominute?fsym=ETH&tsym=USD&limit=10
-		String cryptoCoinApiUrlModel = "https://min-api.cryptocompare.com/data/v2/histominute?fsym=%s&tsym=%s&limit=12";
+		String cryptoCoinApiUrlModel = "https://min-api.cryptocompare.com/data/v2/histominute?fsym=%s&tsym=%s&limit=%s&api_key=%s";
 		HttpUtil h = new HttpUtil();
 
 		try {
@@ -200,6 +200,11 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 				throw new Exception();
 			}
 			
+			if(clawingOptionBO.getLimit() == null || StringUtils.isBlank(clawingOptionBO.getApiKey())) {
+				jsonReporter.appendContent(reportDTO, "参数文件参数异常");
+				throw new Exception();
+			}
+			
 			
 			String httpResponse = null;
 			CryptoCoinHistoryPriceDTO mainDTO = null;
@@ -209,7 +214,7 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 				for(String currencyName : clawingOptionBO.getCurrency()) {
 					mainDTO = new CryptoCoinHistoryPriceDTO();
 					
-					httpResponse = h.sendGet(String.format(cryptoCoinApiUrlModel, coinTypeName, currencyName));
+					httpResponse = h.sendGet(String.format(cryptoCoinApiUrlModel, coinTypeName, currencyName, clawingOptionBO.getLimit(), clawingOptionBO.getApiKey()));
 					jsonReporter.appendContent(reportDTO, httpResponse);
 					
 					subDataList = handleCryptoCoinHistoryResponse(httpResponse, coinTypeName, currencyName);
