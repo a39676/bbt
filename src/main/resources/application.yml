@@ -38,6 +38,10 @@ spring:
     virtualHost: /
     username: u1
     password: something
+    
+endpoints:
+  shutdown:
+    enabled: true
 
 logging:
   level:

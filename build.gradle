@@ -61,6 +61,7 @@ dependencies {
     }
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'
 	compile group: 'org.springframework.boot', name: 'spring-boot-devtools'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
     
     // commons
 	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.7'
