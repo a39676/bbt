@@ -93,12 +93,11 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 
 		String wuYiRunCountKey = "wuYiRunCountKey";
 		String runCountStr = constantService.getValByName(wuYiRunCountKey);
-		int runCount = 0;
-		if (StringUtils.isBlank(runCountStr) || "null".equals(runCountStr) || !numericUtil.matchInteger(runCountStr)) {
-			constantService.setValByName(wuYiRunCountKey, "1");
-			runCount = 1;
-		} else {
+		int runCount = 1;
+		try {
 			runCount = Integer.parseInt(runCountStr);
+		} catch (Exception e) {
+			constantService.setValByName(wuYiRunCountKey, "1");
 		}
 
 		JsonReportDTO reportDTO = new JsonReportDTO();

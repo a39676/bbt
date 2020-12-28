@@ -1,4 +1,6 @@
-﻿工作需要, 项目内需要增加类似 fake ftp 的"本地目录"式搜查报告
+﻿CryptoCoinPriceServiceImpl.insertHistoryCryptoCoinPriceEvent
+
+工作需要, 项目内需要增加类似 fake ftp 的"本地目录"式搜查报告
 	搜索栏应配备
 		地址栏 (可点击某段,并跳转至该目录)
 		可按 是否成功报告 / 关键词 / 测试模型(枚举类) 过滤
