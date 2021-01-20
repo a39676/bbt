@@ -20,7 +20,6 @@ public enum ScheduleClawingType {
 	 * */
 	preciousMetalPrice(7L, "preciousMetalPrice"),
 	
-	cryptoCoinNewPrice(8L, "cryptoCoinNewPrice"),
 	cryptoCoinHistoryPrice(9L, "cryptoCoinHistoryPrice"),
 	
 	wawawiwaComic(10L, "wawawiwaComic"),
