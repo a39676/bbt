@@ -17,7 +17,7 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 	@Autowired
 	private SystemConstantService constantService;
 
-	private String mainSavingFolder_linx = "/home/u2";
+	private String mainSavingFolder_linx = "/home/u2/bbt";
 	private String mainSavingFolder_win = "d:" + mainSavingFolder_linx;
 	private String tmpFolder = "/tmp";
 	private String downloadFolder = tmpFolder;
@@ -173,27 +173,27 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 
 	@Override
 	public String getParameterSavingFolder() {
-		String screenshotSavingDir = constantService.getValByName(parameterSavingFolderRedisKey);
+		String savingDir = constantService.getValByName(parameterSavingFolderRedisKey);
 
-		if (StringUtils.isNotBlank(screenshotSavingDir)) {
-			checkFolderExists(screenshotSavingDir);
-			return pathChangeByDetectOS(screenshotSavingDir);
+		if (StringUtils.isNotBlank(savingDir)) {
+			checkFolderExists(savingDir);
+			return pathChangeByDetectOS(savingDir);
 		}
 
 		if (isWindows()) {
-			screenshotSavingDir = mainSavingFolder_win + parameterSavingFolder;
+			savingDir = mainSavingFolder_win + parameterSavingFolder;
 		} else {
-			screenshotSavingDir = mainSavingFolder_linx + parameterSavingFolder;
+			savingDir = mainSavingFolder_linx + parameterSavingFolder;
 		}
-		screenshotSavingDir = pathChangeByDetectOS(screenshotSavingDir);
+		savingDir = pathChangeByDetectOS(savingDir);
 
 		SystemConstant systemConstant = new SystemConstant();
 		systemConstant.setConstantName(parameterSavingFolderRedisKey);
-		systemConstant.setConstantValue(screenshotSavingDir);
+		systemConstant.setConstantValue(savingDir);
 		constantService.setValByName(systemConstant);
 
-		checkFolderExists(screenshotSavingDir);
-		return screenshotSavingDir;
+		checkFolderExists(savingDir);
+		return savingDir;
 	}
 	
 	@Override

@@ -116,4 +116,7 @@ dependencies {
 	
 	// rabbitMQ
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-amqp', version: '2.0.9.RELEASE'
+    
+    // web socket as client
+	compile group: 'com.neovisionaries', name: 'nv-websocket-client', version: '2.10'
 }

@@ -82,6 +82,10 @@ public class SystemConstantService extends CommonService {
 		redisTemplate.opsForValue().set(cosntantName, constantValue, validTime, timeUnit);
 	}
 	
+	public void setValByName(String cosntantName, String constantValue, Integer validTime, TimeUnit timeUnit) {
+		redisTemplate.opsForValue().set(cosntantName, constantValue, validTime, timeUnit);
+	}
+	
 	public void setValByName(SystemConstant systemConstant) {
 		redisTemplate.opsForValue().set(systemConstant.getConstantName(), systemConstant.getConstantValue());
 	}
@@ -91,4 +95,11 @@ public class SystemConstantService extends CommonService {
 		redisTemplate.opsForValue().multiSet(values);
 	}
 	
+	public void deleteValByName(String constantName) {
+		redisTemplate.delete(constantName);
+	}
+
+	public Boolean hasKey(String key) {
+		return redisTemplate.hasKey(key);
+	}
 }

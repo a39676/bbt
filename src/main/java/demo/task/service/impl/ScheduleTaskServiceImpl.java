@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import demo.clawing.scheduleClawing.service.CryptoCoinPriceService;
 import demo.clawing.scheduleClawing.service.WuYiJobRefreshService;
+import demo.clawing.scheduleClawing.service.impl.CryptoCompareWSClient;
 
 @Component
 public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
@@ -19,6 +20,8 @@ public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 //	private PreciousMetalsPriceService preciousMetalsPriceService;
 	@Autowired
 	private CryptoCoinPriceService cryptoCoinPriceService;
+	@Autowired
+	private CryptoCompareWSClient cryptoCompareWSClient;
 	
 
 //	@Scheduled(fixedRate = 1000L * 60 * 5)
@@ -47,6 +50,13 @@ public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 	public void insertCryptoCoinHistoryPriceCollect() {
 		if (!"dev".equals(constantService.getValByName("envName"))) {
 			cryptoCoinPriceService.insertHistoryCryptoCoinPriceEvent();
+		}
+	}
+	
+	@Scheduled(cron = "*/31 * * * * ?")
+	public void checkCryptoCompareWebSocket() {
+		if (!cryptoCompareWSClient.getSocketLiveFlag()) {
+			cryptoCompareWSClient.startWebSocket();
 		}
 	}
 	

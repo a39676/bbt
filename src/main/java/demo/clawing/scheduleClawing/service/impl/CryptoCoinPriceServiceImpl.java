@@ -17,7 +17,7 @@ import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.baseCommon.pojo.result.CommonResultBBT;
-import demo.clawing.scheduleClawing.mq.sender.CroptoCoinTransmissionAckProducer;
+import demo.clawing.scheduleClawing.mq.sender.CroptoCoinHistoryPriceDataAckProducer;
 import demo.clawing.scheduleClawing.pojo.bo.CryptoCoinHistoryPriceParamBO;
 import demo.clawing.scheduleClawing.pojo.constant.CryptoCoinScheduleClawingConstant;
 import demo.clawing.scheduleClawing.pojo.type.ScheduleClawingType;
@@ -34,7 +34,7 @@ import toolPack.httpHandel.HttpUtil;
 public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements CryptoCoinPriceService {
 
 	@Autowired
-	private CroptoCoinTransmissionAckProducer croptoCoinTransmissionAckProducer;
+	private CroptoCoinHistoryPriceDataAckProducer croptoCoinTransmissionAckProducer;
 
 	private String cryptoCoinHistoryPriceCollect = "cryptoCoinHistoryPriceCollect";
 	private String historyCryptoCoinPriceCollectingParam = "historyCryptoCoinPriceCollectingParam.json";
