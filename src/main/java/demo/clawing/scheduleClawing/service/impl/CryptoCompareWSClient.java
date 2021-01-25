@@ -42,13 +42,13 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 		CryptoCompareSocketConfigBO configBO = getConfig();
 		CommonResult r = new CommonResult();
 		if (configBO == null) {
-			r.failWithMessage("load config error");
+			r.failWithMessage("crypto compare socket load config error");
 			return r;
 		}
 
 		WebSocket ws = createWebSocket(configBO);
 		if (ws == null) {
-			r.failWithMessage("create scoket error");
+			r.failWithMessage("crypto compare socket create scoket error");
 			return r;
 		}
 
@@ -81,6 +81,8 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 			@Override
 			public void onTextMessage(WebSocket websocket, String message) throws Exception {
 				refreshLastActiveTime();
+				
+//				System.out.println(message);
 				
 				if(!isGoodConnection(message)) {
 					ws.disconnect();
@@ -173,7 +175,7 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 		try {
 			JSONObject j = JSONObject.fromObject(msg);
 			Integer typeCode = j.getInt("TYPE");
-			return (typeCode < 400 || typeCode != 999);
+			return (typeCode < 400 || typeCode == 999);
 		} catch (Exception e) {
 			return false;
 		}
