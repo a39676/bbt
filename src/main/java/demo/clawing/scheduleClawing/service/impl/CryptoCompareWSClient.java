@@ -194,9 +194,12 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 			bo.setCurrencyType(CurrencyType.getType(j.getString("TOSYMBOL")).getCode());
 			try {
 				Date tradDate = new Date(j.getLong("LASTUPDATE") * 1000);
-				bo.setStartTime(localDateTimeHandler.dateToLocalDateTime(tradDate));
+				LocalDateTime tradDateTime = localDateTimeHandler.dateToLocalDateTime(tradDate);
+				bo.setStartTime(tradDateTime);
+				bo.setEndTime(tradDateTime);
 			} catch (Exception e) {
 				bo.setStartTime(LocalDateTime.now());
+				bo.setEndTime(LocalDateTime.now());
 			}
 		} catch (Exception e) {
 		}
