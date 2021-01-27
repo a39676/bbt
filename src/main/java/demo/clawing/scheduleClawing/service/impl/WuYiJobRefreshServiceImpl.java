@@ -409,7 +409,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 
 			threadSleepRandomTime(1000L, 3000L);
 
-			d.findElement(By.id("saveresumefour")).click();
+			d.findElement(By.id("saveselfintro")).click();
 			jsonReporter.appendContent(reportDTO, "点击保存");
 
 			threadSleepRandomTime(1000L, 3000L);
