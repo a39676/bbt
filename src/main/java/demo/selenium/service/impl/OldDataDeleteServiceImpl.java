@@ -77,17 +77,14 @@ public class OldDataDeleteServiceImpl extends CommonService implements OldDataDe
 		LocalDateTime createDateTime = null;
 		for(File file : files) {
 			if(file.isDirectory()) {
-				log.error("find folder: " + file.getName());
 				deleting(file.getAbsolutePath(), deadLine);
 			} else {
 				filePath = file.toPath();
-				log.error("find file: " + filePath.toAbsolutePath().toString());
 				attr = Files.readAttributes(filePath, BasicFileAttributes.class);
 				createDate = new Date(attr.creationTime().toMillis());
 				createDateTime = dateHandler.dateToLocalDateTime(createDate);
-				log.error("get create date: " + createDateTime);
 				if(createDateTime.isBefore(deadLine)) {
-					System.out.println("file delete result: " + file.delete());
+					file.delete();
 				}
 			}
 		}
