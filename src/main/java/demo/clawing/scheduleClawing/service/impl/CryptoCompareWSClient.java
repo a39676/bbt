@@ -71,7 +71,7 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 			return ws;
 		} catch (IOException e) {
 			e.printStackTrace();
-			log.error("create socket error: " + e.getLocalizedMessage());
+			log.error("create socket error: " + e);
 			return null;
 		}
 	}
