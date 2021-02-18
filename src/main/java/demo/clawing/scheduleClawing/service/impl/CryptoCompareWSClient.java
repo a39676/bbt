@@ -65,9 +65,7 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 	}
 
 	private WebSocket createWebSocket(CryptoCompareSocketConfigBO configBO) {
-		log.error("get in add createWebSocket, bo: " + configBO.toString());
 		String uriStr = configBO.getUri() + "?api_key=" + configBO.getApiKey();
-		log.error("create web socket url: " + uriStr);
 		try {
 			WebSocket ws = new WebSocketFactory().createSocket(uriStr);
 			return ws;
@@ -106,7 +104,6 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 	}
 
 	private void addSubscription(WebSocket ws, CryptoCompareSocketConfigBO bo) {
-		log.error("get in add subscription, bo: " + bo.toString());
 		JSONObject json = new JSONObject();
 		json.put("action", "SubAdd");
 		JSONArray subs = new JSONArray();
@@ -129,8 +126,6 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 			}
 		}
 		json.put("subs", subs);
-		
-		log.error("add subscription, json: " + json.toString());
 
 		ws.sendText(json.toString());
 	}
