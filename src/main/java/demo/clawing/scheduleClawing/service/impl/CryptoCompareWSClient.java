@@ -67,7 +67,7 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 	private WebSocket createWebSocket(CryptoCompareSocketConfigBO configBO) {
 		String uriStr = configBO.getUri() + "?api_key=" + configBO.getApiKey();
 		try {
-			WebSocket ws = new WebSocketFactory().createSocket(uriStr);
+			WebSocket ws = new WebSocketFactory().setVerifyHostname(false).createSocket(uriStr);
 			return ws;
 		} catch (IOException e) {
 			e.printStackTrace();
