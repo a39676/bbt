@@ -1,7 +1,6 @@
 package demo.clawing.scheduleClawing.service.impl;
 
 import java.io.File;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,7 +18,6 @@ import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.scheduleClawing.mq.sender.CroptoCoinHistoryPriceDataAckProducer;
 import demo.clawing.scheduleClawing.pojo.bo.CryptoCoinHistoryPriceParamBO;
-import demo.clawing.scheduleClawing.pojo.constant.CryptoCoinScheduleClawingConstant;
 import demo.clawing.scheduleClawing.pojo.type.ScheduleClawingType;
 import demo.clawing.scheduleClawing.service.CryptoCoinPriceService;
 import demo.selenium.pojo.bo.BuildTestEventBO;
@@ -61,11 +59,6 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 
 	@Override
 	public InsertTestEventResult insertHistoryCryptoCoinPriceEvent() {
-//		FIXME after 2021/01/01
-		LocalDateTime startDate = LocalDateTime.of(2021, 1, 1, 0, 0, 0, 0);
-		if(LocalDateTime.now().isBefore(startDate)) {
-			return null;
-		}
 		TestEvent te = buildHistoryPriceCollectingEvent();
 		return testEventService.insertTestEvent(te);
 	}
@@ -89,14 +82,6 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 		HttpUtil h = new HttpUtil();
 
 		try {
-			
-			String runcountingStr = constantService.getValByName(CryptoCoinScheduleClawingConstant.RUN_COUNT_KEY);
-			Integer runcounting = 1;
-			try {
-				runcounting = Integer.parseInt(runcountingStr);
-			} catch (Exception e) {
-				constantService.setValByName(CryptoCoinScheduleClawingConstant.RUN_COUNT_KEY, "1");
-			}
 			
 			String jsonStr = ioUtil.getStringFromFile(te.getParameterFilePath());
 			if(StringUtils.isBlank(jsonStr)) {
@@ -127,27 +112,22 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 			CryptoCoinHistoryPriceDTO mainDTO = null;
 			List<CryptoCoinHistoryPriceSubDTO> subDataList = null;
 
-			if(runcounting - 1 >= clawingOptionBO.getCoinType().size()) {
-				runcounting = 1;
-			}
-			String coinTypeName = clawingOptionBO.getCoinType().get(runcounting - 1);
-			
 			for(String currencyName : clawingOptionBO.getCurrency()) {
-				mainDTO = new CryptoCoinHistoryPriceDTO();
-				
-				httpResponse = h.sendGet(String.format(cryptoCoinApiUrlModel, coinTypeName, currencyName, clawingOptionBO.getLimit(), clawingOptionBO.getApiKey()));
-				jsonReporter.appendContent(reportDTO, httpResponse);
-				
-				subDataList = handleCryptoCoinHistoryResponse(httpResponse, coinTypeName, currencyName);
-				mainDTO.setPriceHistoryData(subDataList);
-				mainDTO.setCryptoCoinTypeName(coinTypeName);
-				mainDTO.setCurrencyName(currencyName);
-				
-				croptoCoinTransmissionAckProducer.sendHistoryPrice(mainDTO);
+				for(String coinTypeName : clawingOptionBO.getCoinType()) {
+					mainDTO = new CryptoCoinHistoryPriceDTO();
+					
+					httpResponse = h.sendGet(String.format(cryptoCoinApiUrlModel, coinTypeName, currencyName, clawingOptionBO.getLimit(), clawingOptionBO.getApiKey()));
+					jsonReporter.appendContent(reportDTO, httpResponse);
+					
+					subDataList = handleCryptoCoinHistoryResponse(httpResponse, coinTypeName, currencyName);
+					mainDTO.setPriceHistoryData(subDataList);
+					mainDTO.setCryptoCoinTypeName(coinTypeName);
+					mainDTO.setCurrencyName(currencyName);
+					
+					croptoCoinTransmissionAckProducer.sendHistoryPrice(mainDTO);
+				}
 			}
 			
-			runcounting = runcounting + 1;
-			constantService.setValByName(CryptoCoinScheduleClawingConstant.RUN_COUNT_KEY, runcounting.toString());
 			r.setIsSuccess();
 
 		} catch (Exception e) {
