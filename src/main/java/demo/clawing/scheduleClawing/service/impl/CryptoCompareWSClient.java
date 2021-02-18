@@ -181,19 +181,19 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 		}
 	}
 	
-	private CryptoCoinPriceCommonDataBO buildCommonDataFromMsg(String msg) {
+	private CryptoCoinPriceCommonDataBO buildCommonDataFromMsg(String sourceMsg) {
 		CryptoCoinPriceCommonDataBO bo = null;
 		try {
-			JSONObject j = JSONObject.fromObject(msg);
+			JSONObject sourceMsgJson = JSONObject.fromObject(sourceMsg);
 			bo = new CryptoCoinPriceCommonDataBO();
-			bo.setStartPrice(new BigDecimal(j.getDouble("PRICE")));
-			bo.setEndPrice(new BigDecimal(j.getDouble("PRICE")));
-			bo.setHighPrice(new BigDecimal(j.getDouble("PRICE")));
-			bo.setLowPrice(new BigDecimal(j.getDouble("PRICE")));
-			bo.setCoinType(CryptoCoinType.getType(j.getString("FROMSYMBOL")).getCode());
-			bo.setCurrencyType(CurrencyType.getType(j.getString("TOSYMBOL")).getCode());
+			bo.setStartPrice(new BigDecimal(sourceMsgJson.getDouble("PRICE")));
+			bo.setEndPrice(new BigDecimal(sourceMsgJson.getDouble("PRICE")));
+			bo.setHighPrice(new BigDecimal(sourceMsgJson.getDouble("PRICE")));
+			bo.setLowPrice(new BigDecimal(sourceMsgJson.getDouble("PRICE")));
+			bo.setCoinType(CryptoCoinType.getType(sourceMsgJson.getString("FROMSYMBOL")).getCode());
+			bo.setCurrencyType(CurrencyType.getType(sourceMsgJson.getString("TOSYMBOL")).getCode());
 			try {
-				Date tradDate = new Date(j.getLong("LASTUPDATE") * 1000);
+				Date tradDate = new Date(sourceMsgJson.getLong("LASTUPDATE") * 1000);
 				LocalDateTime tradDateTime = localDateTimeHandler.dateToLocalDateTime(tradDate);
 				bo.setStartTime(tradDateTime);
 				bo.setEndTime(tradDateTime);
