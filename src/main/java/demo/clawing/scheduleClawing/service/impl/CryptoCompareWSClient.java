@@ -195,6 +195,9 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 			try {
 				Date tradDate = new Date(sourceMsgJson.getLong("LASTUPDATE") * 1000);
 				LocalDateTime tradDateTime = localDateTimeHandler.dateToLocalDateTime(tradDate);
+				if(tradDateTime == null) {
+					tradDateTime = LocalDateTime.now();
+				}
 				bo.setStartTime(tradDateTime);
 				bo.setEndTime(tradDateTime);
 			} catch (Exception e) {
