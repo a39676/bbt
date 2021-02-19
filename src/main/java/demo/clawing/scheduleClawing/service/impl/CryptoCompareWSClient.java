@@ -205,6 +205,7 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 				bo.setEndTime(LocalDateTime.now());
 			}
 		} catch (Exception e) {
+			return null;
 		}
 		return bo;
 	}
