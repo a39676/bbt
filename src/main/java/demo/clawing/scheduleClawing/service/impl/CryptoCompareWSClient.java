@@ -22,6 +22,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
 import demo.clawing.scheduleClawing.mq.sender.CroptoCoinPriceCacheDataAckProducer;
 import demo.clawing.scheduleClawing.pojo.bo.CryptoCompareSocketConfigBO;
+import demo.clawing.scheduleClawing.pojo.type.CryptoCompareWebSocketMsgType;
 import demo.selenium.service.impl.SeleniumCommonService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCompareConstant;
@@ -80,11 +81,16 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 		ws.addListener(new WebSocketAdapter() {
 			@Override
 			public void onTextMessage(WebSocket websocket, String message) throws Exception {
-				refreshLastActiveTime();
+				System.out.println(message);
 				
-//				System.out.println(message);
-				
-				if(!isGoodConnection(message)) {
+				CryptoCompareWebSocketMsgType connectionType = checkConnection(message);
+				if(connectionType== null) {
+					ws.disconnect();
+				} else if(connectionType.getCode() < 400 || CryptoCompareWebSocketMsgType.HEARTBEAT.equals(connectionType)) {
+					refreshLastActiveTime(CryptoCompareConstant.SOCKET_INACTIVE_JUDGMENT_SECOND);
+				} else if(CryptoCompareWebSocketMsgType.TOO_MANY_SOCKETS_MAX_.getCode().equals(connectionType.getCode())) {
+					refreshLastActiveTime(CryptoCompareConstant.SOCKET_COLDDOWN_SECOND);
+				} else {
 					ws.disconnect();
 				}
 				
@@ -134,11 +140,11 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 		return constantService.hasKey(CryptoCompareConstant.SOCKET_LAST_ACTIVE_TIME_REDIS_KEY);
 	}
 
-	private void refreshLastActiveTime() {
+	private void refreshLastActiveTime(int seconds) {
 		constantService.setValByName(
 				CryptoCompareConstant.SOCKET_LAST_ACTIVE_TIME_REDIS_KEY,
 				localDateTimeHandler.dateToStr(LocalDateTime.now()), 
-				CryptoCompareConstant.SOCKET_INACTIVE_JUDGMENT_SECOND, 
+				seconds, 
 				TimeUnit.SECONDS);
 	}
 
@@ -171,13 +177,13 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 		return bo;
 	}
 
-	private boolean isGoodConnection(String msg) {
+	private CryptoCompareWebSocketMsgType checkConnection(String msg) {
 		try {
 			JSONObject j = JSONObject.fromObject(msg);
 			Integer typeCode = j.getInt("TYPE");
-			return (typeCode < 400 || typeCode == 999);
+			return CryptoCompareWebSocketMsgType.getType(typeCode);
 		} catch (Exception e) {
-			return false;
+			return null;
 		}
 	}
 	
