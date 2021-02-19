@@ -6,6 +6,7 @@ public enum CryptoCompareWebSocketMsgType {
 	/*
 	 * good connection type
 	 */
+	NROMAL_MSG ("NORMAL_MSG", 5),
 	STREAMERWELCOME ("STREAMERWELCOME", 20),
 	SUBSCRIBECOMPLETE ("SUBSCRIBECOMPLETE", 16),
 	LOADCOMPLETE ("LOADCOMPLETE", 3),
