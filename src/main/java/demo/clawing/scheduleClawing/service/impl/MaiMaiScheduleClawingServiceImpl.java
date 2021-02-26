@@ -40,7 +40,7 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 	private String userDataFileName = "maiMaiSign.json";
 	
 	private TestModuleType testModuleType = TestModuleType.scheduleClawing;
-	private ScheduleClawingType testCastType = ScheduleClawingType.maiMai;
+	private ScheduleClawingType testCastType = ScheduleClawingType.MAI_MAI;
 	
 	
 	private TestEvent buildClawingEvent() {

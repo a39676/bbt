@@ -47,9 +47,16 @@ public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 //	}
 	
 	@Scheduled(cron = "0 */5 * * * ?")
-	public void insertCryptoCoinHistoryPriceCollect() {
+	public void insertCryptoCoinMinuteDataCollect() {
 		if (!"dev".equals(constantService.getValByName("envName"))) {
-			cryptoCoinPriceService.insertHistoryCryptoCoinPriceEvent();
+			cryptoCoinPriceService.insertCryptoCoinMinuteDataCollectEvent();
+		}
+	}
+	
+	@Scheduled(cron="1 3 0 * * *") // 每天00:03:01执行
+	public void insertCryptoCoinDailyDataCollect() {
+		if (!"dev".equals(constantService.getValByName("envName"))) {
+			cryptoCoinPriceService.insertCryptoCoinDailyDataCollectEvent();
 		}
 	}
 	

@@ -40,7 +40,7 @@ public class LiePinDailySignServiceImpl extends SeleniumCommonService implements
 	private String userDataFileName = "liePinDailySign.json";
 	
 	private TestModuleType testModuleType = TestModuleType.scheduleClawing;
-	private ScheduleClawingType testCastType = ScheduleClawingType.liePin;
+	private ScheduleClawingType testCastType = ScheduleClawingType.LIE_PIN;
 
 	private TestEvent buildDailySignEvent() {
 		String paramterFolderPath = getParameterSaveingPath(dailySignEventName);

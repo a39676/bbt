@@ -50,7 +50,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 	private String userDataFileName = "51jobDailySign.json";
 
 	private TestModuleType testModuleType = TestModuleType.scheduleClawing;
-	private ScheduleClawingType testCastType = ScheduleClawingType.wuYiJob;
+	private ScheduleClawingType testCastType = ScheduleClawingType.WU_YI_JOB;
 
 	/*
 	 * TODO

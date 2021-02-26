@@ -57,6 +57,6 @@ public class ScheduleClawingController {
 	@GetMapping(value = "/insertHistoryCryptoCoinPriceEvent")
 	@ResponseBody
 	public InsertTestEventResult insertHistoryCryptoCoinPriceEvent() {
-		return cryptoCoinPriceService.insertHistoryCryptoCoinPriceEvent();
+		return cryptoCoinPriceService.insertCryptoCoinMinuteDataCollectEvent();
 	}
 }

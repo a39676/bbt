@@ -52,7 +52,7 @@ public class ZhiLianDailySignServiceImpl extends SeleniumCommonService implement
 	private String userDataFileName = "zhiLianDailySign.json";
 	
 	private TestModuleType testModuleType = TestModuleType.scheduleClawing;
-	private ScheduleClawingType testCastType = ScheduleClawingType.zhiLian;
+	private ScheduleClawingType testCastType = ScheduleClawingType.ZHI_LIAN;
 
 	
 	private TestEvent buildDailySignEvent() {

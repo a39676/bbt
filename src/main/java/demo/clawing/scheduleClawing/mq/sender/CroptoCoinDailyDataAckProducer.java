@@ -6,21 +6,21 @@ import org.springframework.stereotype.Component;
 
 import demo.baseCommon.service.CommonService;
 import finance.cryptoCoin.pojo.constant.CryptoCoinMQConstant;
-import finance.cryptoCoin.pojo.dto.CryptoCoinHistoryPriceDTO;
+import finance.cryptoCoin.pojo.dto.CryptoCoinDataDTO;
 import net.sf.json.JSONObject;
 
 @Component
-public class CroptoCoinHistoryPriceDataAckProducer extends CommonService {
+public class CroptoCoinDailyDataAckProducer extends CommonService {
 
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
 
-	public void sendHistoryPrice(CryptoCoinHistoryPriceDTO cryptoCoinPriceDTO) {
+	public void sendHistoryPrice(CryptoCoinDataDTO cryptoCoinPriceDTO) {
 		if (cryptoCoinPriceDTO == null) {
 			return;
 		}
 		JSONObject json = JSONObject.fromObject(cryptoCoinPriceDTO);
-		rabbitTemplate.convertAndSend(CryptoCoinMQConstant.CRYPTO_CONI_HISTORY_PRICE_DATA, json.toString());
+		rabbitTemplate.convertAndSend(CryptoCoinMQConstant.CRYPTO_COIN_DAILY_DATA, json.toString());
 	}
 
 }

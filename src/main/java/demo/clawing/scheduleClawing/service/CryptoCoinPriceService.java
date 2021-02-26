@@ -6,8 +6,12 @@ import demo.baseCommon.pojo.result.CommonResultBBT;
 
 public interface CryptoCoinPriceService {
 
-	InsertTestEventResult insertHistoryCryptoCoinPriceEvent();
+	InsertTestEventResult insertCryptoCoinMinuteDataCollectEvent();
 
-	CommonResultBBT cryptoCoinHistoryPriceAPI(TestEvent te);
+	CommonResultBBT cryptoCoinMinuteDataAPI(TestEvent te);
+
+	InsertTestEventResult insertCryptoCoinDailyDataCollectEvent();
+
+	CommonResultBBT cryptoCoinDailyDataAPI(TestEvent te);
 
 }

@@ -45,7 +45,7 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 	private String testEventName = "preciousMetalPriceClawing";
 
 	private TestModuleType testModuleType = TestModuleType.scheduleClawing;
-	private ScheduleClawingType testCastType = ScheduleClawingType.preciousMetalPrice;
+	private ScheduleClawingType testCastType = ScheduleClawingType.PRECIOUS_METAL_PRICE;
 
 	private String goldPricePageUrl = "https://goldprice.org/gold-price-data.html";
 

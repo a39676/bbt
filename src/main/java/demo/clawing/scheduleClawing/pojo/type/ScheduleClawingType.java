@@ -3,26 +3,28 @@ package demo.clawing.scheduleClawing.pojo.type;
 public enum ScheduleClawingType {
 
 	/** wuYiJob */
-	wuYiJob(2L, "wuYiJob"),
+	WU_YI_JOB(2L, "wuYiJob"),
 	
 	/** liePin */
-	liePin(3L, "liePin"),
+	LIE_PIN(3L, "liePin"),
 	
 	/** zhiLian */
-	zhiLian(5L, "zhiLian"),
+	ZHI_LIAN(5L, "zhiLian"),
 	
 	/** maiMai */
-	maiMai(6L, "maiMai"),
+	MAI_MAI(6L, "maiMai"),
 	
 	/** 
 	 * https://goldprice.org/gold-price-data.html
 	 * Precious metals price clawing 
 	 * */
-	preciousMetalPrice(7L, "preciousMetalPrice"),
+	PRECIOUS_METAL_PRICE(7L, "preciousMetalPrice"),
 	
-	cryptoCoinHistoryPrice(9L, "cryptoCoinHistoryPrice"),
+	CRYPTO_COIN_MINUTE_DATA(9L, "cryptoCoinMinuteData"),
 	
-	wawawiwaComic(10L, "wawawiwaComic"),
+	WAWAWIWA_COMIC(10L, "wawawiwaComic"),
+	
+	CRYPTO_COIN_DAILY_DATA(11L, "cryptoCoinDailyData"),
 	;
 
 	private Long id;
