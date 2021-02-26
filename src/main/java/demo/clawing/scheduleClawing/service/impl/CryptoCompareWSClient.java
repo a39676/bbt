@@ -81,7 +81,7 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 		ws.addListener(new WebSocketAdapter() {
 			@Override
 			public void onTextMessage(WebSocket websocket, String message) throws Exception {
-				System.out.println(message);
+//				System.out.println(message);
 				
 				CryptoCompareWebSocketMsgType connectionType = checkConnection(message);
 				if(connectionType== null) {
