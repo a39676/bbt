@@ -253,7 +253,6 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 		return r;
 	}
 	
-	
 	private List<CryptoCoinDataSubDTO> handleCryptoCoinDataResponse(String response, String coinName, String currencyName) {
 		List<CryptoCoinDataSubDTO> list = new ArrayList<>();
 		JSONObject json = JSONObject.fromObject(response);
