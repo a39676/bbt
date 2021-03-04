@@ -62,7 +62,7 @@ public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 	
 	@Scheduled(cron = "*/31 * * * * ?")
 	public void checkCryptoCompareWebSocket() {
-		if (!cryptoCompareWSClient.getSocketLiveFlag()) {
+		if (!"dev".equals(constantService.getValByName("envName")) && !cryptoCompareWSClient.getSocketLiveFlag()) {
 			log.error("crypto compare web socket disconnected");
 			cryptoCompareWSClient.startWebSocket();
 		}
