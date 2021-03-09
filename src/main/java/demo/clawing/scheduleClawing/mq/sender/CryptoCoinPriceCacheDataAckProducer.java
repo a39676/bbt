@@ -5,22 +5,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import demo.baseCommon.service.CommonService;
+import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinMQConstant;
-import finance.cryptoCoin.pojo.dto.CryptoCoinDataDTO;
 import net.sf.json.JSONObject;
 
 @Component
-public class CroptoCoinMinuteDataAckProducer extends CommonService {
+public class CryptoCoinPriceCacheDataAckProducer extends CommonService {
 
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
 
-	public void sendHistoryPrice(CryptoCoinDataDTO cryptoCoinPriceDTO) {
-		if (cryptoCoinPriceDTO == null) {
+	public void sendPriceCacheData(CryptoCoinPriceCommonDataBO bo) {
+		if (bo == null) {
 			return;
 		}
-		JSONObject json = JSONObject.fromObject(cryptoCoinPriceDTO);
-		rabbitTemplate.convertAndSend(CryptoCoinMQConstant.CRYPTO_COIN_MINUTE_DATA, json.toString());
+		JSONObject json = JSONObject.fromObject(bo);
+		rabbitTemplate.convertAndSend(CryptoCoinMQConstant.CRYPTO_COIN_PRICE_CACHE_QUEUE, json.toString());
 	}
 
 }

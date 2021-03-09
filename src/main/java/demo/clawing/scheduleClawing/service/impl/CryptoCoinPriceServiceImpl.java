@@ -16,8 +16,8 @@ import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.baseCommon.pojo.result.CommonResultBBT;
-import demo.clawing.scheduleClawing.mq.sender.CroptoCoinDailyDataAckProducer;
-import demo.clawing.scheduleClawing.mq.sender.CroptoCoinMinuteDataAckProducer;
+import demo.clawing.scheduleClawing.mq.sender.CryptoCoinDailyDataAckProducer;
+import demo.clawing.scheduleClawing.mq.sender.CryptoCoinMinuteDataAckProducer;
 import demo.clawing.scheduleClawing.pojo.bo.CryptoCoinDataParamBO;
 import demo.clawing.scheduleClawing.pojo.type.ScheduleClawingType;
 import demo.clawing.scheduleClawing.service.CryptoCoinPriceService;
@@ -33,9 +33,9 @@ import toolPack.httpHandel.HttpUtil;
 public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements CryptoCoinPriceService {
 
 	@Autowired
-	private CroptoCoinMinuteDataAckProducer croptoCoinMinuteDataAckProducer;
+	private CryptoCoinMinuteDataAckProducer croptoCoinMinuteDataAckProducer;
 	@Autowired
-	private CroptoCoinDailyDataAckProducer croptoCoinDailyDataAckProducer;
+	private CryptoCoinDailyDataAckProducer croptoCoinDailyDataAckProducer;
 
 	private TestModuleType testModuleType = TestModuleType.scheduleClawing;
 

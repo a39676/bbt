@@ -10,7 +10,7 @@ import finance.cryptoCoin.pojo.dto.CryptoCoinDataDTO;
 import net.sf.json.JSONObject;
 
 @Component
-public class CroptoCoinDailyDataAckProducer extends CommonService {
+public class CryptoCoinMinuteDataAckProducer extends CommonService {
 
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
@@ -20,7 +20,7 @@ public class CroptoCoinDailyDataAckProducer extends CommonService {
 			return;
 		}
 		JSONObject json = JSONObject.fromObject(cryptoCoinPriceDTO);
-		rabbitTemplate.convertAndSend(CryptoCoinMQConstant.CRYPTO_COIN_DAILY_DATA, json.toString());
+		rabbitTemplate.convertAndSend(CryptoCoinMQConstant.CRYPTO_COIN_MINUTE_DATA, json.toString());
 	}
 
 }

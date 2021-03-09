@@ -20,7 +20,7 @@ import com.neovisionaries.ws.client.WebSocketFrame;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
-import demo.clawing.scheduleClawing.mq.sender.CroptoCoinPriceCacheDataAckProducer;
+import demo.clawing.scheduleClawing.mq.sender.CryptoCoinPriceCacheDataAckProducer;
 import demo.clawing.scheduleClawing.pojo.bo.CryptoCompareSocketConfigBO;
 import demo.clawing.scheduleClawing.pojo.type.CryptoCompareWebSocketMsgType;
 import demo.selenium.service.impl.SeleniumCommonService;
@@ -37,7 +37,7 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 	@Autowired
 	private FileUtilCustom ioUtil;
 	@Autowired
-	private CroptoCoinPriceCacheDataAckProducer croptoCoinPriceCacheDataAckProducer;
+	private CryptoCoinPriceCacheDataAckProducer croptoCoinPriceCacheDataAckProducer;
 
 	public CommonResult startWebSocket() {
 		CryptoCompareSocketConfigBO configBO = getConfig();
