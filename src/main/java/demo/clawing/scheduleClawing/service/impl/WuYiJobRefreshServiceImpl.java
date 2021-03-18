@@ -188,7 +188,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 	private void findLoginWithUsernameAndPwd(WebDriver d, JsonReportDTO reportDTO) {
 		XpathBuilderBO x = new XpathBuilderBO();
 		
-		x.start("a").addContainsText("账号密码登录");
+		x.start("div").addId("tobydefault").findChild("a").addClass("leftlogin");
 		
 		try {
 			WebElement loginWithUsernameAndPwdButton = d.findElement(By.xpath(x.getXpath()));
@@ -198,7 +198,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 				jsonReporter.appendContent(reportDTO, "click loginWithUsernameAndPwdButton");
 				return;
 			} else {
-				jsonReporter.appendContent(reportDTO, "find loginWithUsernameAndPwdButton");
+				jsonReporter.appendContent(reportDTO, "can not find loginWithUsernameAndPwdButton");
 			}
 
 		} catch (Exception e) {
