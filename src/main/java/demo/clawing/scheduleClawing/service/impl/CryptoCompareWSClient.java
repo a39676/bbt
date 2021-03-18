@@ -26,7 +26,6 @@ import demo.clawing.scheduleClawing.pojo.type.CryptoCompareWebSocketMsgType;
 import demo.selenium.service.impl.SeleniumCommonService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCompareConstant;
-import finance.cryptoCoin.pojo.type.CryptoCoinType;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import toolPack.ioHandle.FileUtilCustom;
@@ -117,11 +116,9 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 		JSONArray subs = new JSONArray();
 		String subscriptionformat = "5~CCCAGG~%s~%s";
 		String subscription = null;
-		CryptoCoinType coinType = null;
 		CurrencyType currencyType = null;
 		for (String cryptoCoinCode : bo.getTargetCoins()) {
-			coinType = CryptoCoinType.getType(cryptoCoinCode);
-			if (coinType == null) {
+			if (cryptoCoinCode == null) {
 				continue;
 			}
 			for (String currencyCode : bo.getTargetCurrency()) {
@@ -129,7 +126,7 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 				if (currencyType == null) {
 					continue;
 				}
-				subscription = String.format(subscriptionformat, coinType.getName(), currencyType.getName());
+				subscription = String.format(subscriptionformat, cryptoCoinCode, currencyType.getName());
 				subs.add(subscription);
 			}
 		}
@@ -202,7 +199,7 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 			bo.setEndPrice(new BigDecimal(sourceMsgJson.getDouble("PRICE")));
 			bo.setHighPrice(new BigDecimal(sourceMsgJson.getDouble("PRICE")));
 			bo.setLowPrice(new BigDecimal(sourceMsgJson.getDouble("PRICE")));
-			bo.setCoinType(CryptoCoinType.getType(sourceMsgJson.getString("FROMSYMBOL")).getCode());
+			bo.setCoinType(sourceMsgJson.getString("FROMSYMBOL"));
 			bo.setCurrencyType(CurrencyType.getType(sourceMsgJson.getString("TOSYMBOL")).getCode());
 			try {
 				Date tradDate = new Date(sourceMsgJson.getLong("LASTUPDATE") * 1000);

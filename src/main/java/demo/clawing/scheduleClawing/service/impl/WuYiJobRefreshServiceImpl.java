@@ -185,6 +185,32 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 		return r;
 	}
 
+	private void findAndCLoseHomePop(WebDriver d, JsonReportDTO reportDTO) {
+		XpathBuilderBO x = new XpathBuilderBO();
+		
+		x.start("div").addClass("homePop");
+		
+		try {
+			WebElement homepopDiv = d.findElement(By.xpath(x.getXpath()));
+			if (homepopDiv == null || !homepopDiv.isDisplayed()) {
+				jsonReporter.appendContent(reportDTO, "can not find homepop div");
+				return;
+			} else {
+				jsonReporter.appendContent(reportDTO, "find homepop div");
+			}
+
+			x.findChild("div").addClass("in").findChild("div").addClass("close");
+
+			WebElement homepopCloseDiv = d.findElement(By.xpath(x.getXpath()));
+			homepopCloseDiv.click();
+			jsonReporter.appendContent(reportDTO, "close homepop div");
+
+		} catch (Exception e) {
+			jsonReporter.appendContent(reportDTO, "close homepop div exception");
+			jsonReporter.appendContent(reportDTO, e.getLocalizedMessage());
+		}
+	}
+	
 	private void findAndCloseLeadDiv(WebDriver d, JsonReportDTO reportDTO) {
 		XpathBuilderBO x = new XpathBuilderBO();
 
@@ -252,6 +278,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			}
 
 			jsonReporter.appendContent(reportDTO, "try find lead div and go app div");
+			findAndCLoseHomePop(d, reportDTO);
 			findAndCloseLeadDiv(d, reportDTO);
 			findAndCloseGoAppDiv(d, reportDTO);
 			jsonReporter.appendContent(reportDTO, "after close lead and go app div");
