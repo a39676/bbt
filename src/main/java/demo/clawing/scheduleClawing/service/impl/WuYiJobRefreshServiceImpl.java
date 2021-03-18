@@ -186,25 +186,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 	}
 	
 	private void findLoginWithUsernameAndPwd(WebDriver d, JsonReportDTO reportDTO) {
-		XpathBuilderBO x = new XpathBuilderBO();
-		
-		x.start("div").addId("tobydefault").findChild("a", 2);
-		
-		try {
-			WebElement loginWithUsernameAndPwdButton = d.findElement(By.xpath(x.getXpath()));
-			if (loginWithUsernameAndPwdButton == null || !loginWithUsernameAndPwdButton.isDisplayed()) {
-				jsonReporter.appendContent(reportDTO, "can not find loginWithUsernameAndPwdButton");
-				loginWithUsernameAndPwdButton.click();
-				jsonReporter.appendContent(reportDTO, "click loginWithUsernameAndPwdButton");
-				return;
-			} else {
-				jsonReporter.appendContent(reportDTO, "can not find loginWithUsernameAndPwdButton");
-			}
-
-		} catch (Exception e) {
-			jsonReporter.appendContent(reportDTO, "find loginWithUsernameAndPwdButton exception");
-			jsonReporter.appendContent(reportDTO, e.getLocalizedMessage());
-		}
+		d.get("https://login.51job.com/login.php?lang=c&from_domain=51job_m&source=&display=h5&isjump=0&url=https%3A%2F%2Fm.51job.com%2F%2Fmy%2Fsuccess.php&loginway=0");
 	}
 
 	private void findAndCLoseHomePop(WebDriver d, JsonReportDTO reportDTO) {
