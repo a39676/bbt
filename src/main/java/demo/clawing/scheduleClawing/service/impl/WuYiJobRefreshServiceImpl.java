@@ -186,7 +186,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 	}
 	
 	private void findLoginWithUsernameAndPwd(WebDriver d, JsonReportDTO reportDTO) {
-		d.get("https://login.51job.com/login.php?lang=c&from_domain=51job_m&source=&display=h5&isjump=0&url=https%3A%2F%2Fm.51job.com%2F%2Fmy%2Fsuccess.php&loginway=0");
+		d.get("https://login.51job.com/login.php?lang=c&from_domain=51job_m&source=&display=h5&isjump=0&url=https://m.51job.com//my/success.php&loginway=0");
 	}
 
 	private void findAndCLoseHomePop(WebDriver d, JsonReportDTO reportDTO) {
