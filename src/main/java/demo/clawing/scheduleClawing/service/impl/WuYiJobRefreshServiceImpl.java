@@ -184,6 +184,28 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 
 		return r;
 	}
+	
+	private void findLoginWithUsernameAndPwd(WebDriver d, JsonReportDTO reportDTO) {
+		XpathBuilderBO x = new XpathBuilderBO();
+		
+		x.start("a").addContainsText("账号密码登录");
+		
+		try {
+			WebElement loginWithUsernameAndPwdButton = d.findElement(By.xpath(x.getXpath()));
+			if (loginWithUsernameAndPwdButton == null || !loginWithUsernameAndPwdButton.isDisplayed()) {
+				jsonReporter.appendContent(reportDTO, "can not find loginWithUsernameAndPwdButton");
+				loginWithUsernameAndPwdButton.click();
+				jsonReporter.appendContent(reportDTO, "click loginWithUsernameAndPwdButton");
+				return;
+			} else {
+				jsonReporter.appendContent(reportDTO, "find loginWithUsernameAndPwdButton");
+			}
+
+		} catch (Exception e) {
+			jsonReporter.appendContent(reportDTO, "find loginWithUsernameAndPwdButton exception");
+			jsonReporter.appendContent(reportDTO, e.getLocalizedMessage());
+		}
+	}
 
 	private void findAndCLoseHomePop(WebDriver d, JsonReportDTO reportDTO) {
 		XpathBuilderBO x = new XpathBuilderBO();
@@ -279,8 +301,11 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 
 			jsonReporter.appendContent(reportDTO, "try find lead div and go app div");
 			findAndCLoseHomePop(d, reportDTO);
+			threadSleepRandomTime();
 			findAndCloseLeadDiv(d, reportDTO);
+			threadSleepRandomTime();
 			findAndCloseGoAppDiv(d, reportDTO);
+			threadSleepRandomTime();
 			jsonReporter.appendContent(reportDTO, "after close lead and go app div");
 
 			// 向下翻动一下页面, 以使登录按钮出现在页面顶部
@@ -292,6 +317,9 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			loginPageButton.click();
 			jsonReporter.appendContent(reportDTO, "click login page button");
 
+			findLoginWithUsernameAndPwd(d, reportDTO);
+			threadSleepRandomTime();
+			
 			x.start("input").addAttribute("id", "loginname");
 			WebElement usernameInput = null;
 			try {
