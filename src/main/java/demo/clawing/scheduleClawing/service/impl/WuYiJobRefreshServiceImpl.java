@@ -188,7 +188,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 	private void findLoginWithUsernameAndPwd(WebDriver d, JsonReportDTO reportDTO) {
 		XpathBuilderBO x = new XpathBuilderBO();
 		
-		x.start("div").addId("tobydefault").findChild("a").addClass("leftlogin");
+		x.start("div").addId("tobydefault").findChild("a", 2);
 		
 		try {
 			WebElement loginWithUsernameAndPwdButton = d.findElement(By.xpath(x.getXpath()));
