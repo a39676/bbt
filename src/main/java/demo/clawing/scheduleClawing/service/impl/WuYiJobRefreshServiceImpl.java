@@ -320,7 +320,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			findLoginWithUsernameAndPwd(d, reportDTO);
 			threadSleepRandomTime();
 			
-			x.start("input").addAttribute("id", "loginname");
+			x.start().addId("loginname");
 			WebElement usernameInput = null;
 			try {
 				usernameInput = d.findElement(By.xpath(x.getXpath()));
@@ -348,7 +348,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 				jsonReporter.appendContent(reportDTO, "找不到Logo");
 			}
 
-			x.start("input").addAttribute("id", "password");
+			x.start().addId("password");
 			WebElement pwdInput = null;
 			try {
 				pwdInput = d.findElement(By.xpath(x.getXpath()));
