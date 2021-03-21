@@ -8,10 +8,9 @@ import demo.baseCommon.service.CommonService;
 
 @Service
 public class TestService extends CommonService {
-	
+
 	@SuppressWarnings("unused")
 	@Autowired
 	private TestEventMapper eventMapper;
-	
-	
+
 }
