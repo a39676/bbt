@@ -43,9 +43,6 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 
 	private String cryptoCoinMinuteDataCollect = "cryptoCoinMinuteDataCollect";
 	private String cryptoCoinMinuteDataCollectParam = "cryptoCoinMinuteDataCollectParam.json";
-	/*
-	 * TODO del historyCryptoCoinPriceCollectingParam.json
-	 */
 	private ScheduleClawingType cryptoCoinMinuteData = ScheduleClawingType.CRYPTO_COIN_MINUTE_DATA;
 
 	private String cryptoCoinDailyDataCollect = "cryptoCoinDailyDataCollect";
@@ -310,8 +307,7 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 			priceDataDTO.setLow(subJson.getDouble("low"));
 			priceDataDTO.setVolume(subJson.getDouble("volumeto"));
 			tmpDate = new Date(subJson.getLong("time") * 1000L);
-			priceDataDTO.setTime(localDateTimeHandler.dateToStr(localDateTimeHandler.dateToLocalDateTime(tmpDate)
-					.withHour(0).withMinute(0).withSecond(0).withNano(0)));
+			priceDataDTO.setTime(localDateTimeHandler.dateToStr(localDateTimeHandler.dateToLocalDateTime(tmpDate)));
 			list.add(priceDataDTO);
 		}
 
