@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 import demo.clawing.scheduleClawing.service.CryptoCoinPriceService;
 import demo.clawing.scheduleClawing.service.WuYiJobRefreshService;
-import demo.clawing.scheduleClawing.service.impl.CryptoCompareWSClient;
+import demo.clawing.scheduleClawing.service.coma.webSocket.CryptoCompareWSClient;
 
 @Component
 public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
