@@ -181,7 +181,7 @@ public abstract class SeleniumCommonService extends CommonService {
 	}
 
 	protected void threadSleepRandomTime() throws InterruptedException {
-		threadSleepRandomTime(3000L, 3000L);
+		threadSleepRandomTime(1000L, 3000L);
 	}
 
 	protected void skipToPageEnd(WebDriver d) {
