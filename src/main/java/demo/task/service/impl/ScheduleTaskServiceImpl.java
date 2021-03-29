@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import demo.clawing.scheduleClawing.service.CryptoCoinPriceService;
 import demo.clawing.scheduleClawing.service.WuYiJobRefreshService;
+import demo.clawing.scheduleClawing.service.component.webSocket.BinanceWSClient;
 import demo.clawing.scheduleClawing.service.component.webSocket.CryptoCompareWSClient;
 
 @Component
@@ -22,7 +23,8 @@ public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 	private CryptoCoinPriceService cryptoCoinPriceService;
 	@Autowired
 	private CryptoCompareWSClient cryptoCompareWSClient;
-	
+	@Autowired
+	private BinanceWSClient binanceWSClient;
 
 //	@Scheduled(fixedRate = 1000L * 60 * 5)
 	@Scheduled(cron = "0 */5 * * * ?")
@@ -38,37 +40,42 @@ public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 			}
 		}
 	}
-	
+
 //	@Scheduled(cron = "*/60 * * * * ?")
 //	public void insertCryptoCoinNewPriceCollect() {
 //		if (!"dev".equals(constantService.getValByName("envName"))) {
 //			cryptoCoinPriceService.insertNewCryptoCoinPriceEvent();
 //		}
 //	}
-	
+
 	@Scheduled(cron = "0 */5 * * * ?")
 	public void insertCryptoCoinMinuteDataCollect() {
 		if (!"dev".equals(constantService.getValByName("envName"))) {
 			cryptoCoinPriceService.insertCryptoCoinMinuteDataCollectEvent();
 		}
 	}
-	
-	@Scheduled(cron="1 3 0 * * *") // 每天00:03:01执行
+
+	@Scheduled(cron = "1 3 0 * * *") // 每天00:03:01执行
 	public void insertCryptoCoinDailyDataCollect() {
 		if (!"dev".equals(constantService.getValByName("envName"))) {
 			cryptoCoinPriceService.insertCryptoCoinDailyDataCollectEvent();
 		}
 	}
-	
+
 	@Scheduled(cron = "*/31 * * * * ?")
 	public void checkCryptoCompareWebSocket() {
-		if (!"dev".equals(constantService.getValByName("envName")) && !cryptoCompareWSClient.getSocketLiveFlag()) {
-//		if (!cryptoCompareWSClient.getSocketLiveFlag()) {
-			log.error("crypto compare web socket disconnected");
-			cryptoCompareWSClient.startWebSocket();
+		if (!"dev".equals(constantService.getValByName("envName"))) {
+			if (!cryptoCompareWSClient.getSocketLiveFlag()) {
+				log.error("crypto compare web socket disconnected");
+				cryptoCompareWSClient.startWebSocket();
+			}
+			if (!binanceWSClient.getSocketLiveFlag()) {
+				log.error("binance web socket disconnected");
+				binanceWSClient.startWebSocket();
+			}
 		}
 	}
-	
+
 //	@Scheduled(cron = "*/30 * * * * ?")
 //	public void insertMetalsPriceClaw() {
 //		/*

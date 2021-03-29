@@ -19,7 +19,7 @@ import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.scheduleClawing.mq.sender.CryptoCoinDailyDataAckProducer;
 import demo.clawing.scheduleClawing.mq.sender.CryptoCoinMinuteDataAckProducer;
-import demo.clawing.scheduleClawing.pojo.bo.CryptoCoinDataParamBO;
+import demo.clawing.scheduleClawing.pojo.bo.CryptoCompareDataAPIParamBO;
 import demo.clawing.scheduleClawing.pojo.type.ScheduleClawingType;
 import demo.clawing.scheduleClawing.service.CryptoCoinPriceService;
 import demo.selenium.pojo.bo.BuildTestEventBO;
@@ -134,9 +134,9 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 				throw new Exception();
 			}
 
-			CryptoCoinDataParamBO clawingOptionBO = null;
+			CryptoCompareDataAPIParamBO clawingOptionBO = null;
 			try {
-				clawingOptionBO = new Gson().fromJson(jsonStr, CryptoCoinDataParamBO.class);
+				clawingOptionBO = new Gson().fromJson(jsonStr, CryptoCompareDataAPIParamBO.class);
 			} catch (Exception e) {
 				jsonReporter.appendContent(reportDTO, "参数文件结构异常");
 				throw new Exception();
@@ -204,9 +204,9 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 				throw new Exception();
 			}
 
-			CryptoCoinDataParamBO clawingOptionBO = null;
+			CryptoCompareDataAPIParamBO clawingOptionBO = null;
 			try {
-				clawingOptionBO = new Gson().fromJson(jsonStr, CryptoCoinDataParamBO.class);
+				clawingOptionBO = new Gson().fromJson(jsonStr, CryptoCompareDataAPIParamBO.class);
 			} catch (Exception e) {
 				jsonReporter.appendContent(reportDTO, "参数文件结构异常");
 				throw new Exception();

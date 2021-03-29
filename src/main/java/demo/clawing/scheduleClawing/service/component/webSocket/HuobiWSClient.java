@@ -35,7 +35,9 @@ import toolPack.ioHandle.FileUtilCustom;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class CryptoCompareWSClient extends SeleniumCommonService {
+public class HuobiWSClient extends SeleniumCommonService {
+	
+//	TODO
 
 	private WebSocket ws = null;
 	
@@ -132,7 +134,7 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 			return ws;
 		} catch (IOException e) {
 			e.printStackTrace();
-			log.error("crypto comapre create socket error: " + e);
+			log.error("create socket error: " + e);
 			return null;
 		}
 	}

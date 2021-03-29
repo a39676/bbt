@@ -2,7 +2,7 @@ package demo.clawing.scheduleClawing.pojo.bo;
 
 import java.util.List;
 
-public class CryptoCoinDataParamBO {
+public class CryptoCompareDataAPIParamBO {
 
 	private List<String> coinType;
 	private List<String> currency;
