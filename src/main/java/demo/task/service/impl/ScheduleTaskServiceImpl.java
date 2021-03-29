@@ -69,6 +69,12 @@ public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 				log.error("crypto compare web socket disconnected");
 				cryptoCompareWSClient.startWebSocket();
 			}
+		}
+	}
+	
+	@Scheduled(cron = "*/10 * * * * ?")
+	public void checkBinanceWebSocket() {
+		if (!"dev".equals(constantService.getValByName("envName"))) {
 			if (!binanceWSClient.getSocketLiveFlag()) {
 				log.error("binance web socket disconnected");
 				binanceWSClient.startWebSocket();
