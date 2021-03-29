@@ -127,6 +127,8 @@ public class BinanceWSClient extends SeleniumCommonService {
 			bo.setEndPrice(new BigDecimal(kDataJson.getDouble("c")));
 			bo.setHighPrice(new BigDecimal(kDataJson.getDouble("h")));
 			bo.setLowPrice(new BigDecimal(kDataJson.getDouble("l")));
+			bo.setVolume(new BigDecimal(kDataJson.getDouble("v")));
+			
 			try {
 				Date tradDate = new Date(sourceMsgJson.getLong("E"));
 				LocalDateTime tradDateTime = localDateTimeHandler.dateToLocalDateTime(tradDate);
@@ -229,4 +231,5 @@ public class BinanceWSClient extends SeleniumCommonService {
 		}
 		ws = null;
 	}
+
 }
