@@ -109,6 +109,7 @@ public class BinanceWSClient extends SeleniumCommonService {
 		try {
 			JSONObject sourceMsgJson = JSONObject.fromObject(sourceMsg);
 			if (!sourceMsgJson.containsKey("k")) {
+				log.error("binnace recive unknow: " + sourceMsg);
 				return null;
 			}
 			bo = new CryptoCoinPriceCommonDataBO();
