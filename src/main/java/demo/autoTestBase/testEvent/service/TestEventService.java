@@ -27,4 +27,6 @@ public interface TestEventService {
 
 	void fixRuningEventStatusManual();
 
+	void deleteOldTestEvent();
+
 }

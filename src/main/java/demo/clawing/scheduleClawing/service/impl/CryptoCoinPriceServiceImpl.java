@@ -25,6 +25,7 @@ import demo.clawing.scheduleClawing.service.CryptoCoinPriceService;
 import demo.selenium.pojo.bo.BuildTestEventBO;
 import demo.selenium.service.impl.SeleniumCommonService;
 import finance.cryptoCoin.pojo.constant.CryptoCoinPriceCommonUrl;
+import finance.cryptoCoin.pojo.dto.CryptoCoinDailyDataQueryDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataSubDTO;
 import net.sf.json.JSONArray;
@@ -83,7 +84,7 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 		bo.setParameterFilePath(paramterFile.getAbsolutePath());
 		return buildTestEvent(bo);
 	}
-
+	
 	@Override
 	public InsertTestEventResult insertCryptoCoinMinuteDataCollectEvent() {
 		TestEvent te = buildCryptoCoinMinuteDataCollectingEvent();
@@ -92,6 +93,11 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 
 	@Override
 	public InsertTestEventResult insertCryptoCoinDailyDataCollectEvent() {
+		TestEvent te = buildCryptoCoinDailyDataCollectingEvent();
+		return testEventService.insertTestEvent(te);
+	}
+	
+	public InsertTestEventResult insertCryptoCoinDailyDataCollectEvent(CryptoCoinDailyDataQueryDTO dto) {
 		TestEvent te = buildCryptoCoinDailyDataCollectingEvent();
 		return testEventService.insertTestEvent(te);
 	}

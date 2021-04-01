@@ -30,6 +30,7 @@ import demo.clawing.movie.service.impl.MovieClawingCasePrefixServiceImpl;
 import demo.clawing.scheduleClawing.service.impl.ScheduleClawingPrefixServiceImpl;
 import demo.tool.pojo.type.MailType;
 import demo.tool.service.MailService;
+import selenium.pojo.constant.SeleniumConstant;
 
 @Service
 public class TestEventServiceImpl extends TestEventCommonService implements TestEventService {
@@ -227,5 +228,13 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	@Override
 	public void fixRuningEventStatusManual() {
 		constantService.setValByName(runningEventRedisKey, "false");
+	}
+
+	@Override
+	public void deleteOldTestEvent() {
+		LocalDateTime deleteLine = LocalDateTime.now().plusMonths(SeleniumConstant.maxHistoryMonth);
+		TestEventExample example = new TestEventExample();
+		example.createCriteria().andIsDeleteEqualTo(false).andStartTimeGreaterThan(deleteLine);
+		eventMapper.deleteByExample(example);
 	}
 }

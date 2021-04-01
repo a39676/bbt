@@ -23,11 +23,15 @@ public class SeleniumDeleteDataTaskServiceImpl {
 	public void deleteOldScreenshot() throws IOException {
 		oldDataDeleteService.deleteOldScreenshot();
 		oldDataDeleteService.deleteOldCaptchaImg();
-		
 	}
 	
 	@Scheduled(cron = "45 11 02 * * *")
 	public void deleteOldReport() throws IOException {
 		oldDataDeleteService.deleteOldReport();
+	}
+	
+	@Scheduled(cron = "33 12 01 * * *")
+	public void deleteOldTestEvent() throws IOException {
+		oldDataDeleteService.deleteOldTestEvent();
 	}
 }

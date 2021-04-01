@@ -34,21 +34,7 @@ public interface TestEventMapper {
 
 	int existsRuningEvent();
 
-	/**
-	 * 2020-07-14
-	 * 采用mq 之后, 准备废弃此方法
-	 * @return
-	 */
-	int countRuningEvent();
-
 	int countWaitingEvent();
-
-	/**
-	 * 2020-07-14
-	 * 采用mq 之后, 准备废弃此方法
-	 * @return
-	 */
-	List<TestEvent> findTestEventNotRunYet();
 
 	List<TestEvent> findTestEventPageByCondition(FindTestEventPageByConditionDTO dto);
 }
