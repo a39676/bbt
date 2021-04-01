@@ -13,7 +13,8 @@ import com.google.gson.Gson;
 
 import at.report.pojo.dto.JsonReportDTO;
 import autoTest.testModule.pojo.type.TestModuleType;
-import auxiliaryCommon.pojo.constant.ServerHost;
+import auxiliaryCommon.pojo.type.CurrencyType;
+import demo.autoTestBase.testEvent.pojo.constant.TestEventOptionConstant;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.baseCommon.pojo.result.CommonResultBBT;
@@ -24,7 +25,6 @@ import demo.clawing.scheduleClawing.pojo.type.ScheduleClawingType;
 import demo.clawing.scheduleClawing.service.CryptoCoinPriceService;
 import demo.selenium.pojo.bo.BuildTestEventBO;
 import demo.selenium.service.impl.SeleniumCommonService;
-import finance.cryptoCoin.pojo.constant.CryptoCoinPriceCommonUrl;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDailyDataQueryDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataSubDTO;
@@ -50,8 +50,6 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 	private String cryptoCoinDailyDataCollectParam = "cryptoCoinDailyDataCollectParam.json";
 	private ScheduleClawingType cryptoCoinDailyData = ScheduleClawingType.CRYPTO_COIN_DAILY_DATA;
 
-	@Autowired
-	private HttpUtil httpUtil;
 
 	private TestEvent buildCryptoCoinMinuteDataCollectingEvent() {
 		String paramterFolderPath = getParameterSaveingPath(cryptoCoinMinuteDataCollect);
@@ -92,14 +90,16 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 	}
 
 	@Override
-	public InsertTestEventResult insertCryptoCoinDailyDataCollectEvent() {
-		TestEvent te = buildCryptoCoinDailyDataCollectingEvent();
-		return testEventService.insertTestEvent(te);
-	}
-	
 	public InsertTestEventResult insertCryptoCoinDailyDataCollectEvent(CryptoCoinDailyDataQueryDTO dto) {
+		if(dto == null || StringUtils.isBlank(dto.getCoinName()) || dto.getCounting() <= 0) {
+			return new InsertTestEventResult();
+		}
+		
 		TestEvent te = buildCryptoCoinDailyDataCollectingEvent();
-		return testEventService.insertTestEvent(te);
+		if(StringUtils.isBlank(dto.getCurrencyName())) {
+			dto.setCurrencyName(CurrencyType.USD.getName());
+		}
+		return testEventService.insertTestEvent(te, JSONObject.fromObject(dto));
 	}
 
 	@Override
@@ -194,6 +194,13 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 		return r;
 	}
 
+	/**
+	 * 
+	 * 每次调用, 仅获取一个币种法币对的数据
+	 * @param te
+	 * @param reportDTO
+	 * @return
+	 */
 	private CommonResultBBT cryptoCoinDailyDataAPI(TestEvent te, JsonReportDTO reportDTO) {
 		CommonResultBBT r = new CommonResultBBT();
 
@@ -204,15 +211,15 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 
 		try {
 
-			String jsonStr = ioUtil.getStringFromFile(te.getParameterFilePath());
-			if (StringUtils.isBlank(jsonStr)) {
+			String optionJsonStr = ioUtil.getStringFromFile(te.getParameterFilePath());
+			if (StringUtils.isBlank(optionJsonStr)) {
 				jsonReporter.appendContent(reportDTO, "参数文件读取异常");
 				throw new Exception();
 			}
 
 			CryptoCompareDataAPIParamBO clawingOptionBO = null;
 			try {
-				clawingOptionBO = new Gson().fromJson(jsonStr, CryptoCompareDataAPIParamBO.class);
+				clawingOptionBO = new Gson().fromJson(optionJsonStr, CryptoCompareDataAPIParamBO.class);
 			} catch (Exception e) {
 				jsonReporter.appendContent(reportDTO, "参数文件结构异常");
 				throw new Exception();
@@ -223,34 +230,41 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 				throw new Exception();
 			}
 
-			if (clawingOptionBO.getLimit() == null || StringUtils.isBlank(clawingOptionBO.getApiKey())) {
+			if (StringUtils.isBlank(clawingOptionBO.getApiKey())) {
 				jsonReporter.appendContent(reportDTO, "参数文件参数异常");
 				throw new Exception();
 			}
 
 			String httpResponse = null;
-			CryptoCoinDataDTO mainDTO = null;
+			CryptoCoinDataDTO mainDTO = new CryptoCoinDataDTO();
 			List<CryptoCoinDataSubDTO> subDataList = null;
 			
-			clawingOptionBO.setCoinType(getCoinCatalog());
-
-			for (String currencyName : clawingOptionBO.getCurrency()) {
-				for (String coinTypeName : clawingOptionBO.getCoinType()) {
-					mainDTO = new CryptoCoinDataDTO();
-
-					httpResponse = h.sendGet(String.format(cryptoCoinApiUrlModel, coinTypeName, currencyName,
-							clawingOptionBO.getLimit(), clawingOptionBO.getApiKey()));
-					jsonReporter.appendContent(reportDTO, httpResponse);
-
-					subDataList = handleCryptoCoinDataResponse(httpResponse, coinTypeName, currencyName);
-					mainDTO.setPriceHistoryData(subDataList);
-					mainDTO.setCryptoCoinTypeName(coinTypeName);
-					mainDTO.setCurrencyName(currencyName);
-
-					croptoCoinDailyDataAckProducer.sendHistoryPrice(mainDTO);
-				}
+			String paramJsonStr = constantService.getValByName(TestEventOptionConstant.TEST_EVENT_REDIS_PARAM_KEY_PREFIX + "_" + te.getId());
+			if(StringUtils.isBlank(paramJsonStr)) {
+				jsonReporter.appendContent(reportDTO, "test event: " + te.getId() + ", " + te.getEventName() + ", 动态参数获取异常");
+				throw new Exception();
 			}
+			
+			CryptoCoinDailyDataQueryDTO dynamicParam = null;
+			try {
+				dynamicParam = new Gson().fromJson(paramJsonStr, CryptoCoinDailyDataQueryDTO.class); 
+			} catch (Exception e) {
+				jsonReporter.appendContent(reportDTO, "test event: " + te.getId() + ", " + te.getEventName() + ", 动态参数获取异常");
+				throw new Exception();
+			}
+			
+			httpResponse = h.sendGet(String.format(cryptoCoinApiUrlModel, dynamicParam.getCoinName(), dynamicParam.getCurrencyName(),
+					dynamicParam.getCounting(), clawingOptionBO.getApiKey()));
+			jsonReporter.appendContent(reportDTO, httpResponse);
+			
+			subDataList = handleCryptoCoinDataResponse(httpResponse, dynamicParam.getCoinName(), dynamicParam.getCurrencyName());
+			mainDTO.setPriceHistoryData(subDataList);
+			mainDTO.setCryptoCoinTypeName(dynamicParam.getCoinName());
+			mainDTO.setCurrencyName(dynamicParam.getCurrencyName());
+			
+			croptoCoinDailyDataAckProducer.sendHistoryPrice(mainDTO);
 
+			constantService.deleteValByName(TestEventOptionConstant.TEST_EVENT_REDIS_PARAM_KEY_PREFIX + "_" + te.getId());
 			r.setIsSuccess();
 
 		} catch (Exception e) {
@@ -264,28 +278,6 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 		}
 
 		return r;
-	}
-
-	private List<String> getCoinCatalog() {
-		List<String> coinTypeNameList = new ArrayList<>();
-		try {
-			String url = ServerHost.localHost10001 + CryptoCoinPriceCommonUrl.ROOT
-					+ CryptoCoinPriceCommonUrl.GET_ALL_CATALOG;
-			String response = String.valueOf(httpUtil.sendGet(url));
-			JSONArray result = JSONArray.fromObject(response);
-			JSONObject tmpJson = null;
-			for(int i = 0; i < result.size(); i++) {
-				try {
-					tmpJson = (JSONObject) result.get(i);
-					coinTypeNameList.add(tmpJson.getString("enShortname"));
-				} catch (Exception e) {
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return coinTypeNameList;
 	}
 
 	private List<CryptoCoinDataSubDTO> handleCryptoCoinDataResponse(String response, String coinName,

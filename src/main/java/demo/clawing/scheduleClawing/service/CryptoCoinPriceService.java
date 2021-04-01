@@ -3,6 +3,7 @@ package demo.clawing.scheduleClawing.service;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.baseCommon.pojo.result.CommonResultBBT;
+import finance.cryptoCoin.pojo.dto.CryptoCoinDailyDataQueryDTO;
 
 public interface CryptoCoinPriceService {
 
@@ -10,7 +11,7 @@ public interface CryptoCoinPriceService {
 
 	CommonResultBBT cryptoCoinMinuteDataAPI(TestEvent te);
 
-	InsertTestEventResult insertCryptoCoinDailyDataCollectEvent();
+	InsertTestEventResult insertCryptoCoinDailyDataCollectEvent(CryptoCoinDailyDataQueryDTO dto);
 
 	CommonResultBBT cryptoCoinDailyDataAPI(TestEvent te);
 

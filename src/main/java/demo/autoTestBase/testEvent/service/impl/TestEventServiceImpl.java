@@ -5,7 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ import demo.autoTestBase.testCase.pojo.po.TestCase;
 import demo.autoTestBase.testCase.service.TestCaseService;
 import demo.autoTestBase.testEvent.mq.TestEventAckProducer;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
+import demo.autoTestBase.testEvent.pojo.constant.TestEventOptionConstant;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.po.TestEventExample;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
@@ -30,6 +33,7 @@ import demo.clawing.movie.service.impl.MovieClawingCasePrefixServiceImpl;
 import demo.clawing.scheduleClawing.service.impl.ScheduleClawingPrefixServiceImpl;
 import demo.tool.pojo.type.MailType;
 import demo.tool.service.MailService;
+import net.sf.json.JSONObject;
 import selenium.pojo.constant.SeleniumConstant;
 
 @Service
@@ -66,6 +70,11 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	
 	@Override
 	public InsertTestEventResult insertTestEvent(TestEvent po) {
+		return insertTestEvent(po, null);
+	}
+	
+	@Override
+	public InsertTestEventResult insertTestEvent(TestEvent po, JSONObject paramJson) {
 		InsertTestEventResult r = new InsertTestEventResult();
 		if(po == null || po.getId() == null || po.getCaseId() == null || po.getModuleId() == null) {
 			return r;
@@ -75,6 +84,9 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		r.setModuleId(po.getModuleId());
 		r.setCaseId(po.getCaseId());
 		
+		if(paramJson != null && StringUtils.isNotBlank(paramJson.toString())) {
+			constantService.setValByName(TestEventOptionConstant.TEST_EVENT_REDIS_PARAM_KEY_PREFIX + "_" + po.getId(), paramJson.toString(), 1L, TimeUnit.DAYS);
+		}
 		testEventAckProducer.send(po);
 		
 		r.setIsSuccess();
