@@ -240,7 +240,7 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 		JSONObject json = new JSONObject();
 		json.put("action", "SubAdd");
 		JSONArray subs = new JSONArray();
-		subs.add(subs.add("5~CCCAGG~" + channelStr + "~USDT"));
+		subs.add("5~CCCAGG~" + channelStr + "~USDT");
 		json.put("subs", subs);
 
 		String records = constantService
@@ -282,7 +282,7 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 			}
 		}
 		for (String subscription : channelStrList) {
-			subs.add(subscription);
+			subs.add("5~CCCAGG~" + subscription + "~USDT");
 		}
 		json.put("subs", subs);
 
@@ -317,7 +317,7 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 		JSONObject json = new JSONObject();
 		json.put("action", "SubRemove");
 		JSONArray subs = new JSONArray();
-		subs.add(channelStr);
+		subs.add("5~CCCAGG~" + channelStr + "~USDT");
 		json.put("subs", subs);
 
 		String records = constantService
