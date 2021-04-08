@@ -115,7 +115,7 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 			bo.setCoinType(sourceMsgJson.getString("FROMSYMBOL"));
 			CurrencyType currencyType = CurrencyType.getType(sourceMsgJson.getString("TOSYMBOL"));
 			/* TODO 2021-04-08 临时处理, usdt 等同 usd 处理 */
-			if(CurrencyType.USDT.equals(currencyType)) {
+			if (CurrencyType.USDT.equals(currencyType)) {
 				currencyType = CurrencyType.USD;
 			}
 			bo.setCurrencyType(currencyType.getCode());
@@ -168,6 +168,10 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 						log.error("crypto compare web socket FORCE_DISCONNECT");
 						ws.disconnect();
 						return;
+					} else if (CryptoCompareWebSocketMsgType.FORCE_DISCONNECT.equals(connectionType)) {
+						log.error("crypto compare web socket error: " + connectionType.getName());
+						refreshLastActiveTime(CryptoCoinWebSocketConstant.SOCKET_COLDDOWN_SECOND);
+						return;
 					} else {
 						log.error("crypto compare web socket error: " + connectionType.getName());
 						cxMsgAckProducer.sendPriceCacheData(connectionType.getName());
@@ -215,11 +219,11 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 		String records = constantService
 				.getValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY);
 		for (String subscription : channelStrList) {
-			subs.add(subscription);
-			if(StringUtils.isBlank(records)) {
+			subs.add("5~CCCAGG~" + subscription + "~USDT");
+			if (StringUtils.isBlank(records)) {
 				records = subscription;
 			} else {
-				if(records.contains(subscription)) {
+				if (records.contains(subscription)) {
 					continue;
 				}
 				records += "," + subscription;
@@ -236,15 +240,15 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 		JSONObject json = new JSONObject();
 		json.put("action", "SubAdd");
 		JSONArray subs = new JSONArray();
-		subs.add(channelStr);
+		subs.add(subs.add("5~CCCAGG~" + channelStr + "~USDT"));
 		json.put("subs", subs);
 
 		String records = constantService
 				.getValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY);
-		if(StringUtils.isBlank(records)) {
+		if (StringUtils.isBlank(records)) {
 			records = channelStr;
 		} else {
-			if(records.contains(channelStr)) {
+			if (records.contains(channelStr)) {
 				return;
 			}
 			records += "," + channelStr;
@@ -259,21 +263,22 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 		JSONObject json = new JSONObject();
 		json.put("action", "SubRemove");
 		JSONArray subs = new JSONArray();
-		
+
 		String records = constantService
 				.getValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY);
 		if (StringUtils.isNotBlank(records)) {
 			List<String> recordList = Arrays.asList(records.split(","));
 			for (String subscription : channelStrList) {
 				subscription = subscription.toUpperCase();
-				if(recordList.contains(subscription)) {
+				if (recordList.contains(subscription)) {
 					if (records.contains(subscription + ",")) {
 						records = records.replaceAll(subscription + ",", "");
 					} else if (records.contains("," + subscription)) {
 						records = records.replaceAll("," + subscription, "");
 					}
 				}
-				constantService.setValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY, records);
+				constantService.setValByName(
+						CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY, records);
 			}
 		}
 		for (String subscription : channelStrList) {
@@ -287,27 +292,28 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 	public void removeAllSubscription() {
 		String records = constantService
 				.getValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY);
-		
-		if(StringUtils.isBlank(records)) {
+
+		if (StringUtils.isBlank(records)) {
 			return;
 		}
-		
+
 		List<String> recordList = Arrays.asList(records.split(","));
-		
+
 		JSONObject json = new JSONObject();
 		json.put("action", "SubRemove");
 		JSONArray subs = new JSONArray();
-		for(String channelStr : recordList) {
+		for (String channelStr : recordList) {
 			subs.add(channelStr);
 		}
-		constantService.setValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY, "");
+		constantService.setValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY,
+				"");
 		json.put("subs", subs);
 		ws.sendText(json.toString());
 	}
-	
+
 	public void removeSubscription(String channelStr) {
 		channelStr = channelStr.toUpperCase();
-		
+
 		JSONObject json = new JSONObject();
 		json.put("action", "SubRemove");
 		JSONArray subs = new JSONArray();
@@ -317,13 +323,14 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 		String records = constantService
 				.getValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY);
 		if (StringUtils.isNotBlank(records)) {
-			if(Arrays.asList(records.split(",")).contains(channelStr)) {
+			if (Arrays.asList(records.split(",")).contains(channelStr)) {
 				if (records.contains(channelStr + ",")) {
 					records = records.replaceAll(channelStr + ",", "");
 				} else if (records.contains("," + channelStr)) {
 					records = records.replaceAll("," + channelStr, "");
 				}
-				constantService.setValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY, records);
+				constantService.setValByName(
+						CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY, records);
 				ws.sendText(json.toString());
 			}
 		}
@@ -364,7 +371,7 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 
 		return r;
 	}
-	
+
 	public void wsDestory() {
 		try {
 			ws.sendClose();
@@ -379,5 +386,5 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 		removeAllSubscription();
 		addSubscription(getSubscriptionList());
 	}
-	
+
 }
