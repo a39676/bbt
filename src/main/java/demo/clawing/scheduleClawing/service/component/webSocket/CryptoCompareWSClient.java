@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -267,6 +268,27 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 		ws.sendText(json.toString());
 	}
 
+	public void removeAllSubscription() {
+		String records = constantService
+				.getValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY);
+		
+		if(StringUtils.isBlank(records)) {
+			return;
+		}
+		
+		List<String> recordList = Arrays.asList(records.split(","));
+		
+		JSONObject json = new JSONObject();
+		json.put("action", "SubRemove");
+		JSONArray subs = new JSONArray();
+		for(String channelStr : recordList) {
+			subs.add(channelStr);
+		}
+		constantService.setValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY, "");
+		json.put("subs", subs);
+		ws.sendText(json.toString());
+	}
+	
 	public void removeSubscription(String channelStr) {
 		JSONObject json = new JSONObject();
 		json.put("action", "SubRemove");

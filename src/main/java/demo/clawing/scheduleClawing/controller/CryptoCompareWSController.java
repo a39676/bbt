@@ -37,6 +37,13 @@ public class CryptoCompareWSController extends CommonController {
 		return "done";
 	}
 	
+	@GetMapping("/removeAllSubscription")
+	@ResponseBody
+	public String removeAllSubscription() {
+		ws.removeAllSubscription();
+		return "done";
+	}
+	
 	@GetMapping("/destory")
 	@ResponseBody
 	public String destoryWS() {

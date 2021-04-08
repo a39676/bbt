@@ -20,6 +20,8 @@ placeholder=""><label>example: 5~CCCAGG~BTC~USD</label>
 placeholder=""><label>example: 5~CCCAGG~BTC~USD</label>
 <button id="removeChannel">removeChannel</button><br>
 <br>
+<button id="removeAllSubscription">removeAllSubscription</button><br>
+<br>
 <button id="destoryWS">destoryWS</button>
 
 </body>
@@ -54,6 +56,17 @@ placeholder=""><label>example: 5~CCCAGG~BTC~USD</label>
       $.get(
         "/cryptoCompareWS/removeChannel",
         {channel : removeChannel},
+      );
+    };
+
+    $("#removeAllSubscription").click( function() {
+      removeAllSubscription();
+    });
+
+    function removeAllSubscription() {
+      var url = "/cryptoCompareWS/removeAllSubscription";
+      $.get(
+        "/cryptoCompareWS/removeAllSubscription",
       );
     };
 
