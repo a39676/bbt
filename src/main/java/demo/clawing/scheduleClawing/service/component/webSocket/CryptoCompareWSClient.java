@@ -168,7 +168,7 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 						log.error("crypto compare web socket FORCE_DISCONNECT");
 						ws.disconnect();
 						return;
-					} else if (CryptoCompareWebSocketMsgType.FORCE_DISCONNECT.equals(connectionType)) {
+					} else if (CryptoCompareWebSocketMsgType.RATE_LIMIT_OPENING_SOCKETS_TOO_FAST.equals(connectionType)) {
 						log.error("crypto compare web socket error: " + connectionType.getName());
 						refreshLastActiveTime(CryptoCoinWebSocketConstant.SOCKET_COLDDOWN_SECOND);
 						return;
