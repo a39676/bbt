@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -168,14 +169,16 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 						log.error("crypto compare web socket FORCE_DISCONNECT");
 						ws.disconnect();
 						return;
-					} else if (CryptoCompareWebSocketMsgType.RATE_LIMIT_OPENING_SOCKETS_TOO_FAST.equals(connectionType)) {
+					} else if (CryptoCompareWebSocketMsgType.RATE_LIMIT_OPENING_SOCKETS_TOO_FAST
+							.equals(connectionType)) {
 						log.error("crypto compare web socket error: " + connectionType.getName());
 						refreshLastActiveTime(CryptoCoinWebSocketConstant.SOCKET_COLDDOWN_SECOND);
 						return;
 					} else {
 						log.error("crypto compare web socket error: " + connectionType.getName());
 						cxMsgAckProducer.sendPriceCacheData(connectionType.getName());
-						refreshLastActiveTime(CryptoCoinWebSocketConstant.CRYPTO_COMPARE_SOCKET_INACTIVE_JUDGMENT_SECOND);
+						refreshLastActiveTime(
+								CryptoCoinWebSocketConstant.CRYPTO_COMPARE_SOCKET_INACTIVE_JUDGMENT_SECOND);
 						return;
 					}
 
@@ -216,21 +219,21 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 		JSONObject json = new JSONObject();
 		json.put("action", "SubAdd");
 		JSONArray subs = new JSONArray();
-		String records = constantService
-				.getValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY);
+		List<String> recordList = getSubscriptionRedisList();
+		String recordStr = "";
 		for (String subscription : channelStrList) {
 			subs.add("5~CCCAGG~" + subscription + "~USDT");
-			if (StringUtils.isBlank(records)) {
-				records = subscription;
+			if (recordList.isEmpty()) {
+				recordStr = subscription;
 			} else {
-				if (records.contains(subscription)) {
+				if (recordList.contains(subscription)) {
 					continue;
 				}
-				records += "," + subscription;
+				recordStr += "," + subscription;
 			}
 		}
 		constantService.setValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY,
-				records);
+				recordStr);
 		json.put("subs", subs);
 
 		ws.sendText(json.toString());
@@ -243,18 +246,18 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 		subs.add("5~CCCAGG~" + channelStr + "~USDT");
 		json.put("subs", subs);
 
-		String records = constantService
-				.getValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY);
-		if (StringUtils.isBlank(records)) {
-			records = channelStr;
+		List<String> recordList = getSubscriptionRedisList();
+		String recordStr = "";
+		if (recordList.isEmpty()) {
+			recordStr = channelStr;
 		} else {
-			if (records.contains(channelStr)) {
+			if (recordList.contains(channelStr)) {
 				return;
 			}
-			records += "," + channelStr;
+			recordStr += "," + channelStr;
 		}
 		constantService.setValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY,
-				records);
+				recordStr);
 
 		ws.sendText(json.toString());
 	}
@@ -387,4 +390,12 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 		addSubscription(getSubscriptionList());
 	}
 
+	private List<String> getSubscriptionRedisList() {
+		String recordsStr = constantService
+				.getValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY);
+		if (StringUtils.isBlank(recordsStr)) {
+			return new ArrayList<>();
+		}
+		return Arrays.asList(recordsStr.split(","));
+	}
 }
