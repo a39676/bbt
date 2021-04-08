@@ -64,12 +64,12 @@ public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 
 	@Scheduled(cron = "*/31 * * * * ?")
 	public void checkCryptoCompareWebSocket() {
-//		if (!"dev".equals(constantService.getValByName("envName"))) {
+		if (!"dev".equals(constantService.getValByName("envName"))) {
 			if (!cryptoCompareWSClient.getSocketLiveFlag()) {
 				log.error("crypto compare web socket disconnected");
 				cryptoCompareWSClient.startWebSocket();
 			}
-//		}
+		}
 	}
 	
 	@Scheduled(cron = "*/10 * * * * ?")
@@ -78,6 +78,18 @@ public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 			if (!binanceWSClient.getSocketLiveFlag()) {
 				log.error("binance web socket disconnected");
 				binanceWSClient.startWebSocket();
+			}
+		}
+	}
+	
+	@Scheduled(cron="0 0 0 * * *")
+	@Scheduled(cron="0 0 8 * * *")
+	@Scheduled(cron="0 0 16 * * *")
+	public void syncCryptoCoinWebSocket() {
+		if (!"dev".equals(constantService.getValByName("envName"))) {
+			if (!binanceWSClient.getSocketLiveFlag()) {
+				cryptoCompareWSClient.syncSubscription();
+				binanceWSClient.wsDestory();
 			}
 		}
 	}

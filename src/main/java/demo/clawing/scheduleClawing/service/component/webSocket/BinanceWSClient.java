@@ -168,7 +168,7 @@ public class BinanceWSClient extends CryptoCoinWebSocketCommonClient {
 			public void onTextMessage(WebSocket websocket, String message) throws Exception {
 //				System.out.println(message);
 
-				refreshLastActiveTime(CryptoCoinWebSocketConstant.SOCKET_INACTIVE_JUDGMENT_SECOND);
+				refreshLastActiveTime(CryptoCoinWebSocketConstant.BINANCE_SOCKET_INACTIVE_JUDGMENT_SECOND);
 		
 				CryptoCoinPriceCommonDataBO dataBO = buildCommonDataFromMsg(message);
 				if (dataBO != null) {

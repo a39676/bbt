@@ -161,7 +161,7 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 					ws.disconnect();
 				} else if (connectionType.getCode() < 400
 						|| CryptoCompareWebSocketMsgType.HEARTBEAT.equals(connectionType)) {
-					refreshLastActiveTime(CryptoCoinWebSocketConstant.SOCKET_INACTIVE_JUDGMENT_SECOND);
+					refreshLastActiveTime(CryptoCoinWebSocketConstant.CRYPTO_COMPARE_SOCKET_INACTIVE_JUDGMENT_SECOND);
 
 				} else if (connectionType.getCode() == 500) {
 					if (CryptoCompareWebSocketMsgType.FORCE_DISCONNECT.equals(connectionType)) {
@@ -175,7 +175,7 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 					} else {
 						log.error("crypto compare web socket error: " + connectionType.getName());
 						cxMsgAckProducer.sendPriceCacheData(connectionType.getName());
-						refreshLastActiveTime(CryptoCoinWebSocketConstant.SOCKET_INACTIVE_JUDGMENT_SECOND);
+						refreshLastActiveTime(CryptoCoinWebSocketConstant.CRYPTO_COMPARE_SOCKET_INACTIVE_JUDGMENT_SECOND);
 						return;
 					}
 
