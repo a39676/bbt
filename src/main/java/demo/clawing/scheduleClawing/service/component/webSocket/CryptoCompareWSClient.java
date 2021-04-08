@@ -23,6 +23,7 @@ import com.neovisionaries.ws.client.WebSocketFrame;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
+import demo.base.system.mq.producer.CxMsgAckProducer;
 import demo.clawing.scheduleClawing.mq.sender.CryptoCoinPriceCacheDataAckProducer;
 import demo.clawing.scheduleClawing.pojo.bo.CryptoCompareSocketConfigBO;
 import demo.clawing.scheduleClawing.pojo.type.CryptoCompareWebSocketMsgType;
@@ -38,12 +39,14 @@ import toolPack.ioHandle.FileUtilCustom;
 public class CryptoCompareWSClient extends SeleniumCommonService {
 
 	private WebSocket ws = null;
-	
+
 	@Autowired
 	private FileUtilCustom ioUtil;
-	
+
 	@Autowired
 	private CryptoCoinPriceCacheDataAckProducer croptoCoinPriceCacheDataAckProducer;
+	@Autowired
+	private CxMsgAckProducer cxMsgAckProducer;
 
 	public WebSocket getWs() {
 		if (ws == null) {
@@ -51,7 +54,7 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 		}
 		return ws;
 	}
-	
+
 	private CryptoCompareSocketConfigBO getDefaultConfig() {
 		CryptoCompareSocketConfigBO bo = null;
 		String systemParameterSavingFolderPath = globalOptionService.getParameterSavingFolder();
@@ -82,23 +85,31 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 	}
 
 	private CryptoCompareWebSocketMsgType checkConnection(String msg) {
+		/*
+		 * example:
+		 * {"TYPE":"500","MESSAGE":"INVALID_SUB","PARAMETER":"5~CCCAGG~NULL~USD","INFO":"We have not integrated any of the exchanges NULL trades on or we have not currently mapped it."}
+		 */
 		try {
 			JSONObject j = JSONObject.fromObject(msg);
 			Integer typeCode = j.getInt("TYPE");
-			return CryptoCompareWebSocketMsgType.getType(typeCode);
+			if(typeCode == 500) {
+				return CryptoCompareWebSocketMsgType.getType(j.getString("MESSAGE"));
+			} else {
+				return CryptoCompareWebSocketMsgType.getType(typeCode);
+			}
 		} catch (Exception e) {
 			return null;
 		}
 	}
-	
+
 	private CryptoCoinPriceCommonDataBO buildCommonDataFromMsg(String sourceMsg) {
 		CryptoCoinPriceCommonDataBO bo = null;
 		try {
 			JSONObject sourceMsgJson = JSONObject.fromObject(sourceMsg);
-			if(!sourceMsgJson.containsKey("PRICE")) {
+			if (!sourceMsgJson.containsKey("PRICE")) {
 				return null;
 			}
-			
+
 			bo = new CryptoCoinPriceCommonDataBO();
 			bo.setStartPrice(new BigDecimal(sourceMsgJson.getDouble("PRICE")));
 			bo.setEndPrice(new BigDecimal(sourceMsgJson.getDouble("PRICE")));
@@ -109,7 +120,7 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 			try {
 				Date tradDate = new Date(sourceMsgJson.getLong("LASTUPDATE") * 1000);
 				LocalDateTime tradDateTime = localDateTimeHandler.dateToLocalDateTime(tradDate);
-				if(tradDateTime == null) {
+				if (tradDateTime == null) {
 					tradDateTime = LocalDateTime.now();
 				}
 				bo.setStartTime(tradDateTime);
@@ -124,7 +135,7 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 		}
 		return bo;
 	}
-	
+
 	private WebSocket createWebSocket(CryptoCompareSocketConfigBO configBO) {
 		String uriStr = configBO.getUri() + "?api_key=" + configBO.getApiKey();
 		try {
@@ -136,26 +147,45 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 			return null;
 		}
 	}
-	
+
 	private WebSocket setListener(WebSocket ws) {
 		ws.addListener(new WebSocketAdapter() {
 			@Override
 			public void onTextMessage(WebSocket websocket, String message) throws Exception {
 //				System.out.println(message);
-				
+
 				CryptoCompareWebSocketMsgType connectionType = checkConnection(message);
-				if(connectionType== null) {
+				if (connectionType == null) {
 					ws.disconnect();
-				} else if(connectionType.getCode() < 400 || CryptoCompareWebSocketMsgType.HEARTBEAT.equals(connectionType)) {
+				} else if (connectionType.getCode() < 400
+						|| CryptoCompareWebSocketMsgType.HEARTBEAT.equals(connectionType)) {
 					refreshLastActiveTime(CryptoCoinWebSocketConstant.SOCKET_INACTIVE_JUDGMENT_SECOND);
-				} else if(CryptoCompareWebSocketMsgType.TOO_MANY_SOCKETS_MAX_.getCode().equals(connectionType.getCode())) {
+
+				} else if (connectionType.getCode() == 500) {
+					if(CryptoCompareWebSocketMsgType.FORCE_DISCONNECT.equals(connectionType)) {
+						log.error("crypto compare web socket FORCE_DISCONNECT");
+						ws.disconnect();
+						return;
+					} else {
+						log.error("crypto compare web socket error: " + connectionType.getName());
+						cxMsgAckProducer.sendPriceCacheData(connectionType.getName());
+						refreshLastActiveTime(CryptoCoinWebSocketConstant.SOCKET_INACTIVE_JUDGMENT_SECOND);
+						return;
+					}
+					
+				} else if (CryptoCompareWebSocketMsgType.TOO_MANY_SOCKETS_MAX_.getCode()
+						.equals(connectionType.getCode())) {
 					log.error("crypto compare web socket error: " + connectionType.getName());
 					refreshLastActiveTime(CryptoCoinWebSocketConstant.SOCKET_COLDDOWN_SECOND);
+					return;
+					
 				} else {
 					log.error("crypto compare web socket error: " + connectionType.getName());
 					ws.disconnect();
+					return;
+					
 				}
-				
+
 				CryptoCoinPriceCommonDataBO dataBO = buildCommonDataFromMsg(message);
 				if (dataBO != null) {
 					croptoCoinPriceCacheDataAckProducer.sendPriceCacheData(dataBO);
@@ -165,15 +195,16 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 			@Override
 			public void onDisconnected(WebSocket websocket, WebSocketFrame serverCloseFrame,
 					WebSocketFrame clientCloseFrame, boolean closedByServer) throws Exception {
-				constantService.deleteValByName(CryptoCoinWebSocketConstant.CRYPTO_COMPARE_SOCKET_LAST_ACTIVE_TIME_REDIS_KEY);
+				constantService
+						.deleteValByName(CryptoCoinWebSocketConstant.CRYPTO_COMPARE_SOCKET_LAST_ACTIVE_TIME_REDIS_KEY);
 			}
 		});
 		return ws;
 	}
-	
+
 	/**
-	 * @param channelStrListchannelStr format 5~CCCAGG~BTC~USD
-	 * ref: https://min-api.cryptocompare.com/documentation/websockets
+	 * @param channelStrListchannelStr format 5~CCCAGG~BTC~USD ref:
+	 *                                 https://min-api.cryptocompare.com/documentation/websockets
 	 */
 	public void addSubscription(List<String> channelStrList) {
 		JSONObject json = new JSONObject();
@@ -186,7 +217,7 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 
 		ws.sendText(json.toString());
 	}
-	
+
 	public void addSubscription(String channelStr) {
 		JSONObject json = new JSONObject();
 		json.put("action", "SubAdd");
@@ -196,7 +227,7 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 
 		ws.sendText(json.toString());
 	}
-	
+
 	public void removeSubscription(List<String> channelStrList) {
 		JSONObject json = new JSONObject();
 		json.put("action", "SubRemove");
@@ -208,7 +239,7 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 
 		ws.sendText(json.toString());
 	}
-	
+
 	public void removeSubscription(String channelStr) {
 		JSONObject json = new JSONObject();
 		json.put("action", "SubRemove");
@@ -220,13 +251,10 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 	}
 
 	private void refreshLastActiveTime(int seconds) {
-		constantService.setValByName(
-				CryptoCoinWebSocketConstant.CRYPTO_COMPARE_SOCKET_LAST_ACTIVE_TIME_REDIS_KEY,
-				localDateTimeHandler.dateToStr(LocalDateTime.now()), 
-				seconds, 
-				TimeUnit.SECONDS);
+		constantService.setValByName(CryptoCoinWebSocketConstant.CRYPTO_COMPARE_SOCKET_LAST_ACTIVE_TIME_REDIS_KEY,
+				localDateTimeHandler.dateToStr(LocalDateTime.now()), seconds, TimeUnit.SECONDS);
 	}
-	
+
 	public boolean getSocketLiveFlag() {
 		return constantService.hasKey(CryptoCoinWebSocketConstant.CRYPTO_COMPARE_SOCKET_LAST_ACTIVE_TIME_REDIS_KEY);
 	}
@@ -256,7 +284,7 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 
 		return r;
 	}
-	
+
 	public void wsDestory() {
 		try {
 			ws.sendClose();

@@ -12,12 +12,12 @@
 
 <p>add channel</p>
 <input type="text" name="" id="addChannelInput" style="width: 340px;" 
-placeholder="addChannel 5~CCCAGG~BTC~USD">
+placeholder=""><label>example: 5~CCCAGG~BTC~USD</label>
 <button id="addChannel">addChannel</button><br>
 <br>
 <p>remove channel</p>
 <input type="text" name="" id="removeChannelInput" style="width: 340px;" 
-placeholder="removeChannel 5~CCCAGG~BTC~USD">
+placeholder=""><label>example: 5~CCCAGG~BTC~USD</label>
 <button id="removeChannel">removeChannel</button><br>
 <br>
 <button id="destoryWS">destoryWS</button>
