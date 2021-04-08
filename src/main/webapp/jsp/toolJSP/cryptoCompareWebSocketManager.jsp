@@ -22,6 +22,8 @@ placeholder=""><label>example: 5~CCCAGG~BTC~USD</label>
 <br>
 <button id="removeAllSubscription">removeAllSubscription</button><br>
 <br>
+<button id="syncSubscription">syncSubscription</button>
+<br>
 <button id="destoryWS">destoryWS</button>
 
 </body>
@@ -32,55 +34,47 @@ placeholder=""><label>example: 5~CCCAGG~BTC~USD</label>
   $(document).ready(function() {
 
     $("#addChannel").click( function() {
-      addChannel();
-    });
-
-    function addChannel() {
       var url = "/cryptoCompareWS/addChannel";
       var addChannel = $("#addChannelInput").val();
 
       $.get(
-        "/cryptoCompareWS/addChannel",
+        url,
         {channel : addChannel},
       );
-    };
-
-    $("#removeChannel").click( function() {
-      removeChannel();
     });
 
-    function removeChannel() {
+    $("#removeChannel").click( function() {
       var url = "/cryptoCompareWS/removeChannel";
       var removeChannel = $("#removeChannelInput").val();
 
       $.get(
-        "/cryptoCompareWS/removeChannel",
+        url,
         {channel : removeChannel},
       );
-    };
+    });
 
     $("#removeAllSubscription").click( function() {
-      removeAllSubscription();
-    });
-
-    function removeAllSubscription() {
       var url = "/cryptoCompareWS/removeAllSubscription";
       $.get(
-        "/cryptoCompareWS/removeAllSubscription",
+        url,
       );
-    };
-
-    $("#destoryWS").click( function() {
-      destoryWS();
     });
 
-    function destoryWS() {
+    $("#syncSubscription").click( function() {
+      var url = "/cryptoCompareWS/syncSubscription";
+      $.get(
+        url,
+      );
+    });
+
+
+    $("#destoryWS").click( function() {
       var url = "/cryptoCompareWS/destory";
       $.get(
-        "/cryptoCompareWS/destory",
+        url,
       );
-    };
-   
+    });
+
   });
 
 </script>

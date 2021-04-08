@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
@@ -22,9 +23,8 @@ import com.neovisionaries.ws.client.WebSocketFrame;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
-import demo.clawing.scheduleClawing.mq.sender.CryptoCoinPriceCacheDataAckProducer;
 import demo.clawing.scheduleClawing.pojo.bo.BinanceWebSocketConfigBO;
-import demo.selenium.service.impl.SeleniumCommonService;
+import demo.clawing.scheduleClawing.service.component.webSocket.common.CryptoCoinWebSocketCommonClient;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinWebSocketConstant;
 import net.sf.json.JSONObject;
@@ -32,15 +32,12 @@ import toolPack.ioHandle.FileUtilCustom;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class BinanceWSClient extends SeleniumCommonService {
+public class BinanceWSClient extends CryptoCoinWebSocketCommonClient {
 
 	private WebSocket ws = null;
 
 	@Autowired
 	private FileUtilCustom ioUtil;
-
-	@Autowired
-	private CryptoCoinPriceCacheDataAckProducer croptoCoinPriceCacheDataAckProducer;
 
 	public WebSocket getWs() {
 		if (ws == null) {
@@ -151,7 +148,8 @@ public class BinanceWSClient extends SeleniumCommonService {
 	private WebSocket createWebSocket(BinanceWebSocketConfigBO configBO) {
 		StringBuffer uriBuilder = new StringBuffer(configBO.getUri());
 		uriBuilder.append("/ws");
-		for(String symbol : configBO.getSubs()) {
+		List<String> symbolList = getSubscriptionList();
+		for(String symbol : symbolList) {
 			uriBuilder.append("/" + symbol + "@kline_1m");
 		}
 		try {
@@ -187,7 +185,6 @@ public class BinanceWSClient extends SeleniumCommonService {
 		});
 		return ws;
 	}
-
 
 	private void refreshLastActiveTime(int seconds) {
 		constantService.setValByName(CryptoCoinWebSocketConstant.BINANCE_SOCKET_LAST_ACTIVE_TIME_REDIS_KEY,

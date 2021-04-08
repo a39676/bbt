@@ -24,12 +24,10 @@ import com.neovisionaries.ws.client.WebSocketFrame;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
-import demo.base.system.mq.producer.CxMsgAckProducer;
-import demo.clawing.scheduleClawing.mq.sender.CryptoCoinPriceCacheDataAckProducer;
 import demo.clawing.scheduleClawing.pojo.bo.CryptoCompareSocketConfigBO;
 import demo.clawing.scheduleClawing.pojo.constant.CryptoCoinScheduleClawingConstant;
 import demo.clawing.scheduleClawing.pojo.type.CryptoCompareWebSocketMsgType;
-import demo.selenium.service.impl.SeleniumCommonService;
+import demo.clawing.scheduleClawing.service.component.webSocket.common.CryptoCoinWebSocketCommonClient;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinWebSocketConstant;
 import net.sf.json.JSONArray;
@@ -38,17 +36,12 @@ import toolPack.ioHandle.FileUtilCustom;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class CryptoCompareWSClient extends SeleniumCommonService {
+public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 
 	private WebSocket ws = null;
 
 	@Autowired
 	private FileUtilCustom ioUtil;
-
-	@Autowired
-	private CryptoCoinPriceCacheDataAckProducer croptoCoinPriceCacheDataAckProducer;
-	@Autowired
-	private CxMsgAckProducer cxMsgAckProducer;
 
 	public WebSocket getWs() {
 		if (ws == null) {
@@ -223,7 +216,14 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 				.getValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY);
 		for (String subscription : channelStrList) {
 			subs.add(subscription);
-			records += "," + subscription;
+			if(StringUtils.isBlank(records)) {
+				records = subscription;
+			} else {
+				if(records.contains(subscription)) {
+					continue;
+				}
+				records += "," + subscription;
+			}
 		}
 		constantService.setValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY,
 				records);
@@ -241,7 +241,14 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 
 		String records = constantService
 				.getValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY);
-		records += "," + channelStr;
+		if(StringUtils.isBlank(records)) {
+			records = channelStr;
+		} else {
+			if(records.contains(channelStr)) {
+				return;
+			}
+			records += "," + channelStr;
+		}
 		constantService.setValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY,
 				records);
 
@@ -256,11 +263,15 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 		String records = constantService
 				.getValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY);
 		if (StringUtils.isNotBlank(records)) {
+			List<String> recordList = Arrays.asList(records.split(","));
 			for (String subscription : channelStrList) {
-				if (records.contains(subscription + ",")) {
-					records = records.replaceAll(subscription + ",", "");
-				} else if (records.contains("," + subscription)) {
-					records = records.replaceAll("," + subscription, "");
+				subscription = subscription.toUpperCase();
+				if(recordList.contains(subscription)) {
+					if (records.contains(subscription + ",")) {
+						records = records.replaceAll(subscription + ",", "");
+					} else if (records.contains("," + subscription)) {
+						records = records.replaceAll("," + subscription, "");
+					}
 				}
 				constantService.setValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY, records);
 			}
@@ -295,6 +306,8 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 	}
 	
 	public void removeSubscription(String channelStr) {
+		channelStr = channelStr.toUpperCase();
+		
 		JSONObject json = new JSONObject();
 		json.put("action", "SubRemove");
 		JSONArray subs = new JSONArray();
@@ -304,15 +317,17 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 		String records = constantService
 				.getValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY);
 		if (StringUtils.isNotBlank(records)) {
-			if (records.contains(channelStr + ",")) {
-				records = records.replaceAll(channelStr + ",", "");
-			} else if (records.contains("," + channelStr)) {
-				records = records.replaceAll("," + channelStr, "");
+			if(Arrays.asList(records.split(",")).contains(channelStr)) {
+				if (records.contains(channelStr + ",")) {
+					records = records.replaceAll(channelStr + ",", "");
+				} else if (records.contains("," + channelStr)) {
+					records = records.replaceAll("," + channelStr, "");
+				}
+				constantService.setValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY, records);
+				ws.sendText(json.toString());
 			}
-			constantService.setValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY, records);
 		}
 
-		ws.sendText(json.toString());
 	}
 
 	private void refreshLastActiveTime(int seconds) {
@@ -341,11 +356,7 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 		ws = setListener(ws);
 		try {
 			ws.connect();
-			/*
-			 * TODO
-			 * 向 cx 获取订阅列表
-			 */
-//			addSubscription(configBO.getSubs());
+			addSubscription(getSubscriptionList());
 			r.normalSuccess();
 		} catch (WebSocketException e) {
 			log.error("crypto compare socket connect error: " + e.getLocalizedMessage());
@@ -353,7 +364,7 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 
 		return r;
 	}
-
+	
 	public void wsDestory() {
 		try {
 			ws.sendClose();
@@ -363,4 +374,10 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 		}
 		ws = null;
 	}
+
+	public void syncSubscription() {
+		removeAllSubscription();
+		addSubscription(getSubscriptionList());
+	}
+	
 }

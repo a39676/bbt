@@ -50,4 +50,13 @@ public class CryptoCompareWSController extends CommonController {
 		ws.wsDestory();
 		return "done";
 	}
+	
+	@GetMapping("/syncSubscription")
+	@ResponseBody
+	public String syncSubscription() {
+		ws.syncSubscription();
+		return "done";
+	}
+	
+	
 }
