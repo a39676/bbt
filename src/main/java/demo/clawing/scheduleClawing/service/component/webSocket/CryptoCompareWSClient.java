@@ -120,7 +120,12 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 			bo.setHighPrice(new BigDecimal(sourceMsgJson.getDouble("PRICE")));
 			bo.setLowPrice(new BigDecimal(sourceMsgJson.getDouble("PRICE")));
 			bo.setCoinType(sourceMsgJson.getString("FROMSYMBOL"));
-			bo.setCurrencyType(CurrencyType.getType(sourceMsgJson.getString("TOSYMBOL")).getCode());
+			CurrencyType currencyType = CurrencyType.getType(sourceMsgJson.getString("TOSYMBOL"));
+			/* TODO 2021-04-08 临时处理, usdt 等同 usd 处理 */
+			if(CurrencyType.USDT.equals(currencyType)) {
+				currencyType = CurrencyType.USD;
+			}
+			bo.setCurrencyType(currencyType.getCode());
 			try {
 				Date tradDate = new Date(sourceMsgJson.getLong("LASTUPDATE") * 1000);
 				LocalDateTime tradDateTime = localDateTimeHandler.dateToLocalDateTime(tradDate);
@@ -336,7 +341,11 @@ public class CryptoCompareWSClient extends SeleniumCommonService {
 		ws = setListener(ws);
 		try {
 			ws.connect();
-			addSubscription(configBO.getSubs());
+			/*
+			 * TODO
+			 * 向 cx 获取订阅列表
+			 */
+//			addSubscription(configBO.getSubs());
 			r.normalSuccess();
 		} catch (WebSocketException e) {
 			log.error("crypto compare socket connect error: " + e.getLocalizedMessage());
