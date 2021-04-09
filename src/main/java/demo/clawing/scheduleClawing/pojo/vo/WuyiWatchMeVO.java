@@ -98,7 +98,7 @@ public class WuyiWatchMeVO implements Comparable<WuyiWatchMeVO> {
 				return 0;
 			} else if (o.lastWatchTime == null) {
 				return -1;
-			} else if (this.lastWatchTime == null) {
+			} else if (t.lastWatchTime == null) {
 				return 1;
 			} else {
 				return 0;
@@ -120,7 +120,7 @@ public class WuyiWatchMeVO implements Comparable<WuyiWatchMeVO> {
 				return 0;
 			} else if (o.degreeOfInterestAvg == null) {
 				return -1;
-			} else if (this.degreeOfInterestAvg == null) {
+			} else if (t.degreeOfInterestAvg == null) {
 				return 1;
 			} else {
 				return 0;
