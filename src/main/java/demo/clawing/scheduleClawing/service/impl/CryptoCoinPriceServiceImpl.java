@@ -242,7 +242,7 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 			String paramJsonStr = constantService.getValByName(TestEventOptionConstant.TEST_EVENT_REDIS_PARAM_KEY_PREFIX + "_" + te.getId());
 			if(StringUtils.isBlank(paramJsonStr)) {
 				jsonReporter.appendContent(reportDTO, "test event: " + te.getId() + ", " + te.getEventName() + ", 动态参数获取异常");
-				throw new Exception();
+				return r;
 			}
 			
 			CryptoCoinDailyDataQueryDTO dynamicParam = null;
