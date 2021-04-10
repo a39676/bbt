@@ -151,7 +151,9 @@ public class BinanceWSClient extends CryptoCoinWebSocketCommonClient {
 		List<String> symbolList = getSubscriptionList();
 		log.error("binance socket get symbolList: " + symbolList);
 		for(String symbol : symbolList) {
-			uriBuilder.append("/" + symbol + "@kline_1m");
+			if(StringUtils.isNotBlank(symbol)) {
+				uriBuilder.append("/" + symbol.toLowerCase() + "usdt" + "@kline_1m");
+			}
 		}
 		log.error("binance url: " + uriBuilder.toString());
 		try {
