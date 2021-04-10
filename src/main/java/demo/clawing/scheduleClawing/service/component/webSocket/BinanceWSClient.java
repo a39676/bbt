@@ -149,9 +149,11 @@ public class BinanceWSClient extends CryptoCoinWebSocketCommonClient {
 		StringBuffer uriBuilder = new StringBuffer(configBO.getUri());
 		uriBuilder.append("/ws");
 		List<String> symbolList = getSubscriptionList();
+		log.error("binance socket get symbolList: " + symbolList);
 		for(String symbol : symbolList) {
 			uriBuilder.append("/" + symbol + "@kline_1m");
 		}
+		log.error("binance url: " + uriBuilder.toString());
 		try {
 			WebSocket ws = new WebSocketFactory().setVerifyHostname(false).createSocket(uriBuilder.toString());
 			return ws;
