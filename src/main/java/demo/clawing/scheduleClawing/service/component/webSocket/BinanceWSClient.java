@@ -172,8 +172,7 @@ public class BinanceWSClient extends CryptoCoinWebSocketCommonClient {
 			@Override
 			public void onTextMessage(WebSocket websocket, String message) throws Exception {
 //				System.out.println(message);
-
-				log.error("binan message: " + message);
+//				log.error("binan message: " + message);
 				refreshLastActiveTime(CryptoCoinWebSocketConstant.BINANCE_SOCKET_INACTIVE_JUDGMENT_SECOND);
 		
 				CryptoCoinPriceCommonDataBO dataBO = buildCommonDataFromMsg(message);
