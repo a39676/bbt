@@ -80,10 +80,8 @@ public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 	@Scheduled(cron="0 0 16 * * *")
 	public void syncCryptoCoinWebSocket() {
 		if (!"dev".equals(constantService.getValByName("envName"))) {
-			if (!binanceWSClient.getSocketLiveFlag()) {
-				cryptoCompareWSClient.syncSubscription();
-				binanceWSClient.wsDestory();
-			}
+			cryptoCompareWSClient.syncSubscription();
+			binanceWSClient.wsDestory();
 		}
 	}
 
