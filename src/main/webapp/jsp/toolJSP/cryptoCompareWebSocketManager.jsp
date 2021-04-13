@@ -12,17 +12,20 @@
 
 <p>add channel</p>
 <input type="text" name="" id="addChannelInput" style="width: 340px;" 
-placeholder=""><label>example: 5~CCCAGG~BTC~USD</label>
+placeholder=""><label>example: BTC</label>
 <button id="addChannel">addChannel</button><br>
 <br>
 <p>remove channel</p>
 <input type="text" name="" id="removeChannelInput" style="width: 340px;" 
-placeholder=""><label>example: 5~CCCAGG~BTC~USD</label>
+placeholder=""><label>example: BTC</label>
 <button id="removeChannel">removeChannel</button><br>
 <br>
 <button id="removeAllSubscription">removeAllSubscription</button><br>
 <br>
 <button id="syncSubscription">syncSubscription</button>
+<br>
+<button id="getSubscriptionList">getSubscriptionList</button>
+<input type="" name="" id="subscriptionList" style="height: 50px; width: 1300px;">
 <br>
 <button id="destoryWS">destoryWS</button>
 
@@ -75,6 +78,32 @@ placeholder=""><label>example: 5~CCCAGG~BTC~USD</label>
       );
     });
 
+    $("#getSubscriptionList").click(function () {
+      getSubscriptionList();
+    });
+
+    function getSubscriptionList () {
+      var url = "/cryptoCompareWS/getSubscriptionRedisList";
+      
+      $.ajax({  
+        type : "GET", 
+        url : url,  
+        data: JSON.stringify(""),
+        dataType: 'json',
+        contentType: "application/json",
+        timeout: 15000,
+        success:function(data){
+          console.log(data);
+          $("#subscriptionList").html("");
+          $("#subscriptionList").val(data);  
+        }, 
+        error:function(e){
+          $("#subscriptionList").text(e);
+        }
+      });
+    }
+
+    getSubscriptionList();
   });
 
 </script>

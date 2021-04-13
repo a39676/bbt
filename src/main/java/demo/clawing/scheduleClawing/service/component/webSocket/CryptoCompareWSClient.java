@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -219,21 +218,11 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 		JSONObject json = new JSONObject();
 		json.put("action", "SubAdd");
 		JSONArray subs = new JSONArray();
-		List<String> recordList = getSubscriptionRedisList();
-		String recordStr = "";
 		for (String subscription : channelStrList) {
-			subs.add("5~CCCAGG~" + subscription + "~USDT");
-			if (recordList.isEmpty()) {
-				recordStr = subscription;
-			} else {
-				if (recordList.contains(subscription)) {
-					continue;
-				}
-				recordStr += "," + subscription;
-			}
+			subscription ="5~CCCAGG~" + subscription + "~USDT"; 
+			subs.add(subscription);
+			redisTemplate.opsForList().leftPush(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY, subscription);
 		}
-		constantService.setValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY,
-				recordStr);
 		json.put("subs", subs);
 
 		ws.sendText(json.toString());
@@ -243,49 +232,55 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 		JSONObject json = new JSONObject();
 		json.put("action", "SubAdd");
 		JSONArray subs = new JSONArray();
-		subs.add("5~CCCAGG~" + channelStr + "~USDT");
+		channelStr = "5~CCCAGG~" + channelStr + "~USDT";
+		subs.add(channelStr);
 		json.put("subs", subs);
 
-		List<String> recordList = getSubscriptionRedisList();
-		String recordStr = "";
-		if (recordList.isEmpty()) {
-			recordStr = channelStr;
-		} else {
-			if (recordList.contains(channelStr)) {
-				return;
-			}
-			recordStr += "," + channelStr;
-		}
-		constantService.setValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY,
-				recordStr);
-
+		redisTemplate.opsForList().leftPush(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY, channelStr);
+		
 		ws.sendText(json.toString());
 	}
 
-	public void removeSubscription(List<String> channelStrList) {
+	public void removeSubscription(List<String> removeChannelStrList) {
+		if(removeChannelStrList == null || removeChannelStrList.isEmpty()) {
+			return;
+		}
+		
+		for(int i = 0; i < removeChannelStrList.size(); i++) {
+			removeChannelStrList.set(i, "5~CCCAGG~" + removeChannelStrList.get(i) + "~USDT");
+		}
+		
 		JSONObject json = new JSONObject();
 		json.put("action", "SubRemove");
 		JSONArray subs = new JSONArray();
 
-		String records = constantService
-				.getValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY);
-		if (StringUtils.isNotBlank(records)) {
-			List<String> recordList = Arrays.asList(records.split(","));
-			for (String subscription : channelStrList) {
-				subscription = subscription.toUpperCase();
-				if (recordList.contains(subscription)) {
-					if (records.contains(subscription + ",")) {
-						records = records.replaceAll(subscription + ",", "");
-					} else if (records.contains("," + subscription)) {
-						records = records.replaceAll("," + subscription, "");
-					}
-				}
-				constantService.setValByName(
-						CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY, records);
+		Long listSize = redisTemplate.opsForList().size(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY);
+
+		if (listSize <= 0) {
+			return;
+		}
+		
+		List<String> redisRecordList = new ArrayList<>();
+		String tmpSub = null;
+		for(int i = 0; i < listSize; i++) {
+			tmpSub = redisTemplate.opsForList().rightPop(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY);
+			if(StringUtils.isNotBlank(tmpSub)) {
+				redisRecordList.add(tmpSub);
 			}
 		}
-		for (String subscription : channelStrList) {
-			subs.add("5~CCCAGG~" + subscription + "~USDT");
+		
+		if(redisRecordList.isEmpty()) {
+			return;
+		}
+		
+		for(String redisRecord : redisRecordList) {
+			if(!removeChannelStrList.contains(redisRecord)) {
+				redisTemplate.opsForList().leftPush(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY, redisRecord);
+			}
+		}
+		
+		for (String subscription : removeChannelStrList) {
+			subs.add(subscription);
 		}
 		json.put("subs", subs);
 
@@ -293,50 +288,59 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 	}
 
 	public void removeAllSubscription() {
-		String records = constantService
-				.getValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY);
+		Long listSize = redisTemplate.opsForList().size(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY);
 
-		if (StringUtils.isBlank(records)) {
+		if (listSize <= 0) {
 			return;
 		}
-
-		List<String> recordList = Arrays.asList(records.split(","));
-
+		
+		List<String> recordList = new ArrayList<>();
+		String tmpSub = null;
+		for(int i = 0; i < listSize; i++) {
+			tmpSub = redisTemplate.opsForList().rightPop(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY);
+			if(StringUtils.isNotBlank(tmpSub)) {
+				recordList.add(tmpSub);
+			}
+		}
+		
+		if(recordList.isEmpty()) {
+			return;
+		}
+		
 		JSONObject json = new JSONObject();
 		json.put("action", "SubRemove");
 		JSONArray subs = new JSONArray();
 		for (String channelStr : recordList) {
 			subs.add(channelStr);
 		}
-		constantService.setValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY,
-				"");
+		
 		json.put("subs", subs);
 		ws.sendText(json.toString());
 	}
 
 	public void removeSubscription(String channelStr) {
 		channelStr = channelStr.toUpperCase();
+		channelStr = "5~CCCAGG~" + channelStr + "~USDT";
 
 		JSONObject json = new JSONObject();
 		json.put("action", "SubRemove");
 		JSONArray subs = new JSONArray();
-		subs.add("5~CCCAGG~" + channelStr + "~USDT");
+		subs.add(channelStr);
 		json.put("subs", subs);
 
-		String records = constantService
-				.getValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY);
-		if (StringUtils.isNotBlank(records)) {
-			if (Arrays.asList(records.split(",")).contains(channelStr)) {
-				if (records.contains(channelStr + ",")) {
-					records = records.replaceAll(channelStr + ",", "");
-				} else if (records.contains("," + channelStr)) {
-					records = records.replaceAll("," + channelStr, "");
-				}
-				constantService.setValByName(
-						CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY, records);
-				ws.sendText(json.toString());
+		String tmpChannelStr = null;
+		boolean existsFlag = false;
+		Long listSize = redisTemplate.opsForList().size(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY);
+		for(int i = 0; !existsFlag && i < listSize; i++) {
+			tmpChannelStr = redisTemplate.opsForList().rightPop(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY);
+			if(channelStr.equals(tmpChannelStr)) {
+				existsFlag = true;
+			} else {
+				redisTemplate.opsForList().leftPush(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY, tmpChannelStr);
 			}
 		}
+		
+		ws.sendText(json.toString());
 
 	}
 
@@ -390,12 +394,14 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 		addSubscription(getSubscriptionList());
 	}
 
-	private List<String> getSubscriptionRedisList() {
-		String recordsStr = constantService
-				.getValByName(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY);
-		if (StringUtils.isBlank(recordsStr)) {
+	public List<String> getSubscriptionRedisList() {
+		
+		Long listSize = redisTemplate.opsForList().size(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY);
+
+		if (listSize <= 0) {
 			return new ArrayList<>();
 		}
-		return Arrays.asList(recordsStr.split(","));
+		
+		return redisTemplate.opsForList().range(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY, 0, listSize);
 	}
 }

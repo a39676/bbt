@@ -1,5 +1,7 @@
 package demo.clawing.scheduleClawing.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,5 +60,9 @@ public class CryptoCompareWSController extends CommonController {
 		return "done";
 	}
 	
-	
+	@GetMapping("/getSubscriptionRedisList")
+	@ResponseBody
+	public List<String> getSubscriptionRedisList() {
+		return ws.getSubscriptionRedisList();
+	}
 }
