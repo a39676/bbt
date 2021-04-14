@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import demo.clawing.scheduleClawing.service.CryptoCoinPriceService;
 import demo.clawing.scheduleClawing.service.WuYiJobRefreshService;
 import demo.clawing.scheduleClawing.service.component.webSocket.BinanceWSClient;
 import demo.clawing.scheduleClawing.service.component.webSocket.CryptoCompareWSClient;
@@ -19,8 +18,8 @@ public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 	private WuYiJobRefreshService wuyiService;
 //	@Autowired
 //	private PreciousMetalsPriceService preciousMetalsPriceService;
-	@Autowired
-	private CryptoCoinPriceService cryptoCoinPriceService;
+//	@Autowired
+//	private CryptoCoinPriceService cryptoCoinPriceService;
 	@Autowired
 	private CryptoCompareWSClient cryptoCompareWSClient;
 	@Autowired
@@ -41,12 +40,12 @@ public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 		}
 	}
 
-	@Scheduled(cron = "0 */5 * * * ?")
-	public void insertCryptoCoinMinuteDataCollect() {
-		if (!"dev".equals(constantService.getValByName("envName"))) {
-			cryptoCoinPriceService.insertCryptoCoinMinuteDataCollectEvent();
-		}
-	}
+//	@Scheduled(cron = "0 */5 * * * ?")
+//	public void insertCryptoCoinMinuteDataCollect() {
+//		if (!"dev".equals(constantService.getValByName("envName"))) {
+//			cryptoCoinPriceService.insertCryptoCoinMinuteDataCollectEvent();
+//		}
+//	}
 
 //	@Scheduled(cron = "1 3 0 * * *") // 每天00:03:01执行
 //	public void insertCryptoCoinDailyDataCollect() {
