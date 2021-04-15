@@ -159,7 +159,7 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 	
 	@Override
 	public WebDriver buildChromeWebDriverMobileEmulation(ChromeOptions options) {
-		String path = globalOptionService.getChrome8xPath();
+		String path = globalOptionService.getChromePath();
 		String driverType = WebDriverConstant.chromeDriver;
 		System.setProperty(driverType, path);
 		WebDriver driver = null;
@@ -187,7 +187,7 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 	
 	@Override
 	public WebDriver buildChromeWebDriver(ChromeOptions options) {
-		String path = globalOptionService.getChrome8xPath();
+		String path = globalOptionService.getChromePath();
 		String driverType = WebDriverConstant.chromeDriver;
 		System.setProperty(driverType, path);
 		WebDriver driver = null;

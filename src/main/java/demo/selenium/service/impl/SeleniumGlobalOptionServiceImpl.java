@@ -38,7 +38,7 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 	
 	private String chrome85Path_win = winSeleniumWebDriverFolder + "/chrome85Driver.exe";
 	private String chrome45Path_win = winSeleniumWebDriverFolder + "/chrome45Driver.exe";
-	private String chrome89Path_linux = linuxSeleniumWebDriverFolder + "/chrome89Driver";
+	private String chrome90Path_linux = linuxSeleniumWebDriverFolder + "/chrome90Driver";
 	private String chrome45Path_linux = linuxSeleniumWebDriverFolder + "/chrome45Driver";
 	
 	private String geckoPath_win = winSeleniumWebDriverFolder + "/geckodriver-v0.27.0-win64.exe";
@@ -197,12 +197,12 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 	}
 	
 	@Override
-	public String getChrome8xPath() {
+	public String getChromePath() {
 		String path = null;
 		if (isWindows()) {
 			path = chrome85Path_win;
 		} else {
-			path = chrome89Path_linux;
+			path = chrome90Path_linux;
 		}
 		
 		return pathChangeByDetectOS(path);
