@@ -4,6 +4,7 @@ import java.io.File;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -27,6 +28,7 @@ import image.pojo.dto.ImageSavingTransDTO;
 import image.pojo.dto.UploadImageToCloudinaryDTO;
 import image.pojo.result.ImageSavingResult;
 import image.pojo.result.UploadImageToCloudinaryResult;
+import net.sf.json.JSONObject;
 import selenium.pojo.constant.SeleniumConstant;
 
 public abstract class SeleniumCommonService extends CommonService {
@@ -61,6 +63,13 @@ public abstract class SeleniumCommonService extends CommonService {
 		te.setId(snowFlake.getNextId());
 		te.setEventName(bo.getEventName());
 		te.setParameterFilePath(bo.getParameterFilePath());
+		if(StringUtils.isNotBlank(bo.getDynamicParam())) {
+			try {
+				JSONObject j = JSONObject.fromObject(bo.getDynamicParam());
+				te.setRemark(j.toString());
+			} catch (Exception e) {
+			}
+		}
 		return te;
 	}
 

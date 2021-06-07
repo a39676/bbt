@@ -21,8 +21,10 @@ import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.scheduleClawing.mq.sender.CryptoCoinDailyDataAckProducer;
 import demo.clawing.scheduleClawing.mq.sender.CryptoCoinMinuteDataAckProducer;
 import demo.clawing.scheduleClawing.pojo.bo.CryptoCompareDataAPIParamBO;
+import demo.clawing.scheduleClawing.pojo.result.CryptoCoinDailyDataResult;
 import demo.clawing.scheduleClawing.pojo.type.ScheduleClawingType;
 import demo.clawing.scheduleClawing.service.CryptoCoinPriceService;
+import demo.clawing.scheduleClawing.service.CryptoCompareService;
 import demo.selenium.pojo.bo.BuildTestEventBO;
 import demo.selenium.service.impl.SeleniumCommonService;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDailyDataQueryDTO;
@@ -39,6 +41,8 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 	private CryptoCoinMinuteDataAckProducer croptoCoinMinuteDataAckProducer;
 	@Autowired
 	private CryptoCoinDailyDataAckProducer croptoCoinDailyDataAckProducer;
+	@Autowired
+	private CryptoCompareService cryptoCompareService;
 
 	private TestModuleType testModuleType = TestModuleType.scheduleClawing;
 
@@ -55,7 +59,7 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 		String paramterFolderPath = getParameterSaveingPath(cryptoCoinMinuteDataCollect);
 		File paramterFile = new File(paramterFolderPath + File.separator + cryptoCoinMinuteDataCollectParam);
 		if (!paramterFile.exists()) {
-//			TODO
+//			TODO test event if paramterFile NOT exists
 			return null;
 		}
 
@@ -71,7 +75,7 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 		String paramterFolderPath = getParameterSaveingPath(cryptoCoinDailyDataCollect);
 		File paramterFile = new File(paramterFolderPath + File.separator + cryptoCoinDailyDataCollectParam);
 		if (!paramterFile.exists()) {
-//			TODO
+//			TODO test event if paramterFile NOT exists
 			return null;
 		}
 
@@ -115,12 +119,26 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 
 	@Override
 	public CommonResultBBT cryptoCoinDailyDataAPI(TestEvent te) {
+		// TODO 正在整理  分 crypto compare / binance api 
 		JsonReportDTO reportDTO = new JsonReportDTO();
 		String reportOutputFolderPath = getReportOutputPath(cryptoCoinDailyDataCollect);
 		reportDTO.setOutputReportPath(reportOutputFolderPath + File.separator + te.getId());
 
-		CommonResultBBT r = cryptoCoinDailyDataAPI(te, reportDTO);
-
+		CryptoCoinDailyDataResult apiResult = cryptoCompareService.cryptoCoinDailyDataAPI(te, reportDTO);
+		CommonResultBBT r = new CommonResultBBT();
+		
+		if(apiResult.isSuccess()) {
+			croptoCoinDailyDataAckProducer.sendHistoryPrice(apiResult.getData());
+			constantService.deleteValByName(TestEventOptionConstant.TEST_EVENT_REDIS_PARAM_KEY_PREFIX + "_" + te.getId());
+		} else {
+			/*
+			 * TODO use binance api?
+			 */
+		}
+		
+		r.setSuccess(apiResult.isSuccess());
+		r.setMessage(apiResult.getMessage());
+		
 		return r;
 	}
 
@@ -179,92 +197,6 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 				}
 			}
 
-			r.setIsSuccess();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			jsonReporter.appendContent(reportDTO, "异常: " + e);
-
-		} finally {
-			if (jsonReporter.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
-				updateTestEventReportPath(te, reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json");
-			}
-		}
-
-		return r;
-	}
-
-	/**
-	 * 
-	 * 每次调用, 仅获取一个币种法币对的数据
-	 * @param te
-	 * @param reportDTO
-	 * @return
-	 */
-	private CommonResultBBT cryptoCoinDailyDataAPI(TestEvent te, JsonReportDTO reportDTO) {
-		CommonResultBBT r = new CommonResultBBT();
-
-		// example:
-		// https://min-api.cryptocompare.com/data/v2/histoday?fsym=BTC&tsym=USD&limit=10
-		String cryptoCoinApiUrlModel = "https://min-api.cryptocompare.com/data/v2/histoday?fsym=%s&tsym=%s&limit=%s&api_key=%s";
-		HttpUtil h = new HttpUtil();
-
-		try {
-
-			String optionJsonStr = ioUtil.getStringFromFile(te.getParameterFilePath());
-			if (StringUtils.isBlank(optionJsonStr)) {
-				jsonReporter.appendContent(reportDTO, "参数文件读取异常");
-				throw new Exception();
-			}
-
-			CryptoCompareDataAPIParamBO clawingOptionBO = null;
-			try {
-				clawingOptionBO = new Gson().fromJson(optionJsonStr, CryptoCompareDataAPIParamBO.class);
-			} catch (Exception e) {
-				jsonReporter.appendContent(reportDTO, "参数文件结构异常");
-				throw new Exception();
-			}
-
-			if (clawingOptionBO == null) {
-				jsonReporter.appendContent(reportDTO, "参数文件结构异常");
-				throw new Exception();
-			}
-
-			if (StringUtils.isBlank(clawingOptionBO.getApiKey())) {
-				jsonReporter.appendContent(reportDTO, "参数文件参数异常");
-				throw new Exception();
-			}
-
-			String httpResponse = null;
-			CryptoCoinDataDTO mainDTO = new CryptoCoinDataDTO();
-			List<CryptoCoinDataSubDTO> subDataList = null;
-			
-			String paramJsonStr = constantService.getValByName(TestEventOptionConstant.TEST_EVENT_REDIS_PARAM_KEY_PREFIX + "_" + te.getId());
-			if(StringUtils.isBlank(paramJsonStr)) {
-				jsonReporter.appendContent(reportDTO, "test event: " + te.getId() + ", " + te.getEventName() + ", 动态参数获取异常");
-				return r;
-			}
-			
-			CryptoCoinDailyDataQueryDTO dynamicParam = null;
-			try {
-				dynamicParam = new Gson().fromJson(paramJsonStr, CryptoCoinDailyDataQueryDTO.class); 
-			} catch (Exception e) {
-				jsonReporter.appendContent(reportDTO, "test event: " + te.getId() + ", " + te.getEventName() + ", 动态参数获取异常");
-				throw new Exception();
-			}
-			
-			httpResponse = h.sendGet(String.format(cryptoCoinApiUrlModel, dynamicParam.getCoinName(), dynamicParam.getCurrencyName(),
-					dynamicParam.getCounting(), clawingOptionBO.getApiKey()));
-			jsonReporter.appendContent(reportDTO, httpResponse);
-			
-			subDataList = handleCryptoCoinDataResponse(httpResponse, dynamicParam.getCoinName(), dynamicParam.getCurrencyName());
-			mainDTO.setPriceHistoryData(subDataList);
-			mainDTO.setCryptoCoinTypeName(dynamicParam.getCoinName());
-			mainDTO.setCurrencyName(dynamicParam.getCurrencyName());
-			
-			croptoCoinDailyDataAckProducer.sendHistoryPrice(mainDTO);
-
-			constantService.deleteValByName(TestEventOptionConstant.TEST_EVENT_REDIS_PARAM_KEY_PREFIX + "_" + te.getId());
 			r.setIsSuccess();
 
 		} catch (Exception e) {

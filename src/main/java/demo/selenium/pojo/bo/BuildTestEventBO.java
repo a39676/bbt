@@ -9,6 +9,7 @@ public class BuildTestEventBO {
 	private Long caseId;
 	private String eventName;
 	private String parameterFilePath;
+	private String dynamicParam;
 
 	public TestModuleType getTestModuleType() {
 		return testModuleType;
@@ -50,10 +51,19 @@ public class BuildTestEventBO {
 		this.parameterFilePath = parameterFilePath;
 	}
 
+	public String getDynamicParam() {
+		return dynamicParam;
+	}
+
+	public void setDynamicParam(String dynamicParam) {
+		this.dynamicParam = dynamicParam;
+	}
+
 	@Override
 	public String toString() {
 		return "BuildTestEventBO [testModuleType=" + testModuleType + ", processId=" + processId + ", caseId=" + caseId
-				+ ", eventName=" + eventName + ", parameterFilePath=" + parameterFilePath + "]";
+				+ ", eventName=" + eventName + ", parameterFilePath=" + parameterFilePath + ", dynamicParam="
+				+ dynamicParam + "]";
 	}
 
 }
