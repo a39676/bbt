@@ -25,8 +25,8 @@ println System.getProperty("java.home")
 
 // JDK version source compatibility
 compileJava {
-	sourceCompatibility = '12'
-	targetCompatibility = '12'
+	sourceCompatibility = '11'
+	targetCompatibility = '11'
 }
 
 [compileJava,compileTestJava,javadoc]*.options*.encoding = 'UTF-8'

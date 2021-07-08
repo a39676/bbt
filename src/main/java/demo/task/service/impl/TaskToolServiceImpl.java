@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.base.system.mapper.BaseMapper;
-import demo.interaction.movieInteraction.service.MovieInteractionService;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.task.service.TaskToolService;
 import demo.tool.mapper.MailRecordMapper;
@@ -22,8 +21,6 @@ public class TaskToolServiceImpl implements TaskToolService {
 	
 	@Autowired
 	private ComplexToolService complexToolService;
-	@Autowired
-	private MovieInteractionService movieInteractionService;
 	@Autowired
 	private TestEventService testEventService;
 	
@@ -57,11 +54,6 @@ public class TaskToolServiceImpl implements TaskToolService {
 	@Scheduled(cron="05 03 23 * * *") 
 	public void cleanTmpFile() {
 		complexToolService.cleanTmpFiles(seleniumGlobalOptionService.getDownloadDir(), null, LocalDateTime.now().minusMonths(1));
-	}
-	
-	@Scheduled(cron="01 03 00 * * *")
-	public void movieClickCountingRedisToOrm() {
-		movieInteractionService.movieClickCountingRedisToOrm();
 	}
 	
 	/** 将最近2天运行失败的定时任务报告发送到指定邮箱 */

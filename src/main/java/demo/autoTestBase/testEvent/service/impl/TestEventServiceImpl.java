@@ -29,7 +29,6 @@ import demo.clawing.collecting.jandan.service.impl.ClawCollectPrefixServiceImpl;
 import demo.clawing.demo.service.impl.SearchingDemoPrefixServiceImpl;
 import demo.clawing.localClawing.service.impl.LocalClawingPrefixServiceImpl;
 import demo.clawing.lottery.service.impl.LotteryPrefixServiceImpl;
-import demo.clawing.movie.service.impl.MovieClawingCasePrefixServiceImpl;
 import demo.clawing.scheduleClawing.service.impl.ScheduleClawingPrefixServiceImpl;
 import demo.tool.pojo.type.MailType;
 import demo.tool.service.MailService;
@@ -46,8 +45,6 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	@Autowired
 	private TestEventAckProducer testEventAckProducer;
 	
-	@Autowired
-	private MovieClawingCasePrefixServiceImpl movieClawingCasePrefixService;
 	@Autowired
 	private BadJokeCasePrefixServiceImpl badJokeCasePrefixService;
 	@Autowired
@@ -133,9 +130,7 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 			return null;
 		}
 		
-		if (TestModuleType.movieClawing.getId().equals(moduleId)) {
-			return movieClawingCasePrefixService.runSubEvent(te);
-		} else if (TestModuleType.badJoke.getId().equals(moduleId)) {
+		if (TestModuleType.badJoke.getId().equals(moduleId)) {
 			return badJokeCasePrefixService.runSubEvent(te);
 		} else if (TestModuleType.ATDemo.getId().equals(moduleId)) {
 			return searchingDemoService.runSubEvent(te);
