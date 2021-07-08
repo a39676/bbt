@@ -24,7 +24,6 @@ import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.baseCommon.pojo.result.CommonResultBBT;
-import demo.clawing.badJoke.sms.service.impl.BadJokeCasePrefixServiceImpl;
 import demo.clawing.collecting.jandan.service.impl.ClawCollectPrefixServiceImpl;
 import demo.clawing.demo.service.impl.SearchingDemoPrefixServiceImpl;
 import demo.clawing.localClawing.service.impl.LocalClawingPrefixServiceImpl;
@@ -45,8 +44,6 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	@Autowired
 	private TestEventAckProducer testEventAckProducer;
 	
-	@Autowired
-	private BadJokeCasePrefixServiceImpl badJokeCasePrefixService;
 	@Autowired
 	private SearchingDemoPrefixServiceImpl searchingDemoService;
 	@Autowired
@@ -130,9 +127,7 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 			return null;
 		}
 		
-		if (TestModuleType.badJoke.getId().equals(moduleId)) {
-			return badJokeCasePrefixService.runSubEvent(te);
-		} else if (TestModuleType.ATDemo.getId().equals(moduleId)) {
+		if (TestModuleType.ATDemo.getId().equals(moduleId)) {
 			return searchingDemoService.runSubEvent(te);
 		} else if (TestModuleType.scheduleClawing.getId().equals(moduleId)) {
 			return scheduleClawingPrefixService.runSubEvent(te);
