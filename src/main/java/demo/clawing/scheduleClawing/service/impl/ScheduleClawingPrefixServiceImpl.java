@@ -27,6 +27,7 @@ public class ScheduleClawingPrefixServiceImpl extends CommonService implements R
 	@Autowired
 	private CryptoCoinPriceService cryptoCoinPriceService;
 
+
 	@Override
 	public CommonResultBBT runSubEvent(TestEvent te) {
 		Long caseId = te.getCaseId();

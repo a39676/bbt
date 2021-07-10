@@ -30,6 +30,7 @@ import demo.selenium.service.impl.SeleniumCommonService;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDailyDataQueryDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataSubDTO;
+import finance.cryptoCoin.pojo.type.CryptoCoinDataSourceType;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import toolPack.httpHandel.HttpUtil;
@@ -40,7 +41,7 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 	@Autowired
 	private CryptoCoinMinuteDataAckProducer croptoCoinMinuteDataAckProducer;
 	@Autowired
-	private CryptoCoinDailyDataAckProducer croptoCoinDailyDataAckProducer;
+	private CryptoCoinDailyDataAckProducer cryptoCoinDailyDataAckProducer;
 	@Autowired
 	private CryptoCompareService cryptoCompareService;
 
@@ -120,19 +121,35 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 	@Override
 	public CommonResultBBT cryptoCoinDailyDataAPI(TestEvent te) {
 		// TODO 正在整理  分 crypto compare / binance api 
+		
+		CryptoCoinDailyDataQueryDTO queryDTO = null;
+		
+		try {
+			JSONObject paramJson = tryFindParam(te.getId());
+			queryDTO = new Gson().fromJson(paramJson.toString(), CryptoCoinDailyDataQueryDTO.class);
+		} catch (Exception e) {
+		}
+		
 		JsonReportDTO reportDTO = new JsonReportDTO();
 		String reportOutputFolderPath = getReportOutputPath(cryptoCoinDailyDataCollect);
 		reportDTO.setOutputReportPath(reportOutputFolderPath + File.separator + te.getId());
-
-		CryptoCoinDailyDataResult apiResult = cryptoCompareService.cryptoCoinDailyDataAPI(te, reportDTO);
+		
+		CryptoCoinDailyDataResult apiResult = null;
+		
+		if(queryDTO == null || queryDTO.getDataSourceCode() == null || CryptoCoinDataSourceType.CRYPTO_COMPARE.getCode().equals(queryDTO.getDataSourceCode())) {
+			apiResult = cryptoCompareService.cryptoCoinDailyDataAPI(te, reportDTO);
+		} else if(CryptoCoinDataSourceType.BINANCE.getCode().equals(queryDTO.getDataSourceCode())){
+//			TODO need binance daily data API
+		}
+		
 		CommonResultBBT r = new CommonResultBBT();
 		
 		if(apiResult.isSuccess()) {
-			croptoCoinDailyDataAckProducer.sendHistoryPrice(apiResult.getData());
+			cryptoCoinDailyDataAckProducer.sendHistoryPrice(apiResult.getData());
 			constantService.deleteValByName(TestEventOptionConstant.TEST_EVENT_REDIS_PARAM_KEY_PREFIX + "_" + te.getId());
 		} else {
 			/*
-			 * TODO use binance api?
+			 * TODO what to do when crypto coin daily data query fail
 			 */
 		}
 		

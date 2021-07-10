@@ -16,6 +16,7 @@ import at.report.service.ATJsonReportService;
 import at.screenshot.pojo.dto.TakeScreenshotSaveDTO;
 import at.screenshot.pojo.result.ScreenshotSaveResult;
 import at.screenshot.service.ScreenshotService;
+import demo.autoTestBase.testEvent.pojo.constant.TestEventOptionConstant;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.baseCommon.service.CommonService;
@@ -73,6 +74,18 @@ public abstract class SeleniumCommonService extends CommonService {
 		return te;
 	}
 
+	protected JSONObject tryFindParam(Long testEventId) {
+		String paramStr = constantService.getValByName(TestEventOptionConstant.TEST_EVENT_REDIS_PARAM_KEY_PREFIX + "_" + testEventId);
+		if(StringUtils.isNotBlank(paramStr)) {
+			try {
+				return JSONObject.fromObject(paramStr);
+			} catch (Exception e) {
+				log.error("find error param: " + paramStr);
+			}
+		}
+		return null;
+	}
+	
 	protected UploadImageToCloudinaryResult uploadImgToCloudinary(String imgFilePath) {
 		UploadImageToCloudinaryDTO uploadImgDTO = new UploadImageToCloudinaryDTO();
 		uploadImgDTO.setFilePath(imgFilePath);
