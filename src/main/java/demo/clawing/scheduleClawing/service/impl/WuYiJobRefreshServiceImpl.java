@@ -298,6 +298,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			} catch (TimeoutException te) {
 				jsonReporter.appendContent(reportDTO, "visit login page timeout");
 			} catch (Exception e) {
+				jsonReporter.appendContent(reportDTO, e.getLocalizedMessage());
 				jsonReporter.appendContent(reportDTO, "visit login page fail");
 				throw new Exception();
 			}
