@@ -22,7 +22,7 @@ public class DangerToolController extends CommonController {
 	@GetMapping(value = "/deleteAllMovieInfo")
 	@ResponseBody
 	public String deleteAllMovieInfo() {
-		String env = constantService.getValByName("envName", true);
+		String env = constantService.getEnvName();
 		if("dev".equals(env)) {
 			dangerMapper.deleteAllMovieInfo();
 			dangerMapper.deleteAllMovieIntroduction();

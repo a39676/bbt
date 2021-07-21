@@ -91,12 +91,12 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 		CommonResultBBT r = new CommonResultBBT();
 
 		String wuYiRunCountKey = "wuYiRunCountKey";
-		String runCountStr = constantService.getValByName(wuYiRunCountKey);
+		String runCountStr = redisConnectService.getValByName(wuYiRunCountKey);
 		int runCount = 1;
 		try {
 			runCount = Integer.parseInt(runCountStr);
 		} catch (Exception e) {
-			constantService.setValByName(wuYiRunCountKey, "1");
+			redisConnectService.setValByName(wuYiRunCountKey, "1");
 		}
 
 		JsonReportDTO reportDTO = new JsonReportDTO();
@@ -157,7 +157,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 				jsonReporter.appendContent(reportDTO, "暂不新简历");
 			}
 
-			constantService.setValByName(wuYiRunCountKey, String.valueOf(runCount + 1));
+			redisConnectService.setValByName(wuYiRunCountKey, String.valueOf(runCount + 1));
 			jsonReporter.appendContent(reportDTO, "更新 redis 计数: " + (runCount));
 
 			r.setIsSuccess();

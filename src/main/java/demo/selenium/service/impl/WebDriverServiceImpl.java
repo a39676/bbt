@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 import at.webDriver.pojo.constant.ChromeConstant;
 import at.webDriver.pojo.constant.FireFoxConstant;
 import at.webDriver.pojo.constant.WebDriverConstant;
-import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.service.CommonService;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.WebDriverService;
@@ -35,13 +34,11 @@ import toolPack.constant.HtmlMimeType;
 public class WebDriverServiceImpl extends CommonService implements WebDriverService {
 
 	@Autowired
-	private SystemConstantService constantService;
-	@Autowired
 	private SeleniumGlobalOptionService globalOptionService;
 
 	@Override
 	public WebDriver buildFireFoxWebDriver(FirefoxOptions options) {
-		String envName = constantService.getValByName("envName", true);
+		String envName = systemConstantService.getEnvName();
 		String path = globalOptionService.getGeckoPath();
 		String driverType = WebDriverConstant.geckoDriver;
 		System.setProperty(driverType, path);
@@ -52,7 +49,6 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 			}
 //			options.addArguments(WebDriverConstant.headLess);
 		}
-		
 
 		if (options.getProfile() == null) {
 			FirefoxProfile profile = new FirefoxProfile();
@@ -77,7 +73,7 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 
 		FirefoxDriver driver = new FirefoxDriver(options);
 		driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS);
-		if ("dev".equals(envName) ) {
+		if ("dev".equals(envName)) {
 //			Point p = new Point(0, 0);
 //			driver.manage().window().setPosition(p);
 //			Dimension targetSize = new Dimension(1024, 800);
@@ -86,15 +82,15 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 		}
 		return driver;
 	}
-	
+
 	@Override
 	public WebDriver buildFireFoxWebDriverMobileEmulation() {
 		return buildFireFoxWebDriverMobileEmulation(null);
 	}
-	
+
 	@Override
 	public WebDriver buildFireFoxWebDriverMobileEmulation(FirefoxOptions options) {
-		String envName = constantService.getValByName("envName", true);
+		String envName = systemConstantService.getEnvName();
 		String path = globalOptionService.getGeckoPath();
 		String driverType = WebDriverConstant.geckoDriver;
 		System.setProperty(driverType, path);
@@ -104,7 +100,6 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 				options.addArguments(WebDriverConstant.headLess);
 			}
 		}
-		
 
 		if (options.getProfile() == null) {
 			FirefoxProfile profile = new FirefoxProfile();
@@ -121,7 +116,7 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 
 		FirefoxDriver driver = new FirefoxDriver(options);
 		driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS);
-		if ("dev".equals(envName) ) {
+		if ("dev".equals(envName)) {
 			Point p = new Point(0, 0);
 			driver.manage().window().setPosition(p);
 			Dimension targetSize = new Dimension(360, 1200);
@@ -156,23 +151,23 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 	public WebDriver buildChromeWebDriverMobileEmulation() {
 		return buildChromeWebDriverMobileEmulation(null);
 	}
-	
+
 	@Override
 	public WebDriver buildChromeWebDriverMobileEmulation(ChromeOptions options) {
 		String path = globalOptionService.getChromePath();
 		String driverType = WebDriverConstant.chromeDriver;
 		System.setProperty(driverType, path);
 		WebDriver driver = null;
-		
-		String envName = constantService.getValByName("envName");
-		if(options == null) {
+
+		String envName = systemConstantService.getEnvName();
+		if (options == null) {
 			options = new ChromeOptions();
 		}
-		
+
 		options.addArguments(WebDriverConstant.headLess);
-		if("dev".equals(envName)) {
+		if ("dev".equals(envName)) {
 		}
-		
+
 		Map<String, String> mobileEmulation = new HashMap<>();
 
 		mobileEmulation.put("deviceName", "Nexus 5");
@@ -180,11 +175,11 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 		options.setExperimentalOption("mobileEmulation", mobileEmulation);
 
 		driver = new ChromeDriver(options);
-		
+
 		return driver;
-		
+
 	}
-	
+
 	@Override
 	public WebDriver buildChromeWebDriver(ChromeOptions options) {
 		String path = globalOptionService.getChromePath();
@@ -192,20 +187,15 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 		System.setProperty(driverType, path);
 		WebDriver driver = null;
 		/*
-		 * 2019-09-08
-		 * I have no idea why 
-		 * can NOT set any experimental option with this code
-		 * every experimental option call "unrecognized chrome option" error
-		if (options == null) {
-			options = new ChromeOptions();
-			if (!"dev".equals(envName)) {
-				options.addArguments(WebDriverConstant.headLess);
-			}
-			options.setExperimentalOption(ChromeConstant.downloadDir, globalOptionService.getDownloadDir());
-			options.setExperimentalOption(ChromeConstant.promptForDownload, false);
-			options.setExperimentalOption(ChromeConstant.directoryUpgrade, true);
-			options.setExperimentalOption(ChromeConstant.safebrowsingEnabled, true);
-		}
+		 * 2019-09-08 I have no idea why can NOT set any experimental option with this
+		 * code every experimental option call "unrecognized chrome option" error if
+		 * (options == null) { options = new ChromeOptions(); if
+		 * (!"dev".equals(envName)) { options.addArguments(WebDriverConstant.headLess);
+		 * } options.setExperimentalOption(ChromeConstant.downloadDir,
+		 * globalOptionService.getDownloadDir());
+		 * options.setExperimentalOption(ChromeConstant.promptForDownload, false);
+		 * options.setExperimentalOption(ChromeConstant.directoryUpgrade, true);
+		 * options.setExperimentalOption(ChromeConstant.safebrowsingEnabled, true); }
 		 */
 
 		driver = buildChromeDriverBugFix(options);
@@ -214,8 +204,8 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 
 	@SuppressWarnings("deprecation")
 	private ChromeDriver buildChromeDriverBugFix(ChromeOptions options) {
-		String envName = constantService.getValByName("envName");
-		if(options == null) {
+		String envName = systemConstantService.getEnvName();
+		if (options == null) {
 			options = new ChromeOptions();
 		}
 		DesiredCapabilities capabilities = DesiredCapabilities.chrome();
@@ -232,11 +222,11 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 		if (!"dev".equals(envName) || !isWindows()) {
 			options.addArguments(WebDriverConstant.headLess);
 		}
-		options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
+		options.setExperimentalOption("excludeSwitches", new String[] { "enable-automation" });
 		options.setExperimentalOption("useAutomationExtension", false);
-		
+
 		capabilities.setCapability(ChromeOptions.CAPABILITY, options);
-		
+
 		return new ChromeDriver(capabilities);
 	}
 
@@ -247,7 +237,7 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 
 	@Override
 	public WebDriver buildChrome45WebDriver(ChromeOptions options) {
-		String envName = constantService.getValByName("envName");
+		String envName = systemConstantService.getEnvName();
 		String path = globalOptionService.getChrome45Path();
 		String driverType = WebDriverConstant.chromeDriver;
 		System.setProperty(driverType, path);

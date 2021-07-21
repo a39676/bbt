@@ -25,7 +25,7 @@ public class SwaggerConfig {
     @Bean
     public Docket api() {
 		Docket d = null;
-		String envName = constantService.getValByName("envName", true);
+		String envName = constantService.getEnvName();
 		if ("dev".equals(envName)) {
 			d = new Docket(DocumentationType.SWAGGER_2)
 					.apiInfo(apiInfo())

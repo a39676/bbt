@@ -75,7 +75,7 @@ public abstract class SeleniumCommonService extends CommonService {
 	}
 
 	protected JSONObject tryFindParam(Long testEventId) {
-		String paramStr = constantService.getValByName(TestEventOptionConstant.TEST_EVENT_REDIS_PARAM_KEY_PREFIX + "_" + testEventId);
+		String paramStr = redisConnectService.getValByName(TestEventOptionConstant.TEST_EVENT_REDIS_PARAM_KEY_PREFIX + "_" + testEventId);
 		if(StringUtils.isNotBlank(paramStr)) {
 			try {
 				return JSONObject.fromObject(paramStr);

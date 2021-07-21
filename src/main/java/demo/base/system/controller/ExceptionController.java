@@ -15,8 +15,6 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import demo.base.system.pojo.bo.SystemConstantStore;
-import demo.base.system.pojo.constant.DebugStatusConstant;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.controller.CommonController;
 
@@ -32,8 +30,7 @@ public class ExceptionController extends CommonController implements HandlerExce
 	public ModelAndView handleException(HttpServletRequest request, Exception e, String message) {
 		ModelAndView view = new ModelAndView("baseJSP/errorCustom");
 		log.error(e.toString());
-		findDebugStatus();
-		if(findDebugStatus()) {
+		if(systemConstantService.getIsDebuging()) {
 			view.addObject("message", e.toString());
 		} else {
 			view.addObject("message", "很抱歉,居然出现了异常");
@@ -48,7 +45,7 @@ public class ExceptionController extends CommonController implements HandlerExce
 	public ModelAndView handleIOException(HttpServletRequest request, Exception e) {
 		log.error(e.toString());
 		ModelAndView view = new ModelAndView("baseJSP/errorCustom");
-		if(findDebugStatus()) {
+		if(systemConstantService.getIsDebuging()) {
 			view.addObject("message", e.toString());
 		} else {
 			view.addObject("message", "IOException");
@@ -62,7 +59,7 @@ public class ExceptionController extends CommonController implements HandlerExce
 	public ModelAndView handleNoHandlerFoundException(HttpServletRequest request, Exception e) {
 		log.error(e.toString());
 		ModelAndView view = new ModelAndView("baseJSP/errorCustom");
-		if(findDebugStatus()) {
+		if(systemConstantService.getIsDebuging()) {
 			view.addObject("message", e.toString());
 		} else {
 			view.addObject("message", "NoHandlerFoundException");
@@ -77,7 +74,7 @@ public class ExceptionController extends CommonController implements HandlerExce
 	public ModelAndView handleSQLException(HttpServletRequest request, Exception e) {
 		log.error(e.toString());
 		ModelAndView view = new ModelAndView("baseJSP/errorCustom");
-		if(findDebugStatus()) {
+		if(systemConstantService.getIsDebuging()) {
 			view.addObject("message", e.toString());
 		} else {
 			view.addObject("message", "SQLException");
@@ -91,7 +88,7 @@ public class ExceptionController extends CommonController implements HandlerExce
 	public ModelAndView hanedleRuntimeException(HttpServletRequest request, Exception e) {
 		log.error(e.toString());
 		ModelAndView view = new ModelAndView("baseJSP/errorCustom");
-		if(findDebugStatus()) {
+		if(systemConstantService.getIsDebuging()) {
 			view.addObject("message", e.toString());
 		} else {
 			view.addObject("message", "RuntimeException");
@@ -119,12 +116,4 @@ public class ExceptionController extends CommonController implements HandlerExce
 		return null;
 	}
 
-	private boolean findDebugStatus() {
-		String debugStatusStr = systemConstantService.getValByName(SystemConstantStore.debugStatus);
-		if(DebugStatusConstant.debuging.equals(debugStatusStr)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
 }
