@@ -32,6 +32,11 @@ public class SystemConstantService extends CommonService {
 		return envName;
 	}
 	
+	public String getEnvNameRefresh() {
+		envName = getSysValByName(SystemConstantStore.ENV_NAME, true);
+		return envName;
+	}
+	
 	public boolean getIsDebuging() {
 		if(isDebuging == null) {
 			isDebuging = DebugStatusConstant.debuging.equals(getSysValByName(SystemConstantStore.DEBUG_STATUS));
@@ -61,5 +66,12 @@ public class SystemConstantService extends CommonService {
 			log.error("refresh " + constantName + ", ---> " + tmpConstant.getConstantValue());
 			return tmpConstant.getConstantValue();
 		}
+	}
+	
+	public String getSysValByName(String constantName, boolean refreshFlag) {
+		if(refreshFlag) {
+			redisTemplate.delete(constantName);
+		}
+		return getSysValByName(constantName);
 	}
 }
