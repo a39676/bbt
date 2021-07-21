@@ -45,18 +45,10 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 			if (!"dev".equals(envName) || !isWindows()) {
 				options.addArguments(WebDriverConstant.headLess);
 			}
-//			options.addArguments(WebDriverConstant.headLess);
 		}
 
 		if (options.getProfile() == null) {
 			FirefoxProfile profile = new FirefoxProfile();
-//			File adblockExtension = new File("D:\\home\\u2\\extension\\adblock_plus-3.6.3-an_fx.xpi");
-//			profile.addExtension(adblockExtension);
-//			profile.setPreference("extensions.adblock_plus.currentVersion", "3.6.3");
-//			profile.setPreference("extensions.adblock_plus.allPagesActivation", "on");    
-//			profile.setPreference("permissions.default.stylesheet", 2);
-//			profile.setPreference("dom.ipc.plugins.enabled.libflashplayer.so", false);
-//			profile.setPreference("permissions.default.image", 2);
 			profile.setPreference(FireFoxConstant.folderList, 2);
 			profile.setPreference(FireFoxConstant.downloadDir, globalOptionService.getDownloadDir());
 			profile.setPreference(FireFoxConstant.downloadShowWhenStarting, false);
@@ -195,7 +187,7 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 			options = new ChromeOptions();
 		}
 
-		if (!"dev".equals(envName)) {
+		if (!"dev".equals(envName) || !isWindows()) {
 			options.addArguments(WebDriverConstant.headLess);
 		}
 
@@ -204,7 +196,6 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 		log.debug("after build chrome driver");
 		return driver;
 	}
-
 
 	@Override
 	public WebDriver buildChromeWebDriver() {
