@@ -82,10 +82,10 @@ public class ZhiLianDailySignServiceImpl extends SeleniumCommonService implement
 		CommonResultBBT r = new CommonResultBBT();
 		
 		String wuYiRunCountKey = "zhiLianRunCountKey";
-		String runCountStr = constantService.getValByName(wuYiRunCountKey);
+		String runCountStr = redisConnectService.getValByName(wuYiRunCountKey);
 		int runCount = 0;
 		if(StringUtils.isBlank(runCountStr) || "null".equals(runCountStr) || !numericUtil.matchInteger(runCountStr)) {
-			constantService.setValByName(wuYiRunCountKey, "1");
+			redisConnectService.setValByName(wuYiRunCountKey, "1");
 			runCount = 1;
 		} else {
 			runCount = Integer.parseInt(runCountStr);
@@ -145,7 +145,7 @@ public class ZhiLianDailySignServiceImpl extends SeleniumCommonService implement
 				jsonReporter.appendContent(reportDTO, "暂不新简历");
 			}
 			
-			constantService.setValByName(wuYiRunCountKey, String.valueOf(runCount + 1));
+			redisConnectService.setValByName(wuYiRunCountKey, String.valueOf(runCount + 1));
 			jsonReporter.appendContent(reportDTO, "更新 redis 计数");
 			
 			r.setIsSuccess();

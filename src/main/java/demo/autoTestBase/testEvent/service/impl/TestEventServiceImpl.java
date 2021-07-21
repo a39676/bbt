@@ -1,10 +1,6 @@
 package demo.autoTestBase.testEvent.service.impl;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
@@ -12,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import autoTest.testModule.pojo.type.TestModuleType;
-import auxiliaryCommon.pojo.result.CommonResult;
 import demo.autoTestBase.testCase.pojo.po.TestCase;
 import demo.autoTestBase.testCase.service.TestCaseService;
 import demo.autoTestBase.testEvent.mq.TestEventAckProducer;
@@ -22,22 +17,17 @@ import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.po.TestEventExample;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.autoTestBase.testEvent.service.TestEventService;
-import demo.base.system.pojo.bo.SystemConstantStore;
 import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.collecting.jandan.service.impl.ClawCollectPrefixServiceImpl;
 import demo.clawing.demo.service.impl.SearchingDemoPrefixServiceImpl;
 import demo.clawing.localClawing.service.impl.LocalClawingPrefixServiceImpl;
 import demo.clawing.scheduleClawing.service.impl.ScheduleClawingPrefixServiceImpl;
-import demo.tool.pojo.type.MailType;
-import demo.tool.service.MailService;
 import net.sf.json.JSONObject;
 import selenium.pojo.constant.SeleniumConstant;
 
 @Service
 public class TestEventServiceImpl extends TestEventCommonService implements TestEventService {
 
-	@Autowired
-	private MailService mailService;
 	@Autowired
 	private TestCaseService caseService;
 	@Autowired
@@ -56,7 +46,7 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	private String safeWord = "breakNow";
 
 	private String findPauseWord() {
-		return constantService.getValByName(pauseWordRedisKey, true);
+		return redisConnectService.getValByName(pauseWordRedisKey);
 	}
 
 	@Override
@@ -76,7 +66,7 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		r.setCaseId(po.getCaseId());
 
 		if (paramJson != null && StringUtils.isNotBlank(paramJson.toString())) {
-			constantService.setValByName(TestEventOptionConstant.TEST_EVENT_REDIS_PARAM_KEY_PREFIX + "_" + po.getId(),
+			redisConnectService.setValByName(TestEventOptionConstant.TEST_EVENT_REDIS_PARAM_KEY_PREFIX + "_" + po.getId(),
 					paramJson.toString(), 1L, TimeUnit.DAYS);
 		}
 		testEventAckProducer.send(po);
@@ -165,56 +155,55 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		return eventMapper.updateByPrimaryKeySelective(te);
 	}
 
-	@Override
-	public CommonResultBBT sendFailReports() {
-		LocalDateTime now = LocalDateTime.now();
-		return sendFailReports(now.minusDays(2L), now);
-	}
-
-	@Override
-	public CommonResultBBT sendFailReports(LocalDateTime startTime, LocalDateTime endTime) {
-		CommonResultBBT r = new CommonResultBBT();
-		TestEventExample example = new TestEventExample();
-		example.createCriteria().andIsDeleteEqualTo(false).andIsPassEqualTo(false).andEndTimeIsNotNull()
-				.andStartTimeBetween(startTime, endTime);
-		List<TestEvent> failEventList = eventMapper.selectByExample(example);
-		r.addMessage("failEventListSize : " + failEventList.size() + "\n");
-
-		LocalDateTime now = LocalDateTime.now();
-		String nowStr = localDateTimeHandler.dateToStr(now);
-		CommonResult mailResult = mailService.sendSimpleMail(0L,
-				constantService.getValByName(SystemConstantStore.managerMail),
-				("截至: " + nowStr + " 最近2天有" + failEventList.size() + "个失败任务"),
-				(buildSendFailReportContent(failEventList)), null, MailType.sandFailTaskReport);
-		if (mailResult.isSuccess()) {
-			r.addMessage("send mail success" + "\n");
-		} else {
-			r.addMessage("send mail fali" + "\n");
-			r.addMessage(mailResult.getMessage());
-		}
-
-		return r;
-	}
-
-	private String buildSendFailReportContent(List<TestEvent> failEventList) {
-		Map<String, Integer> sumMap = new HashMap<String, Integer>();
-		for (TestEvent po : failEventList) {
-			if (sumMap.containsKey(po.getEventName())) {
-				sumMap.put(po.getEventName(), sumMap.get(po.getEventName()) + 1);
-			} else {
-				sumMap.put(po.getEventName(), 1);
-			}
-		}
-
-		LocalDateTime now = LocalDateTime.now();
-		String nowStr = localDateTimeHandler.dateToStr(now);
-		StringBuffer sb = new StringBuffer("截至: " + nowStr + " 最近2天有" + failEventList.size() + "个失败任务 \n");
-
-		for (Entry<String, Integer> entry : sumMap.entrySet()) {
-			sb.append(entry.getKey() + " : " + entry.getValue() + " 个 \n");
-		}
-		return sb.toString();
-	}
+	/*
+	 * TODO 移除mail 模块后, 转移到 telegram 接口
+	 */
+//	public CommonResultBBT sendFailReports() {
+//		LocalDateTime now = LocalDateTime.now();
+//		return sendFailReports(now.minusDays(2L), now);
+//	}
+//	public CommonResultBBT sendFailReports(LocalDateTime startTime, LocalDateTime endTime) {
+//		CommonResultBBT r = new CommonResultBBT();
+//		TestEventExample example = new TestEventExample();
+//		example.createCriteria().andIsDeleteEqualTo(false).andIsPassEqualTo(false).andEndTimeIsNotNull()
+//				.andStartTimeBetween(startTime, endTime);
+//		List<TestEvent> failEventList = eventMapper.selectByExample(example);
+//		r.addMessage("failEventListSize : " + failEventList.size() + "\n");
+//
+//		LocalDateTime now = LocalDateTime.now();
+//		String nowStr = localDateTimeHandler.dateToStr(now);
+//		CommonResult mailResult = mailService.sendSimpleMail(0L,
+//				redisConnectService.getValByName(SystemConstantStore.managerMail),
+//				("截至: " + nowStr + " 最近2天有" + failEventList.size() + "个失败任务"),
+//				(buildSendFailReportContent(failEventList)), null, MailType.sandFailTaskReport);
+//		if (mailResult.isSuccess()) {
+//			r.addMessage("send mail success" + "\n");
+//		} else {
+//			r.addMessage("send mail fali" + "\n");
+//			r.addMessage(mailResult.getMessage());
+//		}
+//
+//		return r;
+//	}
+//	private String buildSendFailReportContent(List<TestEvent> failEventList) {
+//		Map<String, Integer> sumMap = new HashMap<String, Integer>();
+//		for (TestEvent po : failEventList) {
+//			if (sumMap.containsKey(po.getEventName())) {
+//				sumMap.put(po.getEventName(), sumMap.get(po.getEventName()) + 1);
+//			} else {
+//				sumMap.put(po.getEventName(), 1);
+//			}
+//		}
+//
+//		LocalDateTime now = LocalDateTime.now();
+//		String nowStr = localDateTimeHandler.dateToStr(now);
+//		StringBuffer sb = new StringBuffer("截至: " + nowStr + " 最近2天有" + failEventList.size() + "个失败任务 \n");
+//
+//		for (Entry<String, Integer> entry : sumMap.entrySet()) {
+//			sb.append(entry.getKey() + " : " + entry.getValue() + " 个 \n");
+//		}
+//		return sb.toString();
+//	}
 
 	@Override
 	public boolean checkExistsRuningEvent() {
@@ -223,7 +212,7 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 
 	@Override
 	public void fixRuningEventStatusManual() {
-		constantService.setValByName(runningEventRedisKey, "false");
+		redisConnectService.setValByName(runningEventRedisKey, "false");
 	}
 
 	@Override

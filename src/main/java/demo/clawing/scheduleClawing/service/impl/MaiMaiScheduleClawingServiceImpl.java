@@ -557,7 +557,7 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 	}
 	
 	private boolean isAddFriendReachLimitToday() {
-		String v = constantService.getValByName(MaiMaiScheduleClawingConstant.addFriendsLimitFlagRedisKey);
+		String v = redisConnectService.getValByName(MaiMaiScheduleClawingConstant.addFriendsLimitFlagRedisKey);
 		if("true".equals(v)) {
 			return true;
 		}
@@ -567,7 +567,7 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 	private void addFriendReachLimitRreshKey() {
 		LocalDateTime endOfToday = localDateTimeHandler.atEndOfDay(LocalDateTime.now());
 		Long secondGap = ChronoUnit.SECONDS.between(LocalDateTime.now(), endOfToday);
-		constantService.setValByName(MaiMaiScheduleClawingConstant.addFriendsLimitFlagRedisKey, "true", secondGap, TimeUnit.SECONDS);
+		redisConnectService.setValByName(MaiMaiScheduleClawingConstant.addFriendsLimitFlagRedisKey, "true", secondGap, TimeUnit.SECONDS);
 	}
 	
 	private String findClassOfShareAndLikeSpan(WebDriver d) {

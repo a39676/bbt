@@ -66,7 +66,7 @@ public class CryptoCompareServiceImpl extends SeleniumCommonService implements C
 			CryptoCoinDataDTO mainDTO = new CryptoCoinDataDTO();
 			List<CryptoCoinDataSubDTO> subDataList = null;
 			
-			String paramJsonStr = constantService.getValByName(TestEventOptionConstant.TEST_EVENT_REDIS_PARAM_KEY_PREFIX + "_" + te.getId());
+			String paramJsonStr = redisConnectService.getValByName(TestEventOptionConstant.TEST_EVENT_REDIS_PARAM_KEY_PREFIX + "_" + te.getId());
 			if(StringUtils.isBlank(paramJsonStr)) {
 				jsonReporter.appendContent(reportDTO, "test event: " + te.getId() + ", " + te.getEventName() + ", 动态参数获取异常");
 				return r;

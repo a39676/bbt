@@ -146,7 +146,7 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 		
 		if(apiResult.isSuccess()) {
 			cryptoCoinDailyDataAckProducer.sendHistoryPrice(apiResult.getData());
-			constantService.deleteValByName(TestEventOptionConstant.TEST_EVENT_REDIS_PARAM_KEY_PREFIX + "_" + te.getId());
+			redisConnectService.deleteValByName(TestEventOptionConstant.TEST_EVENT_REDIS_PARAM_KEY_PREFIX + "_" + te.getId());
 		} else {
 			/*
 			 * TODO what to do when crypto coin daily data query fail

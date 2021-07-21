@@ -184,7 +184,7 @@ public class BinanceWSClient extends CryptoCoinWebSocketCommonClient {
 			@Override
 			public void onDisconnected(WebSocket websocket, WebSocketFrame serverCloseFrame,
 					WebSocketFrame clientCloseFrame, boolean closedByServer) throws Exception {
-				constantService
+				redisConnectService
 						.deleteValByName(CryptoCoinWebSocketConstant.BINANCE_SOCKET_LAST_ACTIVE_TIME_REDIS_KEY);
 			}
 		});
@@ -192,12 +192,12 @@ public class BinanceWSClient extends CryptoCoinWebSocketCommonClient {
 	}
 
 	private void refreshLastActiveTime(int seconds) {
-		constantService.setValByName(CryptoCoinWebSocketConstant.BINANCE_SOCKET_LAST_ACTIVE_TIME_REDIS_KEY,
+		redisConnectService.setValByName(CryptoCoinWebSocketConstant.BINANCE_SOCKET_LAST_ACTIVE_TIME_REDIS_KEY,
 				localDateTimeHandler.dateToStr(LocalDateTime.now()), seconds, TimeUnit.SECONDS);
 	}
 
 	public boolean getSocketLiveFlag() {
-		return constantService.hasKey(CryptoCoinWebSocketConstant.BINANCE_SOCKET_LAST_ACTIVE_TIME_REDIS_KEY);
+		return redisConnectService.hasKey(CryptoCoinWebSocketConstant.BINANCE_SOCKET_LAST_ACTIVE_TIME_REDIS_KEY);
 	}
 
 	public CommonResult startWebSocket() {
