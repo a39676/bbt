@@ -1,8 +1,6 @@
 package demo.selenium.service.impl;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -184,53 +182,29 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 
 	@Override
 	public WebDriver buildChromeWebDriver(ChromeOptions options) {
+		log.debug("building chrome driver");
 		String path = globalOptionService.getChromePath();
+		log.debug("chrome driver path: " + path);
 		String driverType = WebDriverConstant.chromeDriver;
 		System.setProperty(driverType, path);
 		WebDriver driver = null;
-		/*
-		 * 2019-09-08 I have no idea why can NOT set any experimental option with this
-		 * code every experimental option call "unrecognized chrome option" error if
-		 * (options == null) { options = new ChromeOptions(); if
-		 * (!"dev".equals(envName)) { options.addArguments(WebDriverConstant.headLess);
-		 * } options.setExperimentalOption(ChromeConstant.downloadDir,
-		 * globalOptionService.getDownloadDir());
-		 * options.setExperimentalOption(ChromeConstant.promptForDownload, false);
-		 * options.setExperimentalOption(ChromeConstant.directoryUpgrade, true);
-		 * options.setExperimentalOption(ChromeConstant.safebrowsingEnabled, true); }
-		 */
 
-		driver = buildChromeDriverOld(options);
-		return driver;
-	}
-
-	@SuppressWarnings("deprecation")
-	private ChromeDriver buildChromeDriverOld(ChromeOptions options) {
 		String envName = systemConstantService.getEnvName();
+		log.debug("envName: " + envName);
 		if (options == null) {
 			options = new ChromeOptions();
 		}
-		DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-		Map<String, String> prefs = new Hashtable<>();
-		prefs.put(ChromeConstant.downloadDir, globalOptionService.getDownloadDir());
-		prefs.put(ChromeConstant.promptForDownload, "false");
-		prefs.put(ChromeConstant.directoryUpgrade, "true");
-		prefs.put(ChromeConstant.safebrowsingEnabled, "false");
-		prefs.put("profile.default_content_settings.popups", "0");
-		String[] switches = { "--start-maximized", "--ignore-certificate-errors" };
-		capabilities.setJavascriptEnabled(true);
-		capabilities.setCapability("chrome.prefs", prefs);
-		capabilities.setCapability("chrome.switches", Arrays.asList(switches));
-		if (!"dev".equals(envName) || !isWindows()) {
+
+		if (!"dev".equals(envName)) {
 			options.addArguments(WebDriverConstant.headLess);
 		}
-		options.setExperimentalOption("excludeSwitches", new String[] { "enable-automation" });
-		options.setExperimentalOption("useAutomationExtension", false);
 
-		capabilities.setCapability(ChromeOptions.CAPABILITY, options);
-
-		return new ChromeDriver(capabilities);
+		log.debug("before build chrome driver");
+		driver = new ChromeDriver(options);
+		log.debug("after build chrome driver");
+		return driver;
 	}
+
 
 	@Override
 	public WebDriver buildChromeWebDriver() {
