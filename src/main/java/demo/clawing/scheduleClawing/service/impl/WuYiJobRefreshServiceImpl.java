@@ -69,7 +69,6 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 		String paramterFolderPath = getParameterSaveingPath(dailySignEventName);
 		File paramterFile = new File(paramterFolderPath + File.separator + userDataFileName);
 		if (!paramterFile.exists()) {
-//			TODO
 			return null;
 		}
 
@@ -186,7 +185,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 	}
 	
 	private void findLoginWithUsernameAndPwd(WebDriver d, JsonReportDTO reportDTO) {
-		d.get("https://login.51job.com/login.php?lang=c&from_domain=51job_m&source=&display=h5&isjump=0&url=https://m.51job.com//my/success.php&loginway=0");
+		d.get("https://login.51job.com/login.php?lang=c&from_domain=51job_m&source=&display=h5&loginway=0");
 	}
 
 	private void findAndCLoseHomePop(WebDriver d, JsonReportDTO reportDTO) {
@@ -422,8 +421,6 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 				jsonReporter.appendContent(reportDTO, "无法找到简历简介编辑框");
 				return false;
 			}
-			String now = localDateTimeHandler.dateToStr(LocalDateTime.now());
-			String timeMarkStr = "自动签到时间: " + now;
 			String intentionDetailSourceStr = intentionDetailTextarea.getText();
 			String lineBreak = null;
 			if (intentionDetailSourceStr.contains(System.lineSeparator())) {
@@ -439,7 +436,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			StringBuffer sb = new StringBuffer();
 			for (int i = 0; i < sourceLines.length; i++) {
 				if (i == 0) {
-					sb.append(timeMarkStr);
+					sb.append(snowFlake.getNextId());
 				} else {
 					sb.append(sourceLines[i]);
 				}
@@ -502,7 +499,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 				likelySpan = d.findElement(By.xpath(likelyX));
 				watcheTimeEm = d.findElement(By.xpath(watchTimeX));
 			} catch (Exception e) {
-				jsonReporter.appendContent(reportDTO, "查找页面元素异常");
+				jsonReporter.appendContent(reportDTO, "查找页面元素异常, 或尚无公司浏览记录");
 				return false;
 			}
 
