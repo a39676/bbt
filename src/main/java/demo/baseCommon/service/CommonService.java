@@ -6,10 +6,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.BaseResultType;
+import demo.base.system.service.impl.RedisConnectService;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.pojo.param.PageParam;
 import demo.config.costom_component.SnowFlake;
@@ -31,10 +31,9 @@ public abstract class CommonService {
 	protected SnowFlake snowFlake;
 	
 	@Autowired
-	protected RedisTemplate<String, String> redisTemplate;
-	
+	protected SystemConstantService systemConstantService;
 	@Autowired
-	protected SystemConstantService constantService;
+	protected RedisConnectService redisConnectService;
 	@Autowired
 	protected NumericUtilCustom numericUtil;
 	@Autowired

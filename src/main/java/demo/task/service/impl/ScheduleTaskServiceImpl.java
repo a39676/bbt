@@ -28,7 +28,7 @@ public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 //	@Scheduled(fixedRate = 1000L * 60 * 5)
 	@Scheduled(cron = "0 */5 * * * ?")
 	public void insertWuYiRefresh() {
-		if (!"dev".equals(constantService.getValByName("envName"))) {
+		if (!"dev".equals(systemConstantService.getEnvName())) {
 			LocalDateTime now = LocalDateTime.now();
 			if (now.getHour() >= 8 && now.getHour() <= 22) {
 				wuyiService.insertClawingEvent();
@@ -56,7 +56,7 @@ public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 
 	@Scheduled(cron = "*/31 * * * * ?")
 	public void checkCryptoCompareWebSocket() {
-		if (!"dev".equals(constantService.getValByName("envName"))) {
+		if (!"dev".equals(systemConstantService.getEnvName())) {
 			if (!cryptoCompareWSClient.getSocketLiveFlag()) {
 				log.error("crypto compare web socket disconnected");
 				cryptoCompareWSClient.startWebSocket();
@@ -66,7 +66,7 @@ public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 	
 	@Scheduled(cron = "*/10 * * * * ?")
 	public void checkBinanceWebSocket() {
-		if (!"dev".equals(constantService.getValByName("envName"))) {
+		if (!"dev".equals(systemConstantService.getEnvName())) {
 			if (!binanceWSClient.getSocketLiveFlag()) {
 				log.error("binance web socket disconnected");
 				binanceWSClient.startWebSocket();
@@ -78,7 +78,7 @@ public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 	@Scheduled(cron="0 0 8 * * *")
 	@Scheduled(cron="0 0 16 * * *")
 	public void syncCryptoCoinWebSocket() {
-		if (!"dev".equals(constantService.getValByName("envName"))) {
+		if (!"dev".equals(systemConstantService.getEnvName())) {
 			cryptoCompareWSClient.syncSubscription();
 			binanceWSClient.wsDestory();
 		}

@@ -27,7 +27,7 @@ public class ShutdownServiceImpl extends CommonService implements ShutdownServic
 	@Override
 	public String shutdownContext(String keyInput) {
 		
-		String key = constantService.getValByName("shutdownKey", true);
+		String key = systemConstantService.getShutdownKey();
 		
 		if(key == null || !key.equals(keyInput)) {
 			return "false";

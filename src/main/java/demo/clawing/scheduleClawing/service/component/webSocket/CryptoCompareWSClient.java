@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
@@ -38,6 +39,9 @@ import toolPack.ioHandle.FileUtilCustom;
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 
+	@Autowired
+	private RedisTemplate<String, Object> redisTemplate;
+	
 	private WebSocket ws = null;
 
 	@Autowired
@@ -203,7 +207,7 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 			@Override
 			public void onDisconnected(WebSocket websocket, WebSocketFrame serverCloseFrame,
 					WebSocketFrame clientCloseFrame, boolean closedByServer) throws Exception {
-				constantService
+				redisConnectService
 						.deleteValByName(CryptoCoinWebSocketConstant.CRYPTO_COMPARE_SOCKET_LAST_ACTIVE_TIME_REDIS_KEY);
 			}
 		});
@@ -279,7 +283,7 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 		List<String> recordList = new ArrayList<>();
 		String tmpSub = null;
 		for(int i = 0; i < listSize; i++) {
-			tmpSub = redisTemplate.opsForList().rightPop(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY);
+			tmpSub = String.valueOf(redisTemplate.opsForList().rightPop(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY));
 			if(StringUtils.isNotBlank(tmpSub)) {
 				recordList.add(tmpSub);
 			}
@@ -316,12 +320,12 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 	}
 
 	private void refreshLastActiveTime(int seconds) {
-		constantService.setValByName(CryptoCoinWebSocketConstant.CRYPTO_COMPARE_SOCKET_LAST_ACTIVE_TIME_REDIS_KEY,
+		redisConnectService.setValByName(CryptoCoinWebSocketConstant.CRYPTO_COMPARE_SOCKET_LAST_ACTIVE_TIME_REDIS_KEY,
 				localDateTimeHandler.dateToStr(LocalDateTime.now()), seconds, TimeUnit.SECONDS);
 	}
 
 	public boolean getSocketLiveFlag() {
-		return constantService.hasKey(CryptoCoinWebSocketConstant.CRYPTO_COMPARE_SOCKET_LAST_ACTIVE_TIME_REDIS_KEY);
+		return redisConnectService.hasKey(CryptoCoinWebSocketConstant.CRYPTO_COMPARE_SOCKET_LAST_ACTIVE_TIME_REDIS_KEY);
 	}
 
 	public CommonResult startWebSocket() {
@@ -375,7 +379,7 @@ public class CryptoCompareWSClient extends CryptoCoinWebSocketCommonClient {
 		
 		List<String> result = new ArrayList<>();
 		for(int i = 0; i < listSize; i++) {
-			result.add(redisTemplate.opsForList().rightPopAndLeftPush(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY, CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY));
+			result.add(String.valueOf(redisTemplate.opsForList().rightPopAndLeftPush(CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY, CryptoCoinScheduleClawingConstant.CRYPTO_COMPARE_SUBSCRIPTION_RECORD_REDIS_KEY)));
 		}
 		
 		return result;

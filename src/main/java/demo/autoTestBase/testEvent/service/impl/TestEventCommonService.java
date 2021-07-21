@@ -24,7 +24,7 @@ public abstract class TestEventCommonService extends CommonService {
 
 	protected void startEvent(TestEvent te) {
 		te.setStartTime(LocalDateTime.now());
-		constantService.setValByName(runningEventRedisKey, "true");
+		redisConnectService.setValByName(runningEventRedisKey, "true");
 	}
 	
 	protected CommonResultBBT endEvent(TestEvent te, boolean successFlag) {
@@ -46,7 +46,7 @@ public abstract class TestEventCommonService extends CommonService {
 					saveTestEventReport(te, folerPathStr, report);
 				}
 			}
-			constantService.setValByName(runningEventRedisKey, "false");
+			redisConnectService.setValByName(runningEventRedisKey, "false");
 			int insertCount = eventMapper.insertSelective(te);
 			
 			if(insertCount > 0) {
@@ -63,7 +63,7 @@ public abstract class TestEventCommonService extends CommonService {
 	}
 	
 	protected boolean existsRuningEvent() {
-		String runningEventStatus = constantService.getValByName(runningEventRedisKey);
+		String runningEventStatus = redisConnectService.getValByName(runningEventRedisKey);
 		if("false".equals(runningEventStatus)) {
 			return false;
 		}

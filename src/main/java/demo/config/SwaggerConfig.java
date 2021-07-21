@@ -21,11 +21,10 @@ public class SwaggerConfig {
 	@Autowired
 	private SystemConstantService constantService;
 	
-	
     @Bean
     public Docket api() {
 		Docket d = null;
-		String envName = constantService.getValByName("envName", true);
+		String envName = constantService.getEnvNameRefresh();
 		if ("dev".equals(envName)) {
 			d = new Docket(DocumentationType.SWAGGER_2)
 					.apiInfo(apiInfo())
@@ -44,13 +43,9 @@ public class SwaggerConfig {
 	}
     
 	private ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
-                .title("swagger title")
-                .description("swagger description")
-                .termsOfServiceUrl("http://www.demo.site")
-                .version("1.1")
-                .contact(new Contact("Acorn", "http://www.demo.site", "demo@demo.com"))
-                .build();
+		return new ApiInfoBuilder().title("").description("")
+				.termsOfServiceUrl("").version("")
+				.contact(new Contact("", "", "")).build();
     }
     
 }
