@@ -45,7 +45,7 @@ endpoints:
 
 logging:
   level:
-    root: DEBUG
+    root: ERROR
     org.springframework.web: DEBUG
     # demo.test.controller: DEBUG
     demo.test.mapper: DEBUG
