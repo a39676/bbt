@@ -294,8 +294,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			jsonReporter.appendContent(reportDTO, "after scroll");
 
 			try {
-				d.get("https://login.51job.com/login.php?display=h5&from_domain=51job_m&partner=51jobhtml5&url=https%3A%2F%2Fm.51job.com%2F%2Fmy%2Fsuccess.php");
-				
+				d.get("https://login.51job.com/login.php?display=h5");
 			} catch (TimeoutException te) {
 				jsonReporter.appendContent(reportDTO, "visit login page timeout");
 			} catch (Exception e) {
