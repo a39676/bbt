@@ -435,12 +435,12 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			String[] sourceLines = intentionDetailSourceStr.split(lineBreak);
 			StringBuffer sb = new StringBuffer();
 			for (int i = 0; i < sourceLines.length; i++) {
-				if (i == 0) {
+				if(i == sourceLines.length - 1) {
 					sb.append(snowFlake.getNextId());
 				} else {
 					sb.append(sourceLines[i]);
+					sb.append(lineBreak);
 				}
-				sb.append(lineBreak);
 			}
 
 			intentionDetailTextarea.clear();

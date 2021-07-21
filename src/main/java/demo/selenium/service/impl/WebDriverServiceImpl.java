@@ -164,8 +164,8 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 			options = new ChromeOptions();
 		}
 
-		options.addArguments(WebDriverConstant.headLess);
-		if ("dev".equals(envName)) {
+		if (!"dev".equals(envName)) {
+			options.addArguments(WebDriverConstant.headLess);
 		}
 
 		Map<String, String> mobileEmulation = new HashMap<>();
@@ -198,12 +198,12 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 		 * options.setExperimentalOption(ChromeConstant.safebrowsingEnabled, true); }
 		 */
 
-		driver = buildChromeDriverBugFix(options);
+		driver = buildChromeDriverOld(options);
 		return driver;
 	}
 
 	@SuppressWarnings("deprecation")
-	private ChromeDriver buildChromeDriverBugFix(ChromeOptions options) {
+	private ChromeDriver buildChromeDriverOld(ChromeOptions options) {
 		String envName = systemConstantService.getEnvName();
 		if (options == null) {
 			options = new ChromeOptions();
