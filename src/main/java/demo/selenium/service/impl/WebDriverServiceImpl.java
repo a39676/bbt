@@ -149,17 +149,21 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 
 	@Override
 	public WebDriver buildChromeWebDriverMobileEmulation() {
+		log.debug("build chrome driver with default options");
 		return buildChromeWebDriverMobileEmulation(null);
 	}
 
 	@Override
 	public WebDriver buildChromeWebDriverMobileEmulation(ChromeOptions options) {
+		log.debug("building chrome driver");
 		String path = globalOptionService.getChromePath();
+		log.debug("chrome driver path: " + path);
 		String driverType = WebDriverConstant.chromeDriver;
 		System.setProperty(driverType, path);
 		WebDriver driver = null;
 
 		String envName = systemConstantService.getEnvName();
+		log.debug("envName: " + envName);
 		if (options == null) {
 			options = new ChromeOptions();
 		}
@@ -169,13 +173,11 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 		}
 
 		Map<String, String> mobileEmulation = new HashMap<>();
-
 		mobileEmulation.put("deviceName", "Nexus 5");
-
 		options.setExperimentalOption("mobileEmulation", mobileEmulation);
-
+		log.debug("before build chrome driver");
 		driver = new ChromeDriver(options);
-
+		log.debug("after build chrome driver");
 		return driver;
 
 	}
