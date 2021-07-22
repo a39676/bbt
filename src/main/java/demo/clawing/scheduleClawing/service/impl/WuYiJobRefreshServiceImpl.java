@@ -299,17 +299,17 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 //				throw new Exception();
 //			}
 			
-			x.start("header").addClass("nologin").findChild("a").addClass("my");
-			try {
-				WebElement loginPageButton = d.findElement(By.xpath(x.getXpath()));
-				for(int i = 0; i < 10 && !loginPageButton.isDisplayed(); i++) {
-					jsUtil.scroll(d, 200);
-				}
-				loginPageButton.click();
-			} catch (Exception e) {
-				jsonReporter.appendContent(reportDTO, "can NOT find login page button");
-				throw new Exception();
-			}
+//			x.start("header").addClass("nologin").findChild("a").addClass("my");
+//			try {
+//				WebElement loginPageButton = d.findElement(By.xpath(x.getXpath()));
+//				for(int i = 0; i < 10 && !loginPageButton.isDisplayed(); i++) {
+//					jsUtil.scroll(d, 200);
+//				}
+//				loginPageButton.click();
+//			} catch (Exception e) {
+//				jsonReporter.appendContent(reportDTO, "can NOT find login page button");
+//				throw new Exception();
+//			}
 			
 			jsonReporter.appendContent(reportDTO, "after visit login page");
 			threadSleepRandomTimeLong();
