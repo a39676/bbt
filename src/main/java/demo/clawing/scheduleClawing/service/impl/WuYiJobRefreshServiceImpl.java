@@ -314,7 +314,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			jsonReporter.appendContent(reportDTO, "after visit login page");
 			threadSleepRandomTime();
 			
-			x.start("div").addId("tobydefault").findChild("a").addClass("leftlogin");
+			x.start().addId("tobydefault").findChild("a").addClass("leftlogin");
 			try {
 				WebElement loginWithUsernameAndPwdButton = d.findElement(By.xpath(x.getXpath()));
 				for(int i = 0; i < 10 && !loginWithUsernameAndPwdButton.isDisplayed(); i++) {
