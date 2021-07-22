@@ -312,20 +312,20 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			}
 			
 			jsonReporter.appendContent(reportDTO, "after visit login page");
-			threadSleepRandomTime();
+			threadSleepRandomTimeLong();
 			
 			x.start().addId("tobydefault").findChild("a").addClass("leftlogin");
 			try {
 				WebElement loginWithUsernameAndPwdButton = d.findElement(By.xpath(x.getXpath()));
 				for(int i = 0; i < 10 && !loginWithUsernameAndPwdButton.isDisplayed(); i++) {
-					jsUtil.scroll(d, 200);
+					threadSleepRandomTime();
 				}
 				loginWithUsernameAndPwdButton.click();
 			} catch (Exception e) {
 				jsonReporter.appendContent(reportDTO, "can NOT find login with username and pwd button");
 				throw new Exception();
 			}
-			threadSleepRandomTime();
+			threadSleepRandomTimeLong();
 			
 			x.start().addId("loginname");
 			WebElement usernameInput = null;
@@ -340,7 +340,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			usernameInput.sendKeys(dailySignBO.getUsername());
 			jsonReporter.appendContent(reportDTO, "input username");
 
-			threadSleepRandomTime(1000L, 3000L);
+			threadSleepRandomTimeLong();
 
 			x.start("div").addClass("picture");
 			WebElement logoClick = null;
