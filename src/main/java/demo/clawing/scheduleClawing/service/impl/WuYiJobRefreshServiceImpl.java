@@ -299,7 +299,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 //				throw new Exception();
 //			}
 			
-			x.start("div").addClass("masks").findChild("a").addClass("login");
+			x.start("header").addClass("nologin").findChild("a").addClass("my");
 			try {
 				WebElement loginPageButton = d.findElement(By.xpath(x.getXpath()));
 				for(int i = 0; i < 10 && !loginPageButton.isDisplayed(); i++) {
