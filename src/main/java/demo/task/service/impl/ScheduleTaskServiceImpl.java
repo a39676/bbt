@@ -26,9 +26,10 @@ public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {
 	private BinanceWSClient binanceWSClient;
 
 //	@Scheduled(fixedRate = 1000L * 60 * 5)
-	@Scheduled(cron = "0 */5 * * * ?")
+	@Scheduled(cron = "0 */15 * * * ?")
 	public void insertWuYiRefresh() {
-		if (!"dev".equals(systemConstantService.getEnvName())) {
+//		TODO 脚本问题, 暂时搁置
+		if ("willNotMatch".equals(systemConstantService.getEnvName())) {
 			LocalDateTime now = LocalDateTime.now();
 			if (now.getHour() >= 8 && now.getHour() <= 22) {
 				wuyiService.insertClawingEvent();
