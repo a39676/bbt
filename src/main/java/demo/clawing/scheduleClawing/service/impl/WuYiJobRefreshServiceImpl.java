@@ -293,15 +293,28 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			jsUtil.scroll(d, 200);
 			jsonReporter.appendContent(reportDTO, "after scroll");
 
+//			try {
+//				d.get("https://login.51job.com/login.php?display=h5");
+//			} catch (TimeoutException te) {
+//				jsonReporter.appendContent(reportDTO, "visit login page timeout");
+//			} catch (Exception e) {
+//				jsonReporter.appendContent(reportDTO, e.getLocalizedMessage());
+//				jsonReporter.appendContent(reportDTO, "visit login page fail");
+//				throw new Exception();
+//			}
+			
+			x.start("div").addClass("masks").findChild("a").addClass("login");
 			try {
-				d.get("https://login.51job.com/login.php?display=h5");
-			} catch (TimeoutException te) {
-				jsonReporter.appendContent(reportDTO, "visit login page timeout");
+				WebElement loginPageButton = d.findElement(By.xpath(x.getXpath()));
+				for(int i = 0; i < 10 && !loginPageButton.isDisplayed(); i++) {
+					jsUtil.scroll(d, 200);
+				}
+				loginPageButton.click();
 			} catch (Exception e) {
-				jsonReporter.appendContent(reportDTO, e.getLocalizedMessage());
-				jsonReporter.appendContent(reportDTO, "visit login page fail");
+				jsonReporter.appendContent(reportDTO, "can NOT find login page button");
 				throw new Exception();
 			}
+			
 			jsonReporter.appendContent(reportDTO, "after visit login page");
 			threadSleepRandomTime();
 			
