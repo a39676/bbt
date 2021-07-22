@@ -184,10 +184,6 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 		return r;
 	}
 	
-	private void findLoginWithUsernameAndPwd(WebDriver d, JsonReportDTO reportDTO) {
-		d.get("https://login.51job.com/login.php?lang=c&from_domain=51job_m&source=&display=h5&loginway=0");
-	}
-
 	private void findAndCLoseHomePop(WebDriver d, JsonReportDTO reportDTO) {
 		XpathBuilderBO x = new XpathBuilderBO();
 		
@@ -318,7 +314,17 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			jsonReporter.appendContent(reportDTO, "after visit login page");
 			threadSleepRandomTime();
 			
-			findLoginWithUsernameAndPwd(d, reportDTO);
+			x.start("div").addId("tobydefault").findChild("a").addClass("leftlogin");
+			try {
+				WebElement loginWithUsernameAndPwdButton = d.findElement(By.xpath(x.getXpath()));
+				for(int i = 0; i < 10 && !loginWithUsernameAndPwdButton.isDisplayed(); i++) {
+					jsUtil.scroll(d, 200);
+				}
+				loginWithUsernameAndPwdButton.click();
+			} catch (Exception e) {
+				jsonReporter.appendContent(reportDTO, "can NOT find login with username and pwd button");
+				throw new Exception();
+			}
 			threadSleepRandomTime();
 			
 			x.start().addId("loginname");
