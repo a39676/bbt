@@ -20,7 +20,7 @@ public class TestController extends CommonController {
 
 	@GetMapping(value = "/test")
 	@ResponseBody
-	public String test() {
+	public String test() throws Exception {
 		return testService.testing("something");
 	}
 }
