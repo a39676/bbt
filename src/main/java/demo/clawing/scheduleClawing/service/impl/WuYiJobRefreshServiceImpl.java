@@ -140,6 +140,13 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			}
 
 			threadSleepRandomTime();
+			
+			
+			ScreenshotSaveResult screenSaveResult = screenshot(d, te.getEventName());
+
+			ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(),
+					screenSaveResult.getFileName(), screenshotImageValidTime);
+			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
 
 			jsonReporter.appendContent(reportDTO, "完成登录");
 
