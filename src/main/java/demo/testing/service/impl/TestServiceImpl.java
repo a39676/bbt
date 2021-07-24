@@ -5,9 +5,9 @@ import org.springframework.stereotype.Service;
 
 import demo.autoTestBase.testEvent.mapper.TestEventMapper;
 import demo.baseCommon.service.CommonService;
-import demo.testing.config.CustomAfterAnnotation;
-import demo.testing.config.CustomBeforeAnnotation;
-import demo.testing.config.LogExecutionTime;
+import demo.testing.config.annotation.CustomAfterAnnotation;
+import demo.testing.config.annotation.CustomBeforeAnnotation;
+import demo.testing.config.annotation.LogExecutionTime;
 import demo.testing.service.TestService;
 
 @Service
