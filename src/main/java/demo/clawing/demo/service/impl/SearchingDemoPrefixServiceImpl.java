@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.service.RunSubEventPrefixService;
 import demo.baseCommon.pojo.result.CommonResultBBT;
-import demo.clawing.demo.pojo.type.SearchingDemoCaseType;
+import demo.clawing.demo.pojo.type.testEvent.SearchingDemoEventType;
 import demo.clawing.demo.service.BaiduDemoService;
 import demo.clawing.demo.service.BingDemoService;
 
@@ -25,9 +25,9 @@ public class SearchingDemoPrefixServiceImpl implements RunSubEventPrefixService 
 			return null;
 		}
 		
-		if (SearchingDemoCaseType.baiduDemo.getId().equals(caseId)) {
+		if (SearchingDemoEventType.baiduDemo.getId().equals(caseId)) {
 			return baiduDemoService.clawing(te);
-		} else if (SearchingDemoCaseType.bingDemo.getId().equals(caseId)) {
+		} else if (SearchingDemoEventType.bingDemo.getId().equals(caseId)) {
 			return bingDemoService.clawing(te);
 		}
 		return null;

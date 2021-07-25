@@ -91,12 +91,12 @@ public class BossZhiPinLocalClawingServiceImpl extends JobClawingCommonService i
 			ScreenshotSaveResult screenSaveResult = screenshot(d, te.getEventName());
 			
 			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
-			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
-			jsonReporter.appendContent(reportDTO, "异常: " + e.toString());
+			reportService.appendImage(reportDTO, uploadImgResult.getImgUrl());
+			reportService.appendContent(reportDTO, "异常: " + e.toString());
 			
 		} finally {
 			tryQuitWebDriver(d, reportDTO);
-			if (jsonReporter.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
+			if (reportService.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
 				updateTestEventReportPath(te, reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json");
 			}
 		}

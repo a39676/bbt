@@ -140,10 +140,10 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			jsonReporter.appendContent(reportDTO, "异常(goldPriceApi): " + e);
+			reportService.appendContent(reportDTO, "异常(goldPriceApi): " + e);
 
 		} finally {
-			if (jsonReporter.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
+			if (reportService.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
 				updateTestEventReportPath(te, reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json");
 			}
 		}
@@ -215,10 +215,10 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			jsonReporter.appendContent(reportDTO, "异常(nfusionsolutionApi): " + e);
+			reportService.appendContent(reportDTO, "异常(nfusionsolutionApi): " + e);
 
 		} finally {
-			if (jsonReporter.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
+			if (reportService.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
 				updateTestEventReportPath(te, reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json");
 			}
 		}
@@ -281,10 +281,10 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 
 			try {
 				d.get(goldPricePageUrl);
-				jsonReporter.appendContent(reportDTO, "进入 main url");
+				reportService.appendContent(reportDTO, "进入 main url");
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
-				jsonReporter.appendContent(reportDTO, "进入 main url but timeout");
+				reportService.appendContent(reportDTO, "进入 main url but timeout");
 			}
 
 			threadSleepRandomTime(1000L, 3000L);
@@ -300,11 +300,11 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 			e.printStackTrace();
 			TakeScreenshotSaveDTO screenshotDTO = new TakeScreenshotSaveDTO();
 			screenshotDTO.setDriver(d);
-			jsonReporter.appendContent(reportDTO, "异常: " + e.toString());
+			reportService.appendContent(reportDTO, "异常: " + e.toString());
 
 		} finally {
 			tryQuitWebDriver(d, reportDTO);
-			if (jsonReporter.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
+			if (reportService.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
 				updateTestEventReportPath(te, reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json");
 			}
 		}
@@ -343,7 +343,7 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 				weightSelector.selectByValue("kg");
 
 			} catch (Exception e) {
-				jsonReporter.appendContent(reportDTO, "查找黄金价格选择器异常");
+				reportService.appendContent(reportDTO, "查找黄金价格选择器异常");
 				return result;
 			}
 
@@ -364,7 +364,7 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 				return result;
 
 			} catch (Exception e) {
-				jsonReporter.appendContent(reportDTO, "查找黄金价格异常");
+				reportService.appendContent(reportDTO, "查找黄金价格异常");
 				return result;
 			}
 
@@ -405,7 +405,7 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 				weightSelector.selectByValue("kg");
 
 			} catch (Exception e) {
-				jsonReporter.appendContent(reportDTO, "查找白银价格选择器异常");
+				reportService.appendContent(reportDTO, "查找白银价格选择器异常");
 				return result;
 			}
 
@@ -426,7 +426,7 @@ public class PreciousMetalsPriceServiceImpl extends SeleniumCommonService implem
 				return result;
 
 			} catch (Exception e) {
-				jsonReporter.appendContent(reportDTO, "查找白银价格异常");
+				reportService.appendContent(reportDTO, "查找白银价格异常");
 				return result;
 			}
 

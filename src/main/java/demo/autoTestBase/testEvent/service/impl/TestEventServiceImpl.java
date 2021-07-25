@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import autoTest.testModule.pojo.type.TestModuleType;
-import demo.autoTestBase.testCase.pojo.po.TestCase;
-import demo.autoTestBase.testCase.service.TestCaseService;
 import demo.autoTestBase.testEvent.mq.TestEventAckProducer;
-import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.pojo.constant.TestEventOptionConstant;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.po.TestEventExample;
@@ -28,8 +25,6 @@ import selenium.pojo.constant.SeleniumConstant;
 @Service
 public class TestEventServiceImpl extends TestEventCommonService implements TestEventService {
 
-	@Autowired
-	private TestCaseService caseService;
 	@Autowired
 	private TestEventAckProducer testEventAckProducer;
 
@@ -125,20 +120,6 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 			return localClawingPrefixService.runSubEvent(te);
 		}
 		return new CommonResultBBT();
-	}
-
-	@Override
-	public TestEvent runNewTestEvent(TestEventBO bo) {
-		TestCase casePO = caseService.findByCaseCode(bo.getCaseCode());
-		Long newEventId = snowFlake.getNextId();
-		TestEvent testEvent = new TestEvent();
-		if (casePO != null) {
-			testEvent.setCaseId(casePO.getId());
-		}
-		testEvent.setId(newEventId);
-		eventMapper.insertSelective(testEvent);
-
-		return testEvent;
 	}
 
 	@Override

@@ -65,12 +65,12 @@ public class JianDanCollectingServiceImpl extends SeleniumCommonService implemen
 			ScreenshotSaveResult screenSaveResult = screenshot(d, te.getEventName());
 			
 			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
-			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
-			jsonReporter.appendContent(reportDTO, "异常: " + e.toString());
+			reportService.appendImage(reportDTO, uploadImgResult.getImgUrl());
+			reportService.appendContent(reportDTO, "异常: " + e.toString());
 			
 		} finally {
 			tryQuitWebDriver(d, reportDTO);
-			if (jsonReporter.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
+			if (reportService.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
 				updateTestEventReportPath(te, reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json");
 			}
 		}
@@ -83,18 +83,18 @@ public class JianDanCollectingServiceImpl extends SeleniumCommonService implemen
 	private void tryLoadPic(WebDriver d, JsonReportDTO reportDTO) {
 		try {
 			d.get(HOME_URL);
-			jsonReporter.appendContent(reportDTO, "get home page");
+			reportService.appendContent(reportDTO, "get home page");
 		} catch (TimeoutException e) {
 			jsUtil.windowStop(d);
-			jsonReporter.appendContent(reportDTO, "get home page but timeout");
+			reportService.appendContent(reportDTO, "get home page but timeout");
 		}
 		
 		try {
 			d.get(PIC_URL);
-			jsonReporter.appendContent(reportDTO, "get home page");
+			reportService.appendContent(reportDTO, "get home page");
 		} catch (TimeoutException e) {
 			jsUtil.windowStop(d);
-			jsonReporter.appendContent(reportDTO, "get home page but timeout");
+			reportService.appendContent(reportDTO, "get home page but timeout");
 		}
 	}
 }

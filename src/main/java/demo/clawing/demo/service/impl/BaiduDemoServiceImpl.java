@@ -46,10 +46,10 @@ public class BaiduDemoServiceImpl extends SeleniumCommonService implements Baidu
 		try {
 			try {
 				d.get(mainUrl);
-				jsonReporter.appendContent(reportDTO, "打开: " + mainUrl);
+				reportService.appendContent(reportDTO, "打开: " + mainUrl);
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
-				jsonReporter.appendContent(reportDTO, "访问超时");
+				reportService.appendContent(reportDTO, "访问超时");
 			}
 			
 			XpathBuilderBO x = new XpathBuilderBO();
@@ -59,7 +59,7 @@ public class BaiduDemoServiceImpl extends SeleniumCommonService implements Baidu
 			
 //			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
 			ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName(), screenshotImageValidTime);
-			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
+			reportService.appendImage(reportDTO, uploadImgResult.getImgUrl());
 			
 			x.start("input").addAttribute("id", "kw");
 			WebElement keywordInput = d.findElement(By.xpath(x.getXpath()));
@@ -68,24 +68,24 @@ public class BaiduDemoServiceImpl extends SeleniumCommonService implements Baidu
 			keywordInput.sendKeys(te.getRemark());
 			
 			if(StringUtils.isBlank(te.getRemark())) {
-				jsonReporter.appendContent(reportDTO, "输入空白关键词");
+				reportService.appendContent(reportDTO, "输入空白关键词");
 			} else {
-				jsonReporter.appendContent(reportDTO, "输入关键词: " + te.getRemark());
+				reportService.appendContent(reportDTO, "输入关键词: " + te.getRemark());
 			}
 			
 			screenSaveResult = screenshot(d, te.getEventName());
 			uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName(), screenshotImageValidTime);
-			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
+			reportService.appendImage(reportDTO, uploadImgResult.getImgUrl());
 			
 			x.start("input").addAttribute("id", "su");
 			WebElement searchButton = d.findElement(By.xpath(x.getXpath()));
 			searchButton.click();
 			
-			jsonReporter.appendContent(reportDTO, "点击搜索");
+			reportService.appendContent(reportDTO, "点击搜索");
 			
 			screenSaveResult = screenshot(d, te.getEventName());
 			uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName(), screenshotImageValidTime);
-			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
+			reportService.appendImage(reportDTO, uploadImgResult.getImgUrl());
 			
 			Thread.sleep(1500L);
 			
@@ -96,17 +96,17 @@ public class BaiduDemoServiceImpl extends SeleniumCommonService implements Baidu
 //			List<WebElement> orgAList = d.findElements(By.xpath(x.getXpath()));
 //			jsonReporter.appendContent(reportDTO, "找到: " + orgAList.size() + "个官网标记");
 			
-			jsonReporter.appendContent(reportDTO, "完成");
+			reportService.appendContent(reportDTO, "完成");
 			
 			r.setIsSuccess();
 		} catch (Exception e) {
-			jsonReporter.appendContent(reportDTO, e.getMessage());
+			reportService.appendContent(reportDTO, e.getMessage());
 			
 		} finally {
 			r.setMessage(reportDTO.getContent());
 			tryQuitWebDriver(d, reportDTO);
 			String reportOutputPath = reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json";
-			if(jsonReporter.outputReport(reportDTO, reportOutputPath)) {
+			if(reportService.outputReport(reportDTO, reportOutputPath)) {
 				updateTestEventReportPath(te, reportOutputPath);
 			}
 		}

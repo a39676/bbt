@@ -106,7 +106,7 @@ public class ZhiLianDailySignServiceImpl extends SeleniumCommonService implement
 			
 			String jsonStr = ioUtil.getStringFromFile(te.getParameterFilePath());
 			if(StringUtils.isBlank(jsonStr)) {
-				jsonReporter.appendContent(reportDTO, "参数文件读取异常");
+				reportService.appendContent(reportDTO, "参数文件读取异常");
 				throw new Exception();
 			}
 			
@@ -114,12 +114,12 @@ public class ZhiLianDailySignServiceImpl extends SeleniumCommonService implement
 			try {
 				dailySignBO = new Gson().fromJson(jsonStr, DailySignAccountBO.class);
 			} catch (Exception e) {
-				jsonReporter.appendContent(reportDTO, "参数文件结构异常");
+				reportService.appendContent(reportDTO, "参数文件结构异常");
 				throw new Exception();
 			}
 			
 			if(dailySignBO == null) {
-				jsonReporter.appendContent(reportDTO, "参数文件结构异常");
+				reportService.appendContent(reportDTO, "参数文件结构异常");
 				throw new Exception();
 			}
 
@@ -130,23 +130,23 @@ public class ZhiLianDailySignServiceImpl extends SeleniumCommonService implement
 				throw new Exception();
 			}
 			
-			jsonReporter.appendContent(reportDTO, "完成登录");
+			reportService.appendContent(reportDTO, "完成登录");
 			
 			catchWatchMe(d, reportDTO);
 			if(runCount == 0) {
 				if(!updateDetail(d, reportDTO)) {
-					jsonReporter.appendContent(reportDTO, "刷新简历失败");
+					reportService.appendContent(reportDTO, "刷新简历失败");
 					r.failWithMessage("更新失败");
 					throw new Exception();
 				} else {
-					jsonReporter.appendContent(reportDTO, "刷新简历完毕");
+					reportService.appendContent(reportDTO, "刷新简历完毕");
 				}
 			} else {
-				jsonReporter.appendContent(reportDTO, "暂不新简历");
+				reportService.appendContent(reportDTO, "暂不新简历");
 			}
 			
 			redisConnectService.setValByName(wuYiRunCountKey, String.valueOf(runCount + 1));
-			jsonReporter.appendContent(reportDTO, "更新 redis 计数");
+			reportService.appendContent(reportDTO, "更新 redis 计数");
 			
 			r.setIsSuccess();
 			
@@ -156,13 +156,13 @@ public class ZhiLianDailySignServiceImpl extends SeleniumCommonService implement
 			ScreenshotSaveResult screenSaveResult = screenshot(d, dailySignEventName);
 			
 			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
-			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
-			jsonReporter.appendContent(reportDTO, "异常: " + e.toString());
+			reportService.appendImage(reportDTO, uploadImgResult.getImgUrl());
+			reportService.appendContent(reportDTO, "异常: " + e.toString());
 //			jsonReporter.appendContent(reportDTO, htmlStr);
 			
 		} finally {
 			tryQuitWebDriver(d, reportDTO);
-			if (jsonReporter.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
+			if (reportService.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
 				updateTestEventReportPath(te, reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json");
 			}
 		}
@@ -201,10 +201,10 @@ public class ZhiLianDailySignServiceImpl extends SeleniumCommonService implement
 		try {
 			try {
 				d.get(dailySignBO.getMainUrl());
-				jsonReporter.appendContent(reportDTO, "get home page");
+				reportService.appendContent(reportDTO, "get home page");
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
-				jsonReporter.appendContent(reportDTO, "get home page but timeout");
+				reportService.appendContent(reportDTO, "get home page but timeout");
 			}
 			
 			findAndCloseLeadDiv(d);
@@ -222,7 +222,7 @@ public class ZhiLianDailySignServiceImpl extends SeleniumCommonService implement
 			try {
 				usernameInput = d.findElement(By.xpath(x.getXpath()));
 			} catch (Exception e) {
-				jsonReporter.appendContent(reportDTO, "找不到用户名输入框");
+				reportService.appendContent(reportDTO, "找不到用户名输入框");
 				throw new Exception();
 			}
 			usernameInput.click();
@@ -236,7 +236,7 @@ public class ZhiLianDailySignServiceImpl extends SeleniumCommonService implement
 			try {
 				pwdInput = d.findElement(By.xpath(x.getXpath()));
 			} catch (Exception e) {
-				jsonReporter.appendContent(reportDTO, "找不到密码输入框");
+				reportService.appendContent(reportDTO, "找不到密码输入框");
 			}
 			pwdInput.click();
 			pwdInput.clear();
@@ -249,7 +249,7 @@ public class ZhiLianDailySignServiceImpl extends SeleniumCommonService implement
 			try {
 				loginButton = d.findElement(By.xpath(x.getXpath()));
 			} catch (Exception e) {
-				jsonReporter.appendContent(reportDTO, "找不到登录按钮");
+				reportService.appendContent(reportDTO, "找不到登录按钮");
 			}
 			loginButton.click();
 			
@@ -271,40 +271,40 @@ public class ZhiLianDailySignServiceImpl extends SeleniumCommonService implement
 		try {
 			try {
 				d.get("https://m.51job.com/my/my51job.php");
-				jsonReporter.appendContent(reportDTO, "get 我的51job ");
+				reportService.appendContent(reportDTO, "get 我的51job ");
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
-				jsonReporter.appendContent(reportDTO, "get 我的51job  but timeout");
+				reportService.appendContent(reportDTO, "get 我的51job  but timeout");
 			}
 			
 			threadSleepRandomTime(1000L, 3000L);
 			
 			try {
 				d.get("https://m.51job.com/resume/myresume.php");
-				jsonReporter.appendContent(reportDTO, "get 我的简历");
+				reportService.appendContent(reportDTO, "get 我的简历");
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
-				jsonReporter.appendContent(reportDTO, "get 我的简历 but timeout");
+				reportService.appendContent(reportDTO, "get 我的简历 but timeout");
 			}
 			
 			threadSleepRandomTime(1000L, 3000L);
 			
 			try {
 				d.get("https://m.51job.com/resume/detail.php?userid=398934495");
-				jsonReporter.appendContent(reportDTO, "get 指定简历");
+				reportService.appendContent(reportDTO, "get 指定简历");
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
-				jsonReporter.appendContent(reportDTO, "get 指定简历 but timeout");
+				reportService.appendContent(reportDTO, "get 指定简历 but timeout");
 			}
 			
 			threadSleepRandomTime(1000L, 3000L);
 			
 			try {
 				d.get("https://m.51job.com/resume/jobintent.php?userid=398934495");
-				jsonReporter.appendContent(reportDTO, "get 指定简历编辑界面");
+				reportService.appendContent(reportDTO, "get 指定简历编辑界面");
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
-				jsonReporter.appendContent(reportDTO, "get 指定简历编辑界面 but timeout");
+				reportService.appendContent(reportDTO, "get 指定简历编辑界面 but timeout");
 			}
 			
 			threadSleepRandomTime(1000L, 3000L);
@@ -314,7 +314,7 @@ public class ZhiLianDailySignServiceImpl extends SeleniumCommonService implement
 			try {
 				intentionDetailTextarea = d.findElement(By.xpath(x.getXpath()));
 			} catch (Exception e) {
-				jsonReporter.appendContent(reportDTO, "无法找到简历简介编辑框");
+				reportService.appendContent(reportDTO, "无法找到简历简介编辑框");
 				return false;
 			}
 			String now = localDateTimeHandler.dateToStr(LocalDateTime.now());
@@ -344,12 +344,12 @@ public class ZhiLianDailySignServiceImpl extends SeleniumCommonService implement
 			intentionDetailTextarea.clear();
 			intentionDetailTextarea.sendKeys(sb.toString());
 			
-			jsonReporter.appendContent(reportDTO, "完成编辑内容");
+			reportService.appendContent(reportDTO, "完成编辑内容");
 			
 			threadSleepRandomTime(1000L, 3000L);
 			
 			d.findElement(By.id("saveresumefour")).click();
-			jsonReporter.appendContent(reportDTO, "点击保存");
+			reportService.appendContent(reportDTO, "点击保存");
 			
 			threadSleepRandomTime(1000L, 3000L);
 			
@@ -366,10 +366,10 @@ public class ZhiLianDailySignServiceImpl extends SeleniumCommonService implement
 		try {
 			try {
 				d.get("https://m.51job.com/my/whosawrsm.php");
-				jsonReporter.appendContent(reportDTO, "进入手机版 我的51job");
+				reportService.appendContent(reportDTO, "进入手机版 我的51job");
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
-				jsonReporter.appendContent(reportDTO, "进入手机版 我的51job but timeout");
+				reportService.appendContent(reportDTO, "进入手机版 我的51job but timeout");
 			}
 			
 			
@@ -412,7 +412,7 @@ public class ZhiLianDailySignServiceImpl extends SeleniumCommonService implement
 				likelySpan = d.findElement(By.xpath(likelyX));
 				watcheTimeEm = d.findElement(By.xpath(watchTimeX));
 			} catch (Exception e) {
-				jsonReporter.appendContent(reportDTO, "查找页面元素异常");
+				reportService.appendContent(reportDTO, "查找页面元素异常");
 				return false;
 			}
 			
@@ -430,7 +430,7 @@ public class ZhiLianDailySignServiceImpl extends SeleniumCommonService implement
 				theWatchTime = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(watchTimeSourceStr);
 				newPO.setWatchTime(theWatchTime);
 			} catch (Exception e) {
-				jsonReporter.appendContent(reportDTO, "拼凑 WuyiWatchMe PO 异常: " + e.toString());
+				reportService.appendContent(reportDTO, "拼凑 WuyiWatchMe PO 异常: " + e.toString());
 				return false;
 			}
 			

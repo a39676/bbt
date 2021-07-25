@@ -1,4 +1,12 @@
-﻿TestEventServiceImpl.sendFailReports
+﻿testEvent
+	插入任务时, 参数指定方式
+		文件形式 --> 指定到 parameterFilePath
+		数据库方式?
+		动态指定?
+	testEvent 如何指定连串的 testCase?
+		给定参数时 以类似 map 的方式 --->  {caseCode:{caseParam}}
+
+TestEventServiceImpl.sendFailReports
 可以转给电报了
 
 test event

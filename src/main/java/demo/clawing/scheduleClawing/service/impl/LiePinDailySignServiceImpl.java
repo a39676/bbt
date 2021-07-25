@@ -79,7 +79,7 @@ public class LiePinDailySignServiceImpl extends SeleniumCommonService implements
 			
 			String jsonStr = ioUtil.getStringFromFile(te.getParameterFilePath());
 			if(StringUtils.isBlank(jsonStr)) {
-				jsonReporter.appendContent(reportDTO, "参数文件读取异常");
+				reportService.appendContent(reportDTO, "参数文件读取异常");
 				throw new Exception();
 			}
 			
@@ -87,7 +87,7 @@ public class LiePinDailySignServiceImpl extends SeleniumCommonService implements
 			try {
 				dailySignBO = new Gson().fromJson(jsonStr, DailySignAccountBO.class);
 			} catch (Exception e) {
-				jsonReporter.appendContent(reportDTO, "参数文件结构异常");
+				reportService.appendContent(reportDTO, "参数文件结构异常");
 				throw new Exception();
 			}
 			
@@ -95,10 +95,10 @@ public class LiePinDailySignServiceImpl extends SeleniumCommonService implements
 			
 			try {
 				d.get(dailySignBO.getMainUrl());
-				jsonReporter.appendContent(reportDTO, "get: " + dailySignBO.getMainUrl());
+				reportService.appendContent(reportDTO, "get: " + dailySignBO.getMainUrl());
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
-				jsonReporter.appendContent(reportDTO, "get but timeout");
+				reportService.appendContent(reportDTO, "get but timeout");
 			}
 
 			XpathBuilderBO x = new XpathBuilderBO();
@@ -210,11 +210,11 @@ public class LiePinDailySignServiceImpl extends SeleniumCommonService implements
 			ScreenshotSaveResult screenSaveResult = screenshot(d, dailySignEventName);
 			
 			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
-			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
+			reportService.appendImage(reportDTO, uploadImgResult.getImgUrl());
 			
 		} finally {
 			tryQuitWebDriver(d, reportDTO);
-			if (jsonReporter.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
+			if (reportService.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
 				updateTestEventReportPath(te, reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json");
 			}
 		}

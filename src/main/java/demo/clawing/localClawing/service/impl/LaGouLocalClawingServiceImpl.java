@@ -78,7 +78,7 @@ public class LaGouLocalClawingServiceImpl extends JobClawingCommonService implem
 			
 			String jsonStr = ioUtil.getStringFromFile(te.getParameterFilePath());
 			if(StringUtils.isBlank(jsonStr)) {
-				jsonReporter.appendContent(reportDTO, "参数文件读取异常");
+				reportService.appendContent(reportDTO, "参数文件读取异常");
 				throw new Exception();
 			}
 			
@@ -86,12 +86,12 @@ public class LaGouLocalClawingServiceImpl extends JobClawingCommonService implem
 			try {
 				clawingEventBO = new Gson().fromJson(jsonStr, LaGouClawingBO.class);
 			} catch (Exception e) {
-				jsonReporter.appendContent(reportDTO, "参数文件结构异常");
+				reportService.appendContent(reportDTO, "参数文件结构异常");
 				throw new Exception();
 			}
 			
 			if(clawingEventBO == null) {
-				jsonReporter.appendContent(reportDTO, "参数文件结构异常");
+				reportService.appendContent(reportDTO, "参数文件结构异常");
 				throw new Exception();
 			}
 			
@@ -131,12 +131,12 @@ public class LaGouLocalClawingServiceImpl extends JobClawingCommonService implem
 			ScreenshotSaveResult screenSaveResult = screenshot(d, te.getEventName());
 			
 			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
-			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
-			jsonReporter.appendContent(reportDTO, "异常: " + e.toString());
+			reportService.appendImage(reportDTO, uploadImgResult.getImgUrl());
+			reportService.appendContent(reportDTO, "异常: " + e.toString());
 			
 		} finally {
 			tryQuitWebDriver(d, reportDTO);
-			if (jsonReporter.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
+			if (reportService.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
 				updateTestEventReportPath(te, reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json");
 			}
 		}

@@ -35,7 +35,7 @@ import selenium.pojo.constant.SeleniumConstant;
 public abstract class SeleniumCommonService extends CommonService {
 
 	@Autowired
-	protected ATJsonReportService jsonReporter;
+	protected ATJsonReportService reportService;
 	@Autowired
 	protected ImageInteractionService imageInteractionService;
 	@Autowired
@@ -122,7 +122,7 @@ public abstract class SeleniumCommonService extends CommonService {
 				return true;
 			} catch (Exception e2) {
 				if (reportDTO != null) {
-					jsonReporter.appendContent(reportDTO, e2.getMessage());
+					reportService.appendContent(reportDTO, e2.getMessage());
 				}
 				return false;
 			}

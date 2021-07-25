@@ -171,7 +171,7 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 
 			String jsonStr = ioUtil.getStringFromFile(te.getParameterFilePath());
 			if (StringUtils.isBlank(jsonStr)) {
-				jsonReporter.appendContent(reportDTO, "参数文件读取异常");
+				reportService.appendContent(reportDTO, "参数文件读取异常");
 				throw new Exception();
 			}
 
@@ -179,17 +179,17 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 			try {
 				clawingOptionBO = new Gson().fromJson(jsonStr, CryptoCompareDataAPIParamBO.class);
 			} catch (Exception e) {
-				jsonReporter.appendContent(reportDTO, "参数文件结构异常");
+				reportService.appendContent(reportDTO, "参数文件结构异常");
 				throw new Exception();
 			}
 
 			if (clawingOptionBO == null) {
-				jsonReporter.appendContent(reportDTO, "参数文件结构异常");
+				reportService.appendContent(reportDTO, "参数文件结构异常");
 				throw new Exception();
 			}
 
 			if (clawingOptionBO.getLimit() == null || StringUtils.isBlank(clawingOptionBO.getApiKey())) {
-				jsonReporter.appendContent(reportDTO, "参数文件参数异常");
+				reportService.appendContent(reportDTO, "参数文件参数异常");
 				throw new Exception();
 			}
 
@@ -203,7 +203,7 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 
 					httpResponse = h.sendGet(String.format(cryptoCoinApiUrlModel, coinTypeName, currencyName,
 							clawingOptionBO.getLimit(), clawingOptionBO.getApiKey()));
-					jsonReporter.appendContent(reportDTO, httpResponse);
+					reportService.appendContent(reportDTO, httpResponse);
 
 					subDataList = handleCryptoCoinDataResponse(httpResponse, coinTypeName, currencyName);
 					mainDTO.setPriceHistoryData(subDataList);
@@ -218,10 +218,10 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			jsonReporter.appendContent(reportDTO, "异常: " + e);
+			reportService.appendContent(reportDTO, "异常: " + e);
 
 		} finally {
-			if (jsonReporter.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
+			if (reportService.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
 				updateTestEventReportPath(te, reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json");
 			}
 		}

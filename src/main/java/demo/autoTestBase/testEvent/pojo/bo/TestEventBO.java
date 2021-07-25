@@ -1,28 +1,40 @@
 package demo.autoTestBase.testEvent.pojo.bo;
 
-public abstract class TestEventBO {
+import java.time.LocalDateTime;
 
-	protected String caseCode;
-	protected String projectName;
-	protected String mainUrl;
+import org.openqa.selenium.WebDriver;
 
-	public String getCaseCode() {
-		return caseCode;
-	}
+import at.report.pojo.dto.JsonReportDTO;
+import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 
-	public String getProjectName() {
-		return projectName;
-	}
+public class TestEventBO {
 
-	public String getMainUrl() {
-		return mainUrl;
-	}
-
-	public abstract TestEventBO build();
+	private TestEvent event;
+	private JsonReportDTO report;
+	private WebDriver d;
+	private String reportOutputFolderPath;
+	private LocalDateTime screenshotImageValidTime;
+	
 
 	@Override
 	public String toString() {
-		return "TestEventBO [caseCode=" + caseCode + ", projectName=" + projectName + ", mainUrl=" + mainUrl + "]";
+		return "TestEventBO [event=" + event + ", report=" + report + "]";
+	}
+
+	public TestEvent getEvent() {
+		return event;
+	}
+
+	public void setEvent(TestEvent event) {
+		this.event = event;
+	}
+
+	public JsonReportDTO getReport() {
+		return report;
+	}
+
+	public void setReport(JsonReportDTO report) {
+		this.report = report;
 	}
 
 }
