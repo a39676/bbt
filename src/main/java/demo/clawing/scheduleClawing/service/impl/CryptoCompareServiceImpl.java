@@ -1,6 +1,5 @@
 package demo.clawing.scheduleClawing.service.impl;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 
 import at.report.pojo.dto.JsonReportDTO;
+import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.pojo.constant.TestEventOptionConstant;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.clawing.scheduleClawing.pojo.bo.CryptoCompareDataAPIParamBO;
@@ -30,6 +30,8 @@ public class CryptoCompareServiceImpl extends SeleniumCommonService implements C
 	@Override
 	public CryptoCoinDailyDataResult cryptoCoinDailyDataAPI(TestEvent te, JsonReportDTO reportDTO) {
 		CryptoCoinDailyDataResult r = new CryptoCoinDailyDataResult();
+		
+		TestEventBO tbo = auxTool.beforeRunning(te);
 
 		// example:
 		// https://min-api.cryptocompare.com/data/v2/histoday?fsym=BTC&tsym=USD&limit=10
@@ -97,9 +99,7 @@ public class CryptoCompareServiceImpl extends SeleniumCommonService implements C
 			reportService.appendContent(reportDTO, "异常: " + e);
 
 		} finally {
-			if (reportService.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
-				updateTestEventReportPath(te, reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json");
-			}
+			saveReport(tbo);
 		}
 
 		return r;

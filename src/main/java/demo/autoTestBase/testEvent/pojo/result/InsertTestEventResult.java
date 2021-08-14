@@ -1,8 +1,8 @@
 package demo.autoTestBase.testEvent.pojo.result;
 
-import demo.baseCommon.pojo.result.CommonResultBBT;
+import auxiliaryCommon.pojo.result.CommonResult;
 
-public class InsertTestEventResult extends CommonResultBBT {
+public class InsertTestEventResult extends CommonResult {
 
 	private Integer insertCount;
 	private Long newTestEventId;

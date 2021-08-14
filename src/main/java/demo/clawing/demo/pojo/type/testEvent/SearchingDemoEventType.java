@@ -5,8 +5,6 @@ public enum SearchingDemoEventType {
 	/** bing demo */
 	bingDemo(1L, "bingDemo"),
 
-	/** baidu demo */
-	baiduDemo(2L, "baiduDemo"),
 	;
 
 	private Long id;

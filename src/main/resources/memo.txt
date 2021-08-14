@@ -4,22 +4,17 @@
 		数据库方式?
 		动态指定?
 	testEvent 如何指定连串的 testCase?
-		给定参数时 以类似 map 的方式 --->  {caseCode:{caseParam}}
+		给定参数时 以类似 map 的方式 --->  {DTOname:{paramName1:param1, paraName2:param2}}
 
 TestEventServiceImpl.sendFailReports
 可以转给电报了
 
-test event
-	异常退出,截屏失效
 
 工作需要, 项目内需要增加类似 fake ftp 的"本地目录"式搜查报告
 	搜索栏应配备
 		地址栏 (可点击某段,并跳转至该目录)
 		可按 是否成功报告 / 关键词 / 测试模型(枚举类) 过滤
 
-﻿﻿因 localClawing 类项目
-考虑部分任务, 执行后应该处于等待状态
-	间隔轮询 redis 等待参数, 进行下一步或彻底退出
 
 jd收集
 	考虑被 nsfw 等其他标签屏蔽的情况

@@ -23,9 +23,10 @@ import at.report.pojo.dto.JsonReportDTO;
 import at.screenshot.pojo.result.ScreenshotSaveResult;
 import at.xpath.pojo.bo.XpathBuilderBO;
 import autoTest.testModule.pojo.type.TestModuleType;
+import auxiliaryCommon.pojo.result.CommonResult;
+import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
-import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.scheduleClawing.mapper.WuyiWatchMeMapper;
 import demo.clawing.scheduleClawing.pojo.bo.DailySignAccountBO;
 import demo.clawing.scheduleClawing.pojo.bo.WuYiJobClawingBO;
@@ -74,9 +75,11 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 	}
 
 	@Override
-	public CommonResultBBT clawing(TestEvent te) {
-		CommonResultBBT r = new CommonResultBBT();
+	public CommonResult clawing(TestEvent te) {
+		CommonResult r = new CommonResult();
 
+		TestEventBO tbo = auxTool.beforeRunning(te);
+		
 		String wuYiRunCountKey = "wuYiRunCountKey";
 		String runCountStr = redisConnectService.getValByName(wuYiRunCountKey);
 		int runCount = 1;
@@ -86,19 +89,15 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			redisConnectService.setValByName(wuYiRunCountKey, "1");
 		}
 
-		JsonReportDTO reportDTO = new JsonReportDTO();
-		WebDriver d = null;
+		WebDriver d = tbo.getWebDriver();
 
-		String reportOutputFolderPath = getReportOutputPath(te.getEventName());
 		LocalDateTime screenshotImageValidTime = LocalDateTime.now().plusMonths(SeleniumConstant.maxHistoryMonth);
-
-		reportDTO.setOutputReportPath(reportOutputFolderPath + File.separator + te.getId());
 
 		try {
 
 			String jsonStr = ioUtil.getStringFromFile(te.getParameterFilePath());
 			if (StringUtils.isBlank(jsonStr)) {
-				reportService.appendContent(reportDTO, "参数文件读取异常");
+				reportService.appendContent(tbo.getReport(), "参数文件读取异常");
 				throw new Exception();
 			}
 
@@ -106,12 +105,12 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			try {
 				clawingOptionBO = new Gson().fromJson(jsonStr, WuYiJobClawingBO.class);
 			} catch (Exception e) {
-				reportService.appendContent(reportDTO, "参数文件结构异常");
+				reportService.appendContent(tbo.getReport(), "参数文件结构异常");
 				throw new Exception();
 			}
 
 			if (clawingOptionBO == null) {
-				reportService.appendContent(reportDTO, "参数文件结构异常");
+				reportService.appendContent(tbo.getReport(), "参数文件结构异常");
 				throw new Exception();
 			}
 
@@ -121,7 +120,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 
 			d = webDriverService.buildChromeWebDriver();
 
-			if (!login(d, reportDTO, clawingOptionBO)) {
+			if (!login(d, tbo.getReport(), clawingOptionBO)) {
 				r.failWithMessage("登录失败");
 				throw new Exception();
 			}
@@ -132,26 +131,26 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 
 			ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(),
 					screenSaveResult.getFileName(), screenshotImageValidTime);
-			reportService.appendImage(reportDTO, uploadImgResult.getImgUrl());
+			reportService.appendImage(tbo.getReport(), uploadImgResult.getImgUrl());
 
-			reportService.appendContent(reportDTO, "完成登录");
+			reportService.appendContent(tbo.getReport(), "完成登录");
 
-			catchWatchMe(d, reportDTO);
+			catchWatchMe(d, tbo.getReport());
 
 			if (runCount == 0 && "1".equals(clawingOptionBO.getRefreshCV())) {
-				if (!updateDetail(d, reportDTO, clawingOptionBO)) {
-					reportService.appendContent(reportDTO, "刷新简历失败");
+				if (!updateDetail(d, tbo.getReport(), clawingOptionBO)) {
+					reportService.appendContent(tbo.getReport(), "刷新简历失败");
 					r.failWithMessage("更新失败");
 					throw new Exception();
 				} else {
-					reportService.appendContent(reportDTO, "刷新简历完毕");
+					reportService.appendContent(tbo.getReport(), "刷新简历完毕");
 				}
 			} else {
-				reportService.appendContent(reportDTO, "暂不新简历");
+				reportService.appendContent(tbo.getReport(), "暂不新简历");
 			}
 
 			redisConnectService.setValByName(wuYiRunCountKey, String.valueOf(runCount + 1));
-			reportService.appendContent(reportDTO, "更新 redis 计数: " + (runCount));
+			reportService.appendContent(tbo.getReport(), "更新 redis 计数: " + (runCount));
 
 			r.setIsSuccess();
 
@@ -163,15 +162,13 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 
 			ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(),
 					screenSaveResult.getFileName(), screenshotImageValidTime);
-			reportService.appendImage(reportDTO, uploadImgResult.getImgUrl());
-			reportService.appendContent(reportDTO, "异常: " + e.toString());
+			reportService.appendImage(tbo.getReport(), uploadImgResult.getImgUrl());
+			reportService.appendContent(tbo.getReport(), "异常: " + e.toString());
 //			jsonReporter.appendContent(reportDTO, htmlStr);
 
 		} finally {
-			tryQuitWebDriver(d, reportDTO);
-			if (reportService.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
-				updateTestEventReportPath(te, reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json");
-			}
+			tryQuitWebDriver(d, tbo.getReport());
+			saveReport(tbo);
 		}
 
 		return r;

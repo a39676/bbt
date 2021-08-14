@@ -2,11 +2,9 @@ package demo.clawing.localClawing.pojo.type;
 
 public enum LocalClawingCaseType {
 
-	/** bossZhiPin */
-	bossZhiPin(1L, "bossZhiPin"),
+	/** demo */
+	demo(-1L, "demo"),
 	
-	/** laGou */
-	laGou(2L, "laGou"),
 	
 	;
 
