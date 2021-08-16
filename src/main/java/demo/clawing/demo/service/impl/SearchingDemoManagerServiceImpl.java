@@ -2,8 +2,8 @@ package demo.clawing.demo.service.impl;
 
 import org.springframework.stereotype.Service;
 
-import autoTest.testEvent.pojo.dto.InsertSearchingDemoTestEventDTO;
-import autoTest.testEvent.pojo.result.InsertSearchingDemoEventResult;
+import autoTest.testEvent.searchingDemo.pojo.dto.ATBingDemoDTO;
+import autoTest.testEvent.searchingDemo.pojo.result.InsertSearchingDemoEventResult;
 import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
@@ -24,10 +24,10 @@ public class SearchingDemoManagerServiceImpl extends SeleniumCommonService imple
 	}
 	
 	@Override
-	public InsertSearchingDemoEventResult insert(InsertSearchingDemoTestEventDTO dto) {
+	public InsertSearchingDemoEventResult insert(ATBingDemoDTO dto) {
 		InsertSearchingDemoEventResult ir = new InsertSearchingDemoEventResult();
 
-		SearchingDemoEventType t = SearchingDemoEventType.getType(dto.getCaseId());
+		SearchingDemoEventType t = SearchingDemoEventType.bingDemo;
 		if(t == null) {
 			ir.failWithMessage("数据异常");
 			return ir;
@@ -46,11 +46,12 @@ public class SearchingDemoManagerServiceImpl extends SeleniumCommonService imple
 		return ir;
 	}
 	
-	private InsertTestEventResult insertclawingEvent(InsertSearchingDemoTestEventDTO dto, SearchingDemoEventType t) {
+	private InsertTestEventResult insertclawingEvent(ATBingDemoDTO dto, SearchingDemoEventType t) {
 		TestEvent te = buildTestEvent(t);
+		// TODO 插入任务时, 建议以文件形式, 另存参数, 并配定时清除参数文件的任务
 		te.setRemark(dto.getSearchKeyWord());
 		te.setAppointment(dto.getAppointment());
-		te.setCaseId(dto.getCaseId());
+		te.setCaseId(SearchingDemoEventType.bingDemo.getId());
 		return testEventService.insertTestEvent(te);
 	}
 }

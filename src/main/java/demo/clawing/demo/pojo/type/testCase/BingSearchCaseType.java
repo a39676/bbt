@@ -5,7 +5,7 @@ public enum BingSearchCaseType {
 	/** search in home page */
 	SEARCH_IN_HOMEPAGE(1L, 1L, "searchInHomepage"),
 	/** click "image" tag in search result page */
-	clickImageTag(1L, 2L, "clickImageTag"),
+	CLICK_IMAGE_TAG(1L, 2L, "clickImageTag"),
 
 	;
 

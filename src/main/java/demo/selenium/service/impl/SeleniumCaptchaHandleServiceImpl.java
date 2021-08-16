@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import at.screenshot.pojo.result.ScreenshotSaveResult;
-import demo.autoTestBase.captcha.service.CaptchaService;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.selenium.service.SeleniumCaptchaHandleService;
+import demo.tool.captcha.service.CaptchaService;
 
 @Service
 public class SeleniumCaptchaHandleServiceImpl extends SeleniumCommonService implements SeleniumCaptchaHandleService {

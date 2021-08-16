@@ -11,11 +11,11 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import demo.autoTestBase.captcha.service.CaptchaService;
 import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.baseCommon.service.CommonService;
 import demo.selenium.service.OldDataDeleteService;
 import demo.selenium.service.SeleniumGlobalOptionService;
+import demo.tool.captcha.service.CaptchaService;
 import selenium.pojo.constant.SeleniumConstant;
 
 @Service

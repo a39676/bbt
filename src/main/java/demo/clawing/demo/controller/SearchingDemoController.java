@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import autoTest.testEvent.pojo.constant.SearchingDemoUrl;
-import autoTest.testEvent.pojo.dto.InsertSearchingDemoTestEventDTO;
-import autoTest.testEvent.pojo.result.InsertSearchingDemoEventResult;
+import autoTest.testEvent.searchingDemo.pojo.constant.SearchingDemoUrl;
+import autoTest.testEvent.searchingDemo.pojo.dto.ATBingDemoDTO;
+import autoTest.testEvent.searchingDemo.pojo.result.InsertSearchingDemoEventResult;
 import demo.clawing.demo.service.SearchingDemoManagerService;
 
 @Controller
@@ -21,7 +21,7 @@ public class SearchingDemoController {
 	
 	@PostMapping(value = SearchingDemoUrl.insert)
 	@ResponseBody
-	public InsertSearchingDemoEventResult insert(@RequestBody InsertSearchingDemoTestEventDTO dto) {
+	public InsertSearchingDemoEventResult insert(@RequestBody ATBingDemoDTO dto) {
 		return searchingDemoManagerService.insert(dto);
 	}
 	

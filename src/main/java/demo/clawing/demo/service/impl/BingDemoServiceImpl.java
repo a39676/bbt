@@ -13,13 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import at.xpath.pojo.bo.XpathBuilderBO;
+import autoTest.testEvent.searchingDemo.pojo.dto.ATBingDemoDTO;
+import autoTest.testEvent.searchingDemo.pojo.dto.BingSearchInHomePageDTO;
 import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
-import demo.clawing.demo.pojo.dto.ATBingDemoDTO;
-import demo.clawing.demo.pojo.dto.BingSearchInHomePageDTO;
 import demo.clawing.demo.pojo.type.testEvent.SearchingDemoEventType;
 import demo.clawing.demo.service.BingDemoService;
 import demo.selenium.pojo.bo.BuildTestEventBO;

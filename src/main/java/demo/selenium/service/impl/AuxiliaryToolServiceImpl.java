@@ -118,12 +118,15 @@ public class AuxiliaryToolServiceImpl extends SeleniumCommonService {
 	public <T> T buildParamDTO(TestEventBO bo, Class<T> clazz) {
 		String className = clazz.getSimpleName();
 
-		String paramStr = null;
+		String paramStr = bo.getParamStr();
 		
-		if(StringUtils.isNotBlank(bo.getEvent().getParameterFilePath())) {
-			paramStr = ioUtil.getStringFromFile(bo.getEvent().getParameterFilePath());
-		} else {
-			paramStr = bo.getEvent().getRemark();
+		if(StringUtils.isBlank(paramStr)) {
+			if(StringUtils.isNotBlank(bo.getEvent().getParameterFilePath())) {
+				paramStr = ioUtil.getStringFromFile(bo.getEvent().getParameterFilePath());
+			} else {
+				paramStr = bo.getEvent().getRemark();
+			}
+			bo.setParamStr(paramStr);
 		}
 
 		try {
