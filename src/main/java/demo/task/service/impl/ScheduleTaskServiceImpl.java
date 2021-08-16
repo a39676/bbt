@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import demo.clawing.scheduleClawing.service.WuYiJobRefreshService;
-import demo.clawing.scheduleClawing.service.component.webSocket.BinanceWSClient;
-import demo.clawing.scheduleClawing.service.component.webSocket.CryptoCompareWSClient;
+import demo.scriptCore.scheduleClawing.service.WuYiJobRefreshService;
+import demo.scriptCore.scheduleClawing.service.component.webSocket.BinanceWSClient;
+import demo.scriptCore.scheduleClawing.service.component.webSocket.CryptoCompareWSClient;
 
 @Component
 public class ScheduleTaskServiceImpl extends SeleniumTaskCommonServiceImpl {

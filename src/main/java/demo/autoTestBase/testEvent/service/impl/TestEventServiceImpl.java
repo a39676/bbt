@@ -15,10 +15,10 @@ import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.po.TestEventExample;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.autoTestBase.testEvent.service.TestEventService;
-import demo.clawing.collecting.jandan.service.impl.ClawCollectPrefixServiceImpl;
-import demo.clawing.demo.service.impl.SearchingDemoPrefixServiceImpl;
-import demo.clawing.localClawing.service.impl.LocalClawingPrefixServiceImpl;
-import demo.clawing.scheduleClawing.service.impl.ScheduleClawingPrefixServiceImpl;
+import demo.scriptCore.collecting.jandan.service.impl.ClawCollectPrefixServiceImpl;
+import demo.scriptCore.demo.service.impl.SearchingDemoPrefixServiceImpl;
+import demo.scriptCore.localClawing.service.impl.LocalClawingPrefixServiceImpl;
+import demo.scriptCore.scheduleClawing.service.impl.ScheduleClawingPrefixServiceImpl;
 import net.sf.json.JSONObject;
 import selenium.pojo.constant.SeleniumConstant;
 
