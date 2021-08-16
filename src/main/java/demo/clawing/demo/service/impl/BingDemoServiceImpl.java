@@ -1,106 +1,185 @@
 package demo.clawing.demo.service.impl;
 
 import java.io.File;
-import java.time.LocalDateTime;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import at.report.pojo.dto.JsonReportDTO;
-import at.screenshot.pojo.dto.TakeScreenshotSaveDTO;
-import at.screenshot.pojo.result.ScreenshotSaveResult;
 import at.xpath.pojo.bo.XpathBuilderBO;
+import autoTest.testModule.pojo.type.TestModuleType;
+import auxiliaryCommon.pojo.result.CommonResult;
+import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
-import demo.baseCommon.pojo.result.CommonResultBBT;
+import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
+import demo.clawing.demo.pojo.dto.ATBingDemoDTO;
+import demo.clawing.demo.pojo.dto.BingSearchInHomePageDTO;
+import demo.clawing.demo.pojo.type.testEvent.SearchingDemoEventType;
 import demo.clawing.demo.service.BingDemoService;
+import demo.selenium.pojo.bo.BuildTestEventBO;
 import demo.selenium.service.impl.SeleniumCommonService;
-import image.pojo.result.ImageSavingResult;
-import selenium.pojo.constant.SeleniumConstant;
+import net.sf.json.JSONObject;
+import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class BingDemoServiceImpl extends SeleniumCommonService implements BingDemoService {
+
+	@Autowired
+	private FileUtilCustom ioUtil;
 	
-	private String eventName = "bing_search_demo";
-	
-	private String getReportOutputPath() {
-		return globalOptionService.getReportOutputFolder() + File.separator + eventName;
+	private TestEvent buildBingSearchDemo(ATBingDemoDTO dto) {
+		BuildTestEventBO bo = new BuildTestEventBO();
+
+		TestModuleType testModuleType = TestModuleType.ATDemo;
+		SearchingDemoEventType testCastType = SearchingDemoEventType.bingDemo;
+		String eventName = "bing_search_demo";
+		
+		String paramterFolderPath = getParameterSaveingPath(eventName);
+		
+		if(dto.getBingSearchInHomePageDTO() == null) {
+			File paramterFile = new File(paramterFolderPath + File.separator + "default.json");
+			if (!paramterFile.exists()) {
+				return null;
+			}
+			bo.setParameterFilePath(paramterFile.getAbsolutePath());
+		} else {
+			File paramterFile = new File(paramterFolderPath + File.separator + snowFlake.getNextId() + ".json");
+			JSONObject json = JSONObject.fromObject(dto);
+			ioUtil.byteToFile(json.toString().getBytes(StandardCharsets.UTF_8), paramterFile.getAbsolutePath());
+			bo.setParameterFilePath(paramterFile.getAbsolutePath());
+		}
+
+		bo.setTestModuleType(testModuleType);
+		bo.setCaseId(testCastType.getId());
+		bo.setEventName(eventName);
+		
+		return buildTestEvent(bo);
+	}
+
+	@Override
+	public InsertTestEventResult insertSearchDemoEvent(ATBingDemoDTO dto) {
+		TestEvent te = buildBingSearchDemo(dto);
+		return testEventService.insertTestEvent(te);
 	}
 	
 	@Override
-	public CommonResultBBT clawing(TestEvent te) {
-		CommonResultBBT r = new CommonResultBBT();
-		JsonReportDTO reportDTO = new JsonReportDTO();
+	public InsertTestEventResult insertSearchDemoEvent() {
+		return insertSearchDemoEvent(null);
+	}
+	
+	@Override
+	public CommonResult testing(TestEvent te) {
+		CommonResult r = new CommonResult();
 		
-		String reportOutputFolderPath = getReportOutputPath();
-		
-		reportDTO.setOutputReportPath(reportOutputFolderPath + File.separator + te.getId());
-
-		WebDriver d = null;
-
-		String mainUrl = "https://cn.bing.com/?FORM=BEHPTB";
+		TestEventBO tbo = auxTool.beforeRunning(te);
 		
 		try {
-			d = webDriverService.buildFireFoxWebDriver();
-			try {
-				d.get(mainUrl);
-				jsonReporter.appendContent(reportDTO, "打开: " + mainUrl);
-			} catch (TimeoutException e) {
-				jsUtil.windowStop(d);
-				jsonReporter.appendContent(reportDTO, "访问超时");
-			}
-			
-			XpathBuilderBO x = new XpathBuilderBO();
-			
-			TakeScreenshotSaveDTO screenshotDTO = new TakeScreenshotSaveDTO();
-			screenshotDTO.setDriver(d);
-			ScreenshotSaveResult screenSaveResult = screenshot(d, te.getEventName());
-			LocalDateTime screenshotImageValidTime = LocalDateTime.now().plusMonths(SeleniumConstant.maxHistoryMonth);
-//			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
-			ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName(), screenshotImageValidTime);
-			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
-			
-			x.start("input").addAttribute("id", "sb_form_q");
-			WebElement keywordInput = d.findElement(By.xpath(x.getXpath()));
-			keywordInput.click();
-			keywordInput.clear();
-			keywordInput.sendKeys(te.getRemark());
-			
-			if(StringUtils.isBlank(te.getRemark())) {
-				jsonReporter.appendContent(reportDTO, "输入空白关键词");
-			} else {
-				jsonReporter.appendContent(reportDTO, "输入关键词: " + te.getRemark());
-			}
-			
-			screenSaveResult = screenshot(d, te.getEventName());
-			uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName(), screenshotImageValidTime);
-			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
-			
-			x.start("div").addAttribute("id", "sb_go_par");
-			WebElement searchButton = d.findElement(By.xpath(x.getXpath()));
-			searchButton.click();
-			
-			jsonReporter.appendContent(reportDTO, "点击搜索");
-			
-			screenSaveResult = screenshot(d, te.getEventName());
-			uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(), screenSaveResult.getFileName(), screenshotImageValidTime);
-			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
-			
-			jsonReporter.appendContent(reportDTO, "完成");
-			
-			r.setIsSuccess();
+			r = searchInHomepage(tbo);
+			r = checkResult(tbo);
+		
 		} catch (Exception e) {
-			jsonReporter.appendContent(reportDTO, e.getMessage());
-			
+			reportService.appendContent(tbo.getReport(), e.getMessage());
+
 		} finally {
-			r.setMessage(reportDTO.getContent());
-			tryQuitWebDriver(d, reportDTO);
-			String reportOutputPath = reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json";
-			if(jsonReporter.outputReport(reportDTO, reportOutputPath)) {
-				updateTestEventReportPath(te, reportOutputPath);
+			tryQuitWebDriver(tbo.getWebDriver(), tbo.getReport());
+			saveReport(tbo);
+		}
+
+		return r;
+	}
+
+	private CommonResult searchInHomepage(TestEventBO tbo) {
+		CommonResult r = new CommonResult();
+		reportService.appendContent(tbo.getReport(), "准备进行搜索");
+		WebDriver d = tbo.getWebDriver();
+
+		BingSearchInHomePageDTO dto = auxTool.buildParamDTO(tbo, BingSearchInHomePageDTO.class);
+		if (dto == null) {
+			reportService.appendContent(tbo.getReport(), "读取参数异常");
+			return r;
+		}
+
+		addScreenshotToReport(d, tbo);
+
+		String mainUrl = "https://cn.bing.com/?FORM=BEHPTB";
+
+		try {
+			d.get(mainUrl);
+			reportService.appendContent(tbo.getReport(), "打开: " + mainUrl);
+		} catch (TimeoutException e) {
+			jsUtil.windowStop(d);
+			reportService.appendContent(tbo.getReport(), "访问超时");
+		}
+
+		XpathBuilderBO x = new XpathBuilderBO();
+
+		addScreenshotToReport(d, tbo);
+
+		x.start("input").addAttribute("id", "sb_form_q");
+		WebElement keywordInput = d.findElement(By.xpath(x.getXpath()));
+		keywordInput.click();
+		keywordInput.clear();
+		keywordInput.sendKeys(dto.getSearchKeyword());
+
+		if (StringUtils.isBlank(dto.getSearchKeyword())) {
+			reportService.appendContent(tbo.getReport(), "输入空白关键词");
+		} else {
+			reportService.appendContent(tbo.getReport(), "输入关键词: " + dto.getSearchKeyword());
+		}
+
+		addScreenshotToReport(d, tbo);
+
+		x.start("div").addAttribute("id", "sb_go_par");
+		WebElement searchButton = d.findElement(By.xpath(x.getXpath()));
+		searchButton.click();
+
+		reportService.appendContent(tbo.getReport(), "点击搜索");
+
+		addScreenshotToReport(d, tbo);
+
+		reportService.appendContent(tbo.getReport(), "完成搜索");
+		r.setIsSuccess();
+		return r;
+	}
+	
+	private CommonResult checkResult(TestEventBO tbo) {
+		CommonResult r = new CommonResult();
+		reportService.appendContent(tbo.getReport(), "准备检查搜索结果");
+
+		WebDriver d = tbo.getWebDriver();
+		
+		BingSearchInHomePageDTO dto = auxTool.buildParamDTO(tbo, BingSearchInHomePageDTO.class);
+		
+		XpathBuilderBO x = new XpathBuilderBO();
+		
+		x.start("ol").addId("b_results");
+		
+		WebElement resultListOL = null;
+		try {
+			resultListOL = d.findElement(By.xpath(x.getXpath()));
+		} catch (Exception e) {
+			reportService.appendContent(tbo.getReport(), "无法定位搜索结果");
+			return r;
+		}
+		
+		if(!resultListOL.getText().contains(dto.getSearchKeyword())) {
+			reportService.appendContent(tbo.getReport(), "搜索结果未包含目标关键字");
+			return r;
+		}
+		
+		x.findChild("li");
+		List<WebElement> resultListLi = d.findElements(By.xpath(x.getXpath()));
+		
+		for(int i = 0; i < resultListLi.size(); i++) {
+			if(resultListLi.get(i).getText().contains(dto.getSearchKeyword())) {
+				reportService.appendContent(tbo.getReport(), "第" + (i + 1) + "位包含目标关键字");
+				r.setIsSuccess();
 			}
 		}
 		

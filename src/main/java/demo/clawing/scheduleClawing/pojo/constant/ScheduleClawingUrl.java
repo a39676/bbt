@@ -6,10 +6,7 @@ public class ScheduleClawingUrl {
 	
 	public static final String insertWuYiSign = "/insertWuYiSign";
 	
-	public static final String insertLiePinSign = "/insertLiePinSign";
-	
 	public static final String insertMaiMai = "/insertMaiMai";
 	
-	public static final String insertPreciousMetal = "/insertPreciousMetal";
 	
 }

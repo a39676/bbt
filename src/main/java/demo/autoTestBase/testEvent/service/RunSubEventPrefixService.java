@@ -1,10 +1,10 @@
 package demo.autoTestBase.testEvent.service;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
-import demo.baseCommon.pojo.result.CommonResultBBT;
 
 public interface RunSubEventPrefixService {
 
-	CommonResultBBT runSubEvent(TestEvent te);
+	CommonResult runSubEvent(TestEvent te);
 	
 }

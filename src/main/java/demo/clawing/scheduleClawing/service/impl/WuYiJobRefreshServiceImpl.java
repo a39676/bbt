@@ -23,9 +23,10 @@ import at.report.pojo.dto.JsonReportDTO;
 import at.screenshot.pojo.result.ScreenshotSaveResult;
 import at.xpath.pojo.bo.XpathBuilderBO;
 import autoTest.testModule.pojo.type.TestModuleType;
+import auxiliaryCommon.pojo.result.CommonResult;
+import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
-import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.scheduleClawing.mapper.WuyiWatchMeMapper;
 import demo.clawing.scheduleClawing.pojo.bo.DailySignAccountBO;
 import demo.clawing.scheduleClawing.pojo.bo.WuYiJobClawingBO;
@@ -52,19 +53,6 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 	private TestModuleType testModuleType = TestModuleType.scheduleClawing;
 	private ScheduleClawingType testCastType = ScheduleClawingType.WU_YI_JOB;
 
-	/*
-	 * TODO
-	 * 
-	 * 已经新建 test_process 表, 但批量增加 test_event 并有顺序要求的情况, 难以封装, 后期可能视具体情况, 固定代码实现
-	 * 
-	 * 因每个任务的 参数BO 均不同, 不再封装公共方法
-	 * 
-	 * 考虑在 SeleniumCommonService 新建以参数文件数量, 对应新建多个子任务的方法 每个 testEvent 很可能对应多个参数文件,
-	 * 那么加入任务的时候, 如果不声明指定的参数文件, 则应该所有参数配置都跑一次 但当时新建任务时 if(无指定参数文件的任务 &&
-	 * 对应的参数文件夹下有多个参数搭配文件) { 就应该同时建立N个子任务, 不是等运行时才建立子任务, 保证数据排序, 并且对应多个子任务有多个报告
-	 * 新建子任务后, 就可以生成一份报告, 报告内是对应各个子报告的链接 考虑选用 processId 做关联? }
-	 */
-
 	private TestEvent buildDailySignEvent() {
 		String paramterFolderPath = getParameterSaveingPath(dailySignEventName);
 		File paramterFile = new File(paramterFolderPath + File.separator + userDataFileName);
@@ -87,9 +75,11 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 	}
 
 	@Override
-	public CommonResultBBT clawing(TestEvent te) {
-		CommonResultBBT r = new CommonResultBBT();
+	public CommonResult clawing(TestEvent te) {
+		CommonResult r = new CommonResult();
 
+		TestEventBO tbo = auxTool.beforeRunning(te);
+		
 		String wuYiRunCountKey = "wuYiRunCountKey";
 		String runCountStr = redisConnectService.getValByName(wuYiRunCountKey);
 		int runCount = 1;
@@ -99,19 +89,15 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			redisConnectService.setValByName(wuYiRunCountKey, "1");
 		}
 
-		JsonReportDTO reportDTO = new JsonReportDTO();
-		WebDriver d = null;
+		WebDriver d = tbo.getWebDriver();
 
-		String reportOutputFolderPath = getReportOutputPath(te.getEventName());
 		LocalDateTime screenshotImageValidTime = LocalDateTime.now().plusMonths(SeleniumConstant.maxHistoryMonth);
-
-		reportDTO.setOutputReportPath(reportOutputFolderPath + File.separator + te.getId());
 
 		try {
 
 			String jsonStr = ioUtil.getStringFromFile(te.getParameterFilePath());
 			if (StringUtils.isBlank(jsonStr)) {
-				jsonReporter.appendContent(reportDTO, "参数文件读取异常");
+				reportService.appendContent(tbo.getReport(), "参数文件读取异常");
 				throw new Exception();
 			}
 
@@ -119,12 +105,12 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			try {
 				clawingOptionBO = new Gson().fromJson(jsonStr, WuYiJobClawingBO.class);
 			} catch (Exception e) {
-				jsonReporter.appendContent(reportDTO, "参数文件结构异常");
+				reportService.appendContent(tbo.getReport(), "参数文件结构异常");
 				throw new Exception();
 			}
 
 			if (clawingOptionBO == null) {
-				jsonReporter.appendContent(reportDTO, "参数文件结构异常");
+				reportService.appendContent(tbo.getReport(), "参数文件结构异常");
 				throw new Exception();
 			}
 
@@ -134,38 +120,37 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 
 			d = webDriverService.buildChromeWebDriver();
 
-			if (!login(d, reportDTO, clawingOptionBO)) {
+			if (!login(d, tbo.getReport(), clawingOptionBO)) {
 				r.failWithMessage("登录失败");
 				throw new Exception();
 			}
 
 			threadSleepRandomTime();
-			
-			
+
 			ScreenshotSaveResult screenSaveResult = screenshot(d, te.getEventName());
 
 			ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(),
 					screenSaveResult.getFileName(), screenshotImageValidTime);
-			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
+			reportService.appendImage(tbo.getReport(), uploadImgResult.getImgUrl());
 
-			jsonReporter.appendContent(reportDTO, "完成登录");
+			reportService.appendContent(tbo.getReport(), "完成登录");
 
-			catchWatchMe(d, reportDTO);
+			catchWatchMe(d, tbo.getReport());
 
 			if (runCount == 0 && "1".equals(clawingOptionBO.getRefreshCV())) {
-				if (!updateDetail(d, reportDTO, clawingOptionBO)) {
-					jsonReporter.appendContent(reportDTO, "刷新简历失败");
+				if (!updateDetail(d, tbo.getReport(), clawingOptionBO)) {
+					reportService.appendContent(tbo.getReport(), "刷新简历失败");
 					r.failWithMessage("更新失败");
 					throw new Exception();
 				} else {
-					jsonReporter.appendContent(reportDTO, "刷新简历完毕");
+					reportService.appendContent(tbo.getReport(), "刷新简历完毕");
 				}
 			} else {
-				jsonReporter.appendContent(reportDTO, "暂不新简历");
+				reportService.appendContent(tbo.getReport(), "暂不新简历");
 			}
 
 			redisConnectService.setValByName(wuYiRunCountKey, String.valueOf(runCount + 1));
-			jsonReporter.appendContent(reportDTO, "更新 redis 计数: " + (runCount));
+			reportService.appendContent(tbo.getReport(), "更新 redis 计数: " + (runCount));
 
 			r.setIsSuccess();
 
@@ -177,46 +162,44 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 
 			ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(),
 					screenSaveResult.getFileName(), screenshotImageValidTime);
-			jsonReporter.appendImage(reportDTO, uploadImgResult.getImgUrl());
-			jsonReporter.appendContent(reportDTO, "异常: " + e.toString());
+			reportService.appendImage(tbo.getReport(), uploadImgResult.getImgUrl());
+			reportService.appendContent(tbo.getReport(), "异常: " + e.toString());
 //			jsonReporter.appendContent(reportDTO, htmlStr);
 
 		} finally {
-			tryQuitWebDriver(d, reportDTO);
-			if (jsonReporter.outputReport(reportDTO, reportDTO.getOutputReportPath(), te.getId() + ".json")) {
-				updateTestEventReportPath(te, reportDTO.getOutputReportPath() + File.separator + te.getId() + ".json");
-			}
+			tryQuitWebDriver(d, tbo.getReport());
+			saveReport(tbo);
 		}
 
 		return r;
 	}
-	
+
 	private void findAndCLoseHomePop(WebDriver d, JsonReportDTO reportDTO) {
 		XpathBuilderBO x = new XpathBuilderBO();
-		
+
 		x.start("div").addClass("homePop");
-		
+
 		try {
 			WebElement homepopDiv = d.findElement(By.xpath(x.getXpath()));
 			if (homepopDiv == null || !homepopDiv.isDisplayed()) {
-				jsonReporter.appendContent(reportDTO, "can not find homepop div");
+				reportService.appendContent(reportDTO, "can not find homepop div");
 				return;
 			} else {
-				jsonReporter.appendContent(reportDTO, "find homepop div");
+				reportService.appendContent(reportDTO, "find homepop div");
 			}
 
 			x.findChild("div").addClass("in").findChild("div").addClass("close");
 
 			WebElement homepopCloseDiv = d.findElement(By.xpath(x.getXpath()));
 			homepopCloseDiv.click();
-			jsonReporter.appendContent(reportDTO, "close homepop div");
+			reportService.appendContent(reportDTO, "close homepop div");
 
 		} catch (Exception e) {
-			jsonReporter.appendContent(reportDTO, "close homepop div exception");
-			jsonReporter.appendContent(reportDTO, e.getLocalizedMessage());
+			reportService.appendContent(reportDTO, "close homepop div exception");
+			reportService.appendContent(reportDTO, e.getLocalizedMessage());
 		}
 	}
-	
+
 	private void findAndCloseLeadDiv(WebDriver d, JsonReportDTO reportDTO) {
 		XpathBuilderBO x = new XpathBuilderBO();
 
@@ -225,10 +208,10 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 		try {
 			WebElement leadDiv = d.findElement(By.xpath(x.getXpath()));
 			if (leadDiv == null || !leadDiv.isDisplayed()) {
-				jsonReporter.appendContent(reportDTO, "can not find lead div");
+				reportService.appendContent(reportDTO, "can not find lead div");
 				return;
 			} else {
-				jsonReporter.appendContent(reportDTO, "find lead div");
+				reportService.appendContent(reportDTO, "find lead div");
 			}
 
 			x.findChild("div").addClass("close");
@@ -236,11 +219,11 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 
 			WebElement leadCloseDiv = d.findElement(By.xpath(x.getXpath()));
 			leadCloseDiv.click();
-			jsonReporter.appendContent(reportDTO, "close lead div");
+			reportService.appendContent(reportDTO, "close lead div");
 
 		} catch (Exception e) {
-			jsonReporter.appendContent(reportDTO, "close lead div exception");
-			jsonReporter.appendContent(reportDTO, e.getLocalizedMessage());
+			reportService.appendContent(reportDTO, "close lead div exception");
+			reportService.appendContent(reportDTO, e.getLocalizedMessage());
 		}
 	}
 
@@ -252,10 +235,10 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 		try {
 			WebElement goAppDiv = d.findElement(By.xpath(x.getXpath()));
 			if (goAppDiv == null || !goAppDiv.isDisplayed()) {
-				jsonReporter.appendContent(reportDTO, "can not find go app div");
+				reportService.appendContent(reportDTO, "can not find go app div");
 				return;
 			} else {
-				jsonReporter.appendContent(reportDTO, "find go app div");
+				reportService.appendContent(reportDTO, "find go app div");
 			}
 
 			x.findChild("em").addClass("close");
@@ -263,11 +246,11 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 
 			WebElement goAppCloseButton = d.findElement(By.xpath(x.getXpath()));
 			goAppCloseButton.click();
-			jsonReporter.appendContent(reportDTO, "close go app div");
+			reportService.appendContent(reportDTO, "close go app div");
 
 		} catch (Exception e) {
-			jsonReporter.appendContent(reportDTO, "close go app div exception");
-			jsonReporter.appendContent(reportDTO, e.getLocalizedMessage());
+			reportService.appendContent(reportDTO, "close go app div exception");
+			reportService.appendContent(reportDTO, e.getLocalizedMessage());
 		}
 	}
 
@@ -277,24 +260,24 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 		try {
 			try {
 				d.get(dailySignBO.getMainUrl());
-				jsonReporter.appendContent(reportDTO, "get home page");
+				reportService.appendContent(reportDTO, "get home page");
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
-				jsonReporter.appendContent(reportDTO, "get home page but timeout");
+				reportService.appendContent(reportDTO, "get home page but timeout");
 			}
 
-			jsonReporter.appendContent(reportDTO, "try find lead div and go app div");
+			reportService.appendContent(reportDTO, "try find lead div and go app div");
 			findAndCLoseHomePop(d, reportDTO);
 			threadSleepRandomTime();
 			findAndCloseLeadDiv(d, reportDTO);
 			threadSleepRandomTime();
 			findAndCloseGoAppDiv(d, reportDTO);
 			threadSleepRandomTime();
-			jsonReporter.appendContent(reportDTO, "after close lead and go app div");
+			reportService.appendContent(reportDTO, "after close lead and go app div");
 
 			// 向下翻动一下页面, 以使登录按钮出现在页面顶部
 			jsUtil.scroll(d, 200);
-			jsonReporter.appendContent(reportDTO, "after scroll");
+			reportService.appendContent(reportDTO, "after scroll");
 
 //			try {
 //				d.get("https://login.51job.com/login.php?display=h5");
@@ -305,47 +288,47 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 //				jsonReporter.appendContent(reportDTO, "visit login page fail");
 //				throw new Exception();
 //			}
-			
+
 			x.start("header").addClass("nologin").findChild("a").addClass("my");
 			try {
 				WebElement loginPageButton = d.findElement(By.xpath(x.getXpath()));
-				for(int i = 0; i < 10 && !loginPageButton.isDisplayed(); i++) {
+				for (int i = 0; i < 10 && !loginPageButton.isDisplayed(); i++) {
 					jsUtil.scroll(d, 200);
 				}
 				loginPageButton.click();
 			} catch (Exception e) {
-				jsonReporter.appendContent(reportDTO, "can NOT find login page button");
+				reportService.appendContent(reportDTO, "can NOT find login page button");
 				throw new Exception();
 			}
-			
-			jsonReporter.appendContent(reportDTO, "after visit login page");
+
+			reportService.appendContent(reportDTO, "after visit login page");
 			threadSleepRandomTimeLong();
-			
+
 			x.start().addId("tobydefault").findChild("a").addClass("leftlogin");
 			try {
 				WebElement loginWithUsernameAndPwdButton = d.findElement(By.xpath(x.getXpath()));
-				for(int i = 0; i < 10 && !loginWithUsernameAndPwdButton.isDisplayed(); i++) {
+				for (int i = 0; i < 10 && !loginWithUsernameAndPwdButton.isDisplayed(); i++) {
 					threadSleepRandomTime();
 				}
 				loginWithUsernameAndPwdButton.click();
 			} catch (Exception e) {
-				jsonReporter.appendContent(reportDTO, "can NOT find login with username and pwd button");
+				reportService.appendContent(reportDTO, "can NOT find login with username and pwd button");
 				throw new Exception();
 			}
 			threadSleepRandomTimeLong();
-			
+
 			x.start().addId("loginname");
 			WebElement usernameInput = null;
 			try {
 				usernameInput = d.findElement(By.xpath(x.getXpath()));
 			} catch (Exception e) {
-				jsonReporter.appendContent(reportDTO, "找不到用户名输入框");
+				reportService.appendContent(reportDTO, "找不到用户名输入框");
 				throw new Exception();
 			}
 			usernameInput.click();
 			usernameInput.clear();
 			usernameInput.sendKeys(dailySignBO.getUsername());
-			jsonReporter.appendContent(reportDTO, "input username");
+			reportService.appendContent(reportDTO, "input username");
 
 			threadSleepRandomTimeLong();
 
@@ -354,12 +337,12 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			try {
 				logoClick = d.findElement(By.xpath(x.getXpath()));
 				logoClick.click();
-				jsonReporter.appendContent(reportDTO, "close logo");
+				reportService.appendContent(reportDTO, "close logo");
 				/*
 				 * 有时候 输入完用户帐号, 会遮挡住密码输入框, 引起报错
 				 */
 			} catch (Exception e) {
-				jsonReporter.appendContent(reportDTO, "找不到Logo");
+				reportService.appendContent(reportDTO, "找不到Logo");
 			}
 
 			x.start().addId("password");
@@ -367,12 +350,12 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			try {
 				pwdInput = d.findElement(By.xpath(x.getXpath()));
 			} catch (Exception e) {
-				jsonReporter.appendContent(reportDTO, "找不到密码输入框");
+				reportService.appendContent(reportDTO, "找不到密码输入框");
 			}
 			pwdInput.click();
 			pwdInput.clear();
 			pwdInput.sendKeys(dailySignBO.getPwd());
-			jsonReporter.appendContent(reportDTO, "input pwd");
+			reportService.appendContent(reportDTO, "input pwd");
 
 			threadSleepRandomTime(1000L, 3000L);
 
@@ -381,16 +364,16 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			try {
 				loginButton = d.findElement(By.xpath(x.getXpath()));
 			} catch (Exception e) {
-				jsonReporter.appendContent(reportDTO, "找不到登录按钮");
+				reportService.appendContent(reportDTO, "找不到登录按钮");
 			}
 			loginButton.click();
-			jsonReporter.appendContent(reportDTO, "click login button");
+			reportService.appendContent(reportDTO, "click login button");
 
 			return true;
 		} catch (Exception e) {
 
-			jsonReporter.appendContent(reportDTO, "login exception");
-			jsonReporter.appendContent(reportDTO, e.getLocalizedMessage());
+			reportService.appendContent(reportDTO, "login exception");
+			reportService.appendContent(reportDTO, e.getLocalizedMessage());
 			return false;
 		}
 	}
@@ -401,40 +384,40 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 		try {
 			try {
 				d.get("https://m.51job.com/my/my51job.php");
-				jsonReporter.appendContent(reportDTO, "get 我的51job ");
+				reportService.appendContent(reportDTO, "get 我的51job ");
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
-				jsonReporter.appendContent(reportDTO, "get 我的51job  but timeout");
+				reportService.appendContent(reportDTO, "get 我的51job  but timeout");
 			}
 
 			threadSleepRandomTime(1000L, 3000L);
 
 			try {
 				d.get("https://m.51job.com/resume/myresume.php");
-				jsonReporter.appendContent(reportDTO, "get 我的简历");
+				reportService.appendContent(reportDTO, "get 我的简历");
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
-				jsonReporter.appendContent(reportDTO, "get 我的简历 but timeout");
+				reportService.appendContent(reportDTO, "get 我的简历 but timeout");
 			}
 
 			threadSleepRandomTime(1000L, 3000L);
 
 			try {
 				d.get(dailySignBO.getResumeDetailUrl());
-				jsonReporter.appendContent(reportDTO, "get 指定简历");
+				reportService.appendContent(reportDTO, "get 指定简历");
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
-				jsonReporter.appendContent(reportDTO, "get 指定简历 but timeout");
+				reportService.appendContent(reportDTO, "get 指定简历 but timeout");
 			}
 
 			threadSleepRandomTime(1000L, 3000L);
 
 			try {
 				d.get(dailySignBO.getJobintentUrl());
-				jsonReporter.appendContent(reportDTO, "get 指定简历编辑界面");
+				reportService.appendContent(reportDTO, "get 指定简历编辑界面");
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
-				jsonReporter.appendContent(reportDTO, "get 指定简历编辑界面 but timeout");
+				reportService.appendContent(reportDTO, "get 指定简历编辑界面 but timeout");
 			}
 
 			threadSleepRandomTime(1000L, 3000L);
@@ -444,7 +427,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			try {
 				intentionDetailTextarea = d.findElement(By.xpath(x.getXpath()));
 			} catch (Exception e) {
-				jsonReporter.appendContent(reportDTO, "无法找到简历简介编辑框");
+				reportService.appendContent(reportDTO, "无法找到简历简介编辑框");
 				return false;
 			}
 			String intentionDetailSourceStr = intentionDetailTextarea.getText();
@@ -461,7 +444,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			String[] sourceLines = intentionDetailSourceStr.split(lineBreak);
 			StringBuffer sb = new StringBuffer();
 			for (int i = 0; i < sourceLines.length; i++) {
-				if(i == sourceLines.length - 1) {
+				if (i == sourceLines.length - 1) {
 					sb.append(snowFlake.getNextId());
 				} else {
 					sb.append(sourceLines[i]);
@@ -472,12 +455,12 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 			intentionDetailTextarea.clear();
 			intentionDetailTextarea.sendKeys(sb.toString());
 
-			jsonReporter.appendContent(reportDTO, "完成编辑内容");
+			reportService.appendContent(reportDTO, "完成编辑内容");
 
 			threadSleepRandomTime(1000L, 3000L);
 
 			d.findElement(By.id("saveselfintro")).click();
-			jsonReporter.appendContent(reportDTO, "点击保存");
+			reportService.appendContent(reportDTO, "点击保存");
 
 			threadSleepRandomTime(1000L, 3000L);
 
@@ -493,10 +476,10 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 		try {
 			try {
 				d.get("https://m.51job.com/my/whosawrsm.php");
-				jsonReporter.appendContent(reportDTO, "进入手机版 我的51job");
+				reportService.appendContent(reportDTO, "进入手机版 我的51job");
 			} catch (TimeoutException e) {
 				jsUtil.windowStop(d);
-				jsonReporter.appendContent(reportDTO, "进入手机版 我的51job but timeout");
+				reportService.appendContent(reportDTO, "进入手机版 我的51job but timeout");
 			}
 
 			String companyLinkX = x.start("div").addAttribute("class", "new_l").findChild("a", 1).getXpath();
@@ -525,7 +508,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 				likelySpan = d.findElement(By.xpath(likelyX));
 				watcheTimeEm = d.findElement(By.xpath(watchTimeX));
 			} catch (Exception e) {
-				jsonReporter.appendContent(reportDTO, "查找页面元素异常, 或尚无公司浏览记录");
+				reportService.appendContent(reportDTO, "查找页面元素异常, 或尚无公司浏览记录");
 				return false;
 			}
 
@@ -543,7 +526,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 				theWatchTime = localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(watchTimeSourceStr);
 				newPO.setWatchTime(theWatchTime);
 			} catch (Exception e) {
-				jsonReporter.appendContent(reportDTO, "拼凑 WuyiWatchMe PO 异常: " + e.toString());
+				reportService.appendContent(reportDTO, "拼凑 WuyiWatchMe PO 异常: " + e.toString());
 				return false;
 			}
 

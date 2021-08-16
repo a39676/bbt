@@ -1,28 +1,74 @@
 package demo.autoTestBase.testEvent.pojo.bo;
 
-public abstract class TestEventBO {
+import java.time.LocalDateTime;
 
-	protected String caseCode;
-	protected String projectName;
-	protected String mainUrl;
+import org.openqa.selenium.WebDriver;
 
-	public String getCaseCode() {
-		return caseCode;
+import at.report.pojo.dto.JsonReportDTO;
+import demo.autoTestBase.testEvent.pojo.po.TestEvent;
+
+public class TestEventBO {
+
+	private TestEvent event;
+	private WebDriver webDriver;
+	private JsonReportDTO report;
+	private String reportOutputFolderPath;
+	private LocalDateTime screenshotImageValidTime;
+	private String paramStr;
+
+	public TestEvent getEvent() {
+		return event;
 	}
 
-	public String getProjectName() {
-		return projectName;
+	public void setEvent(TestEvent event) {
+		this.event = event;
 	}
 
-	public String getMainUrl() {
-		return mainUrl;
+	public WebDriver getWebDriver() {
+		return webDriver;
 	}
 
-	public abstract TestEventBO build();
+	public void setWebDriver(WebDriver webDriver) {
+		this.webDriver = webDriver;
+	}
+
+	public JsonReportDTO getReport() {
+		return report;
+	}
+
+	public void setReport(JsonReportDTO report) {
+		this.report = report;
+	}
+
+	public String getReportOutputFolderPath() {
+		return reportOutputFolderPath;
+	}
+
+	public void setReportOutputPath(String reportOutputFolderPath) {
+		this.reportOutputFolderPath = reportOutputFolderPath;
+	}
+
+	public LocalDateTime getScreenshotImageValidTime() {
+		return screenshotImageValidTime;
+	}
+
+	public void setScreenshotImageValidTime(LocalDateTime screenshotImageValidTime) {
+		this.screenshotImageValidTime = screenshotImageValidTime;
+	}
+
+	public String getParamStr() {
+		return paramStr;
+	}
+
+	public void setParamStr(String paramStr) {
+		this.paramStr = paramStr;
+	}
 
 	@Override
 	public String toString() {
-		return "TestEventBO [caseCode=" + caseCode + ", projectName=" + projectName + ", mainUrl=" + mainUrl + "]";
+		return "TestEventBO [event=" + event + ", webDriver=" + webDriver + ", report=" + report
+				+ ", reportOutputFolderPath=" + reportOutputFolderPath + ", screenshotImageValidTime="
+				+ screenshotImageValidTime + ", paramStr=" + paramStr + "]";
 	}
 
 }

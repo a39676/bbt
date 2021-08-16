@@ -7,9 +7,9 @@ import java.time.LocalDateTime;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.autoTestBase.testEvent.mapper.TestEventMapper;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
-import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.baseCommon.service.CommonService;
 import toolPack.ioHandle.FileUtilCustom;
 
@@ -27,13 +27,13 @@ public abstract class TestEventCommonService extends CommonService {
 		redisConnectService.setValByName(runningEventRedisKey, "true");
 	}
 	
-	protected CommonResultBBT endEvent(TestEvent te, boolean successFlag) {
+	protected CommonResult endEvent(TestEvent te, boolean successFlag) {
 		return endEvent(te, successFlag, null);
 	}
 	
-	protected CommonResultBBT endEvent(TestEvent te, boolean successFlag, String report) {
+	protected CommonResult endEvent(TestEvent te, boolean successFlag, String report) {
 		
-		CommonResultBBT endEventResult = new CommonResultBBT();
+		CommonResult endEventResult = new CommonResult();
 		
 		try {
 			te.setEndTime(LocalDateTime.now());

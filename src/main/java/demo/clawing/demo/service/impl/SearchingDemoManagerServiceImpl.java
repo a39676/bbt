@@ -7,7 +7,7 @@ import autoTest.testEvent.pojo.result.InsertSearchingDemoEventResult;
 import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
-import demo.clawing.demo.pojo.type.SearchingDemoCaseType;
+import demo.clawing.demo.pojo.type.testEvent.SearchingDemoEventType;
 import demo.clawing.demo.service.SearchingDemoManagerService;
 import demo.selenium.pojo.bo.BuildTestEventBO;
 import demo.selenium.service.impl.SeleniumCommonService;
@@ -15,11 +15,11 @@ import demo.selenium.service.impl.SeleniumCommonService;
 @Service
 public class SearchingDemoManagerServiceImpl extends SeleniumCommonService implements SearchingDemoManagerService {
 
-	private TestEvent buildTestEvent(SearchingDemoCaseType t) {
+	private TestEvent buildTestEvent(SearchingDemoEventType t) {
 		BuildTestEventBO bo = new BuildTestEventBO();
 		bo.setTestModuleType(TestModuleType.ATDemo);
 		bo.setCaseId(t.getId());
-		bo.setEventName(t.getEventName());
+		bo.setEventName(t.getCaseName());
 		return buildTestEvent(bo);
 	}
 	
@@ -27,7 +27,7 @@ public class SearchingDemoManagerServiceImpl extends SeleniumCommonService imple
 	public InsertSearchingDemoEventResult insert(InsertSearchingDemoTestEventDTO dto) {
 		InsertSearchingDemoEventResult ir = new InsertSearchingDemoEventResult();
 
-		SearchingDemoCaseType t = SearchingDemoCaseType.getType(dto.getCaseId());
+		SearchingDemoEventType t = SearchingDemoEventType.getType(dto.getCaseId());
 		if(t == null) {
 			ir.failWithMessage("数据异常");
 			return ir;
@@ -46,7 +46,7 @@ public class SearchingDemoManagerServiceImpl extends SeleniumCommonService imple
 		return ir;
 	}
 	
-	private InsertTestEventResult insertclawingEvent(InsertSearchingDemoTestEventDTO dto, SearchingDemoCaseType t) {
+	private InsertTestEventResult insertclawingEvent(InsertSearchingDemoTestEventDTO dto, SearchingDemoEventType t) {
 		TestEvent te = buildTestEvent(t);
 		te.setRemark(dto.getSearchKeyWord());
 		te.setAppointment(dto.getAppointment());

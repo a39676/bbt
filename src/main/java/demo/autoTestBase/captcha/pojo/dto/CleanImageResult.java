@@ -1,8 +1,8 @@
 package demo.autoTestBase.captcha.pojo.dto;
 
-import demo.baseCommon.pojo.result.CommonResultBBT;
+import auxiliaryCommon.pojo.result.CommonResult;
 
-public class CleanImageResult extends CommonResultBBT {
+public class CleanImageResult extends CommonResult {
 
 	private String outputPath;
 

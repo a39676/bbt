@@ -16,6 +16,7 @@ import at.report.service.ATJsonReportService;
 import at.screenshot.pojo.dto.TakeScreenshotSaveDTO;
 import at.screenshot.pojo.result.ScreenshotSaveResult;
 import at.screenshot.service.ScreenshotService;
+import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.pojo.constant.TestEventOptionConstant;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.service.TestEventService;
@@ -35,7 +36,7 @@ import selenium.pojo.constant.SeleniumConstant;
 public abstract class SeleniumCommonService extends CommonService {
 
 	@Autowired
-	protected ATJsonReportService jsonReporter;
+	protected ATJsonReportService reportService;
 	@Autowired
 	protected ImageInteractionService imageInteractionService;
 	@Autowired
@@ -111,6 +112,12 @@ public abstract class SeleniumCommonService extends CommonService {
 		return r;
 	}
 
+	protected void saveReport(TestEventBO tbo) {
+		if (reportService.outputReport(tbo.getReport(), tbo.getReportOutputFolderPath())) {
+			updateTestEventReportPath(tbo.getEvent(), tbo.getReportOutputFolderPath());
+		}
+	}
+	
 	protected int updateTestEventReportPath(TestEvent te, String reportPath) {
 		return testEventService.updateTestEventReportPath(te, reportPath);
 	}
@@ -122,7 +129,7 @@ public abstract class SeleniumCommonService extends CommonService {
 				return true;
 			} catch (Exception e2) {
 				if (reportDTO != null) {
-					jsonReporter.appendContent(reportDTO, e2.getMessage());
+					reportService.appendContent(reportDTO, e2.getMessage());
 				}
 				return false;
 			}
@@ -185,7 +192,10 @@ public abstract class SeleniumCommonService extends CommonService {
 		return screenshotService.screenshot(dto);
 	}
 
-	protected String getReportOutputPath(String eventName) {
+	protected String getReportOutputFolderPath(String eventName) {
+		if(StringUtils.isBlank(eventName)) {
+			eventName = "unknow";
+		}
 		String path = globalOptionService.getReportOutputFolder() + File.separator + eventName;
 		globalOptionService.checkFolderExists(path);
 		return path;
@@ -195,6 +205,13 @@ public abstract class SeleniumCommonService extends CommonService {
 		String path = globalOptionService.getParameterSavingFolder() + File.separator + eventName;
 		globalOptionService.checkFolderExists(path);
 		return path;
+	}
+	
+	protected void addScreenshotToReport(WebDriver d, TestEventBO tbo) {
+		ScreenshotSaveResult screenSaveResult = screenshot(d, tbo.getEvent().getEventName());
+		ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(),
+				screenSaveResult.getFileName());
+		reportService.appendImage(tbo.getReport(), uploadImgResult.getImgUrl());
 	}
 
 	protected void threadSleepRandomTime(Long minMS, Long maxMS) throws InterruptedException {

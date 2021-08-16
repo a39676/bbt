@@ -8,16 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import autoTest.testModule.pojo.type.TestModuleType;
-import demo.autoTestBase.testCase.pojo.po.TestCase;
-import demo.autoTestBase.testCase.service.TestCaseService;
+import auxiliaryCommon.pojo.result.CommonResult;
 import demo.autoTestBase.testEvent.mq.TestEventAckProducer;
-import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.pojo.constant.TestEventOptionConstant;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.po.TestEventExample;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.autoTestBase.testEvent.service.TestEventService;
-import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.clawing.collecting.jandan.service.impl.ClawCollectPrefixServiceImpl;
 import demo.clawing.demo.service.impl.SearchingDemoPrefixServiceImpl;
 import demo.clawing.localClawing.service.impl.LocalClawingPrefixServiceImpl;
@@ -28,8 +25,6 @@ import selenium.pojo.constant.SeleniumConstant;
 @Service
 public class TestEventServiceImpl extends TestEventCommonService implements TestEventService {
 
-	@Autowired
-	private TestCaseService caseService;
 	@Autowired
 	private TestEventAckProducer testEventAckProducer;
 
@@ -76,32 +71,32 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	}
 
 	@Override
-	public CommonResultBBT reciveTestEventAndRun(TestEvent te) {
+	public CommonResult reciveTestEventAndRun(TestEvent te) {
 
 		if (te == null) {
-			return new CommonResultBBT();
+			return new CommonResult();
 		}
 
 		if (existsRuningEvent()) {
-			return new CommonResultBBT();
+			return new CommonResult();
 		}
 
 		return runEvent(te);
 	}
 
-	private CommonResultBBT runEvent(TestEvent event) {
+	private CommonResult runEvent(TestEvent event) {
 		String breakWord = findPauseWord();
 		if (safeWord.equals(breakWord)) {
-			return new CommonResultBBT();
+			return new CommonResult();
 		}
 
-		CommonResultBBT runResult = null;
+		CommonResult runResult = null;
 		if (event.getAppointment() == null || event.getAppointment().isBefore(LocalDateTime.now())) {
 			startEvent(event);
 			try {
 				runResult = runSubEvent(event);
 			} catch (Exception e) {
-				runResult = new CommonResultBBT();
+				runResult = new CommonResult();
 			}
 			endEvent(event, runResult.isSuccess(), runResult.getMessage());
 		}
@@ -109,7 +104,7 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		return runResult;
 	}
 
-	private CommonResultBBT runSubEvent(TestEvent te) {
+	private CommonResult runSubEvent(TestEvent te) {
 		Long moduleId = te.getModuleId();
 		if (moduleId == null) {
 			return null;
@@ -124,21 +119,7 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		} else if (TestModuleType.localClawing.getId().equals(moduleId)) {
 			return localClawingPrefixService.runSubEvent(te);
 		}
-		return new CommonResultBBT();
-	}
-
-	@Override
-	public TestEvent runNewTestEvent(TestEventBO bo) {
-		TestCase casePO = caseService.findByCaseCode(bo.getCaseCode());
-		Long newEventId = snowFlake.getNextId();
-		TestEvent testEvent = new TestEvent();
-		if (casePO != null) {
-			testEvent.setCaseId(casePO.getId());
-		}
-		testEvent.setId(newEventId);
-		eventMapper.insertSelective(testEvent);
-
-		return testEvent;
+		return new CommonResult();
 	}
 
 	@Override
@@ -158,12 +139,12 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	/*
 	 * TODO 移除mail 模块后, 转移到 telegram 接口
 	 */
-//	public CommonResultBBT sendFailReports() {
+//	public CommonResult sendFailReports() {
 //		LocalDateTime now = LocalDateTime.now();
 //		return sendFailReports(now.minusDays(2L), now);
 //	}
-//	public CommonResultBBT sendFailReports(LocalDateTime startTime, LocalDateTime endTime) {
-//		CommonResultBBT r = new CommonResultBBT();
+//	public CommonResult sendFailReports(LocalDateTime startTime, LocalDateTime endTime) {
+//		CommonResult r = new CommonResult();
 //		TestEventExample example = new TestEventExample();
 //		example.createCriteria().andIsDeleteEqualTo(false).andIsPassEqualTo(false).andEndTimeIsNotNull()
 //				.andStartTimeBetween(startTime, endTime);
