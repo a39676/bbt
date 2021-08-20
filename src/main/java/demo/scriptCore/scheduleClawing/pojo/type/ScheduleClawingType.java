@@ -14,19 +14,19 @@ public enum ScheduleClawingType {
 	;
 
 	private Long id;
-	private String eventName;
+	private String flowName;
 
 	ScheduleClawingType(Long id, String eventName) {
 		this.id = id;
-		this.eventName = eventName;
+		this.flowName = eventName;
 	}
 
 	public Long getId() {
 		return id;
 	}
 
-	public String getEventName() {
-		return eventName;
+	public String getFlowName() {
+		return flowName;
 	}
 
 }

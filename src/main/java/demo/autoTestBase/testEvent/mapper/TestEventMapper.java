@@ -3,38 +3,38 @@ package demo.autoTestBase.testEvent.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.RowBounds;
 
 import autoTest.jsonReport.pojo.dto.FindTestEventPageByConditionDTO;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.po.TestEventExample;
 
 public interface TestEventMapper {
-	
-	long countByExample(TestEventExample example);
+    long countByExample(TestEventExample example);
 
-	int deleteByExample(TestEventExample example);
+    int deleteByExample(TestEventExample example);
 
-	int deleteByPrimaryKey(Long id);
+    int deleteByPrimaryKey(Long id);
 
-	int insert(TestEvent record);
+    int insert(TestEvent record);
 
-	int insertSelective(TestEvent record);
+    int insertSelective(TestEvent record);
 
-	List<TestEvent> selectByExample(TestEventExample example);
+    List<TestEvent> selectByExampleWithRowbounds(TestEventExample example, RowBounds rowBounds);
 
-	TestEvent selectByPrimaryKey(Long id);
+    List<TestEvent> selectByExample(TestEventExample example);
 
-	int updateByExampleSelective(@Param("record") TestEvent record, @Param("example") TestEventExample example);
+    TestEvent selectByPrimaryKey(Long id);
 
-	int updateByExample(@Param("record") TestEvent record, @Param("example") TestEventExample example);
+    int updateByExampleSelective(@Param("record") TestEvent record, @Param("example") TestEventExample example);
 
-	int updateByPrimaryKeySelective(TestEvent record);
+    int updateByExample(@Param("record") TestEvent record, @Param("example") TestEventExample example);
 
-	int updateByPrimaryKey(TestEvent record);
+    int updateByPrimaryKeySelective(TestEvent record);
 
-	int existsRuningEvent();
+    int updateByPrimaryKey(TestEvent record);
+    
+    List<TestEvent> findTestEventPageByCondition(FindTestEventPageByConditionDTO dto);
 
 	int countWaitingEvent();
-
-	List<TestEvent> findTestEventPageByCondition(FindTestEventPageByConditionDTO dto);
 }

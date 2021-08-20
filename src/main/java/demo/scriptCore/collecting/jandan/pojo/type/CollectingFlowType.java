@@ -1,6 +1,6 @@
 package demo.scriptCore.collecting.jandan.pojo.type;
 
-public enum CollectingCaseType {
+public enum CollectingFlowType {
 
 	/** jianDan */
 	jianDan(1L, "jianDan"),
@@ -10,7 +10,7 @@ public enum CollectingCaseType {
 	private Long id;
 	private String eventName;
 
-	CollectingCaseType(Long id, String eventName) {
+	CollectingFlowType(Long id, String eventName) {
 		this.id = id;
 		this.eventName = eventName;
 	}

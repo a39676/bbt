@@ -41,7 +41,7 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 	private String userDataFileName = "maiMaiSign.json";
 
 	private TestModuleType testModuleType = TestModuleType.scheduleClawing;
-	private ScheduleClawingType testCastType = ScheduleClawingType.MAI_MAI;
+	private ScheduleClawingType testFlowType = ScheduleClawingType.MAI_MAI;
 
 	private TestEvent buildClawingEvent() {
 		String paramterFolderPath = getParameterSaveingPath(eventName);
@@ -53,8 +53,8 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 
 		BuildTestEventBO bo = new BuildTestEventBO();
 		bo.setTestModuleType(testModuleType);
-		bo.setCaseId(testCastType.getId());
-		bo.setEventName(testCastType.getEventName());
+		bo.setEventId(testFlowType.getId());
+		bo.setFlowName(testFlowType.getFlowName());
 		bo.setParameterFilePath(paramterFile.getAbsolutePath());
 		return buildTestEvent(bo);
 	}
@@ -62,7 +62,7 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 	@Override
 	public InsertTestEventResult insertClawingEvent() {
 		TestEvent te = buildClawingEvent();
-		return testEventService.insertTestEvent(te);
+		return testEventService.insertExecuteTestEvent(te);
 	}
 
 	@Override

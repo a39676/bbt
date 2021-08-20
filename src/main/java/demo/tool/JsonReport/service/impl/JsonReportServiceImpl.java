@@ -57,7 +57,7 @@ public class JsonReportServiceImpl extends CommonService implements JsonReportSe
 	
 	private TestReportBO buildBOByPO(TestEvent te) {
 		TestReportBO bo = new TestReportBO();
-		bo.setCaseId(te.getCaseId());
+		bo.setFlowId(te.getFlowId());
 		bo.setEndTime(te.getEndTime());
 		bo.setEventName(te.getEventName());
 		bo.setId(te.getId());

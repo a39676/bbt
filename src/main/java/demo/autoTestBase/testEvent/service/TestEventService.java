@@ -7,7 +7,7 @@ import net.sf.json.JSONObject;
 
 public interface TestEventService {
 
-	InsertTestEventResult insertTestEvent(TestEvent po);
+	InsertTestEventResult insertExecuteTestEvent(TestEvent po);
 	InsertTestEventResult insertTestEvent(TestEvent po, JSONObject paramJson);
 	
 	int countWaitingEvent();

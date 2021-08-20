@@ -1,7 +1,5 @@
 package demo.scriptCore.demo.service.impl;
 
-import java.io.File;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -9,70 +7,19 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import at.xpath.pojo.bo.XpathBuilderBO;
-import autoTest.testEvent.searchingDemo.pojo.dto.ATBingDemoDTO;
 import autoTest.testEvent.searchingDemo.pojo.dto.BingSearchInHomePageDTO;
-import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
-import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
-import demo.scriptCore.demo.pojo.type.testEvent.SearchingDemoEventType;
 import demo.scriptCore.demo.service.BingDemoService;
-import demo.selenium.pojo.bo.BuildTestEventBO;
 import demo.selenium.service.impl.SeleniumCommonService;
-import net.sf.json.JSONObject;
-import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class BingDemoServiceImpl extends SeleniumCommonService implements BingDemoService {
 
-	@Autowired
-	private FileUtilCustom ioUtil;
-	
-	private TestEvent buildBingSearchDemo(ATBingDemoDTO dto) {
-		BuildTestEventBO bo = new BuildTestEventBO();
-
-		TestModuleType testModuleType = TestModuleType.ATDemo;
-		SearchingDemoEventType testCastType = SearchingDemoEventType.bingDemo;
-		String eventName = "bing_search_demo";
-		
-		String paramterFolderPath = getParameterSaveingPath(eventName);
-		
-		if(dto.getBingSearchInHomePageDTO() == null) {
-			File paramterFile = new File(paramterFolderPath + File.separator + "default.json");
-			if (!paramterFile.exists()) {
-				return null;
-			}
-			bo.setParameterFilePath(paramterFile.getAbsolutePath());
-		} else {
-			File paramterFile = new File(paramterFolderPath + File.separator + snowFlake.getNextId() + ".json");
-			JSONObject json = JSONObject.fromObject(dto);
-			ioUtil.byteToFile(json.toString().getBytes(StandardCharsets.UTF_8), paramterFile.getAbsolutePath());
-			bo.setParameterFilePath(paramterFile.getAbsolutePath());
-		}
-
-		bo.setTestModuleType(testModuleType);
-		bo.setCaseId(testCastType.getId());
-		bo.setEventName(eventName);
-		
-		return buildTestEvent(bo);
-	}
-
-	@Override
-	public InsertTestEventResult insertSearchDemoEvent(ATBingDemoDTO dto) {
-		TestEvent te = buildBingSearchDemo(dto);
-		return testEventService.insertTestEvent(te);
-	}
-	
-	@Override
-	public InsertTestEventResult insertSearchDemoEvent() {
-		return insertSearchDemoEvent(null);
-	}
-	
 	@Override
 	public CommonResult testing(TestEvent te) {
 		CommonResult r = new CommonResult();
@@ -135,10 +82,10 @@ public class BingDemoServiceImpl extends SeleniumCommonService implements BingDe
 
 		addScreenshotToReport(d, tbo);
 
-		x.start("div").addAttribute("id", "sb_go_par");
+		x.start("label").addId("search_icon");
 		WebElement searchButton = d.findElement(By.xpath(x.getXpath()));
 		searchButton.click();
-
+		
 		reportService.appendContent(tbo.getReport(), "点击搜索");
 
 		addScreenshotToReport(d, tbo);

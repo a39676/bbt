@@ -8,21 +8,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import autoTest.testEvent.searchingDemo.pojo.constant.SearchingDemoUrl;
-import autoTest.testEvent.searchingDemo.pojo.dto.ATBingDemoDTO;
 import autoTest.testEvent.searchingDemo.pojo.result.InsertSearchingDemoEventResult;
-import demo.scriptCore.demo.service.SearchingDemoManagerService;
+import demo.scriptCore.demo.pojo.dto.InsertBingSearchDemoDTO;
+import demo.scriptCore.demo.service.BingDemoPrefixService;
 
 @Controller
-@RequestMapping(value = SearchingDemoUrl.root)
-public class SearchingDemoController {
+@RequestMapping(value = SearchingDemoUrl.ROOT)
+public class BingDemoController {
 
 	@Autowired
-	private SearchingDemoManagerService searchingDemoManagerService;
+	private BingDemoPrefixService bingDemoPrefixService;
 	
-	@PostMapping(value = SearchingDemoUrl.insert)
+	@PostMapping(value = SearchingDemoUrl.INSERT_SEARCH_IN_HOMEPAGE)
 	@ResponseBody
-	public InsertSearchingDemoEventResult insert(@RequestBody ATBingDemoDTO dto) {
-		return searchingDemoManagerService.insert(dto);
+	public InsertSearchingDemoEventResult insertSerachInHomepage(@RequestBody InsertBingSearchDemoDTO dto) {
+		return bingDemoPrefixService.insertSearchInHomeEvent(dto);
 	}
 	
 }

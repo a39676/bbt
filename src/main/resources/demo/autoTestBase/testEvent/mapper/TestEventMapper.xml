@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="demo.autoTestBase.testEvent.pojo.po.TestEvent">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="project_id" jdbcType="BIGINT" property="projectId" />
-    <result column="case_id" jdbcType="BIGINT" property="caseId" />
+    <result column="flow_id" jdbcType="BIGINT" property="flowId" />
     <result column="process_id" jdbcType="BIGINT" property="processId" />
     <result column="module_id" jdbcType="BIGINT" property="moduleId" />
     <result column="event_name" jdbcType="VARCHAR" property="eventName" />
@@ -77,7 +77,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, project_id, case_id, process_id, module_id, event_name, remark, parameter_file_path, 
+    id, project_id, flow_id, process_id, module_id, event_name, remark, parameter_file_path, 
     report_path, create_time, appointment, start_time, end_time, is_pass, is_delete
   </sql>
   <select id="selectByExample" parameterType="demo.autoTestBase.testEvent.pojo.po.TestEventExample" resultMap="BaseResultMap">
@@ -111,13 +111,13 @@
     </if>
   </delete>
   <insert id="insert" parameterType="demo.autoTestBase.testEvent.pojo.po.TestEvent">
-    insert into test_event (id, project_id, case_id, 
+    insert into test_event (id, project_id, flow_id, 
       process_id, module_id, event_name, 
       remark, parameter_file_path, report_path, 
       create_time, appointment, start_time, 
       end_time, is_pass, is_delete
       )
-    values (#{id,jdbcType=BIGINT}, #{projectId,jdbcType=BIGINT}, #{caseId,jdbcType=BIGINT}, 
+    values (#{id,jdbcType=BIGINT}, #{projectId,jdbcType=BIGINT}, #{flowId,jdbcType=BIGINT}, 
       #{processId,jdbcType=BIGINT}, #{moduleId,jdbcType=BIGINT}, #{eventName,jdbcType=VARCHAR}, 
       #{remark,jdbcType=VARCHAR}, #{parameterFilePath,jdbcType=VARCHAR}, #{reportPath,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{appointment,jdbcType=TIMESTAMP}, #{startTime,jdbcType=TIMESTAMP}, 
@@ -133,8 +133,8 @@
       <if test="projectId != null">
         project_id,
       </if>
-      <if test="caseId != null">
-        case_id,
+      <if test="flowId != null">
+        flow_id,
       </if>
       <if test="processId != null">
         process_id,
@@ -180,8 +180,8 @@
       <if test="projectId != null">
         #{projectId,jdbcType=BIGINT},
       </if>
-      <if test="caseId != null">
-        #{caseId,jdbcType=BIGINT},
+      <if test="flowId != null">
+        #{flowId,jdbcType=BIGINT},
       </if>
       <if test="processId != null">
         #{processId,jdbcType=BIGINT},
@@ -236,8 +236,8 @@
       <if test="record.projectId != null">
         project_id = #{record.projectId,jdbcType=BIGINT},
       </if>
-      <if test="record.caseId != null">
-        case_id = #{record.caseId,jdbcType=BIGINT},
+      <if test="record.flowId != null">
+        flow_id = #{record.flowId,jdbcType=BIGINT},
       </if>
       <if test="record.processId != null">
         process_id = #{record.processId,jdbcType=BIGINT},
@@ -284,7 +284,7 @@
     update test_event
     set id = #{record.id,jdbcType=BIGINT},
       project_id = #{record.projectId,jdbcType=BIGINT},
-      case_id = #{record.caseId,jdbcType=BIGINT},
+      flow_id = #{record.flowId,jdbcType=BIGINT},
       process_id = #{record.processId,jdbcType=BIGINT},
       module_id = #{record.moduleId,jdbcType=BIGINT},
       event_name = #{record.eventName,jdbcType=VARCHAR},
@@ -307,8 +307,8 @@
       <if test="projectId != null">
         project_id = #{projectId,jdbcType=BIGINT},
       </if>
-      <if test="caseId != null">
-        case_id = #{caseId,jdbcType=BIGINT},
+      <if test="flowId != null">
+        flow_id = #{flowId,jdbcType=BIGINT},
       </if>
       <if test="processId != null">
         process_id = #{processId,jdbcType=BIGINT},
@@ -352,7 +352,7 @@
   <update id="updateByPrimaryKey" parameterType="demo.autoTestBase.testEvent.pojo.po.TestEvent">
     update test_event
     set project_id = #{projectId,jdbcType=BIGINT},
-      case_id = #{caseId,jdbcType=BIGINT},
+      flow_id = #{flowId,jdbcType=BIGINT},
       process_id = #{processId,jdbcType=BIGINT},
       module_id = #{moduleId,jdbcType=BIGINT},
       event_name = #{eventName,jdbcType=VARCHAR},
@@ -367,18 +367,19 @@
       is_delete = #{isDelete,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  
-  <select id="existsRuningEvent" resultType="int">
-    select exists(
-      select 
-        1 
-      from 
-        test_event 
-      where 
-        is_delete = false 
-        and start_time is not null 
-        and end_time is null
-    )
+  <select id="selectByExampleWithRowbounds" parameterType="demo.autoTestBase.testEvent.pojo.po.TestEventExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from test_event
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
   </select>
 
   <select id="countWaitingEvent" resultType="int">
@@ -401,8 +402,8 @@
       <if test="moduleId != null">
         and module_id = #{moduleId}
       </if>
-      <if test="caseId != null">
-        and case_id = #{caseId}
+      <if test="flowId != null">
+        and flow_id = #{flowId}
       </if>
       <if test="id != null">
         and id = #{id}

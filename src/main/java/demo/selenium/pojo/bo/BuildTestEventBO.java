@@ -4,12 +4,19 @@ import autoTest.testModule.pojo.type.TestModuleType;
 
 public class BuildTestEventBO {
 
+	private Long eventId;
 	private TestModuleType testModuleType;
-	private Long processId;
-	private Long caseId;
-	private String eventName;
+	private Long flowId;
+	private String flowName;
 	private String parameterFilePath;
-	private String dynamicParam;
+
+	public Long getEventId() {
+		return eventId;
+	}
+
+	public void setEventId(Long eventId) {
+		this.eventId = eventId;
+	}
 
 	public TestModuleType getTestModuleType() {
 		return testModuleType;
@@ -19,28 +26,20 @@ public class BuildTestEventBO {
 		this.testModuleType = testModuleType;
 	}
 
-	public Long getProcessId() {
-		return processId;
+	public Long getFlowId() {
+		return flowId;
 	}
 
-	public void setProcessId(Long processId) {
-		this.processId = processId;
+	public void setFlowId(Long flowId) {
+		this.flowId = flowId;
 	}
 
-	public Long getCaseId() {
-		return caseId;
+	public String getFlowName() {
+		return flowName;
 	}
 
-	public void setCaseId(Long caseId) {
-		this.caseId = caseId;
-	}
-
-	public String getEventName() {
-		return eventName;
-	}
-
-	public void setEventName(String eventName) {
-		this.eventName = eventName;
+	public void setFlowName(String flowName) {
+		this.flowName = flowName;
 	}
 
 	public String getParameterFilePath() {
@@ -51,19 +50,10 @@ public class BuildTestEventBO {
 		this.parameterFilePath = parameterFilePath;
 	}
 
-	public String getDynamicParam() {
-		return dynamicParam;
-	}
-
-	public void setDynamicParam(String dynamicParam) {
-		this.dynamicParam = dynamicParam;
-	}
-
 	@Override
 	public String toString() {
-		return "BuildTestEventBO [testModuleType=" + testModuleType + ", processId=" + processId + ", caseId=" + caseId
-				+ ", eventName=" + eventName + ", parameterFilePath=" + parameterFilePath + ", dynamicParam="
-				+ dynamicParam + "]";
+		return "BuildTestEventBO [eventId=" + eventId + ", testModuleType=" + testModuleType + ", flowId=" + flowId
+				+ ", flowName=" + flowName + ", parameterFilePath=" + parameterFilePath + "]";
 	}
 
 }

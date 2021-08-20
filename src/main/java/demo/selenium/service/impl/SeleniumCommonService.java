@@ -55,23 +55,19 @@ public abstract class SeleniumCommonService extends CommonService {
 	protected SeleniumCaptchaHandleService captchaHandleService;
 	
 	protected TestEvent buildTestEvent(BuildTestEventBO bo) {
-		if (bo.getTestModuleType() == null || bo.getCaseId() == null) {
+		if (bo.getTestModuleType() == null || bo.getFlowId() == null) {
 			return null;
 		}
 		TestEvent te = new TestEvent();
-		te.setProcessId(bo.getProcessId());
-		te.setCaseId(bo.getCaseId());
+		te.setFlowId(bo.getFlowId());
 		te.setModuleId(bo.getTestModuleType().getId());
-		te.setId(snowFlake.getNextId());
-		te.setEventName(bo.getEventName());
-		te.setParameterFilePath(bo.getParameterFilePath());
-		if(StringUtils.isNotBlank(bo.getDynamicParam())) {
-			try {
-				JSONObject j = JSONObject.fromObject(bo.getDynamicParam());
-				te.setRemark(j.toString());
-			} catch (Exception e) {
-			}
+		if(bo.getEventId() != null) {
+			te.setId(bo.getEventId());
+		} else {
+			te.setId(snowFlake.getNextId());
 		}
+		te.setEventName(bo.getFlowName());
+		te.setParameterFilePath(bo.getParameterFilePath());
 		return te;
 	}
 

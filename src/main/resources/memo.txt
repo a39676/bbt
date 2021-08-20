@@ -1,10 +1,23 @@
 ﻿testEvent
-	插入任务时, 参数指定方式
-		文件形式 --> 指定到 parameterFilePath
-		数据库方式?
-		动态指定?
-	testEvent 如何指定连串的 testCase?
+	mq
+		TestEventQueue 重命名为 TestEventExecuteQueue
+		新增 TestEventInsertQueue
+	testEvent 
+		通过flow 指定连串的 testCase
+		ALTER TABLE bbt.test_event CHANGE case_id flow_id bigint(20) NOT NULL;
+		case 字段 重命名为 flow
 		给定参数时 以类似 map 的方式 --->  {DTOname:{paramName1:param1, paraName2:param2}}
+		插入任务时, 参数指定方式
+			AutomationTestInsertEventDTO.paramStr --> json String
+			文件形式 --> 指定到 parameterFilePath
+			TestEvent.parameterFilePath 数据库字段保存 
+			参数优先级, 动态参数指定优先 然后 脚本内 hardcode 默认参数
+			并安排定时清除任务, 物理删除过时参数文件
+	最终的报告, 应由 N个case 的子报告 List 形式给出
+		方便判定哪个 case failed, 并可能影响下一步测试流程 
+		可能会分布式部署 BBT, test event 运行结束后, 需要将报告发送到 MQ, 汇总到另一个 report 服务器
+		
+	需要废弃  --> TestEventServiceImpl.insertTestEvent(TestEvent po, JSONObject paramJson)
 
 TestEventServiceImpl.sendFailReports
 可以转给电报了

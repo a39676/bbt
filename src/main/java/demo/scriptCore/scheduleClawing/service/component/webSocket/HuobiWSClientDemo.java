@@ -53,7 +53,7 @@ package demo.scriptCore.scheduleClawing.service.component.webSocket;
 //	private CryptoCompareSocketConfigBO getDefaultConfig() {
 //		CryptoCompareSocketConfigBO bo = null;
 ////		String systemParameterSavingFolderPath = globalOptionService.getParameterSavingFolder();
-//		String systemParameterSavingFolderPath = "d:/home/u2/bbt/autoTestParameterFiles";
+//		String systemParameterSavingFolderPath = MAIN_FOLDER_PATH + "/autoTestParameterFiles";
 //		String cryptoCompareParameterSavingFolderPath = systemParameterSavingFolderPath + File.separator
 //				+ CryptoCoinWebSocketConstant.HUO_BI_PARAM_STORE_PATH;
 //

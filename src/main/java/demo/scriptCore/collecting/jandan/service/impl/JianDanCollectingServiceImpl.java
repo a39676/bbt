@@ -9,7 +9,7 @@ import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
-import demo.scriptCore.collecting.jandan.pojo.type.CollectingCaseType;
+import demo.scriptCore.collecting.jandan.pojo.type.CollectingFlowType;
 import demo.scriptCore.collecting.jandan.service.JianDanCollectingService;
 import demo.selenium.pojo.bo.BuildTestEventBO;
 import demo.selenium.service.impl.SeleniumCommonService;
@@ -18,7 +18,7 @@ import demo.selenium.service.impl.SeleniumCommonService;
 public class JianDanCollectingServiceImpl extends SeleniumCommonService implements JianDanCollectingService {
 
 	private static final TestModuleType TEST_MODULE_TYPE = TestModuleType.collecting;
-	private static final CollectingCaseType TEST_CAST_TYPE = CollectingCaseType.jianDan;
+	private static final CollectingFlowType TEST_FLOW_TYPE = CollectingFlowType.jianDan;
 	@SuppressWarnings("unused")
 	private static final String COLLECT_EVENT_NAME = "jiandanCollect";
 	private static final String HOME_URL = "https://jandan.net/";
@@ -27,15 +27,15 @@ public class JianDanCollectingServiceImpl extends SeleniumCommonService implemen
 	private TestEvent buildCollectingEvent() {
 		BuildTestEventBO bo = new BuildTestEventBO();
 		bo.setTestModuleType(TEST_MODULE_TYPE);
-		bo.setCaseId(TEST_CAST_TYPE.getId());
-		bo.setEventName(TEST_CAST_TYPE.getEventName());
+		bo.setEventId(TEST_FLOW_TYPE.getId());
+		bo.setFlowName(TEST_FLOW_TYPE.getEventName());
 		return buildTestEvent(bo);
 	}
 
 	@Override
 	public InsertTestEventResult insertCollectingJianDanEvent() {
 		TestEvent te = buildCollectingEvent();
-		return testEventService.insertTestEvent(te);
+		return testEventService.insertExecuteTestEvent(te);
 	}
 	
 	@Override

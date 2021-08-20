@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="demo.clawing.medicine.mapper.MedicineFactoryMapper">
-  <resultMap id="BaseResultMap" type="demo.clawing.medicine.pojo.po.MedicineFactory">
+<mapper namespace="demo.scriptCore.medicine.mapper.MedicineDocumentMapper">
+  <resultMap id="BaseResultMap" type="demo.scriptCore.medicine.pojo.po.MedicineDocument">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="factory_name" jdbcType="VARCHAR" property="factoryName" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="medicine_id" jdbcType="BIGINT" property="medicineId" />
+    <result column="document_path" jdbcType="VARCHAR" property="documentPath" />
+    <result column="document_type" jdbcType="TINYINT" property="documentType" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -66,15 +67,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, factory_name, create_time, is_delete
+    id, medicine_id, document_path, document_type, is_delete
   </sql>
-  <select id="selectByExample" parameterType="demo.clawing.medicine.pojo.po.MedicineFactoryExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="demo.scriptCore.medicine.pojo.po.MedicineDocumentExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from medicine_factory
+    from medicine_document
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -85,36 +86,39 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from medicine_factory
+    from medicine_document
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from medicine_factory
+    delete from medicine_document
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="demo.clawing.medicine.pojo.po.MedicineFactoryExample">
-    delete from medicine_factory
+  <delete id="deleteByExample" parameterType="demo.scriptCore.medicine.pojo.po.MedicineDocumentExample">
+    delete from medicine_document
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="demo.clawing.medicine.pojo.po.MedicineFactory">
-    insert into medicine_factory (id, factory_name, create_time, 
-      is_delete)
-    values (#{id,jdbcType=BIGINT}, #{factoryName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{isDelete,jdbcType=BIT})
+  <insert id="insert" parameterType="demo.scriptCore.medicine.pojo.po.MedicineDocument">
+    insert into medicine_document (id, medicine_id, document_path, 
+      document_type, is_delete)
+    values (#{id,jdbcType=BIGINT}, #{medicineId,jdbcType=BIGINT}, #{documentPath,jdbcType=VARCHAR}, 
+      #{documentType,jdbcType=TINYINT}, #{isDelete,jdbcType=BIT})
   </insert>
-  <insert id="insertSelective" parameterType="demo.clawing.medicine.pojo.po.MedicineFactory">
-    insert into medicine_factory
+  <insert id="insertSelective" parameterType="demo.scriptCore.medicine.pojo.po.MedicineDocument">
+    insert into medicine_document
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
       </if>
-      <if test="factoryName != null">
-        factory_name,
+      <if test="medicineId != null">
+        medicine_id,
       </if>
-      <if test="createTime != null">
-        create_time,
+      <if test="documentPath != null">
+        document_path,
+      </if>
+      <if test="documentType != null">
+        document_type,
       </if>
       <if test="isDelete != null">
         is_delete,
@@ -124,34 +128,40 @@
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="factoryName != null">
-        #{factoryName,jdbcType=VARCHAR},
+      <if test="medicineId != null">
+        #{medicineId,jdbcType=BIGINT},
       </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
+      <if test="documentPath != null">
+        #{documentPath,jdbcType=VARCHAR},
+      </if>
+      <if test="documentType != null">
+        #{documentType,jdbcType=TINYINT},
       </if>
       <if test="isDelete != null">
         #{isDelete,jdbcType=BIT},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="demo.clawing.medicine.pojo.po.MedicineFactoryExample" resultType="java.lang.Long">
-    select count(*) from medicine_factory
+  <select id="countByExample" parameterType="demo.scriptCore.medicine.pojo.po.MedicineDocumentExample" resultType="java.lang.Long">
+    select count(*) from medicine_document
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update medicine_factory
+    update medicine_document
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.factoryName != null">
-        factory_name = #{record.factoryName,jdbcType=VARCHAR},
+      <if test="record.medicineId != null">
+        medicine_id = #{record.medicineId,jdbcType=BIGINT},
       </if>
-      <if test="record.createTime != null">
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      <if test="record.documentPath != null">
+        document_path = #{record.documentPath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.documentType != null">
+        document_type = #{record.documentType,jdbcType=TINYINT},
       </if>
       <if test="record.isDelete != null">
         is_delete = #{record.isDelete,jdbcType=BIT},
@@ -162,23 +172,27 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update medicine_factory
+    update medicine_document
     set id = #{record.id,jdbcType=BIGINT},
-      factory_name = #{record.factoryName,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      medicine_id = #{record.medicineId,jdbcType=BIGINT},
+      document_path = #{record.documentPath,jdbcType=VARCHAR},
+      document_type = #{record.documentType,jdbcType=TINYINT},
       is_delete = #{record.isDelete,jdbcType=BIT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="demo.clawing.medicine.pojo.po.MedicineFactory">
-    update medicine_factory
+  <update id="updateByPrimaryKeySelective" parameterType="demo.scriptCore.medicine.pojo.po.MedicineDocument">
+    update medicine_document
     <set>
-      <if test="factoryName != null">
-        factory_name = #{factoryName,jdbcType=VARCHAR},
+      <if test="medicineId != null">
+        medicine_id = #{medicineId,jdbcType=BIGINT},
       </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
+      <if test="documentPath != null">
+        document_path = #{documentPath,jdbcType=VARCHAR},
+      </if>
+      <if test="documentType != null">
+        document_type = #{documentType,jdbcType=TINYINT},
       </if>
       <if test="isDelete != null">
         is_delete = #{isDelete,jdbcType=BIT},
@@ -186,10 +200,11 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="demo.clawing.medicine.pojo.po.MedicineFactory">
-    update medicine_factory
-    set factory_name = #{factoryName,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
+  <update id="updateByPrimaryKey" parameterType="demo.scriptCore.medicine.pojo.po.MedicineDocument">
+    update medicine_document
+    set medicine_id = #{medicineId,jdbcType=BIGINT},
+      document_path = #{documentPath,jdbcType=VARCHAR},
+      document_type = #{documentType,jdbcType=TINYINT},
       is_delete = #{isDelete,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>

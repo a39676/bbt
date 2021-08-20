@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="demo.clawing.medicine.mapper.MedicineDocumentMapper">
-  <resultMap id="BaseResultMap" type="demo.clawing.medicine.pojo.po.MedicineDocument">
+<mapper namespace="demo.scriptCore.medicine.mapper.MedicineInfoErrorMapper">
+  <resultMap id="BaseResultMap" type="demo.scriptCore.medicine.pojo.po.MedicineInfoError">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="medicine_id" jdbcType="BIGINT" property="medicineId" />
-    <result column="document_path" jdbcType="VARCHAR" property="documentPath" />
-    <result column="document_type" jdbcType="TINYINT" property="documentType" />
+    <result column="head_detail_error" jdbcType="BIT" property="headDetailError" />
+    <result column="main_detail_error" jdbcType="BIT" property="mainDetailError" />
+    <result column="document_error" jdbcType="BIT" property="documentError" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -67,15 +68,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, medicine_id, document_path, document_type, is_delete
+    id, medicine_id, head_detail_error, main_detail_error, document_error, is_delete
   </sql>
-  <select id="selectByExample" parameterType="demo.clawing.medicine.pojo.po.MedicineDocumentExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="demo.scriptCore.medicine.pojo.po.MedicineInfoErrorExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from medicine_document
+    from medicine_info_error
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -86,27 +87,29 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from medicine_document
+    from medicine_info_error
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from medicine_document
+    delete from medicine_info_error
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="demo.clawing.medicine.pojo.po.MedicineDocumentExample">
-    delete from medicine_document
+  <delete id="deleteByExample" parameterType="demo.scriptCore.medicine.pojo.po.MedicineInfoErrorExample">
+    delete from medicine_info_error
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="demo.clawing.medicine.pojo.po.MedicineDocument">
-    insert into medicine_document (id, medicine_id, document_path, 
-      document_type, is_delete)
-    values (#{id,jdbcType=BIGINT}, #{medicineId,jdbcType=BIGINT}, #{documentPath,jdbcType=VARCHAR}, 
-      #{documentType,jdbcType=TINYINT}, #{isDelete,jdbcType=BIT})
+  <insert id="insert" parameterType="demo.scriptCore.medicine.pojo.po.MedicineInfoError">
+    insert into medicine_info_error (id, medicine_id, head_detail_error, 
+      main_detail_error, document_error, is_delete
+      )
+    values (#{id,jdbcType=BIGINT}, #{medicineId,jdbcType=BIGINT}, #{headDetailError,jdbcType=BIT}, 
+      #{mainDetailError,jdbcType=BIT}, #{documentError,jdbcType=BIT}, #{isDelete,jdbcType=BIT}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="demo.clawing.medicine.pojo.po.MedicineDocument">
-    insert into medicine_document
+  <insert id="insertSelective" parameterType="demo.scriptCore.medicine.pojo.po.MedicineInfoError">
+    insert into medicine_info_error
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -114,11 +117,14 @@
       <if test="medicineId != null">
         medicine_id,
       </if>
-      <if test="documentPath != null">
-        document_path,
+      <if test="headDetailError != null">
+        head_detail_error,
       </if>
-      <if test="documentType != null">
-        document_type,
+      <if test="mainDetailError != null">
+        main_detail_error,
+      </if>
+      <if test="documentError != null">
+        document_error,
       </if>
       <if test="isDelete != null">
         is_delete,
@@ -131,25 +137,28 @@
       <if test="medicineId != null">
         #{medicineId,jdbcType=BIGINT},
       </if>
-      <if test="documentPath != null">
-        #{documentPath,jdbcType=VARCHAR},
+      <if test="headDetailError != null">
+        #{headDetailError,jdbcType=BIT},
       </if>
-      <if test="documentType != null">
-        #{documentType,jdbcType=TINYINT},
+      <if test="mainDetailError != null">
+        #{mainDetailError,jdbcType=BIT},
+      </if>
+      <if test="documentError != null">
+        #{documentError,jdbcType=BIT},
       </if>
       <if test="isDelete != null">
         #{isDelete,jdbcType=BIT},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="demo.clawing.medicine.pojo.po.MedicineDocumentExample" resultType="java.lang.Long">
-    select count(*) from medicine_document
+  <select id="countByExample" parameterType="demo.scriptCore.medicine.pojo.po.MedicineInfoErrorExample" resultType="java.lang.Long">
+    select count(*) from medicine_info_error
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update medicine_document
+    update medicine_info_error
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
@@ -157,11 +166,14 @@
       <if test="record.medicineId != null">
         medicine_id = #{record.medicineId,jdbcType=BIGINT},
       </if>
-      <if test="record.documentPath != null">
-        document_path = #{record.documentPath,jdbcType=VARCHAR},
+      <if test="record.headDetailError != null">
+        head_detail_error = #{record.headDetailError,jdbcType=BIT},
       </if>
-      <if test="record.documentType != null">
-        document_type = #{record.documentType,jdbcType=TINYINT},
+      <if test="record.mainDetailError != null">
+        main_detail_error = #{record.mainDetailError,jdbcType=BIT},
+      </if>
+      <if test="record.documentError != null">
+        document_error = #{record.documentError,jdbcType=BIT},
       </if>
       <if test="record.isDelete != null">
         is_delete = #{record.isDelete,jdbcType=BIT},
@@ -172,27 +184,31 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update medicine_document
+    update medicine_info_error
     set id = #{record.id,jdbcType=BIGINT},
       medicine_id = #{record.medicineId,jdbcType=BIGINT},
-      document_path = #{record.documentPath,jdbcType=VARCHAR},
-      document_type = #{record.documentType,jdbcType=TINYINT},
+      head_detail_error = #{record.headDetailError,jdbcType=BIT},
+      main_detail_error = #{record.mainDetailError,jdbcType=BIT},
+      document_error = #{record.documentError,jdbcType=BIT},
       is_delete = #{record.isDelete,jdbcType=BIT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="demo.clawing.medicine.pojo.po.MedicineDocument">
-    update medicine_document
+  <update id="updateByPrimaryKeySelective" parameterType="demo.scriptCore.medicine.pojo.po.MedicineInfoError">
+    update medicine_info_error
     <set>
       <if test="medicineId != null">
         medicine_id = #{medicineId,jdbcType=BIGINT},
       </if>
-      <if test="documentPath != null">
-        document_path = #{documentPath,jdbcType=VARCHAR},
+      <if test="headDetailError != null">
+        head_detail_error = #{headDetailError,jdbcType=BIT},
       </if>
-      <if test="documentType != null">
-        document_type = #{documentType,jdbcType=TINYINT},
+      <if test="mainDetailError != null">
+        main_detail_error = #{mainDetailError,jdbcType=BIT},
+      </if>
+      <if test="documentError != null">
+        document_error = #{documentError,jdbcType=BIT},
       </if>
       <if test="isDelete != null">
         is_delete = #{isDelete,jdbcType=BIT},
@@ -200,11 +216,12 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="demo.clawing.medicine.pojo.po.MedicineDocument">
-    update medicine_document
+  <update id="updateByPrimaryKey" parameterType="demo.scriptCore.medicine.pojo.po.MedicineInfoError">
+    update medicine_info_error
     set medicine_id = #{medicineId,jdbcType=BIGINT},
-      document_path = #{documentPath,jdbcType=VARCHAR},
-      document_type = #{documentType,jdbcType=TINYINT},
+      head_detail_error = #{headDetailError,jdbcType=BIT},
+      main_detail_error = #{mainDetailError,jdbcType=BIT},
+      document_error = #{documentError,jdbcType=BIT},
       is_delete = #{isDelete,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>

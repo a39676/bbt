@@ -51,7 +51,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 	private String userDataFileName = "51jobDailySign.json";
 
 	private TestModuleType testModuleType = TestModuleType.scheduleClawing;
-	private ScheduleClawingType testCastType = ScheduleClawingType.WU_YI_JOB;
+	private ScheduleClawingType testFlowType = ScheduleClawingType.WU_YI_JOB;
 
 	private TestEvent buildDailySignEvent() {
 		String paramterFolderPath = getParameterSaveingPath(dailySignEventName);
@@ -62,8 +62,8 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 
 		BuildTestEventBO bo = new BuildTestEventBO();
 		bo.setTestModuleType(testModuleType);
-		bo.setCaseId(testCastType.getId());
-		bo.setEventName(testCastType.getEventName());
+		bo.setEventId(testFlowType.getId());
+		bo.setFlowName(testFlowType.getFlowName());
 		bo.setParameterFilePath(paramterFile.getAbsolutePath());
 		return buildTestEvent(bo);
 	}
@@ -71,7 +71,7 @@ public class WuYiJobRefreshServiceImpl extends SeleniumCommonService implements 
 	@Override
 	public InsertTestEventResult insertClawingEvent() {
 		TestEvent te = buildDailySignEvent();
-		return testEventService.insertTestEvent(te);
+		return testEventService.insertExecuteTestEvent(te);
 	}
 
 	@Override

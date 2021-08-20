@@ -10,15 +10,15 @@ import org.springframework.stereotype.Component;
 
 import com.rabbitmq.client.Channel;
 
-import demo.autoTestBase.testEvent.pojo.constant.TestEventMQConstant;
+import autoTest.testEvent.pojo.constant.TestEventMQConstant;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.baseCommon.service.CommonService;
 import net.sf.json.JSONObject;
 
 @Component
-@RabbitListener(queues = TestEventMQConstant.TEST_EVENT_QUEUE)
-public class TestEventAckReceiver extends CommonService {
+@RabbitListener(queues = TestEventMQConstant.TEST_EVENT_EXECUTE_QUEUE)
+public class TestEventExecuteQueueAckReceiver extends CommonService {
 
 	@Autowired
 	private TestEventService testEventService;
@@ -28,14 +28,14 @@ public class TestEventAckReceiver extends CommonService {
 
 		try {
 			TestEvent te = msgToTestEventPO(messageStr);
-			
-			if(te != null) {
+
+			if (te != null) {
 				testEventService.reciveTestEventAndRun(te);
 			}
 
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
 		} catch (IOException e) {
-			
+
 			channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);
 		}
 
@@ -52,8 +52,8 @@ public class TestEventAckReceiver extends CommonService {
 			if(json.has("projectId")) {
 				te.setProjectId(json.getLong("projectId"));
 			}
-			if(json.has("caseId")) {
-				te.setCaseId(json.getLong("caseId"));
+			if(json.has("flowId")) {
+				te.setFlowId(json.getLong("flowId"));
 			}
 			if(json.has("processId")) {
 				te.setProcessId(json.getLong("processId"));
@@ -106,5 +106,5 @@ public class TestEventAckReceiver extends CommonService {
 			return null;
 		}
 	}
-	
+
 }

@@ -12,12 +12,12 @@ import demo.selenium.service.SeleniumGlobalOptionService;
 @Service
 public class SeleniumGlobalOptionServiceImpl extends CommonService implements SeleniumGlobalOptionService {
 
-	private String downloadFolderPath = "/home/u2/bbt/tmp";
-	private String tmpFolder = "/home/u2/bbt/tmp";
-	private String screenshotSavingFolder = "/home/u2/bbt/screenshot";
-	private String captchaScreenshotSavingFolder = "/home/u2/bbt/captchaScreenshotSavingFolder";
-	private String reportOutputFolder = "/home/u2/bbt/reportOutputFolder";
-	private String parameterSavingFolder = "/home/u2/bbt/autoTestParameterFiles";
+	private String downloadFolderPath = MAIN_FOLDER_PATH + "/tmp";
+	private String tmpFolder = MAIN_FOLDER_PATH + "/tmp";
+	private String screenshotSavingFolder = MAIN_FOLDER_PATH + "/screenshot";
+	private String captchaScreenshotSavingFolder = MAIN_FOLDER_PATH + "/captchaScreenshotSavingFolder";
+	private String reportOutputFolder = MAIN_FOLDER_PATH + "/reportOutputFolder";
+	private String parameterSavingFolder = MAIN_FOLDER_PATH + "/autoTestParameterFiles";
 
 	private String winSeleniumWebDriverFolder = "d:/auxiliary/seleniumWebDriver";
 	private String linuxSeleniumWebDriverFolder = "/home/u2/seleniumWebDriver";

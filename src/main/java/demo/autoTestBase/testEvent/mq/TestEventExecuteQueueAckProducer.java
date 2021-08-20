@@ -4,13 +4,13 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import demo.autoTestBase.testEvent.pojo.constant.TestEventMQConstant;
+import autoTest.testEvent.pojo.constant.TestEventMQConstant;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.baseCommon.service.CommonService;
 import net.sf.json.JSONObject;
 
 @Component
-public class TestEventAckProducer extends CommonService {
+public class TestEventExecuteQueueAckProducer extends CommonService {
 
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
@@ -20,7 +20,7 @@ public class TestEventAckProducer extends CommonService {
 			return;
 		}
 		JSONObject json = testEventPOToJSON(te);
-		rabbitTemplate.convertAndSend(TestEventMQConstant.TEST_EVENT_QUEUE, json.toString());
+		rabbitTemplate.convertAndSend(TestEventMQConstant.TEST_EVENT_EXECUTE_QUEUE, json.toString());
 	}
 
 	private JSONObject testEventPOToJSON(TestEvent te) {
@@ -32,8 +32,8 @@ public class TestEventAckProducer extends CommonService {
 		if (te.getProjectId() != null) {
 			json.put("projectId", te.getProjectId());
 		}
-		if (te.getCaseId() != null) {
-			json.put("caseId", te.getCaseId());
+		if (te.getFlowId() != null) {
+			json.put("flowId", te.getFlowId());
 		}
 		if (te.getProcessId() != null) {
 			json.put("processId", te.getProcessId());

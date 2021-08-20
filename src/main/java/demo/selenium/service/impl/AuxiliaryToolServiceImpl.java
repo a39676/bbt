@@ -91,6 +91,7 @@ public class AuxiliaryToolServiceImpl extends SeleniumCommonService {
 
 	public TestEventBO beforeRunning(TestEvent te) {
 		TestEventBO tbo = new TestEventBO();
+		tbo.setEvent(te);
 		
 		JsonReportDTO reportDTO = new JsonReportDTO();
 		String reportOutputFolderPath = getReportOutputFolderPath(te.getEventName());

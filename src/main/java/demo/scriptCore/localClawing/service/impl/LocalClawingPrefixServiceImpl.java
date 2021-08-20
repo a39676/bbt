@@ -14,7 +14,7 @@ public class LocalClawingPrefixServiceImpl extends CommonService implements RunS
 
 	@Override
 	public CommonResult runSubEvent(TestEvent te) {
-		Long caseId = te.getCaseId();
+		Long caseId = te.getFlowId();
 
 		if (LocalClawingCaseType.demo.getId().equals(caseId)) {
 			

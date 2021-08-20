@@ -42,6 +42,7 @@ public abstract class CommonService {
 	private static final int normalPageSize = 10;
 	private static final int maxPageSize = 300;
 	protected static final long theStartTime = 946656000000L;
+	protected static final String MAIN_FOLDER_PATH = "/home/u2/bbt";
 
 	protected PageParam setPageFromPageNo(Integer pageNo) {
 		return setPageFromPageNo(pageNo, normalPageSize);

@@ -51,8 +51,8 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 
 		BuildTestEventBO bo = new BuildTestEventBO();
 		bo.setTestModuleType(testModuleType);
-		bo.setCaseId(cryptoCoinDailyData.getId());
-		bo.setEventName(cryptoCoinDailyData.getEventName());
+		bo.setEventId(cryptoCoinDailyData.getId());
+		bo.setFlowName(cryptoCoinDailyData.getFlowName());
 		bo.setParameterFilePath(paramterFile.getAbsolutePath());
 		return buildTestEvent(bo);
 	}

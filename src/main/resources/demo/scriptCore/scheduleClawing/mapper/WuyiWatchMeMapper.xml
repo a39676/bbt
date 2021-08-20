@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="demo.clawing.scheduleClawing.mapper.WuyiWatchMeMapper">
-  <resultMap id="BaseResultMap" type="demo.clawing.scheduleClawing.pojo.po.WuyiWatchMe">
+<mapper namespace="demo.scriptCore.scheduleClawing.mapper.WuyiWatchMeMapper">
+  <resultMap id="BaseResultMap" type="demo.scriptCore.scheduleClawing.pojo.po.WuyiWatchMe">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="company_name" jdbcType="VARCHAR" property="companyName" />
     <result column="company_link" jdbcType="VARCHAR" property="companyLink" />
@@ -73,7 +73,7 @@
     id, company_name, company_link, watch_time, degree_of_interest, my_resume_name, create_time, 
     is_delete
   </sql>
-  <select id="selectByExample" parameterType="demo.clawing.scheduleClawing.pojo.po.WuyiWatchMeExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="demo.scriptCore.scheduleClawing.pojo.po.WuyiWatchMeExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -97,13 +97,13 @@
     delete from wuyi_watch_me
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="demo.clawing.scheduleClawing.pojo.po.WuyiWatchMeExample">
+  <delete id="deleteByExample" parameterType="demo.scriptCore.scheduleClawing.pojo.po.WuyiWatchMeExample">
     delete from wuyi_watch_me
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="demo.clawing.scheduleClawing.pojo.po.WuyiWatchMe">
+  <insert id="insert" parameterType="demo.scriptCore.scheduleClawing.pojo.po.WuyiWatchMe">
     insert into wuyi_watch_me (id, company_name, company_link, 
       watch_time, degree_of_interest, my_resume_name, 
       create_time, is_delete)
@@ -111,7 +111,7 @@
       #{watchTime,jdbcType=TIMESTAMP}, #{degreeOfInterest,jdbcType=INTEGER}, #{myResumeName,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT})
   </insert>
-  <insert id="insertSelective" parameterType="demo.clawing.scheduleClawing.pojo.po.WuyiWatchMe">
+  <insert id="insertSelective" parameterType="demo.scriptCore.scheduleClawing.pojo.po.WuyiWatchMe">
     insert into wuyi_watch_me
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -166,7 +166,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="demo.clawing.scheduleClawing.pojo.po.WuyiWatchMeExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="demo.scriptCore.scheduleClawing.pojo.po.WuyiWatchMeExample" resultType="java.lang.Long">
     select count(*) from wuyi_watch_me
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -218,7 +218,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="demo.clawing.scheduleClawing.pojo.po.WuyiWatchMe">
+  <update id="updateByPrimaryKeySelective" parameterType="demo.scriptCore.scheduleClawing.pojo.po.WuyiWatchMe">
     update wuyi_watch_me
     <set>
       <if test="companyName != null">
@@ -245,7 +245,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="demo.clawing.scheduleClawing.pojo.po.WuyiWatchMe">
+  <update id="updateByPrimaryKey" parameterType="demo.scriptCore.scheduleClawing.pojo.po.WuyiWatchMe">
     update wuyi_watch_me
     set company_name = #{companyName,jdbcType=VARCHAR},
       company_link = #{companyLink,jdbcType=VARCHAR},

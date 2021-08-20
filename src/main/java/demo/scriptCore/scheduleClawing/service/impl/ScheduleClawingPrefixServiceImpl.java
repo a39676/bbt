@@ -23,7 +23,7 @@ public class ScheduleClawingPrefixServiceImpl extends CommonService implements R
 
 	@Override
 	public CommonResult runSubEvent(TestEvent te) {
-		Long caseId = te.getCaseId();
+		Long caseId = te.getFlowId();
 
 		if (ScheduleClawingType.WU_YI_JOB.getId().equals(caseId)) {
 			return wuYiSign.clawing(te);
