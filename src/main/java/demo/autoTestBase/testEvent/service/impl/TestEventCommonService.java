@@ -1,10 +1,7 @@
 package demo.autoTestBase.testEvent.service.impl;
 
-import java.io.File;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import auxiliaryCommon.pojo.result.CommonResult;
@@ -27,25 +24,11 @@ public abstract class TestEventCommonService extends CommonService {
 		redisConnectService.setValByName(runningEventRedisKey, "true");
 	}
 	
-	protected CommonResult endEvent(TestEvent te, boolean successFlag) {
-		return endEvent(te, successFlag, null);
-	}
-	
-	protected CommonResult endEvent(TestEvent te, boolean successFlag, String report) {
+	protected CommonResult endEvent(TestEvent te) {
 		
 		CommonResult endEventResult = new CommonResult();
 		
 		try {
-			te.setEndTime(LocalDateTime.now());
-			te.setIsPass(successFlag);
-			
-			if(StringUtils.isNotBlank(report)) {
-				String folerPathStr = te.getReportPath();
-				File folder = new File(folerPathStr);
-				if(folder.exists() && folder.isDirectory()) {
-					saveTestEventReport(te, folerPathStr, report);
-				}
-			}
 			redisConnectService.setValByName(runningEventRedisKey, "false");
 			int insertCount = eventMapper.insertSelective(te);
 			
@@ -53,13 +36,10 @@ public abstract class TestEventCommonService extends CommonService {
 				endEventResult.setIsSuccess();
 			}
 		} catch (Exception e) {
+			log.error("end test event error: " + e.getLocalizedMessage());
 		}
 		
 		return endEventResult;
-	}
-	
-	private void saveTestEventReport(TestEvent te, String folerPath, String report) {
-		fileUtil.byteToFile(report.getBytes(StandardCharsets.UTF_8), folerPath + "/" + te.getId(), true);
 	}
 	
 	protected boolean existsRuningEvent() {

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
+import autoTest.testEvent.pojo.result.AutomationTestCaseResult;
 import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
@@ -72,7 +73,7 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 	}
 
 	@Override
-	public CommonResult cryptoCoinDailyDataAPI(TestEvent te) {
+	public AutomationTestCaseResult cryptoCoinDailyDataAPI(TestEvent te) {
 		// TODO 正在整理  分 crypto compare / binance api 
 		
 		/*

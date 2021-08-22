@@ -53,14 +53,6 @@ public class OldDataDeleteServiceImpl extends CommonService implements OldDataDe
 	}
 
 	@Override
-	public void deleteOldReport() throws IOException {
-		LocalDateTime oldHistoryLimit = LocalDateTime.now().minusMonths(SeleniumConstant.maxHistoryMonth);
-
-		deleting(globalOptionService.getReportOutputFolder(), oldHistoryLimit);
-
-	}
-	
-	@Override
 	public void deleteOldTestEvent() {
 		testEventService.deleteOldTestEvent();
 	}

@@ -1,20 +1,25 @@
 package demo.autoTestBase.testEvent.pojo.bo;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.openqa.selenium.WebDriver;
 
-import at.report.pojo.dto.JsonReportDTO;
+import at.report.pojo.dto.JsonReportOfEventDTO;
+import autoTest.testEvent.pojo.result.AutomationTestCaseResult;
+import autoTest.testEvent.pojo.type.AutomationTestFlowResultType;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 
 public class TestEventBO {
 
 	private TestEvent event;
 	private WebDriver webDriver;
-	private JsonReportDTO report;
-	private String reportOutputFolderPath;
+	private JsonReportOfEventDTO report;
+	private List<AutomationTestCaseResult> caseResultList;
 	private LocalDateTime screenshotImageValidTime;
 	private String paramStr;
+	private LocalDateTime startTime;
+	private LocalDateTime endTime;
 
 	public TestEvent getEvent() {
 		return event;
@@ -32,20 +37,20 @@ public class TestEventBO {
 		this.webDriver = webDriver;
 	}
 
-	public JsonReportDTO getReport() {
+	public JsonReportOfEventDTO getReport() {
 		return report;
 	}
 
-	public void setReport(JsonReportDTO report) {
+	public void setReport(JsonReportOfEventDTO report) {
 		this.report = report;
 	}
 
-	public String getReportOutputFolderPath() {
-		return reportOutputFolderPath;
+	public List<AutomationTestCaseResult> getCaseResultList() {
+		return caseResultList;
 	}
 
-	public void setReportOutputPath(String reportOutputFolderPath) {
-		this.reportOutputFolderPath = reportOutputFolderPath;
+	public void setCaseResultList(List<AutomationTestCaseResult> caseResultList) {
+		this.caseResultList = caseResultList;
 	}
 
 	public LocalDateTime getScreenshotImageValidTime() {
@@ -64,11 +69,39 @@ public class TestEventBO {
 		this.paramStr = paramStr;
 	}
 
+	public LocalDateTime getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(LocalDateTime startTime) {
+		this.startTime = startTime;
+	}
+
+	public LocalDateTime getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(LocalDateTime endTime) {
+		this.endTime = endTime;
+	}
+	
+	public boolean isPass() {
+		if(caseResultList == null || caseResultList.isEmpty()) {
+			return false;
+		}
+		for(AutomationTestCaseResult subResult : caseResultList) {
+			if(!AutomationTestFlowResultType.PASS.equals(subResult.getResultType())) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	@Override
 	public String toString() {
-		return "TestEventBO [event=" + event + ", webDriver=" + webDriver + ", report=" + report
-				+ ", reportOutputFolderPath=" + reportOutputFolderPath + ", screenshotImageValidTime="
-				+ screenshotImageValidTime + ", paramStr=" + paramStr + "]";
+		return "TestEventBO [event=" + event + ", webDriver=" + webDriver + ", report=" + report + ", flowResultList="
+				+ caseResultList + ", screenshotImageValidTime=" + screenshotImageValidTime + ", paramStr=" + paramStr
+				+ ", startTime=" + startTime + ", endTime=" + endTime + "]";
 	}
 
 }

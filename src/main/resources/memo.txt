@@ -1,7 +1,13 @@
 ﻿testEvent
+    改变思路:
+    	仅作为执行脚本的项目, 从MQ获取任务, 任务结束后, 将结果 & 报告, 通过MQ 返回给cx
+    	返回给 cx 的dto中, 将 flowResultList 放入 DTO中
+    		cx再将 flow result list 按序列插入报告中
 	mq
 		TestEventQueue 重命名为 TestEventExecuteQueue
 		新增 TestEventInsertQueue
+		新增 TestEventResultQueue
+		新增 AutomationTestResult
 	testEvent 
 		通过flow 指定连串的 testCase
 		ALTER TABLE bbt.test_event CHANGE case_id flow_id bigint(20) NOT NULL;
@@ -20,6 +26,9 @@
 		可能会分布式部署 BBT, test event 运行结束后, 需要将报告发送到 MQ, 汇总到另一个 report 服务器
 		
 	需要废弃  --> TestEventServiceImpl.insertTestEvent(TestEvent po, JSONObject paramJson)
+
+删除 mail_record 表
+删除 movie 相关表
 
 TestEventServiceImpl.sendFailReports
 可以转给电报了

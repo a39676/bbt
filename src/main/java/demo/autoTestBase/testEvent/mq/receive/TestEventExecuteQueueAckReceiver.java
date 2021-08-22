@@ -1,4 +1,4 @@
-package demo.autoTestBase.testEvent.mq;
+package demo.autoTestBase.testEvent.mq.receive;
 
 import java.io.IOException;
 

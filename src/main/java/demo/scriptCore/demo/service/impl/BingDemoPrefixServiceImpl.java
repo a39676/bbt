@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import autoTest.testEvent.searchingDemo.pojo.result.InsertSearchingDemoEventResult;
-import autoTest.testEvent.searchingDemo.pojo.type.BingDemoFlowType;
+import autoTest.testEvent.searchingDemo.pojo.type.BingDemoSearchCaseType;
 import autoTest.testModule.pojo.type.TestModuleType;
-import auxiliaryCommon.pojo.result.CommonResult;
+import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.autoTestBase.testEvent.service.RunSubEventPrefixService;
@@ -30,7 +30,7 @@ public class BingDemoPrefixServiceImpl extends AutomationTestCommonService
 	public InsertSearchingDemoEventResult insertSearchInHomeEvent(InsertBingSearchDemoDTO dto) {
 		InsertSearchingDemoEventResult ir = new InsertSearchingDemoEventResult();
 
-		BingDemoFlowType t = BingDemoFlowType.bingSearchDemo;
+		BingDemoSearchCaseType t = BingDemoSearchCaseType.SEARCH_IN_HOMEPAGE;
 
 		InsertTestEventResult r = insertSearchEvent(dto, t);
 		int waitingEventCount = testEventService.countWaitingEvent();
@@ -45,7 +45,7 @@ public class BingDemoPrefixServiceImpl extends AutomationTestCommonService
 		return ir;
 	}
 
-	private InsertTestEventResult insertSearchEvent(InsertBingSearchDemoDTO dto, BingDemoFlowType t) {
+	private InsertTestEventResult insertSearchEvent(InsertBingSearchDemoDTO dto, BingDemoSearchCaseType t) {
 		long newEventId = snowFlake.getNextId();
 		BuildTestEventBO bo = new BuildTestEventBO();
 		bo.setTestModuleType(TestModuleType.ATDemo);
@@ -62,13 +62,13 @@ public class BingDemoPrefixServiceImpl extends AutomationTestCommonService
 	}
 
 	@Override
-	public CommonResult runSubEvent(TestEvent te) {
+	public TestEventBO runSubEvent(TestEvent te) {
 		Long flowId = te.getFlowId();
 		if (flowId == null) {
 			return null;
 		}
 
-		if (BingDemoFlowType.bingSearchDemo.getId().equals(flowId)) {
+		if (BingDemoSearchCaseType.SEARCH_IN_HOMEPAGE.getId().equals(flowId)) {
 			return bingDemoService.testing(te);
 		}
 		return null;

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
-import at.report.pojo.dto.JsonReportDTO;
+import at.report.pojo.dto.JsonReportOfCaseDTO;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.pojo.constant.TestEventOptionConstant;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
@@ -28,7 +28,7 @@ import toolPack.httpHandel.HttpUtil;
 public class CryptoCompareServiceImpl extends SeleniumCommonService implements CryptoCompareService {
 
 	@Override
-	public CryptoCoinDailyDataResult cryptoCoinDailyDataAPI(TestEvent te, JsonReportDTO reportDTO) {
+	public CryptoCoinDailyDataResult cryptoCoinDailyDataAPI(TestEvent te, JsonReportOfCaseDTO reportDTO) {
 		CryptoCoinDailyDataResult r = new CryptoCoinDailyDataResult();
 		
 		TestEventBO tbo = auxTool.beforeRunning(te);
@@ -42,7 +42,7 @@ public class CryptoCompareServiceImpl extends SeleniumCommonService implements C
 
 			String optionJsonStr = ioUtil.getStringFromFile(te.getParameterFilePath());
 			if (StringUtils.isBlank(optionJsonStr)) {
-				reportService.appendContent(reportDTO, "参数文件读取异常");
+				reportService.caseReportAppendContent(reportDTO, "参数文件读取异常");
 				throw new Exception();
 			}
 
@@ -50,17 +50,17 @@ public class CryptoCompareServiceImpl extends SeleniumCommonService implements C
 			try {
 				clawingOptionBO = new Gson().fromJson(optionJsonStr, CryptoCompareDataAPIParamBO.class);
 			} catch (Exception e) {
-				reportService.appendContent(reportDTO, "参数文件结构异常");
+				reportService.caseReportAppendContent(reportDTO, "参数文件结构异常");
 				throw new Exception();
 			}
 
 			if (clawingOptionBO == null) {
-				reportService.appendContent(reportDTO, "参数文件结构异常");
+				reportService.caseReportAppendContent(reportDTO, "参数文件结构异常");
 				throw new Exception();
 			}
 
 			if (StringUtils.isBlank(clawingOptionBO.getApiKey())) {
-				reportService.appendContent(reportDTO, "参数文件参数异常");
+				reportService.caseReportAppendContent(reportDTO, "参数文件参数异常");
 				throw new Exception();
 			}
 
@@ -70,7 +70,7 @@ public class CryptoCompareServiceImpl extends SeleniumCommonService implements C
 			
 			String paramJsonStr = redisConnectService.getValByName(TestEventOptionConstant.TEST_EVENT_REDIS_PARAM_KEY_PREFIX + "_" + te.getId());
 			if(StringUtils.isBlank(paramJsonStr)) {
-				reportService.appendContent(reportDTO, "test event: " + te.getId() + ", " + te.getEventName() + ", 动态参数获取异常");
+				reportService.caseReportAppendContent(reportDTO, "test event: " + te.getId() + ", " + te.getEventName() + ", 动态参数获取异常");
 				return r;
 			}
 			
@@ -78,13 +78,13 @@ public class CryptoCompareServiceImpl extends SeleniumCommonService implements C
 			try {
 				dynamicParam = new Gson().fromJson(paramJsonStr, CryptoCoinDailyDataQueryDTO.class); 
 			} catch (Exception e) {
-				reportService.appendContent(reportDTO, "test event: " + te.getId() + ", " + te.getEventName() + ", 动态参数获取异常");
+				reportService.caseReportAppendContent(reportDTO, "test event: " + te.getId() + ", " + te.getEventName() + ", 动态参数获取异常");
 				throw new Exception();
 			}
 			
 			httpResponse = h.sendGet(String.format(cryptoCoinApiUrlModel, dynamicParam.getCoinName(), dynamicParam.getCurrencyName(),
 					dynamicParam.getCounting(), clawingOptionBO.getApiKey()));
-			reportService.appendContent(reportDTO, httpResponse);
+			reportService.caseReportAppendContent(reportDTO, httpResponse);
 			
 			subDataList = handleCryptoCoinDataResponse(httpResponse, dynamicParam.getCoinName(), dynamicParam.getCurrencyName());
 			mainDTO.setPriceHistoryData(subDataList);
@@ -96,7 +96,7 @@ public class CryptoCompareServiceImpl extends SeleniumCommonService implements C
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			reportService.appendContent(reportDTO, "异常: " + e);
+			reportService.caseReportAppendContent(reportDTO, "异常: " + e);
 
 		} finally {
 			saveReport(tbo);

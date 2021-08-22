@@ -4,9 +4,9 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.springframework.stereotype.Service;
 
-import at.report.pojo.dto.JsonReportDTO;
+import at.report.pojo.dto.JsonReportOfCaseDTO;
+import autoTest.testEvent.pojo.result.AutomationTestCaseResult;
 import autoTest.testModule.pojo.type.TestModuleType;
-import auxiliaryCommon.pojo.result.CommonResult;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.scriptCore.collecting.jandan.pojo.type.CollectingFlowType;
@@ -39,8 +39,8 @@ public class JianDanCollectingServiceImpl extends SeleniumCommonService implemen
 	}
 	
 	@Override
-	public CommonResult collecting(TestEvent te) {
-		CommonResult r = new CommonResult();
+	public AutomationTestCaseResult collecting(TestEvent te) {
+		AutomationTestCaseResult r = new AutomationTestCaseResult();
 		
 		/*
 		 * TODO JianDanCollectingServiceImpl collecting
@@ -48,27 +48,26 @@ public class JianDanCollectingServiceImpl extends SeleniumCommonService implemen
 		
 		
 		
-		r.setIsSuccess();
 		return r;
 		
 	}
 	
 	@SuppressWarnings("unused")
-	private void tryLoadPic(WebDriver d, JsonReportDTO reportDTO) {
+	private void tryLoadPic(WebDriver d, JsonReportOfCaseDTO reportDTO) {
 		try {
 			d.get(HOME_URL);
-			reportService.appendContent(reportDTO, "get home page");
+			reportService.caseReportAppendContent(reportDTO, "get home page");
 		} catch (TimeoutException e) {
 			jsUtil.windowStop(d);
-			reportService.appendContent(reportDTO, "get home page but timeout");
+			reportService.caseReportAppendContent(reportDTO, "get home page but timeout");
 		}
 		
 		try {
 			d.get(PIC_URL);
-			reportService.appendContent(reportDTO, "get home page");
+			reportService.caseReportAppendContent(reportDTO, "get home page");
 		} catch (TimeoutException e) {
 			jsUtil.windowStop(d);
-			reportService.appendContent(reportDTO, "get home page but timeout");
+			reportService.caseReportAppendContent(reportDTO, "get home page but timeout");
 		}
 	}
 }

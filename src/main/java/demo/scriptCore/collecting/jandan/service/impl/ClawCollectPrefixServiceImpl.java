@@ -3,7 +3,7 @@ package demo.scriptCore.collecting.jandan.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import auxiliaryCommon.pojo.result.CommonResult;
+import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.service.RunSubEventPrefixService;
 import demo.baseCommon.service.CommonService;
@@ -17,12 +17,12 @@ public class ClawCollectPrefixServiceImpl extends CommonService implements RunSu
 	private JianDanCollectingService jianDanCollectingService;
 	
 	@Override
-	public CommonResult runSubEvent(TestEvent te) {
+	public TestEventBO runSubEvent(TestEvent te) {
 		Long caseId = te.getFlowId();
 		
 		if (CollectingFlowType.jianDan.getId().equals(caseId)) {
 			return jianDanCollectingService.collecting(te);
 		} 
-		return new CommonResult();
+		return new TestEventBO();
 	}
 }

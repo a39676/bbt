@@ -1,6 +1,5 @@
 package demo.selenium.service.impl;
 
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Random;
@@ -20,12 +19,11 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
-import at.report.pojo.dto.JsonReportDTO;
+import at.report.pojo.dto.JsonReportOfEventDTO;
 import at.webDriver.pojo.constant.WebDriverConstant;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import net.sf.json.JSONObject;
-import toolPack.dateTimeHandle.DateTimeUtilCommon;
 
 @Service
 public class AuxiliaryToolServiceImpl extends SeleniumCommonService {
@@ -91,13 +89,10 @@ public class AuxiliaryToolServiceImpl extends SeleniumCommonService {
 
 	public TestEventBO beforeRunning(TestEvent te) {
 		TestEventBO tbo = new TestEventBO();
+		tbo.setStartTime(LocalDateTime.now());
 		tbo.setEvent(te);
 		
-		JsonReportDTO reportDTO = new JsonReportDTO();
-		String reportOutputFolderPath = getReportOutputFolderPath(te.getEventName());
-		String path = reportOutputFolderPath + File.separator + localDateTimeHandler.dateToStr(LocalDateTime.now(), DateTimeUtilCommon.dateTimeFormatNoSymbol) + File.separator + te.getId() + ".json";
-		
-		tbo.setReportOutputPath(path);
+		JsonReportOfEventDTO reportDTO = new JsonReportOfEventDTO();
 		tbo.setReport(reportDTO);
 
 		try {

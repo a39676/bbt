@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import autoTest.testModule.pojo.type.TestModuleType;
-import auxiliaryCommon.pojo.result.CommonResult;
-import demo.autoTestBase.testEvent.mq.TestEventExecuteQueueAckProducer;
+import demo.autoTestBase.testEvent.mq.producer.TestEventExecuteQueueAckProducer;
+import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.pojo.constant.TestEventOptionConstant;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.po.TestEventExample;
@@ -74,40 +74,40 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	}
 
 	@Override
-	public CommonResult reciveTestEventAndRun(TestEvent te) {
+	public TestEventBO reciveTestEventAndRun(TestEvent te) {
 
 		if (te == null) {
-			return new CommonResult();
+			return new TestEventBO();
 		}
 
 		if (existsRuningEvent()) {
-			return new CommonResult();
+			return new TestEventBO();
 		}
 
 		return runEvent(te);
 	}
 
-	private CommonResult runEvent(TestEvent event) {
+	private TestEventBO runEvent(TestEvent event) {
 		String breakWord = findPauseWord();
 		if (safeWord.equals(breakWord)) {
-			return new CommonResult();
+			return new TestEventBO();
 		}
 
-		CommonResult runResult = null;
+		TestEventBO runResult = null;
 		if (event.getAppointment() == null || event.getAppointment().isBefore(LocalDateTime.now())) {
 			startEvent(event);
 			try {
 				runResult = runSubEvent(event);
 			} catch (Exception e) {
-				runResult = new CommonResult();
+				runResult = new TestEventBO();
 			}
-			endEvent(event, runResult.isSuccess(), runResult.getMessage());
+			endEvent(event);
 		}
 
 		return runResult;
 	}
 
-	private CommonResult runSubEvent(TestEvent te) {
+	private TestEventBO runSubEvent(TestEvent te) {
 		Long moduleId = te.getModuleId();
 		if (moduleId == null) {
 			return null;
@@ -122,7 +122,7 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		} else if (TestModuleType.localClawing.getId().equals(moduleId)) {
 			return localClawingPrefixService.runSubEvent(te);
 		}
-		return new CommonResult();
+		return new TestEventBO();
 	}
 
 	@Override

@@ -3,7 +3,7 @@ package demo.scriptCore.scheduleClawing.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import auxiliaryCommon.pojo.result.CommonResult;
+import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.service.RunSubEventPrefixService;
 import demo.baseCommon.service.CommonService;
@@ -22,7 +22,7 @@ public class ScheduleClawingPrefixServiceImpl extends CommonService implements R
 	private CryptoCoinPriceService cryptoCoinPriceService;
 
 	@Override
-	public CommonResult runSubEvent(TestEvent te) {
+	public TestEventBO runSubEvent(TestEvent te) {
 		Long caseId = te.getFlowId();
 
 		if (ScheduleClawingType.WU_YI_JOB.getId().equals(caseId)) {
@@ -33,6 +33,6 @@ public class ScheduleClawingPrefixServiceImpl extends CommonService implements R
 			return cryptoCoinPriceService.cryptoCoinDailyDataAPI(te);
 		}
 
-		return new CommonResult();
+		return new TestEventBO();
 	}
 }
