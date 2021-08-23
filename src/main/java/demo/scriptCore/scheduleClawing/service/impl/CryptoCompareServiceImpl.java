@@ -1,10 +1,12 @@
 package demo.scriptCore.scheduleClawing.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
@@ -13,20 +15,24 @@ import at.report.pojo.dto.JsonReportOfCaseDTO;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.pojo.constant.TestEventOptionConstant;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
+import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.scheduleClawing.pojo.bo.CryptoCompareDataAPIParamBO;
 import demo.scriptCore.scheduleClawing.pojo.result.CryptoCoinDailyDataResult;
 import demo.scriptCore.scheduleClawing.service.CryptoCompareService;
-import demo.selenium.service.impl.SeleniumCommonService;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDailyDataQueryDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataSubDTO;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import toolPack.httpHandel.HttpUtil;
+import toolPack.ioHandle.FileUtilCustom;
 
 @Service
-public class CryptoCompareServiceImpl extends SeleniumCommonService implements CryptoCompareService {
+public class CryptoCompareServiceImpl extends AutomationTestCommonService implements CryptoCompareService {
 
+	@Autowired
+	private FileUtilCustom ioUtil;
+	
 	@Override
 	public CryptoCoinDailyDataResult cryptoCoinDailyDataAPI(TestEvent te, JsonReportOfCaseDTO reportDTO) {
 		CryptoCoinDailyDataResult r = new CryptoCoinDailyDataResult();
@@ -99,7 +105,8 @@ public class CryptoCompareServiceImpl extends SeleniumCommonService implements C
 			reportService.caseReportAppendContent(reportDTO, "异常: " + e);
 
 		} finally {
-			saveReport(tbo);
+			tbo.setEndTime(LocalDateTime.now());
+			sendAutomationTestResult(tbo);
 		}
 
 		return r;

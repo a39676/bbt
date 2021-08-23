@@ -3,11 +3,11 @@ package demo.scriptCore.scheduleClawing.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.service.RunSubEventPrefixService;
 import demo.baseCommon.service.CommonService;
-import demo.scriptCore.scheduleClawing.pojo.type.ScheduleClawingType;
 import demo.scriptCore.scheduleClawing.service.CryptoCoinPriceService;
 import demo.scriptCore.scheduleClawing.service.WuYiJobRefreshService;
 

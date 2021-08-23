@@ -5,8 +5,8 @@ import org.openqa.selenium.WebDriver;
 import org.springframework.stereotype.Service;
 
 import at.report.pojo.dto.JsonReportOfCaseDTO;
-import autoTest.testEvent.pojo.result.AutomationTestCaseResult;
 import autoTest.testModule.pojo.type.TestModuleType;
+import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.scriptCore.collecting.jandan.pojo.type.CollectingFlowType;
@@ -39,8 +39,8 @@ public class JianDanCollectingServiceImpl extends SeleniumCommonService implemen
 	}
 	
 	@Override
-	public AutomationTestCaseResult collecting(TestEvent te) {
-		AutomationTestCaseResult r = new AutomationTestCaseResult();
+	public TestEventBO collecting(TestEvent te) {
+		TestEventBO r = new TestEventBO();
 		
 		/*
 		 * TODO JianDanCollectingServiceImpl collecting

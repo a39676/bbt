@@ -13,6 +13,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
@@ -20,6 +21,7 @@ import com.google.gson.Gson;
 import at.report.pojo.dto.JsonReportOfCaseDTO;
 import at.screenshot.pojo.result.ScreenshotSaveResult;
 import at.xpath.pojo.bo.XpathBuilderBO;
+import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
@@ -29,19 +31,22 @@ import demo.scriptCore.common.service.JobClawingCommonService;
 import demo.scriptCore.localClawing.pojo.bo.MaiMaiClawingBO;
 import demo.scriptCore.scheduleClawing.pojo.bo.MaiMaiRunningBO;
 import demo.scriptCore.scheduleClawing.pojo.constant.MaiMaiScheduleClawingConstant;
-import demo.scriptCore.scheduleClawing.pojo.type.ScheduleClawingType;
 import demo.scriptCore.scheduleClawing.service.MaiMaiScheduleClawingService;
 import demo.selenium.pojo.bo.BuildTestEventBO;
 import image.pojo.result.UploadImageToCloudinaryResult;
+import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService implements MaiMaiScheduleClawingService {
 
+	@Autowired
+	private FileUtilCustom ioUtil;
+	
 	private String eventName = "maiMaiLocalClawing";
 	private String userDataFileName = "maiMaiSign.json";
 
 	private TestModuleType testModuleType = TestModuleType.scheduleClawing;
-	private ScheduleClawingType testFlowType = ScheduleClawingType.MAI_MAI;
+	private ScheduleClawingType testCaseType = ScheduleClawingType.MAI_MAI;
 
 	private TestEvent buildClawingEvent() {
 		String paramterFolderPath = getParameterSaveingPath(eventName);
@@ -53,8 +58,8 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 
 		BuildTestEventBO bo = new BuildTestEventBO();
 		bo.setTestModuleType(testModuleType);
-		bo.setEventId(testFlowType.getId());
-		bo.setFlowName(testFlowType.getFlowName());
+		bo.setEventId(testCaseType.getId());
+		bo.setFlowName(testCaseType.getFlowName());
 		bo.setParameterFilePath(paramterFile.getAbsolutePath());
 		return buildTestEvent(bo);
 	}
@@ -70,13 +75,14 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 		CommonResult r = new CommonResult();
 
 		TestEventBO tbo = auxTool.beforeRunning(te);
+		JsonReportOfCaseDTO caseReport = buildCaseReportDTO(testCaseType);
 
-		WebDriver d = null;
+		WebDriver d = tbo.getWebDriver();
 		try {
 
 			String jsonStr = ioUtil.getStringFromFile(te.getParameterFilePath());
 			if (StringUtils.isBlank(jsonStr)) {
-				reportService.caseReportAppendContent(tbo.getReport(), "参数文件读取异常");
+				reportService.caseReportAppendContent(caseReport, "参数文件读取异常");
 				throw new Exception();
 			}
 
@@ -84,16 +90,15 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 			try {
 				clawingEventBO = new Gson().fromJson(jsonStr, MaiMaiClawingBO.class);
 			} catch (Exception e) {
-				reportService.caseReportAppendContent(tbo.getReport(), "参数文件结构异常");
+				reportService.caseReportAppendContent(caseReport, "参数文件结构异常");
 				throw new Exception();
 			}
 
 			if (clawingEventBO == null) {
-				reportService.caseReportAppendContent(tbo.getReport(), "参数文件结构异常");
+				reportService.caseReportAppendContent(caseReport, "参数文件结构异常");
 				throw new Exception();
 			}
 
-			d = tbo.getWebDriver();
 			String mainWindowHandle = d.getWindowHandle();
 
 			try {
@@ -102,9 +107,9 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 				jsUtil.windowStop(d);
 			}
 
-			boolean operatorFlag = tryLogin(d, tbo.getReport(), clawingEventBO);
+			boolean operatorFlag = tryLogin(d, caseReport, clawingEventBO);
 			if (!operatorFlag) {
-				reportService.caseReportAppendContent(tbo.getReport(), "登录异常");
+				reportService.caseReportAppendContent(caseReport, "登录异常");
 				throw new Exception("登录异常");
 			}
 
@@ -112,19 +117,19 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 
 			operatorFlag = changeToExploer(d);
 			if (!operatorFlag) {
-				reportService.caseReportAppendContent(tbo.getReport(), "查找'发现'按钮异常");
+				reportService.caseReportAppendContent(caseReport, "查找'发现'按钮异常");
 				throw new Exception("查找'发现'按钮异常");
 			}
 
 			threadSleepRandomTime(3000L, 5000L);
 
-			reportService.caseReportAppendContent(tbo.getReport(), "准备点赞");
+			reportService.caseReportAppendContent(caseReport, "准备点赞");
 
 			MaiMaiRunningBO runningBO = new MaiMaiRunningBO();
 
 			runningBO.setShareAndLikeSpanClass(findClassOfShareAndLikeSpan(d));
 			if (runningBO.getShareAndLikeSpanClass() == null) {
-				reportService.caseReportAppendContent(tbo.getReport(), "查找'分享'按钮的 class 属性异常");
+				reportService.caseReportAppendContent(caseReport, "查找'分享'按钮的 class 属性异常");
 				throw new Exception("查找'分享'按钮的 class 属性异常");
 			}
 
@@ -133,19 +138,19 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 				skipToPageEnd(d);
 				operatorFlag = pageLoadSuccess(d);
 				if (!operatorFlag) {
-					reportService.caseReportAppendContent(tbo.getReport(), "page loading time out");
+					reportService.caseReportAppendContent(caseReport, "page loading time out");
 					throw new Exception("page loading time out");
 				}
 				threadSleepRandomTime(1500L, 2500L);
 			}
-			reportService.caseReportAppendContent(tbo.getReport(), "本次点赞: " + runningBO.getClickLikeCount());
+			reportService.caseReportAppendContent(caseReport, "本次点赞: " + runningBO.getClickLikeCount());
 
 			if (!isAddFriendReachLimitToday()) {
-				reportService.caseReportAppendContent(tbo.getReport(), "准备添加目标好友");
+				reportService.caseReportAppendContent(caseReport, "准备添加目标好友");
 				tryAddFriend(d, mainWindowHandle, runningBO);
-				reportService.caseReportAppendContent(tbo.getReport(), "添加完毕");
+				reportService.caseReportAppendContent(caseReport, "添加完毕");
 			} else {
-				reportService.caseReportAppendContent(tbo.getReport(), "本日添加好友已达上限");
+				reportService.caseReportAppendContent(caseReport, "本日添加好友已达上限");
 			}
 
 			r.setIsSuccess();
@@ -155,15 +160,16 @@ public class MaiMaiScheduleClawingServiceImpl extends JobClawingCommonService im
 			ScreenshotSaveResult screenSaveResult = screenshot(d, eventName);
 
 			UploadImageToCloudinaryResult uploadImgResult = uploadImgToCloudinary(screenSaveResult.getSavingPath());
-			reportService.caseReportAppendImage(tbo.getReport(), uploadImgResult.getImgUrl());
-			reportService.caseReportAppendContent(tbo.getReport(), "异常: " + e.toString());
+			reportService.caseReportAppendImage(caseReport, uploadImgResult.getImgUrl());
+			reportService.caseReportAppendContent(caseReport, "异常: " + e.toString());
 
 		} finally {
-			tryQuitWebDriver(d, tbo.getReport());
-			saveReport(tbo);
+			tryQuitWebDriver(d);
+			tbo.setEndTime(LocalDateTime.now());
+			sendAutomationTestResult(tbo);
 		}
 
-		return r;
+		return tbo;
 	}
 
 	private boolean tryLogin(WebDriver d, JsonReportOfCaseDTO reportDTO, MaiMaiClawingBO clawingEventBO)

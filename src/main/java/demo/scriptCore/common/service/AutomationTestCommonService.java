@@ -72,16 +72,16 @@ public abstract class AutomationTestCommonService extends SeleniumCommonService 
 		return r;
 	}
 
-	protected JsonReportOfCaseDTO buildCaseReportDTO(Object flowType) {
+	protected JsonReportOfCaseDTO buildCaseReportDTO(Object caseType) {
 
 		JsonReportOfCaseDTO report = new JsonReportOfCaseDTO();
 		report.setReportElementList(new ArrayList<>());
 		
-		Class<? extends Object> flowTypeClass = flowType.getClass();
+		Class<? extends Object> flowTypeClass = caseType.getClass();
 		try {
 			Method getFlowNameMethod = flowTypeClass.getMethod("getFlowName");
 			
-			report.setCaseTypeName((String) getFlowNameMethod.invoke(flowType));
+			report.setCaseTypeName((String) getFlowNameMethod.invoke(caseType));
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e1) {
 			e1.printStackTrace();
@@ -91,7 +91,7 @@ public abstract class AutomationTestCommonService extends SeleniumCommonService 
 
 		try {
 			Method getIdMethod = flowTypeClass.getMethod("getId");
-			report.setCaseTypeID((Long) getIdMethod.invoke(flowType));
+			report.setCaseTypeID((Long) getIdMethod.invoke(caseType));
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e1) {
 			e1.printStackTrace();

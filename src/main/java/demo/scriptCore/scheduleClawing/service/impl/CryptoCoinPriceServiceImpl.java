@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
-import autoTest.testEvent.pojo.result.AutomationTestCaseResult;
+import at.report.pojo.dto.JsonReportOfCaseDTO;
+import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.CurrencyType;
@@ -16,19 +17,18 @@ import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.pojo.constant.TestEventOptionConstant;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
+import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.scheduleClawing.mq.sender.CryptoCoinDailyDataAckProducer;
 import demo.scriptCore.scheduleClawing.pojo.result.CryptoCoinDailyDataResult;
-import demo.scriptCore.scheduleClawing.pojo.type.ScheduleClawingType;
 import demo.scriptCore.scheduleClawing.service.CryptoCoinPriceService;
 import demo.scriptCore.scheduleClawing.service.CryptoCompareService;
 import demo.selenium.pojo.bo.BuildTestEventBO;
-import demo.selenium.service.impl.SeleniumCommonService;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDailyDataQueryDTO;
 import finance.cryptoCoin.pojo.type.CryptoCoinDataSourceType;
 import net.sf.json.JSONObject;
 
 @Service
-public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements CryptoCoinPriceService {
+public class CryptoCoinPriceServiceImpl extends AutomationTestCommonService implements CryptoCoinPriceService {
 
 	@Autowired
 	private CryptoCoinDailyDataAckProducer cryptoCoinDailyDataAckProducer;
@@ -73,7 +73,7 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 	}
 
 	@Override
-	public AutomationTestCaseResult cryptoCoinDailyDataAPI(TestEvent te) {
+	public TestEventBO cryptoCoinDailyDataAPI(TestEvent te) {
 		// TODO 正在整理  分 crypto compare / binance api 
 		
 		/*
@@ -94,9 +94,11 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 		}
 		
 		CryptoCoinDailyDataResult apiResult = null;
+		ScheduleClawingType caseType = ScheduleClawingType.CRYPTO_COIN_DAILY_DATA;
+		JsonReportOfCaseDTO caseReport = buildCaseReportDTO(caseType);
 		
 		if(queryDTO == null || queryDTO.getDataSourceCode() == null || CryptoCoinDataSourceType.CRYPTO_COMPARE.getCode().equals(queryDTO.getDataSourceCode())) {
-			apiResult = cryptoCompareService.cryptoCoinDailyDataAPI(te, tbo.getReport());
+			apiResult = cryptoCompareService.cryptoCoinDailyDataAPI(te, caseReport);
 		} else if(CryptoCoinDataSourceType.BINANCE.getCode().equals(queryDTO.getDataSourceCode())){
 //			TODO need binance daily data API
 		}
@@ -115,7 +117,7 @@ public class CryptoCoinPriceServiceImpl extends SeleniumCommonService implements
 		r.setSuccess(apiResult.isSuccess());
 		r.setMessage(apiResult.getMessage());
 		
-		return r;
+		return tbo;
 	}
 
 }

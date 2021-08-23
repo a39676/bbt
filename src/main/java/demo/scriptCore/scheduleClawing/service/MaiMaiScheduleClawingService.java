@@ -1,6 +1,6 @@
 package demo.scriptCore.scheduleClawing.service;
 
-import autoTest.testEvent.pojo.result.AutomationTestCaseResult;
+import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 
@@ -15,6 +15,6 @@ public interface MaiMaiScheduleClawingService {
 	 * @param te
 	 * @return
 	 */
-	AutomationTestCaseResult clawing(TestEvent te);
+	TestEventBO clawing(TestEvent te);
 
 }

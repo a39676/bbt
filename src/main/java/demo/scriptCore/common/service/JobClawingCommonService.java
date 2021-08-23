@@ -2,9 +2,7 @@ package demo.scriptCore.common.service;
 
 import java.util.List;
 
-import demo.selenium.service.impl.SeleniumCommonService;
-
-public abstract class JobClawingCommonService extends SeleniumCommonService {
+public abstract class JobClawingCommonService extends AutomationTestCommonService {
 
 	/* 不察看的公司名(contain?) */
 	protected static List<String> jobBlackList = List.of(
