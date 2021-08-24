@@ -1,5 +1,6 @@
 package demo.autoTestBase.testEvent.service;
 
+import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
@@ -10,16 +11,12 @@ public interface TestEventService {
 	InsertTestEventResult insertExecuteTestEvent(TestEvent po);
 	InsertTestEventResult insertTestEvent(TestEvent po, JSONObject paramJson);
 	
-	int countWaitingEvent();
-
-	int updateTestEventReportPath(TestEvent te, String reportPath);
-
 	TestEventBO reciveTestEventAndRun(TestEvent te);
 
 	boolean checkExistsRuningEvent();
 
 	void fixRuningEventStatusManual();
 
-	void deleteOldTestEvent();
+	void insertTestEvent(AutomationTestInsertEventDTO dto);
 
 }

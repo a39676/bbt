@@ -1,7 +1,5 @@
 package demo.selenium.service.impl;
 
-import java.io.File;
-
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -41,16 +39,6 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 	@Override
 	public String getTmpDir() {
 		return tmpFolder;
-	}
-
-	@Override
-	public boolean checkFolderExists(String path) {
-		File f = new File(path);
-		if (!f.exists() || !f.isDirectory()) {
-			return f.mkdirs();
-		} else {
-			return true;
-		}
 	}
 
 	@Override

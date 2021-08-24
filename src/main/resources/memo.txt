@@ -3,12 +3,14 @@
     	仅作为执行脚本的项目, 从MQ获取任务, 任务结束后, 将结果 & 报告, 通过MQ 返回给cx
     	返回给 cx 的dto中, 将 flowResultList 放入 DTO中
     		cx再将 flow result list 按序列插入报告中
+    	测试中的截图, 需要重构, 统一交给CX保存处理
 	mq
-		TestEventQueue 重命名为 TestEventExecuteQueue
+		删除 TestEventQueue 
+		新增 TestEventExecuteQueue
 		新增 TestEventInsertQueue
-		新增 TestEventResultQueue
 		新增 AutomationTestResult
 	testEvent 
+		考虑删除 test event 表?
 		通过flow 指定连串的 testCase
 		ALTER TABLE bbt.test_event CHANGE case_id flow_id bigint(20) NOT NULL;
 		case 字段 重命名为 flow
@@ -23,9 +25,9 @@
 		目前 cx 服务中, 查询报告时, 发现 test event ID有误, 待排查
 			目前, 运行完毕之后. 报告中还是体现未执行 待排查
 		方便判定哪个 case failed, 并可能影响下一步测试流程 
-		可能会分布式部署 BBT, test event 运行结束后, 需要将报告发送到 MQ, 汇总到另一个 report 服务器
 		
 	需要废弃  --> TestEventServiceImpl.insertTestEvent(TestEvent po, JSONObject paramJson)
+		待 crypto coin 系列任务调整后就处理
 
 删除 mail_record 表
 删除 movie 相关表

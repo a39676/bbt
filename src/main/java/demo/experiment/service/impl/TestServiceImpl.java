@@ -1,21 +1,16 @@
 package demo.experiment.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import demo.autoTestBase.testEvent.mapper.TestEventMapper;
 import demo.baseCommon.service.CommonService;
-import demo.experiment.config.annotation.CustomAfterAnnotation;
-import demo.experiment.config.annotation.CustomBeforeAnnotation;
-import demo.experiment.config.annotation.LogExecutionTime;
+import demo.config.costomAnnotation.CustomAfterAnnotation;
+import demo.config.costomAnnotation.CustomBeforeAnnotation;
+import demo.config.costomAnnotation.LogExecutionTime;
 import demo.experiment.service.TestService;
 
 @Service
 public class TestServiceImpl extends CommonService implements TestService {
 
-	@SuppressWarnings("unused")
-	@Autowired
-	private TestEventMapper eventMapper;
 	
 	@Override
 	@LogExecutionTime

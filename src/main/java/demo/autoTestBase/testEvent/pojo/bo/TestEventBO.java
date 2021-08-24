@@ -1,6 +1,7 @@
 package demo.autoTestBase.testEvent.pojo.bo;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.WebDriver;
@@ -15,7 +16,7 @@ public class TestEventBO {
 	private TestEvent event;
 	private WebDriver webDriver;
 	private JsonReportOfEventDTO report;
-	private List<AutomationTestCaseResult> caseResultList;
+	private List<AutomationTestCaseResult> caseResultList = new ArrayList<>();
 	private LocalDateTime screenshotImageValidTime;
 	private String paramStr;
 	private LocalDateTime startTime;

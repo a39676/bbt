@@ -1,4 +1,4 @@
-package demo.experiment.config.annotation;
+package demo.config.costomAnnotation;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,7 +16,7 @@ import demo.experiment.service.TestService2;
 
 @Aspect
 @Component
-public class ExampleAspect {
+public class AnnotationConfig {
 	
 	@Autowired
 	private TestService2 testService2;

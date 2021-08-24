@@ -7,20 +7,20 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.mq.producer.TestEventExecuteQueueAckProducer;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.pojo.constant.TestEventOptionConstant;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
-import demo.autoTestBase.testEvent.pojo.po.TestEventExample;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.scriptCore.collecting.jandan.service.impl.ClawCollectPrefixServiceImpl;
+import demo.scriptCore.demo.service.BingDemoPrefixService;
 import demo.scriptCore.demo.service.impl.BingDemoPrefixServiceImpl;
 import demo.scriptCore.localClawing.service.impl.LocalClawingPrefixServiceImpl;
 import demo.scriptCore.scheduleClawing.service.impl.ScheduleClawingPrefixServiceImpl;
 import net.sf.json.JSONObject;
-import selenium.pojo.constant.SeleniumConstant;
 
 @Service
 public class TestEventServiceImpl extends TestEventCommonService implements TestEventService {
@@ -30,6 +30,8 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 
 	@Autowired
 	private BingDemoPrefixServiceImpl searchingDemoService;
+	@Autowired
+	private BingDemoPrefixService bingDemoPrefixService;
 	@Autowired
 	private ScheduleClawingPrefixServiceImpl scheduleClawingPrefixService;
 	@Autowired
@@ -126,21 +128,6 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	}
 
 	@Override
-	public int countWaitingEvent() {
-		return eventMapper.countWaitingEvent();
-	}
-
-	@Override
-	public int updateTestEventReportPath(TestEvent te, String reportPath) {
-		if (te.getId() == null) {
-			return 0;
-		}
-		te.setReportPath(reportPath);
-		return eventMapper.updateByPrimaryKeySelective(te);
-	}
-
-
-	@Override
 	public boolean checkExistsRuningEvent() {
 		return existsRuningEvent();
 	}
@@ -151,10 +138,20 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	}
 
 	@Override
-	public void deleteOldTestEvent() {
-		LocalDateTime deleteLine = LocalDateTime.now().plusMonths(SeleniumConstant.maxHistoryMonth);
-		TestEventExample example = new TestEventExample();
-		example.createCriteria().andIsDeleteEqualTo(false).andStartTimeGreaterThan(deleteLine);
-		eventMapper.deleteByExample(example);
+	public void insertTestEvent(AutomationTestInsertEventDTO dto) {
+		Long moduleId = dto.getTestModuleType();
+		if (moduleId == null) {
+			return;
+		}
+
+		if (TestModuleType.ATDemo.getId().equals(moduleId)) {
+			bingDemoPrefixService.insertSearchInHomeEvent(dto);
+//		} else if (TestModuleType.scheduleClawing.getId().equals(moduleId)) {
+//			return scheduleClawingPrefixService.runSubEvent(dto);
+//		} else if (TestModuleType.collecting.getId().equals(moduleId)) {
+//			return clawCollectPrefixService.runSubEvent(dto);
+//		} else if (TestModuleType.localClawing.getId().equals(moduleId)) {
+//			return localClawingPrefixService.runSubEvent(dto);
+		}
 	}
 }

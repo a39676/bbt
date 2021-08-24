@@ -16,8 +16,6 @@ public interface SeleniumGlobalOptionService {
 
 	String getIePath();
 
-	boolean checkFolderExists(String path);
-
 	String getTmpDir();
 	String getOperaPath();
 

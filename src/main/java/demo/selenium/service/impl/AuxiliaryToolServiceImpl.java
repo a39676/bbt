@@ -15,6 +15,7 @@ import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
@@ -24,10 +25,14 @@ import at.webDriver.pojo.constant.WebDriverConstant;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import net.sf.json.JSONObject;
+import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class AuxiliaryToolServiceImpl extends SeleniumCommonService {
 
+	@Autowired
+	private FileUtilCustom ioUtil;
+	
 	public WebElement fluentWait(WebDriver driver, final By by) {
 		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
 				.withTimeout(WebDriverConstant.pageWaitingTimeoutSecond, TimeUnit.SECONDS)

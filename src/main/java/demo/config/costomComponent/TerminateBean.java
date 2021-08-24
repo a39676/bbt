@@ -1,4 +1,4 @@
-package demo.config.costom_component;
+package demo.config.costomComponent;
 
 import javax.annotation.PreDestroy;
 

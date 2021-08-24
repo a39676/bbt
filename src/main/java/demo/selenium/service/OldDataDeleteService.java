@@ -13,7 +13,4 @@ public interface OldDataDeleteService {
 	void deleteOldScreenshot() throws IOException;
 	void deleteOldCaptchaImg() throws IOException;
 	
-	/** 逻辑删除 */
-	void deleteOldTestEvent();
-
 }

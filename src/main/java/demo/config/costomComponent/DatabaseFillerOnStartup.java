@@ -1,4 +1,4 @@
-package demo.config.costom_component;
+package demo.config.costomComponent;
 
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;

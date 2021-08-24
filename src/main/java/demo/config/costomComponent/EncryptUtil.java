@@ -1,4 +1,4 @@
-package demo.config.costom_component;
+package demo.config.costomComponent;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;

@@ -1,15 +1,20 @@
 package demo.scriptCore.medicine.service.impl;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.base.system.pojo.bo.SystemConstant;
 import demo.scriptCore.medicine.service.ClawingSinaMedicineGlobalOptionService;
 import demo.selenium.service.impl.SeleniumCommonService;
+import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class ClawingSinaMedicineGlobalOptionServiceImpl extends SeleniumCommonService implements ClawingSinaMedicineGlobalOptionService {
 
+	@Autowired
+	private FileUtilCustom ioUtil;
+	
 	protected String mainSavingFolder_win = "d:/auxiliary";
 	protected String mainSavingFolder_linx = "/home/u2";
 	protected String medicineDocumentFolder = "/medicineDocument";
@@ -21,7 +26,7 @@ public class ClawingSinaMedicineGlobalOptionServiceImpl extends SeleniumCommonSe
 		String medicineDocumentFolderPath = redisConnectService.getValByName(medicineDocumentFolder);
 
 		if (StringUtils.isNotBlank(medicineDocumentFolderPath)) {
-			globalOptionService.checkFolderExists(medicineDocumentFolderPath);
+			ioUtil.checkFolderExists(medicineDocumentFolderPath);
 			return pathChangeByDetectOS(medicineDocumentFolderPath);
 		}
 
@@ -37,7 +42,7 @@ public class ClawingSinaMedicineGlobalOptionServiceImpl extends SeleniumCommonSe
 		constant.setConstantValue(medicineDocumentFolderPath);
 		redisConnectService.setValByName(constant);
 
-		globalOptionService.checkFolderExists(medicineDocumentFolderPath);
+		ioUtil.checkFolderExists(medicineDocumentFolderPath);
 		return medicineDocumentFolderPath;
 	}
 }

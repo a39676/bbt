@@ -31,9 +31,12 @@ import image.pojo.result.ImageSavingResult;
 import image.pojo.result.UploadImageToCloudinaryResult;
 import net.sf.json.JSONObject;
 import selenium.pojo.constant.SeleniumConstant;
+import toolPack.ioHandle.FileUtilCustom;
 
 public abstract class SeleniumCommonService extends CommonService {
 
+	@Autowired
+	private FileUtilCustom ioUtil;
 	@Autowired
 	protected ATJsonReportService reportService;
 	@Autowired
@@ -123,7 +126,7 @@ public abstract class SeleniumCommonService extends CommonService {
 
 	protected String getScreenshotSaveingPath(String eventName) {
 		String path = globalOptionService.getScreenshotSavingFolder() + File.separator + eventName;
-		globalOptionService.checkFolderExists(path);
+		ioUtil.checkFolderExists(path);
 		return path;
 	}
 
@@ -173,7 +176,7 @@ public abstract class SeleniumCommonService extends CommonService {
 
 	protected String getParameterSaveingPath(String eventName) {
 		String path = globalOptionService.getParameterSavingFolder() + File.separator + eventName;
-		globalOptionService.checkFolderExists(path);
+		ioUtil.checkFolderExists(path);
 		return path;
 	}
 	

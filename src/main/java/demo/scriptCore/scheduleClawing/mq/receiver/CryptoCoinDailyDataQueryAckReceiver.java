@@ -32,7 +32,7 @@ public class CryptoCoinDailyDataQueryAckReceiver extends CommonService {
 			cryptoCoinPriceService.insertCryptoCoinDailyDataCollectEvent(dto);
 
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			
 			channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);
 		}

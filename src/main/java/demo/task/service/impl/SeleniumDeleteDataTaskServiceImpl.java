@@ -25,8 +25,4 @@ public class SeleniumDeleteDataTaskServiceImpl {
 		oldDataDeleteService.deleteOldCaptchaImg();
 	}
 	
-	@Scheduled(cron = "33 12 01 * * *")
-	public void deleteOldTestEvent() throws IOException {
-		oldDataDeleteService.deleteOldTestEvent();
-	}
 }

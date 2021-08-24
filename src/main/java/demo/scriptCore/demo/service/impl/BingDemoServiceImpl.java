@@ -15,7 +15,7 @@ import at.xpath.pojo.bo.XpathBuilderBO;
 import autoTest.testEvent.pojo.result.AutomationTestCaseResult;
 import autoTest.testEvent.pojo.type.AutomationTestFlowResultType;
 import autoTest.testEvent.searchingDemo.pojo.dto.BingSearchInHomePageDTO;
-import autoTest.testEvent.searchingDemo.pojo.type.BingDemoSearchCaseType;
+import autoTest.testEvent.searchingDemo.pojo.type.BingDemoSearchFlowType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.scriptCore.demo.service.BingDemoService;
@@ -25,13 +25,13 @@ public class BingDemoServiceImpl extends BingDemoCommonService implements BingDe
 
 	@Override
 	public TestEventBO testing(TestEvent te) {
-		
+
 		TestEventBO tbo = auxTool.beforeRunning(te);
-		
+
 		try {
-			tbo.getCaseResultList().add(searchInHomepage(tbo));
-			tbo.getCaseResultList().add(checkResult(tbo));
-		
+			searchInHomepage(tbo);
+			checkResult(tbo);
+
 		} catch (Exception e) {
 			JsonReportOfCaseDTO errorReport = buildCaseReportDTO();
 			reportService.caseReportAppendContent(errorReport, e.getMessage());
@@ -47,10 +47,10 @@ public class BingDemoServiceImpl extends BingDemoCommonService implements BingDe
 	}
 
 	private AutomationTestCaseResult searchInHomepage(TestEventBO tbo) {
-		BingDemoSearchCaseType caseType = BingDemoSearchCaseType.SEARCH_IN_HOMEPAGE;
+		BingDemoSearchFlowType caseType = BingDemoSearchFlowType.SEARCH_IN_HOMEPAGE;
 		AutomationTestCaseResult r = buildCaseResult(caseType);
 		JsonReportOfCaseDTO caseReport = buildCaseReportDTO(caseType);
-		
+
 		reportService.caseReportAppendContent(caseReport, "准备进行搜索");
 		WebDriver d = tbo.getWebDriver();
 
@@ -93,7 +93,7 @@ public class BingDemoServiceImpl extends BingDemoCommonService implements BingDe
 		x.start("label").addId("search_icon");
 		WebElement searchButton = d.findElement(By.xpath(x.getXpath()));
 		searchButton.click();
-		
+
 		reportService.caseReportAppendContent(caseReport, "点击搜索");
 
 		addScreenshotToReport(d, caseReport);
@@ -104,49 +104,50 @@ public class BingDemoServiceImpl extends BingDemoCommonService implements BingDe
 		tbo.getReport().getCaseReportList().add(caseReport);
 		return r;
 	}
-	
+
 	private AutomationTestCaseResult checkResult(TestEventBO tbo) {
-		BingDemoSearchCaseType caseType = BingDemoSearchCaseType.SEARCH_RESULT_CHECK;
+		BingDemoSearchFlowType caseType = BingDemoSearchFlowType.SEARCH_RESULT_CHECK;
 		AutomationTestCaseResult r = buildCaseResult(caseType);
 		JsonReportOfCaseDTO caseReport = buildCaseReportDTO(caseType);
-		
-		reportService.caseReportAppendContent(caseReport, "准备检查搜索结果");
-
-		WebDriver d = tbo.getWebDriver();
-		
-		BingSearchInHomePageDTO dto = auxTool.buildParamDTO(tbo, BingSearchInHomePageDTO.class);
-		
-		XpathBuilderBO x = new XpathBuilderBO();
-		
-		x.start("ol").addId("b_results");
-		
-		WebElement resultListOL = null;
 		try {
-			resultListOL = d.findElement(By.xpath(x.getXpath()));
-		} catch (Exception e) {
-			reportService.caseReportAppendContent(caseReport, "无法定位搜索结果");
-			return r;
-		}
-		
-		if(!resultListOL.getText().contains(dto.getSearchKeyword())) {
-			reportService.caseReportAppendContent(caseReport, "搜索结果未包含目标关键字");
-			return r;
-		}
-		
-		x.findChild("li");
-		List<WebElement> resultListLi = d.findElements(By.xpath(x.getXpath()));
-		
-		for(int i = 0; i < resultListLi.size(); i++) {
-			if(resultListLi.get(i).getText().contains(dto.getSearchKeyword())) {
-				reportService.caseReportAppendContent(caseReport, "第" + (i + 1) + "位包含目标关键字");
-				r.setResultType(AutomationTestFlowResultType.PASS);
+			reportService.caseReportAppendContent(caseReport, "准备检查搜索结果");
+
+			WebDriver d = tbo.getWebDriver();
+
+			BingSearchInHomePageDTO dto = auxTool.buildParamDTO(tbo, BingSearchInHomePageDTO.class);
+
+			XpathBuilderBO x = new XpathBuilderBO();
+
+			x.start("ol").addId("b_results");
+
+			WebElement resultListOL = null;
+			try {
+				resultListOL = d.findElement(By.xpath(x.getXpath()));
+			} catch (Exception e) {
+				reportService.caseReportAppendContent(caseReport, "无法定位搜索结果");
+				throw new Exception();
 			}
+
+			if (!resultListOL.getText().contains(dto.getSearchKeyword())) {
+				reportService.caseReportAppendContent(caseReport, "搜索结果未包含目标关键字");
+			} else {
+				x.findChild("li");
+				List<WebElement> resultListLi = d.findElements(By.xpath(x.getXpath()));
+
+				for (int i = 0; i < resultListLi.size(); i++) {
+					if (resultListLi.get(i).getText().contains(dto.getSearchKeyword())) {
+						reportService.caseReportAppendContent(caseReport, "第" + (i + 1) + "位包含目标关键字");
+						r.setResultType(AutomationTestFlowResultType.PASS);
+					}
+				}
+			}
+		} catch (Exception e) {
 		}
 		
 		tbo.getCaseResultList().add(r);
 		tbo.getReport().getCaseReportList().add(caseReport);
-		
 		return r;
+
 	}
 
 }

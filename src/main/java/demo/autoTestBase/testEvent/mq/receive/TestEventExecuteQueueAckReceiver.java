@@ -34,7 +34,7 @@ public class TestEventExecuteQueueAckReceiver extends CommonService {
 			}
 
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
-		} catch (IOException e) {
+		} catch (Exception e) {
 
 			channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);
 		}

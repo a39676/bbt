@@ -12,7 +12,7 @@ import auxiliaryCommon.pojo.type.BaseResultType;
 import demo.base.system.service.impl.RedisConnectService;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.pojo.param.PageParam;
-import demo.config.costom_component.SnowFlake;
+import demo.config.costomComponent.SnowFlake;
 import toolPack.dateTimeHandle.DateHandler;
 import toolPack.dateTimeHandle.LocalDateTimeHandler;
 import toolPack.ioHandle.FileUtilCustom;
