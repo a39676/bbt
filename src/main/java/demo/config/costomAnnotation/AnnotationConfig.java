@@ -9,17 +9,12 @@ import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import demo.experiment.service.TestService2;
 
 @Aspect
 @Component
 public class AnnotationConfig {
 	
-	@Autowired
-	private TestService2 testService2;
 
 	@Around("@annotation(LogExecutionTime)")
 	public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -35,7 +30,6 @@ public class AnnotationConfig {
 
 	@Before("@annotation(CustomBeforeAnnotation)")
 	public void customAnnotation(JoinPoint joinPoint) throws Throwable {
-		System.out.println(testService2.test2());
 		String methodName = joinPoint.getSignature().getName();
 		List<Object> args = Arrays.asList(joinPoint.getArgs());
 		System.out.println(this.getClass().getSimpleName() + " before execute:" + methodName + " begin with " + args);
