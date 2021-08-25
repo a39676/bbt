@@ -15,7 +15,6 @@ import demo.autoTestBase.testEvent.pojo.constant.TestEventOptionConstant;
 import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.autoTestBase.testEvent.service.TestEventService;
-import demo.scriptCore.collecting.jandan.service.impl.ClawCollectPrefixServiceImpl;
 import demo.scriptCore.demo.service.BingDemoPrefixService;
 import demo.scriptCore.demo.service.impl.BingDemoPrefixServiceImpl;
 import demo.scriptCore.localClawing.service.impl.LocalClawingPrefixServiceImpl;
@@ -35,8 +34,6 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	@Autowired
 	private ScheduleClawingPrefixServiceImpl scheduleClawingPrefixService;
 	@Autowired
-	private ClawCollectPrefixServiceImpl clawCollectPrefixService;
-	@Autowired
 	private LocalClawingPrefixServiceImpl localClawingPrefixService;
 
 	private String pauseWordRedisKey = "testEventPauseWord";
@@ -54,7 +51,6 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	/*
 	 * TODO 废弃此添加动态参数的方法?
 	 */
-	@Override
 	public InsertTestEventResult insertTestEvent(TestEvent po, JSONObject paramJson) {
 		InsertTestEventResult r = new InsertTestEventResult();
 		if (po == null || po.getId() == null || po.getFlowId() == null || po.getModuleId() == null) {
@@ -119,8 +115,6 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 			return searchingDemoService.runSubEvent(te);
 		} else if (TestModuleType.scheduleClawing.getId().equals(moduleId)) {
 			return scheduleClawingPrefixService.runSubEvent(te);
-		} else if (TestModuleType.collecting.getId().equals(moduleId)) {
-			return clawCollectPrefixService.runSubEvent(te);
 		} else if (TestModuleType.localClawing.getId().equals(moduleId)) {
 			return localClawingPrefixService.runSubEvent(te);
 		}

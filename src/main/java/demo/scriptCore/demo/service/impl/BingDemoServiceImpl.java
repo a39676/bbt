@@ -47,9 +47,9 @@ public class BingDemoServiceImpl extends BingDemoCommonService implements BingDe
 	}
 
 	private AutomationTestCaseResult searchInHomepage(TestEventBO tbo) {
-		BingDemoSearchFlowType caseType = BingDemoSearchFlowType.SEARCH_IN_HOMEPAGE;
-		AutomationTestCaseResult r = buildCaseResult(caseType);
-		JsonReportOfCaseDTO caseReport = buildCaseReportDTO(caseType);
+		BingDemoSearchFlowType flowType = BingDemoSearchFlowType.SEARCH_IN_HOMEPAGE;
+		AutomationTestCaseResult r = buildCaseResult(flowType);
+		JsonReportOfCaseDTO caseReport = buildCaseReportDTO(flowType);
 
 		reportService.caseReportAppendContent(caseReport, "准备进行搜索");
 		WebDriver d = tbo.getWebDriver();

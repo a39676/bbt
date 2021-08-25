@@ -9,7 +9,6 @@ import net.sf.json.JSONObject;
 public interface TestEventService {
 
 	InsertTestEventResult insertExecuteTestEvent(TestEvent po);
-	InsertTestEventResult insertTestEvent(TestEvent po, JSONObject paramJson);
 	
 	TestEventBO reciveTestEventAndRun(TestEvent te);
 
