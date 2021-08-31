@@ -5,8 +5,6 @@ public interface SeleniumGlobalOptionService {
 	String getDownloadDir();
 	String getScreenshotSavingFolder();
 	String getCaptchaScreenshotSavingFolder();
-	String getReportOutputFolder();
-	String getParameterSavingFolder();
 
 	String getChromePath();
 	String getChrome45Path();
@@ -16,8 +14,6 @@ public interface SeleniumGlobalOptionService {
 	String getEdgePath();
 
 	String getIePath();
-
-	boolean checkFolderExists(String path);
 
 	String getTmpDir();
 	String getOperaPath();
