@@ -15,7 +15,11 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.Gson;
+
 import at.webDriver.pojo.constant.WebDriverConstant;
+import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
+import net.sf.json.JSONObject;
 
 @Service
 public class AuxiliaryToolServiceImpl extends SeleniumCommonService {
@@ -77,6 +81,26 @@ public class AuxiliaryToolServiceImpl extends SeleniumCommonService {
 			Thread.sleep(waitGap);
 		}
 		return false;
+	}
+
+	public <T> T buildParamDTO(TestEventBO bo, Class<T> clazz) {
+		String className = clazz.getSimpleName();
+
+		String paramStr = bo.getParamStr();
+		
+		try {
+			JSONObject paramJson = JSONObject.fromObject(paramStr);
+			
+			JSONObject targetJson = paramJson.getJSONObject(className);
+			
+			return new Gson().fromJson(targetJson.toString(), clazz);
+
+		} catch (Exception e) {
+			String msg = String.format("get param DTO error, module: %s, test flow: %s, param name: %s ", bo.getModuleType().getModuleName(), bo.getFlowName(), className);
+			log.error(msg);
+		}
+		return null;
+
 	}
 
 	public static void main(String[] args) throws IOException {

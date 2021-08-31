@@ -1,17 +1,52 @@
-﻿TestEventServiceImpl.sendFailReports
+﻿testEvent
+	逐步删除项目下保存参数的文件
+		/home/u2/bbt/atParam
+    改变思路:
+    	仅作为执行脚本的项目, 从MQ获取任务, 任务结束后, 将结果 & 报告, 通过MQ 返回给cx
+    	crypto coin 
+    		一次发送大量币种  需要增加队列消息存活时间
+			bbt 服务新增逻辑: 同一个任务接收多次, 且因异常而执行失败时, 直接返回执行失败, 防止MQ队列拥堵
+    	测试中的截图, 需要重构, 统一交给CX保存处理
+	mq
+		del CryptoCoinDailyDataQuery
+		删除 TestEventQueue 
+		add TestEventInsertQueue
+		新增 AutomationTestResult
+	testEvent 
+		TestEventServiceImpl.java
+			参照 cx 另建缓存服务
+		考虑删除 test event 表?
+		通过flow 指定连串的 testCase
+		ALTER TABLE bbt.test_event CHANGE case_id flow_id bigint(20) NOT NULL;
+		case 字段 重命名为 flow
+		给定参数时 以类似 map 的方式 --->  {DTOname:{paramName1:param1, paraName2:param2}}
+		插入任务时, 参数指定方式
+			AutomationTestInsertEventDTO.paramStr --> json String
+			文件形式 --> 指定到 parameterFilePath
+			TestEvent.parameterFilePath 数据库字段保存 
+			参数优先级, 动态参数指定优先 然后 脚本内 hardcode 默认参数
+			并安排定时清除任务, 物理删除过时参数文件
+	最终的报告, 应由 N个case 的子报告 List 形式给出
+		dev 环境中, 应该本地保存报告, 不要发送到 mq
+		目前 cx 服务中, 查询报告时, 发现 test event ID有误, 待排查
+			目前, 运行完毕之后. 报告中还是体现未执行 待排查
+		方便判定哪个 case failed, 并可能影响下一步测试流程 
+		
+	需要废弃  --> TestEventServiceImpl.insertTestEvent(TestEvent po, JSONObject paramJson)
+		待 crypto coin 系列任务调整后就处理
+
+删除 mail_record 表
+删除 movie 相关表
+
+TestEventServiceImpl.sendFailReports
 可以转给电报了
 
-test event
-	异常退出,截屏失效
 
 工作需要, 项目内需要增加类似 fake ftp 的"本地目录"式搜查报告
 	搜索栏应配备
 		地址栏 (可点击某段,并跳转至该目录)
 		可按 是否成功报告 / 关键词 / 测试模型(枚举类) 过滤
 
-﻿﻿因 localClawing 类项目
-考虑部分任务, 执行后应该处于等待状态
-	间隔轮询 redis 等待参数, 进行下一步或彻底退出
 
 jd收集
 	考虑被 nsfw 等其他标签屏蔽的情况

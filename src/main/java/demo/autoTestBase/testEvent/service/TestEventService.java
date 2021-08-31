@@ -1,32 +1,22 @@
 package demo.autoTestBase.testEvent.service;
 
+import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
-import demo.autoTestBase.testEvent.pojo.po.TestEvent;
-import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
-import demo.baseCommon.pojo.result.CommonResultBBT;
-import net.sf.json.JSONObject;
 
 public interface TestEventService {
 
-	InsertTestEventResult insertTestEvent(TestEvent po);
-	InsertTestEventResult insertTestEvent(TestEvent po, JSONObject paramJson);
+	/**
+	 * 从 MQ 获取任务
+	 */
+	TestEventBO reciveTestEventAndRun(AutomationTestInsertEventDTO dto);
+
+	/**
+	 * 应用自建任务
+	 */
+	TestEventBO receiveTestEventAndRun(TestEventBO bo);
 	
-	TestEvent runNewTestEvent(TestEventBO bo);
-
-	int countWaitingEvent();
-
-	int updateTestEventReportPath(TestEvent te, String reportPath);
-
-//	CommonResultBBT sendFailReports();
-//
-//	CommonResultBBT sendFailReports(LocalDateTime startTime, LocalDateTime endTime);
-
-	CommonResultBBT reciveTestEventAndRun(TestEvent te);
-
 	boolean checkExistsRuningEvent();
 
 	void fixRuningEventStatusManual();
-
-	void deleteOldTestEvent();
 
 }

@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.BaseResultType;
-import demo.baseCommon.pojo.result.CommonResultBBT;
 import demo.baseCommon.service.CommonService;
 import demo.tool.pojo.constant.ToolPathConstant;
 import demo.tool.service.ComplexToolService;
@@ -70,8 +69,8 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 	}
 	
 	@Override
-	public CommonResultBBT cleanTmpFiles(String targetFolder, String extensionName, LocalDateTime oldestCreateTime) {
-		CommonResultBBT r = new CommonResultBBT();
+	public CommonResult cleanTmpFiles(String targetFolder, String extensionName, LocalDateTime oldestCreateTime) {
+		CommonResult r = new CommonResult();
 
 		File folder = new File(targetFolder);
 		if(!folder.exists()) {

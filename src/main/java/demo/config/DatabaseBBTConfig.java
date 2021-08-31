@@ -24,7 +24,7 @@ import com.zaxxer.hikari.HikariDataSource;
 	basePackages = {
 		"demo.base.*.mapper", 
 		"demo.autoTestBase.*.mapper", 
-		"demo.clawing.*.mapper", 
+		"demo.scriptCore.*.mapper", 
 		"demo.interaction.*.mapper", 
 		"demo.*.mapper"
 	},

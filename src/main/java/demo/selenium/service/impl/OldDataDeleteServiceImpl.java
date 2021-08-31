@@ -11,11 +11,10 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import demo.autoTestBase.captcha.service.CaptchaService;
-import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.baseCommon.service.CommonService;
 import demo.selenium.service.OldDataDeleteService;
 import demo.selenium.service.SeleniumGlobalOptionService;
+import demo.tool.captcha.service.CaptchaService;
 import selenium.pojo.constant.SeleniumConstant;
 
 @Service
@@ -25,8 +24,6 @@ public class OldDataDeleteServiceImpl extends CommonService implements OldDataDe
 	private SeleniumGlobalOptionService globalOptionService;
 	@Autowired
 	private CaptchaService captchaService;
-	@Autowired
-	private TestEventService testEventService;
 
 	@Override
 	public void deleteOldDownload() throws IOException {
@@ -52,18 +49,6 @@ public class OldDataDeleteServiceImpl extends CommonService implements OldDataDe
 
 	}
 
-	@Override
-	public void deleteOldReport() throws IOException {
-		LocalDateTime oldHistoryLimit = LocalDateTime.now().minusMonths(SeleniumConstant.maxHistoryMonth);
-
-		deleting(globalOptionService.getReportOutputFolder(), oldHistoryLimit);
-
-	}
-	
-	@Override
-	public void deleteOldTestEvent() {
-		testEventService.deleteOldTestEvent();
-	}
 
 	/**
 	 * delete files ONLY, will not delete folder even though empty

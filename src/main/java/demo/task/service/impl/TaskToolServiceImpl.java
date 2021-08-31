@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import demo.base.system.mapper.BaseMapper;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.task.service.TaskToolService;
-import demo.tool.mapper.MailRecordMapper;
 import demo.tool.service.ComplexToolService;
 
 @Component
@@ -21,8 +20,6 @@ public class TaskToolServiceImpl implements TaskToolService {
 	@Autowired
 	private ComplexToolService complexToolService;
 
-	@Autowired
-	private MailRecordMapper mailRecordMapper;
 
 	@Autowired
 	private BaseMapper baseMapper;
@@ -38,12 +35,6 @@ public class TaskToolServiceImpl implements TaskToolService {
 	@Scheduled(cron = "*/31 * * * * ?")
 	public void keepDatabaseConnectionAlive() {
 		baseMapper.keepDatabaseAlive();
-	}
-
-	/** 清理过期或已读的邮件记录. */
-	@Scheduled(cron = "0 */63 * * * ?")
-	public void cleanMailRecord() {
-		mailRecordMapper.cleanMailRecord(null);
 	}
 
 	@Scheduled(cron = "05 03 23 * * *")
