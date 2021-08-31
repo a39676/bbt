@@ -1,31 +1,20 @@
 package demo.scriptCore.scheduleClawing.service.impl;
 
-import java.io.File;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.Gson;
-
 import at.report.pojo.dto.JsonReportOfCaseDTO;
-import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
-import autoTest.testModule.pojo.type.TestModuleType;
+import autoTest.testEvent.cryptoCoin.pojo.type.CryptoCoinFlowType;
 import auxiliaryCommon.pojo.result.CommonResult;
-import auxiliaryCommon.pojo.type.CurrencyType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
-import demo.autoTestBase.testEvent.pojo.constant.TestEventOptionConstant;
-import demo.autoTestBase.testEvent.pojo.po.TestEvent;
-import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.scheduleClawing.mq.sender.CryptoCoinDailyDataAckProducer;
 import demo.scriptCore.scheduleClawing.pojo.result.CryptoCoinDailyDataResult;
 import demo.scriptCore.scheduleClawing.service.CryptoCoinPriceService;
 import demo.scriptCore.scheduleClawing.service.CryptoCompareService;
-import demo.selenium.pojo.bo.BuildTestEventBO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDailyDataQueryDTO;
 import finance.cryptoCoin.pojo.type.CryptoCoinDataSourceType;
-import net.sf.json.JSONObject;
 
 @Service
 public class CryptoCoinPriceServiceImpl extends AutomationTestCommonService implements CryptoCoinPriceService {
@@ -35,87 +24,61 @@ public class CryptoCoinPriceServiceImpl extends AutomationTestCommonService impl
 	@Autowired
 	private CryptoCompareService cryptoCompareService;
 
-	private TestModuleType testModuleType = TestModuleType.scheduleClawing;
-
-	private String cryptoCoinDailyDataCollect = "cryptoCoinDailyDataCollect";
-	private String cryptoCoinDailyDataCollectParam = "cryptoCoinDailyDataCollectParam.json";
-
-	private ScheduleClawingType cryptoCoinDailyData = ScheduleClawingType.CRYPTO_COIN_DAILY_DATA;
-
-	private TestEvent buildCryptoCoinDailyDataCollectingEvent() {
-		String paramterFolderPath = getParameterSaveingPath(cryptoCoinDailyDataCollect);
-		File paramterFile = new File(paramterFolderPath + File.separator + cryptoCoinDailyDataCollectParam);
-		if (!paramterFile.exists()) {
-//			TODO test event if paramterFile NOT exists
-			return null;
-		}
-
-		BuildTestEventBO bo = new BuildTestEventBO();
-		bo.setTestModuleType(testModuleType);
-		bo.setEventId(cryptoCoinDailyData.getId());
-		bo.setFlowName(cryptoCoinDailyData.getFlowName());
-		bo.setParameterFilePath(paramterFile.getAbsolutePath());
-		return buildTestEvent(bo);
-	}
-	
-
 	@Override
-	public InsertTestEventResult insertCryptoCoinDailyDataCollectEvent(CryptoCoinDailyDataQueryDTO dto) {
-		if(dto == null || StringUtils.isBlank(dto.getCoinName()) || dto.getCounting() <= 0) {
-			return new InsertTestEventResult();
-		}
-		
-		TestEvent te = buildCryptoCoinDailyDataCollectingEvent();
-		if(StringUtils.isBlank(dto.getCurrencyName())) {
-			dto.setCurrencyName(CurrencyType.USD.getName());
-		}
-		return testEventService.insertTestEvent(te, JSONObject.fromObject(dto));
-	}
+	public TestEventBO cryptoCoinDailyDataAPI(TestEventBO tbo) {
 
-	@Override
-	public TestEventBO cryptoCoinDailyDataAPI(TestEvent te) {
-		// TODO 正在整理  分 crypto compare / binance api 
-		
-		/*
-		 * 2021-08-13
-		 * 暂时无精力再修缮
-		 * 能用就算的部分代码
-		 * 请勿以此为模板
-		 */
-		
-		TestEventBO tbo = auxTool.beforeRunning(te);
-		
-		CryptoCoinDailyDataQueryDTO queryDTO = null;
+		CryptoCoinFlowType flowType = CryptoCoinFlowType.DAILY_DATA;
+		JsonReportOfCaseDTO caseReport = buildCaseReportDTO(flowType.getFlowName());
 		
 		try {
-			JSONObject paramJson = tryFindParam(te.getId());
-			queryDTO = new Gson().fromJson(paramJson.toString(), CryptoCoinDailyDataQueryDTO.class);
-		} catch (Exception e) {
-		}
-		
-		CryptoCoinDailyDataResult apiResult = null;
-		ScheduleClawingType caseType = ScheduleClawingType.CRYPTO_COIN_DAILY_DATA;
-		JsonReportOfCaseDTO caseReport = buildCaseReportDTO(caseType);
-		
-		if(queryDTO == null || queryDTO.getDataSourceCode() == null || CryptoCoinDataSourceType.CRYPTO_COMPARE.getCode().equals(queryDTO.getDataSourceCode())) {
-			apiResult = cryptoCompareService.cryptoCoinDailyDataAPI(te, caseReport);
-		} else if(CryptoCoinDataSourceType.BINANCE.getCode().equals(queryDTO.getDataSourceCode())){
-//			TODO need binance daily data API
-		}
-		
-		CommonResult r = new CommonResult();
-		
-		if(apiResult.isSuccess()) {
-			cryptoCoinDailyDataAckProducer.sendHistoryPrice(apiResult.getData());
-			redisConnectService.deleteValByName(TestEventOptionConstant.TEST_EVENT_REDIS_PARAM_KEY_PREFIX + "_" + te.getId());
-		} else {
+			if (StringUtils.isBlank(tbo.getParamStr())) {
+				reportService.caseReportAppendContent(caseReport, "参数文件读取异常");
+				throw new Exception();
+			}
+
+			CryptoCoinDailyDataQueryDTO paramDTO = auxTool.buildParamDTO(tbo, CryptoCoinDailyDataQueryDTO.class);
+			
+			if (paramDTO == null) {
+				reportService.caseReportAppendContent(caseReport, "参数文件结构异常");
+				throw new Exception();
+			}
+
+			if (StringUtils.isBlank(paramDTO.getApiKey())) {
+				reportService.caseReportAppendContent(caseReport, "参数文件参数异常");
+				throw new Exception();
+			}
+			// TODO 正在整理  分 crypto compare / binance api 
+			
 			/*
-			 * TODO what to do when crypto coin daily data query fail
+			 * 2021-08-13
+			 * 暂时无精力再修缮
+			 * 能用就算的部分代码
+			 * 请勿以此为模板
 			 */
+			CryptoCoinDailyDataResult apiResult = null;
+			
+			if(paramDTO.getDataSourceCode() == null || CryptoCoinDataSourceType.CRYPTO_COMPARE.getCode().equals(paramDTO.getDataSourceCode())) {
+				apiResult = cryptoCompareService.cryptoCoinDailyDataAPI(tbo, paramDTO);
+			} else if(CryptoCoinDataSourceType.BINANCE.getCode().equals(paramDTO.getDataSourceCode())){
+//				TODO need binance daily data API
+			}
+			
+			CommonResult r = new CommonResult();
+			
+			if(apiResult.isSuccess()) {
+				cryptoCoinDailyDataAckProducer.sendHistoryPrice(apiResult.getData());
+			} else {
+				/*
+				 * TODO what to do when crypto coin daily data query fail
+				 */
+			}
+			
+			r.setSuccess(apiResult.isSuccess());
+			r.setMessage(apiResult.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			reportService.caseReportAppendContent(caseReport, "异常: " + e);
 		}
-		
-		r.setSuccess(apiResult.isSuccess());
-		r.setMessage(apiResult.getMessage());
 		
 		return tbo;
 	}

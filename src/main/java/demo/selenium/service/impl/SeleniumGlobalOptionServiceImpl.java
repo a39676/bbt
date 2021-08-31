@@ -14,7 +14,6 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 	private String tmpFolder = MAIN_FOLDER_PATH + "/tmp";
 	private String screenshotSavingFolder = MAIN_FOLDER_PATH + "/screenshot";
 	private String captchaScreenshotSavingFolder = MAIN_FOLDER_PATH + "/captchaScreenshotSavingFolder";
-	private String parameterSavingFolder = MAIN_FOLDER_PATH + "/autoTestParameterFiles";
 
 	private String winSeleniumWebDriverFolder = "d:/auxiliary/seleniumWebDriver";
 	private String linuxSeleniumWebDriverFolder = "/home/u2/seleniumWebDriver";
@@ -49,11 +48,6 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 	@Override
 	public String getCaptchaScreenshotSavingFolder() {
 		return captchaScreenshotSavingFolder;
-	}
-
-	@Override
-	public String getParameterSavingFolder() {
-		return parameterSavingFolder;
 	}
 
 	@Override

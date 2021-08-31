@@ -17,19 +17,19 @@ import autoTest.testEvent.pojo.type.AutomationTestFlowResultType;
 import autoTest.testEvent.searchingDemo.pojo.dto.BingSearchInHomePageDTO;
 import autoTest.testEvent.searchingDemo.pojo.type.BingDemoSearchFlowType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
-import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.scriptCore.demo.service.BingDemoService;
 
 @Service
 public class BingDemoServiceImpl extends BingDemoCommonService implements BingDemoService {
 
 	@Override
-	public TestEventBO testing(TestEvent te) {
-
-		TestEventBO tbo = auxTool.beforeRunning(te);
+	public TestEventBO searchInHomepage(TestEventBO tbo) {
+		BingDemoSearchFlowType flowType = BingDemoSearchFlowType.SEARCH_IN_HOMEPAGE;
+		tbo.setFlowId(flowType.getId());
+		tbo.setFlowName(flowType.getFlowName());
 
 		try {
-			searchInHomepage(tbo);
+			keywordSearchInHomepage(tbo);
 			checkResult(tbo);
 
 		} catch (Exception e) {
@@ -46,10 +46,10 @@ public class BingDemoServiceImpl extends BingDemoCommonService implements BingDe
 		return tbo;
 	}
 
-	private AutomationTestCaseResult searchInHomepage(TestEventBO tbo) {
-		BingDemoSearchFlowType flowType = BingDemoSearchFlowType.SEARCH_IN_HOMEPAGE;
-		AutomationTestCaseResult r = buildCaseResult(flowType);
-		JsonReportOfCaseDTO caseReport = buildCaseReportDTO(flowType);
+	private AutomationTestCaseResult keywordSearchInHomepage(TestEventBO tbo) {
+		String casename = "searchInHomepage";
+		AutomationTestCaseResult r = buildCaseResult(casename);
+		JsonReportOfCaseDTO caseReport = buildCaseReportDTO(casename);
 
 		reportService.caseReportAppendContent(caseReport, "准备进行搜索");
 		WebDriver d = tbo.getWebDriver();
@@ -106,9 +106,9 @@ public class BingDemoServiceImpl extends BingDemoCommonService implements BingDe
 	}
 
 	private AutomationTestCaseResult checkResult(TestEventBO tbo) {
-		BingDemoSearchFlowType caseType = BingDemoSearchFlowType.SEARCH_RESULT_CHECK;
-		AutomationTestCaseResult r = buildCaseResult(caseType);
-		JsonReportOfCaseDTO caseReport = buildCaseReportDTO(caseType);
+		String casename = "checkResult";
+		AutomationTestCaseResult r = buildCaseResult(casename);
+		JsonReportOfCaseDTO caseReport = buildCaseReportDTO(casename);
 		try {
 			reportService.caseReportAppendContent(caseReport, "准备检查搜索结果");
 

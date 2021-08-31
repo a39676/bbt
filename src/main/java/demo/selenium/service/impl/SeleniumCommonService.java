@@ -17,11 +17,9 @@ import at.screenshot.pojo.dto.TakeScreenshotSaveDTO;
 import at.screenshot.pojo.result.ScreenshotSaveResult;
 import at.screenshot.service.ScreenshotService;
 import demo.autoTestBase.testEvent.pojo.constant.TestEventOptionConstant;
-import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.baseCommon.service.CommonService;
 import demo.interaction.image.service.ImageInteractionService;
-import demo.selenium.pojo.bo.BuildTestEventBO;
 import demo.selenium.service.SeleniumCaptchaHandleService;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.WebDriverService;
@@ -56,23 +54,6 @@ public abstract class SeleniumCommonService extends CommonService {
 	@Autowired
 	protected SeleniumCaptchaHandleService captchaHandleService;
 	
-	protected TestEvent buildTestEvent(BuildTestEventBO bo) {
-		if (bo.getTestModuleType() == null || bo.getFlowId() == null) {
-			return null;
-		}
-		TestEvent te = new TestEvent();
-		te.setFlowId(bo.getFlowId());
-		te.setModuleId(bo.getTestModuleType().getId());
-		if(bo.getEventId() != null) {
-			te.setId(bo.getEventId());
-		} else {
-			te.setId(snowFlake.getNextId());
-		}
-		te.setEventName(bo.getFlowName());
-		te.setParameterFilePath(bo.getParameterFilePath());
-		return te;
-	}
-
 	protected JSONObject tryFindParam(Long testEventId) {
 		String paramStr = redisConnectService.getValByName(TestEventOptionConstant.TEST_EVENT_REDIS_PARAM_KEY_PREFIX + "_" + testEventId);
 		if(StringUtils.isNotBlank(paramStr)) {
@@ -174,12 +155,6 @@ public abstract class SeleniumCommonService extends CommonService {
 		return screenshotService.screenshot(dto);
 	}
 
-	protected String getParameterSaveingPath(String eventName) {
-		String path = globalOptionService.getParameterSavingFolder() + File.separator + eventName;
-		ioUtil.checkFolderExists(path);
-		return path;
-	}
-	
 	protected void addScreenshotToReport(WebDriver d, JsonReportOfCaseDTO flowReportDTO) {
 		ScreenshotSaveResult screenSaveResult = screenshot(d, flowReportDTO.getCaseTypeName());
 		ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(),

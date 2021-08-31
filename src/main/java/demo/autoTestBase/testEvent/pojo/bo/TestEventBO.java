@@ -9,11 +9,17 @@ import org.openqa.selenium.WebDriver;
 import at.report.pojo.dto.JsonReportOfEventDTO;
 import autoTest.testEvent.pojo.result.AutomationTestCaseResult;
 import autoTest.testEvent.pojo.type.AutomationTestFlowResultType;
-import demo.autoTestBase.testEvent.pojo.po.TestEvent;
+import autoTest.testModule.pojo.type.TestModuleType;
 
 public class TestEventBO {
 
-	private TestEvent event;
+	private Long eventId;
+	private TestModuleType moduleType;
+	private Long flowId;
+	private String flowName;
+
+	private LocalDateTime appointment;
+
 	private WebDriver webDriver;
 	private JsonReportOfEventDTO report;
 	private List<AutomationTestCaseResult> caseResultList = new ArrayList<>();
@@ -22,12 +28,46 @@ public class TestEventBO {
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
 
-	public TestEvent getEvent() {
-		return event;
+	private String remark;
+
+	public Long getEventId() {
+		return eventId;
 	}
 
-	public void setEvent(TestEvent event) {
-		this.event = event;
+	public void setEventId(Long eventId) {
+		this.eventId = eventId;
+	}
+
+	public TestModuleType getModuleType() {
+		return moduleType;
+	}
+
+	public void setModuleType(TestModuleType moduleType) {
+		this.moduleType = moduleType;
+	}
+
+	public Long getFlowId() {
+		return flowId;
+	}
+
+	public void setFlowId(Long flowId) {
+		this.flowId = flowId;
+	}
+
+	public String getFlowName() {
+		return flowName;
+	}
+
+	public void setFlowName(String flowName) {
+		this.flowName = flowName;
+	}
+
+	public LocalDateTime getAppointment() {
+		return appointment;
+	}
+
+	public void setAppointment(LocalDateTime appointment) {
+		this.appointment = appointment;
 	}
 
 	public WebDriver getWebDriver() {
@@ -85,24 +125,34 @@ public class TestEventBO {
 	public void setEndTime(LocalDateTime endTime) {
 		this.endTime = endTime;
 	}
-	
+
 	public boolean isPass() {
-		if(caseResultList == null || caseResultList.isEmpty()) {
+		if (caseResultList == null || caseResultList.isEmpty()) {
 			return false;
 		}
-		for(AutomationTestCaseResult subResult : caseResultList) {
-			if(!AutomationTestFlowResultType.PASS.equals(subResult.getResultType())) {
+		for (AutomationTestCaseResult subResult : caseResultList) {
+			if (!AutomationTestFlowResultType.PASS.equals(subResult.getResultType())) {
 				return false;
 			}
 		}
 		return true;
 	}
 
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
 	@Override
 	public String toString() {
-		return "TestEventBO [event=" + event + ", webDriver=" + webDriver + ", report=" + report + ", flowResultList="
-				+ caseResultList + ", screenshotImageValidTime=" + screenshotImageValidTime + ", paramStr=" + paramStr
-				+ ", startTime=" + startTime + ", endTime=" + endTime + "]";
+		return "TestEventBO [eventId=" + eventId + ", moduleType=" + moduleType + ", flowId=" + flowId + ", flowName="
+				+ flowName + ", appointment=" + appointment + ", webDriver=" + webDriver + ", report=" + report
+				+ ", caseResultList=" + caseResultList + ", screenshotImageValidTime=" + screenshotImageValidTime
+				+ ", paramStr=" + paramStr + ", startTime=" + startTime + ", endTime=" + endTime + ", remark=" + remark
+				+ "]";
 	}
 
 }

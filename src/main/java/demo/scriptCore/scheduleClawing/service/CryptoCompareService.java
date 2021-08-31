@@ -1,8 +1,8 @@
 package demo.scriptCore.scheduleClawing.service;
 
-import at.report.pojo.dto.JsonReportOfCaseDTO;
-import demo.autoTestBase.testEvent.pojo.po.TestEvent;
+import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.scriptCore.scheduleClawing.pojo.result.CryptoCoinDailyDataResult;
+import finance.cryptoCoin.pojo.dto.CryptoCoinDailyDataQueryDTO;
 
 public interface CryptoCompareService {
 
@@ -13,6 +13,6 @@ public interface CryptoCompareService {
 	 * @param reportDTO
 	 * @return
 	 */
-	CryptoCoinDailyDataResult cryptoCoinDailyDataAPI(TestEvent te, JsonReportOfCaseDTO reportDTO);
+	CryptoCoinDailyDataResult cryptoCoinDailyDataAPI(TestEventBO tbo, CryptoCoinDailyDataQueryDTO paramDTO);
 
 }

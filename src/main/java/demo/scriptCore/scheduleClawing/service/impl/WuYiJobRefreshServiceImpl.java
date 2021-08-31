@@ -1,6 +1,5 @@
 package demo.scriptCore.scheduleClawing.service.impl;
 
-import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,70 +21,35 @@ import com.google.gson.Gson;
 import at.report.pojo.dto.JsonReportOfCaseDTO;
 import at.screenshot.pojo.result.ScreenshotSaveResult;
 import at.xpath.pojo.bo.XpathBuilderBO;
+import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
+import autoTest.testEvent.scheduleClawing.pojo.bo.DailySignAccountBO;
+import autoTest.testEvent.scheduleClawing.pojo.bo.WuYiJobClawingBO;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
-import demo.autoTestBase.testEvent.pojo.po.TestEvent;
-import demo.autoTestBase.testEvent.pojo.result.InsertTestEventResult;
 import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.scheduleClawing.mapper.WuyiWatchMeMapper;
-import demo.scriptCore.scheduleClawing.pojo.bo.DailySignAccountBO;
-import demo.scriptCore.scheduleClawing.pojo.bo.WuYiJobClawingBO;
 import demo.scriptCore.scheduleClawing.pojo.po.WuyiWatchMe;
 import demo.scriptCore.scheduleClawing.pojo.po.WuyiWatchMeExample;
 import demo.scriptCore.scheduleClawing.pojo.vo.WuyiWatchMeVO;
 import demo.scriptCore.scheduleClawing.service.WuYiJobRefreshService;
-import demo.selenium.pojo.bo.BuildTestEventBO;
 import image.pojo.result.ImageSavingResult;
 import selenium.pojo.constant.SeleniumConstant;
-import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService implements WuYiJobRefreshService {
 
 	@Autowired
-	private FileUtilCustom ioUtil;
-	@Autowired
 	private WuyiWatchMeMapper wuyiWatcheMeMapper;
 
-	private String dailySignEventName = "wuYiJobDailySign";
-
-	private String userDataFileName = "51jobDailySign.json";
-
-	private TestModuleType testModuleType = TestModuleType.scheduleClawing;
-	private ScheduleClawingType testFlowType = ScheduleClawingType.WU_YI_JOB;
-
-	private TestEvent buildDailySignEvent() {
-		String paramterFolderPath = getParameterSaveingPath(dailySignEventName);
-		File paramterFile = new File(paramterFolderPath + File.separator + userDataFileName);
-		if (!paramterFile.exists()) {
-			return null;
-		}
-
-		BuildTestEventBO bo = new BuildTestEventBO();
-		bo.setTestModuleType(testModuleType);
-		bo.setEventId(testFlowType.getId());
-		bo.setFlowName(testFlowType.getFlowName());
-		bo.setParameterFilePath(paramterFile.getAbsolutePath());
-		return buildTestEvent(bo);
-	}
-
 	@Override
-	public InsertTestEventResult insertClawingEvent() {
-		TestEvent te = buildDailySignEvent();
-		return testEventService.insertExecuteTestEvent(te);
-	}
-
-	@Override
-	public TestEventBO clawing(TestEvent te) {
+	public TestEventBO clawing(TestEventBO tbo) {
 		CommonResult r = new CommonResult();
-		
-		ScheduleClawingType caseType = ScheduleClawingType.WU_YI_JOB;
-		JsonReportOfCaseDTO caseReport = buildCaseReportDTO(caseType);
 
-		TestEventBO tbo = auxTool.beforeRunning(te);
-		
+		ScheduleClawingType caseType = ScheduleClawingType.WU_YI_JOB;
+		JsonReportOfCaseDTO caseReport = buildCaseReportDTO(caseType.getFlowName());
+
 		String wuYiRunCountKey = "wuYiRunCountKey";
 		String runCountStr = redisConnectService.getValByName(wuYiRunCountKey);
 		int runCount = 1;
@@ -95,13 +59,11 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 			redisConnectService.setValByName(wuYiRunCountKey, "1");
 		}
 
-		WebDriver d = tbo.getWebDriver();
-
 		LocalDateTime screenshotImageValidTime = LocalDateTime.now().plusMonths(SeleniumConstant.maxHistoryMonth);
 
 		try {
 
-			String jsonStr = ioUtil.getStringFromFile(te.getParameterFilePath());
+			String jsonStr = tbo.getParamStr();
 			if (StringUtils.isBlank(jsonStr)) {
 				reportService.caseReportAppendContent(caseReport, "参数文件读取异常");
 				throw new Exception();
@@ -124,14 +86,14 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 				runCount = 0;
 			}
 
-			if (!login(d, caseReport, clawingOptionBO)) {
+			if (!login(tbo.getWebDriver(), caseReport, clawingOptionBO)) {
 				r.failWithMessage("登录失败");
 				throw new Exception();
 			}
 
 			threadSleepRandomTime();
 
-			ScreenshotSaveResult screenSaveResult = screenshot(d, te.getEventName());
+			ScreenshotSaveResult screenSaveResult = screenshot(tbo.getWebDriver(), tbo.getFlowName());
 
 			ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(),
 					screenSaveResult.getFileName(), screenshotImageValidTime);
@@ -139,10 +101,10 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 
 			reportService.caseReportAppendContent(caseReport, "完成登录");
 
-			catchWatchMe(d, caseReport);
+			catchWatchMe(tbo.getWebDriver(), caseReport);
 
 			if (runCount == 0 && "1".equals(clawingOptionBO.getRefreshCV())) {
-				if (!updateDetail(d, caseReport, clawingOptionBO)) {
+				if (!updateDetail(tbo.getWebDriver(), caseReport, clawingOptionBO)) {
 					reportService.caseReportAppendContent(caseReport, "刷新简历失败");
 					r.failWithMessage("更新失败");
 					throw new Exception();
@@ -162,7 +124,7 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 			e.printStackTrace();
 //			String htmlStr = jsUtil.getHtmlSource(d);
 
-			ScreenshotSaveResult screenSaveResult = screenshot(d, te.getEventName());
+			ScreenshotSaveResult screenSaveResult = screenshot(tbo.getWebDriver(), tbo.getFlowName());
 
 			ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(),
 					screenSaveResult.getFileName(), screenshotImageValidTime);
@@ -171,7 +133,7 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 //			jsonReporter.appendContent(reportDTO, htmlStr);
 
 		} finally {
-			tryQuitWebDriver(d);
+			tryQuitWebDriver(tbo.getWebDriver());
 			tbo.setEndTime(LocalDateTime.now());
 			sendAutomationTestResult(tbo);
 		}
@@ -608,4 +570,19 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 		return v;
 	}
 
+	@Override
+	public TestEventBO receiveAndRun(AutomationTestInsertEventDTO dto) {
+		TestEventBO bo = buildTestEventBOPreHandle(dto);
+
+		TestModuleType modultType = TestModuleType.getType(dto.getTestModuleType());
+		bo.setModuleType(modultType);
+		ScheduleClawingType caseType = ScheduleClawingType.getType(dto.getFlowType());
+		bo.setFlowName(caseType.getFlowName());
+		bo.setFlowId(caseType.getId());
+		bo.setEventId(dto.getTestEventId());
+		bo.setAppointment(dto.getAppointment());
+		bo.setParamStr(dto.getParamStr());
+		
+		return testEventService.receiveTestEventAndRun(bo);
+	}
 }

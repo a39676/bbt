@@ -5,18 +5,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.Gson;
-
 import at.report.pojo.dto.JsonReportOfCaseDTO;
+import autoTest.testEvent.cryptoCoin.pojo.type.CryptoCoinFlowType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
-import demo.autoTestBase.testEvent.pojo.constant.TestEventOptionConstant;
-import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.scriptCore.common.service.AutomationTestCommonService;
-import demo.scriptCore.scheduleClawing.pojo.bo.CryptoCompareDataAPIParamBO;
 import demo.scriptCore.scheduleClawing.pojo.result.CryptoCoinDailyDataResult;
 import demo.scriptCore.scheduleClawing.service.CryptoCompareService;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDailyDataQueryDTO;
@@ -25,19 +19,16 @@ import finance.cryptoCoin.pojo.dto.CryptoCoinDataSubDTO;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import toolPack.httpHandel.HttpUtil;
-import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class CryptoCompareServiceImpl extends AutomationTestCommonService implements CryptoCompareService {
 
-	@Autowired
-	private FileUtilCustom ioUtil;
-	
 	@Override
-	public CryptoCoinDailyDataResult cryptoCoinDailyDataAPI(TestEvent te, JsonReportOfCaseDTO reportDTO) {
+	public CryptoCoinDailyDataResult cryptoCoinDailyDataAPI(TestEventBO tbo, CryptoCoinDailyDataQueryDTO paramDTO) {
 		CryptoCoinDailyDataResult r = new CryptoCoinDailyDataResult();
-		
-		TestEventBO tbo = auxTool.beforeRunning(te);
+
+		CryptoCoinFlowType flowType = CryptoCoinFlowType.DAILY_DATA;
+		JsonReportOfCaseDTO caseReport = buildCaseReportDTO(flowType.getFlowName());
 
 		// example:
 		// https://min-api.cryptocompare.com/data/v2/histoday?fsym=BTC&tsym=USD&limit=10
@@ -45,73 +36,39 @@ public class CryptoCompareServiceImpl extends AutomationTestCommonService implem
 		HttpUtil h = new HttpUtil();
 
 		try {
-
-			String optionJsonStr = ioUtil.getStringFromFile(te.getParameterFilePath());
-			if (StringUtils.isBlank(optionJsonStr)) {
-				reportService.caseReportAppendContent(reportDTO, "参数文件读取异常");
-				throw new Exception();
-			}
-
-			CryptoCompareDataAPIParamBO clawingOptionBO = null;
-			try {
-				clawingOptionBO = new Gson().fromJson(optionJsonStr, CryptoCompareDataAPIParamBO.class);
-			} catch (Exception e) {
-				reportService.caseReportAppendContent(reportDTO, "参数文件结构异常");
-				throw new Exception();
-			}
-
-			if (clawingOptionBO == null) {
-				reportService.caseReportAppendContent(reportDTO, "参数文件结构异常");
-				throw new Exception();
-			}
-
-			if (StringUtils.isBlank(clawingOptionBO.getApiKey())) {
-				reportService.caseReportAppendContent(reportDTO, "参数文件参数异常");
-				throw new Exception();
-			}
-
 			String httpResponse = null;
 			CryptoCoinDataDTO mainDTO = new CryptoCoinDataDTO();
 			List<CryptoCoinDataSubDTO> subDataList = null;
-			
-			String paramJsonStr = redisConnectService.getValByName(TestEventOptionConstant.TEST_EVENT_REDIS_PARAM_KEY_PREFIX + "_" + te.getId());
-			if(StringUtils.isBlank(paramJsonStr)) {
-				reportService.caseReportAppendContent(reportDTO, "test event: " + te.getId() + ", " + te.getEventName() + ", 动态参数获取异常");
-				return r;
-			}
-			
-			CryptoCoinDailyDataQueryDTO dynamicParam = null;
-			try {
-				dynamicParam = new Gson().fromJson(paramJsonStr, CryptoCoinDailyDataQueryDTO.class); 
-			} catch (Exception e) {
-				reportService.caseReportAppendContent(reportDTO, "test event: " + te.getId() + ", " + te.getEventName() + ", 动态参数获取异常");
-				throw new Exception();
-			}
-			
-			httpResponse = h.sendGet(String.format(cryptoCoinApiUrlModel, dynamicParam.getCoinName(), dynamicParam.getCurrencyName(),
-					dynamicParam.getCounting(), clawingOptionBO.getApiKey()));
-			reportService.caseReportAppendContent(reportDTO, httpResponse);
-			
-			subDataList = handleCryptoCoinDataResponse(httpResponse, dynamicParam.getCoinName(), dynamicParam.getCurrencyName());
+
+			httpResponse = h.sendGet(String.format(cryptoCoinApiUrlModel, paramDTO.getCoinName(),
+					paramDTO.getCurrencyName(), paramDTO.getCounting(), paramDTO.getApiKey()));
+			reportService.caseReportAppendContent(caseReport, httpResponse);
+
+			subDataList = handleCryptoCoinDataResponse(httpResponse, paramDTO.getCoinName(),
+					paramDTO.getCurrencyName());
 			mainDTO.setPriceHistoryData(subDataList);
-			mainDTO.setCryptoCoinTypeName(dynamicParam.getCoinName());
-			mainDTO.setCurrencyName(dynamicParam.getCurrencyName());
-			
+			mainDTO.setCryptoCoinTypeName(paramDTO.getCoinName());
+			mainDTO.setCurrencyName(paramDTO.getCurrencyName());
+
 			r.setData(mainDTO);
 			r.setIsSuccess();
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			reportService.caseReportAppendContent(reportDTO, "异常: " + e);
+			reportService.caseReportAppendContent(caseReport, "异常: " + e);
 
 		} finally {
+			/*
+			 * crypto coin report 未保存 report
+			 * tbo.getReport().getCaseReportList().add(caseReport);
+			 */
 			tbo.setEndTime(LocalDateTime.now());
 			sendAutomationTestResult(tbo);
 		}
 
 		return r;
 	}
-	
+
 	private List<CryptoCoinDataSubDTO> handleCryptoCoinDataResponse(String response, String coinName,
 			String currencyName) {
 		List<CryptoCoinDataSubDTO> list = new ArrayList<>();

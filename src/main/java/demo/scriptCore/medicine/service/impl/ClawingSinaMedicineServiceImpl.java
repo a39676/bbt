@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import at.xpath.pojo.bo.XpathBuilderBO;
-import demo.autoTestBase.testEvent.pojo.po.TestEvent;
+import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.scriptCore.medicine.mapper.MedicineInfoErrorMapper;
 import demo.scriptCore.medicine.mapper.MedicineInfoMapper;
 import demo.scriptCore.medicine.pojo.po.MedicineInfo;
@@ -46,9 +46,9 @@ public class ClawingSinaMedicineServiceImpl extends SeleniumCommonService implem
 
 	@Override
 	public void medicineTest() {
-		TestEvent te = new TestEvent();
-		te.setId(1L);
-		te.setEventName("clawingMedicineTest");
+		TestEventBO te = new TestEventBO();
+		te.setEventId(1L);
+		te.setFlowName("clawingMedicineTest");
 		WebDriver d = webDriverService.buildFireFoxWebDriver();
 
 		try {
@@ -68,7 +68,7 @@ public class ClawingSinaMedicineServiceImpl extends SeleniumCommonService implem
 		}
 	}
 
-	public void sinaMedicineDetailHandle(WebDriver d, TestEvent te) {
+	public void sinaMedicineDetailHandle(WebDriver d, TestEventBO te) {
 		/*
 		 * TODO
 		 */
@@ -255,7 +255,7 @@ public class ClawingSinaMedicineServiceImpl extends SeleniumCommonService implem
 		return targetList;
 	}
 	
-	public void medicineDocumentHandler(WebDriver d, TestEvent te, List<WebElement> targetEleList) {
+	public void medicineDocumentHandler(WebDriver d, TestEventBO te, List<WebElement> targetEleList) {
 		/*
 		 * TODO
 		 */

@@ -5,10 +5,8 @@ import org.springframework.stereotype.Service;
 
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
-import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.service.RunSubEventPrefixService;
 import demo.baseCommon.service.CommonService;
-import demo.scriptCore.scheduleClawing.service.CryptoCoinPriceService;
 import demo.scriptCore.scheduleClawing.service.WuYiJobRefreshService;
 
 @Service
@@ -16,21 +14,13 @@ public class ScheduleClawingPrefixServiceImpl extends CommonService implements R
 
 	@Autowired
 	private WuYiJobRefreshService wuYiSign;
-	@Autowired
-	private MaiMaiScheduleClawingServiceImpl maiMaiLocalClawingServiceImpl;
-	@Autowired
-	private CryptoCoinPriceService cryptoCoinPriceService;
-
+	
 	@Override
-	public TestEventBO runSubEvent(TestEvent te) {
+	public TestEventBO runSubEvent(TestEventBO te) {
 		Long caseId = te.getFlowId();
 
 		if (ScheduleClawingType.WU_YI_JOB.getId().equals(caseId)) {
 			return wuYiSign.clawing(te);
-		} else if (ScheduleClawingType.MAI_MAI.getId().equals(caseId)) {
-			return maiMaiLocalClawingServiceImpl.clawing(te);
-		} else if (ScheduleClawingType.CRYPTO_COIN_DAILY_DATA.getId().equals(caseId)) {
-			return cryptoCoinPriceService.cryptoCoinDailyDataAPI(te);
 		}
 
 		return new TestEventBO();

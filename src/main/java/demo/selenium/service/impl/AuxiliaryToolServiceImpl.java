@@ -1,12 +1,10 @@
 package demo.selenium.service.impl;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
-import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -15,24 +13,17 @@ import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
-import at.report.pojo.dto.JsonReportOfEventDTO;
 import at.webDriver.pojo.constant.WebDriverConstant;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
-import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import net.sf.json.JSONObject;
-import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class AuxiliaryToolServiceImpl extends SeleniumCommonService {
 
-	@Autowired
-	private FileUtilCustom ioUtil;
-	
 	public WebElement fluentWait(WebDriver driver, final By by) {
 		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
 				.withTimeout(WebDriverConstant.pageWaitingTimeoutSecond, TimeUnit.SECONDS)
@@ -92,44 +83,11 @@ public class AuxiliaryToolServiceImpl extends SeleniumCommonService {
 		return false;
 	}
 
-	public TestEventBO beforeRunning(TestEvent te) {
-		TestEventBO tbo = new TestEventBO();
-		tbo.setStartTime(LocalDateTime.now());
-		tbo.setEvent(te);
-		
-		JsonReportOfEventDTO reportDTO = new JsonReportOfEventDTO();
-		tbo.setReport(reportDTO);
-
-		try {
-			tbo.setWebDriver(webDriverService.buildChromeWebDriver());
-		} catch (Exception e) {
-			log.error(te.getEventName() + ": build web driver error");
-			return null;
-		}
-
-		if (StringUtils.isNotBlank(te.getParameterFilePath())) {
-			tbo.setParamStr(ioUtil.getStringFromFile(te.getParameterFilePath()));
-		} else {
-			tbo.setParamStr(te.getRemark());
-		}
-		
-		return tbo;
-	}
-	
 	public <T> T buildParamDTO(TestEventBO bo, Class<T> clazz) {
 		String className = clazz.getSimpleName();
 
 		String paramStr = bo.getParamStr();
 		
-		if(StringUtils.isBlank(paramStr)) {
-			if(StringUtils.isNotBlank(bo.getEvent().getParameterFilePath())) {
-				paramStr = ioUtil.getStringFromFile(bo.getEvent().getParameterFilePath());
-			} else {
-				paramStr = bo.getEvent().getRemark();
-			}
-			bo.setParamStr(paramStr);
-		}
-
 		try {
 			JSONObject paramJson = JSONObject.fromObject(paramStr);
 			
@@ -138,7 +96,8 @@ public class AuxiliaryToolServiceImpl extends SeleniumCommonService {
 			return new Gson().fromJson(targetJson.toString(), clazz);
 
 		} catch (Exception e) {
-			log.error("get param DTO error, test event: " + bo.getEvent().getEventName() + ", param name: " + clazz);
+			String msg = String.format("get param DTO error, module: %s, test flow: %s, param name: %s ", bo.getModuleType().getModuleName(), bo.getFlowName(), className);
+			log.error(msg);
 		}
 		return null;
 

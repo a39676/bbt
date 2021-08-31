@@ -30,7 +30,7 @@ public class TestEventInsertQueueAckReceiver extends CommonService {
 			AutomationTestInsertEventDTO dto = msgToAutomationTestInsertEventDTO(messageStr);
 
 			if (dto != null) {
-				testEventService.insertTestEvent(dto);
+				testEventService.reciveTestEventAndRun(dto);
 			}
 
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);

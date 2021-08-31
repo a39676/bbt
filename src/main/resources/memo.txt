@@ -1,15 +1,20 @@
 ﻿testEvent
+	逐步删除项目下保存参数的文件
+		/home/u2/bbt/atParam
     改变思路:
     	仅作为执行脚本的项目, 从MQ获取任务, 任务结束后, 将结果 & 报告, 通过MQ 返回给cx
-    	返回给 cx 的dto中, 将 flowResultList 放入 DTO中
-    		cx再将 flow result list 按序列插入报告中
+    	crypto coin 
+    		一次发送大量币种  需要增加队列消息存活时间
+			bbt 服务新增逻辑: 同一个任务接收多次, 且因异常而执行失败时, 直接返回执行失败, 防止MQ队列拥堵
     	测试中的截图, 需要重构, 统一交给CX保存处理
 	mq
+		del CryptoCoinDailyDataQuery
 		删除 TestEventQueue 
-		新增 TestEventExecuteQueue
-		新增 TestEventInsertQueue
+		add TestEventInsertQueue
 		新增 AutomationTestResult
 	testEvent 
+		TestEventServiceImpl.java
+			参照 cx 另建缓存服务
 		考虑删除 test event 表?
 		通过flow 指定连串的 testCase
 		ALTER TABLE bbt.test_event CHANGE case_id flow_id bigint(20) NOT NULL;
@@ -22,6 +27,7 @@
 			参数优先级, 动态参数指定优先 然后 脚本内 hardcode 默认参数
 			并安排定时清除任务, 物理删除过时参数文件
 	最终的报告, 应由 N个case 的子报告 List 形式给出
+		dev 环境中, 应该本地保存报告, 不要发送到 mq
 		目前 cx 服务中, 查询报告时, 发现 test event ID有误, 待排查
 			目前, 运行完毕之后. 报告中还是体现未执行 待排查
 		方便判定哪个 case failed, 并可能影响下一步测试流程 
