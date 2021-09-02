@@ -1,6 +1,9 @@
 package demo.config;
 
 import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.context.annotation.Bean;
@@ -17,6 +20,13 @@ import org.springframework.web.servlet.view.JstlView;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+
+import toolPack.dateTimeHandle.DateTimeUtilCommon;
 
 @EnableWebMvc // <mvc:annotation-driven />
 @Configuration
@@ -45,6 +55,16 @@ public class SpringMvcConfig implements WebMvcConfigurer {
         objectMapper.registerModule(simpleModule);
         jackson2HttpMessageConverter.setObjectMapper(objectMapper);
         converters.add(jackson2HttpMessageConverter);
+        
+        objectMapper = new ObjectMapper();
+		JavaTimeModule javaTimeModule = new JavaTimeModule();
+		javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DateTimeUtilCommon.normalDateTimeFormat)));
+		javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(DateTimeUtilCommon.normalDateTimeFormat)));
+		javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(DateTimeUtilCommon.normalDateFormat)));
+		javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(DateTimeUtilCommon.normalDateFormat)));
+		objectMapper.registerModule(javaTimeModule);
+		jackson2HttpMessageConverter.setObjectMapper(objectMapper);
+		converters.add(jackson2HttpMessageConverter);
     }
 	
 	@Bean

@@ -12,7 +12,7 @@ import auxiliaryCommon.pojo.type.BaseResultType;
 import demo.base.system.service.impl.RedisConnectService;
 import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.pojo.param.PageParam;
-import demo.config.costom_component.SnowFlake;
+import demo.config.costomComponent.SnowFlake;
 import toolPack.dateTimeHandle.DateHandler;
 import toolPack.dateTimeHandle.LocalDateTimeHandler;
 import toolPack.ioHandle.FileUtilCustom;
@@ -42,6 +42,7 @@ public abstract class CommonService {
 	private static final int normalPageSize = 10;
 	private static final int maxPageSize = 300;
 	protected static final long theStartTime = 946656000000L;
+	protected static final String MAIN_FOLDER_PATH = "/home/u2/bbt";
 
 	protected PageParam setPageFromPageNo(Integer pageNo) {
 		return setPageFromPageNo(pageNo, normalPageSize);

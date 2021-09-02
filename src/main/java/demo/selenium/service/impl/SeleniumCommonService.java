@@ -11,17 +11,15 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import at.report.pojo.dto.JsonReportDTO;
+import at.report.pojo.dto.JsonReportOfCaseDTO;
 import at.report.service.ATJsonReportService;
 import at.screenshot.pojo.dto.TakeScreenshotSaveDTO;
 import at.screenshot.pojo.result.ScreenshotSaveResult;
 import at.screenshot.service.ScreenshotService;
 import demo.autoTestBase.testEvent.pojo.constant.TestEventOptionConstant;
-import demo.autoTestBase.testEvent.pojo.po.TestEvent;
 import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.baseCommon.service.CommonService;
 import demo.interaction.image.service.ImageInteractionService;
-import demo.selenium.pojo.bo.BuildTestEventBO;
 import demo.selenium.service.SeleniumCaptchaHandleService;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.WebDriverService;
@@ -31,11 +29,14 @@ import image.pojo.result.ImageSavingResult;
 import image.pojo.result.UploadImageToCloudinaryResult;
 import net.sf.json.JSONObject;
 import selenium.pojo.constant.SeleniumConstant;
+import toolPack.ioHandle.FileUtilCustom;
 
 public abstract class SeleniumCommonService extends CommonService {
 
 	@Autowired
-	protected ATJsonReportService jsonReporter;
+	private FileUtilCustom ioUtil;
+	@Autowired
+	protected ATJsonReportService reportService;
 	@Autowired
 	protected ImageInteractionService imageInteractionService;
 	@Autowired
@@ -53,27 +54,6 @@ public abstract class SeleniumCommonService extends CommonService {
 	@Autowired
 	protected SeleniumCaptchaHandleService captchaHandleService;
 	
-	protected TestEvent buildTestEvent(BuildTestEventBO bo) {
-		if (bo.getTestModuleType() == null || bo.getCaseId() == null) {
-			return null;
-		}
-		TestEvent te = new TestEvent();
-		te.setProcessId(bo.getProcessId());
-		te.setCaseId(bo.getCaseId());
-		te.setModuleId(bo.getTestModuleType().getId());
-		te.setId(snowFlake.getNextId());
-		te.setEventName(bo.getEventName());
-		te.setParameterFilePath(bo.getParameterFilePath());
-		if(StringUtils.isNotBlank(bo.getDynamicParam())) {
-			try {
-				JSONObject j = JSONObject.fromObject(bo.getDynamicParam());
-				te.setRemark(j.toString());
-			} catch (Exception e) {
-			}
-		}
-		return te;
-	}
-
 	protected JSONObject tryFindParam(Long testEventId) {
 		String paramStr = redisConnectService.getValByName(TestEventOptionConstant.TEST_EVENT_REDIS_PARAM_KEY_PREFIX + "_" + testEventId);
 		if(StringUtils.isNotBlank(paramStr)) {
@@ -111,19 +91,13 @@ public abstract class SeleniumCommonService extends CommonService {
 		return r;
 	}
 
-	protected int updateTestEventReportPath(TestEvent te, String reportPath) {
-		return testEventService.updateTestEventReportPath(te, reportPath);
-	}
-
-	protected boolean tryQuitWebDriver(WebDriver d, JsonReportDTO reportDTO) {
+	protected boolean tryQuitWebDriver(WebDriver d) {
 		if (d != null) {
 			try {
 				d.quit();
 				return true;
-			} catch (Exception e2) {
-				if (reportDTO != null) {
-					jsonReporter.appendContent(reportDTO, e2.getMessage());
-				}
+			} catch (Exception e) {
+				log.error("web deiver quit error: " + e.getMessage());
 				return false;
 			}
 		} else {
@@ -131,13 +105,9 @@ public abstract class SeleniumCommonService extends CommonService {
 		}
 	}
 
-	protected boolean tryQuitWebDriver(WebDriver d) {
-		return tryQuitWebDriver(d, null);
-	}
-
 	protected String getScreenshotSaveingPath(String eventName) {
 		String path = globalOptionService.getScreenshotSavingFolder() + File.separator + eventName;
-		globalOptionService.checkFolderExists(path);
+		ioUtil.checkFolderExists(path);
 		return path;
 	}
 
@@ -170,8 +140,8 @@ public abstract class SeleniumCommonService extends CommonService {
 		return dto;
 	}
 
-	protected ScreenshotSaveResult screenshot(WebDriver d, String testEventName) {
-		TakeScreenshotSaveDTO dto = buildScreenshotDTO(d, testEventName);
+	protected ScreenshotSaveResult screenshot(WebDriver d, String testFlowName) {
+		TakeScreenshotSaveDTO dto = buildScreenshotDTO(d, testFlowName);
 		return screenshotService.screenshot(dto);
 	}
 	
@@ -185,16 +155,11 @@ public abstract class SeleniumCommonService extends CommonService {
 		return screenshotService.screenshot(dto);
 	}
 
-	protected String getReportOutputPath(String eventName) {
-		String path = globalOptionService.getReportOutputFolder() + File.separator + eventName;
-		globalOptionService.checkFolderExists(path);
-		return path;
-	}
-
-	protected String getParameterSaveingPath(String eventName) {
-		String path = globalOptionService.getParameterSavingFolder() + File.separator + eventName;
-		globalOptionService.checkFolderExists(path);
-		return path;
+	protected void addScreenshotToReport(WebDriver d, JsonReportOfCaseDTO flowReportDTO) {
+		ScreenshotSaveResult screenSaveResult = screenshot(d, flowReportDTO.getCaseTypeName());
+		ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(),
+				screenSaveResult.getFileName());
+		reportService.caseReportAppendImage(flowReportDTO, uploadImgResult.getImgUrl());
 	}
 
 	protected void threadSleepRandomTime(Long minMS, Long maxMS) throws InterruptedException {

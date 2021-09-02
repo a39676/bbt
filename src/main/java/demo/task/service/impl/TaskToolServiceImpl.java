@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import demo.autoTestBase.testEvent.mq.producer.HeartBeatProducer;
 import demo.base.system.mapper.BaseMapper;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.task.service.TaskToolService;
-import demo.tool.mapper.MailRecordMapper;
 import demo.tool.service.ComplexToolService;
 
 @Component
@@ -22,7 +22,7 @@ public class TaskToolServiceImpl implements TaskToolService {
 	private ComplexToolService complexToolService;
 
 	@Autowired
-	private MailRecordMapper mailRecordMapper;
+	private HeartBeatProducer heartBeatProducer;
 
 	@Autowired
 	private BaseMapper baseMapper;
@@ -40,16 +40,15 @@ public class TaskToolServiceImpl implements TaskToolService {
 		baseMapper.keepDatabaseAlive();
 	}
 
-	/** 清理过期或已读的邮件记录. */
-	@Scheduled(cron = "0 */63 * * * ?")
-	public void cleanMailRecord() {
-		mailRecordMapper.cleanMailRecord(null);
-	}
-
 	@Scheduled(cron = "05 03 23 * * *")
 	public void cleanTmpFile() {
 		complexToolService.cleanTmpFiles(seleniumGlobalOptionService.getDownloadDir(), null,
 				LocalDateTime.now().minusMonths(1));
+	}
+	
+	@Scheduled(cron="0 */3 * ? * *")
+	public void sendHeartBeat() {
+		heartBeatProducer.send();
 	}
 
 }
