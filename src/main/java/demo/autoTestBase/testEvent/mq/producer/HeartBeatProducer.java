@@ -14,7 +14,7 @@ public class HeartBeatProducer extends CommonService {
 	private RabbitTemplate rabbitTemplate;
 
 	public void send() {
-		rabbitTemplate.convertAndSend(AutomationTestMQConstant.HEART_BEAT, "");
+		rabbitTemplate.convertAndSend(AutomationTestMQConstant.HEART_BEAT, "_");
 	}
 
 }
