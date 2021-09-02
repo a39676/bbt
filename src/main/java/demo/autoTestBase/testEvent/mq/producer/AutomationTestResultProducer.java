@@ -4,7 +4,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import autoTest.testEvent.pojo.constant.AutomationTestResultMQConstant;
+import autoTest.testEvent.pojo.constant.AutomationTestMQConstant;
 import autoTest.testEvent.pojo.dto.AutomationTestResultDTO;
 import demo.baseCommon.service.CommonService;
 import net.sf.json.JSONObject;
@@ -21,7 +21,7 @@ public class AutomationTestResultProducer extends CommonService {
 			return;
 		}
 		JSONObject json = (JSONObject) JSONSerializer.toJSON(dto);
-		rabbitTemplate.convertAndSend(AutomationTestResultMQConstant.AUTOMATION_TEST_RESULT_QUEUE, json.toString());
+		rabbitTemplate.convertAndSend(AutomationTestMQConstant.AUTOMATION_TEST_RESULT_QUEUE, json.toString());
 	}
 
 }
