@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import demo.autoTestBase.testEvent.mq.producer.HeartBeatProducer;
 import demo.base.system.mapper.BaseMapper;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.task.service.TaskToolService;
@@ -20,6 +21,8 @@ public class TaskToolServiceImpl implements TaskToolService {
 	@Autowired
 	private ComplexToolService complexToolService;
 
+	@Autowired
+	private HeartBeatProducer heartBeatProducer;
 
 	@Autowired
 	private BaseMapper baseMapper;
@@ -41,6 +44,11 @@ public class TaskToolServiceImpl implements TaskToolService {
 	public void cleanTmpFile() {
 		complexToolService.cleanTmpFiles(seleniumGlobalOptionService.getDownloadDir(), null,
 				LocalDateTime.now().minusMonths(1));
+	}
+	
+	@Scheduled(cron="0 */3 * ? * *")
+	public void sendHeartBeat() {
+		heartBeatProducer.send();
 	}
 
 }
