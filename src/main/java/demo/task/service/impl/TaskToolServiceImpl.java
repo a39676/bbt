@@ -46,7 +46,7 @@ public class TaskToolServiceImpl implements TaskToolService {
 				LocalDateTime.now().minusMonths(1));
 	}
 	
-	@Scheduled(cron="0 */3 * * * ?")
+	@Scheduled(cron="0 */3 * ? * *")
 	public void sendHeartBeat() {
 		heartBeatProducer.send();
 	}
