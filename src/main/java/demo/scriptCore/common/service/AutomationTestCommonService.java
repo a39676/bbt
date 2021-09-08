@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import at.report.pojo.dto.JsonReportOfCaseDTO;
-import at.report.pojo.dto.JsonReportOfEventDTO;
+import at.report.pojo.dto.JsonReportOfFlowDTO;
 import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testEvent.pojo.dto.AutomationTestResultDTO;
 import autoTest.testEvent.pojo.result.AutomationTestCaseResult;
@@ -27,7 +27,7 @@ public abstract class AutomationTestCommonService extends SeleniumCommonService 
 		TestEventBO tbo = new TestEventBO();
 		tbo.setStartTime(LocalDateTime.now());
 		
-		JsonReportOfEventDTO reportDTO = new JsonReportOfEventDTO();
+		JsonReportOfFlowDTO reportDTO = new JsonReportOfFlowDTO();
 		tbo.setReport(reportDTO);
 
 		if(needWebDriver != null && needWebDriver) {
