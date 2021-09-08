@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.openqa.selenium.WebDriver;
 
-import at.report.pojo.dto.JsonReportOfEventDTO;
+import at.report.pojo.dto.JsonReportOfFlowDTO;
 import autoTest.testEvent.pojo.result.AutomationTestCaseResult;
 import autoTest.testEvent.pojo.type.AutomationTestFlowResultType;
 import autoTest.testModule.pojo.type.TestModuleType;
@@ -21,7 +21,7 @@ public class TestEventBO {
 	private LocalDateTime appointment;
 
 	private WebDriver webDriver;
-	private JsonReportOfEventDTO report;
+	private JsonReportOfFlowDTO report;
 	private List<AutomationTestCaseResult> caseResultList = new ArrayList<>();
 	private LocalDateTime screenshotImageValidTime;
 	private String paramStr;
@@ -78,11 +78,11 @@ public class TestEventBO {
 		this.webDriver = webDriver;
 	}
 
-	public JsonReportOfEventDTO getReport() {
+	public JsonReportOfFlowDTO getReport() {
 		return report;
 	}
 
-	public void setReport(JsonReportOfEventDTO report) {
+	public void setReport(JsonReportOfFlowDTO report) {
 		this.report = report;
 	}
 
