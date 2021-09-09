@@ -97,7 +97,7 @@ public abstract class CommonService {
 
 	protected CommonResult nullParam() {
 		CommonResult result = new CommonResult();
-		result.fillWithResult(BaseResultType.nullParam);
+		result.fillWithResult(BaseResultType.NULL_PARAM);
 		return result;
 	}
 	
