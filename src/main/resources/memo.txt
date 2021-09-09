@@ -1,6 +1,4 @@
 ﻿testEvent
-	逐步删除项目下保存参数的文件
-		/home/u2/bbt/atParam
     改变思路:
     	crypto coin 
     		一次发送大量币种  需要增加队列消息存活时间
@@ -9,18 +7,12 @@
 	testEvent 
 		TestEventServiceImpl.java
 			参照 cx 另建缓存服务
-		考虑删除 test event 表?
-		插入任务时, 参数指定方式
-			参数优先级, 动态参数指定优先 然后 脚本内 hardcode 默认参数
 	最终的报告, 应由 N个case 的子报告 List 形式给出
 		dev 环境中, 应该本地保存报告, 不要发送到 mq
 		目前 cx 服务中, 查询报告时, 发现 test event ID有误, 待排查
 			目前, 运行完毕之后. 报告中还是体现未执行 待排查
 		方便判定哪个 case failed, 并可能影响下一步测试流程 
 		
-	需要废弃  --> TestEventServiceImpl.insertTestEvent(TestEvent po, JSONObject paramJson)
-		待 crypto coin 系列任务调整后就处理
-
 TestEventServiceImpl.sendFailReports
 可以转给电报了
 
