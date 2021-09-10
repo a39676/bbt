@@ -11,6 +11,6 @@ public interface WuYiJobRefreshService {
 
 	ModelAndView watchMeList();
 
-	TestEventBO receiveAndRun(AutomationTestInsertEventDTO dto);
+	TestEventBO receiveAndBuildTestEventBO(AutomationTestInsertEventDTO dto);
 
 }

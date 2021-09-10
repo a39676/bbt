@@ -29,15 +29,6 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	@Autowired
 	private CryptoCoinPrefixServiceImpl cryptoCoinPrefixService;
 
-	/*
-	 * TODO 参照 cx 另建缓存服务
-	 */
-	private String pauseWordRedisKey = "testEventPauseWord";
-	private String safeWord = "breakNow";
-
-	private String findPauseWord() {
-		return redisConnectService.getValByName(pauseWordRedisKey);
-	}
 
 	@Override
 	public TestEventBO reciveTestEventAndRun(AutomationTestInsertEventDTO dto) {
@@ -52,34 +43,21 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		TestEventBO tbo = null;
 
 		if (TestModuleType.ATDemo.getId().equals(dto.getTestModuleType())) {
-			tbo = bingDemoPrefixService.receiveAndRun(dto);
+			tbo = bingDemoPrefixService.receiveAndBuildTestEventBO(dto);
 		} else if (TestModuleType.CRYPTO_COIN.getId().equals(dto.getTestModuleType())) {
-			return cryptoCoinPrefixService.buildTestEventBO(dto);
+			return cryptoCoinPrefixService.receiveAndBuildTestEventBO(dto);
 		} else if (TestModuleType.SCHEDULE_CLAWING.getId().equals(dto.getTestModuleType())) {
 //			return scheduleClawingPrefixService.
 		}
 
-		return runEvent(tbo);
-
-	}
-
-	@Override
-	public TestEventBO receiveTestEventAndRun(TestEventBO te) {
-
-		if (te == null) {
-			return new TestEventBO();
-		}
-
-		if (existsRuningEvent()) {
-			return new TestEventBO();
-		}
-
-		return runEvent(te);
+		tbo.setEndTime(LocalDateTime.now());
+		tbo = runEvent(tbo);
+		
+		return tbo;
 	}
 
 	private TestEventBO runEvent(TestEventBO event) {
-		String breakWord = findPauseWord();
-		if (safeWord.equals(breakWord)) {
+		if (constantService.getBreakFlag()) {
 			return new TestEventBO();
 		}
 

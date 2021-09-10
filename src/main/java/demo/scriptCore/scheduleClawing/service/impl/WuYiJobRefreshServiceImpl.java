@@ -134,7 +134,6 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 
 		} finally {
 			tryQuitWebDriver(tbo.getWebDriver());
-			tbo.setEndTime(LocalDateTime.now());
 			sendAutomationTestResult(tbo);
 		}
 
@@ -571,7 +570,7 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 	}
 
 	@Override
-	public TestEventBO receiveAndRun(AutomationTestInsertEventDTO dto) {
+	public TestEventBO receiveAndBuildTestEventBO(AutomationTestInsertEventDTO dto) {
 		TestEventBO bo = buildTestEventBOPreHandle(dto);
 
 		TestModuleType modultType = TestModuleType.getType(dto.getTestModuleType());
@@ -583,6 +582,6 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 		bo.setAppointment(dto.getAppointment());
 		bo.setParamStr(dto.getParamStr());
 		
-		return testEventService.receiveTestEventAndRun(bo);
+		return bo;
 	}
 }

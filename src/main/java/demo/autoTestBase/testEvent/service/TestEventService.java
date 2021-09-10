@@ -10,11 +10,6 @@ public interface TestEventService {
 	 */
 	TestEventBO reciveTestEventAndRun(AutomationTestInsertEventDTO dto);
 
-	/**
-	 * 应用自建任务
-	 */
-	TestEventBO receiveTestEventAndRun(TestEventBO bo);
-	
 	boolean checkExistsRuningEvent();
 
 	void fixRuningEventStatusManual();

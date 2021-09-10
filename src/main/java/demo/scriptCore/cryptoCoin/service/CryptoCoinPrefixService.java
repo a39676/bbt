@@ -5,6 +5,6 @@ import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 
 public interface CryptoCoinPrefixService {
 
-	TestEventBO buildTestEventBO(AutomationTestInsertEventDTO dto);
+	TestEventBO receiveAndBuildTestEventBO(AutomationTestInsertEventDTO dto);
 
 }

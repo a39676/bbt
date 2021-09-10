@@ -42,6 +42,9 @@ spring:
 endpoints:
   shutdown:
     enabled: true
+    
+optionFilePath:
+  automationTest: "/home/u2/bbt/optionFile/automationTest/option.json"
 
 logging:
   level:
