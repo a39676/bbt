@@ -1,9 +1,6 @@
 ﻿testEvent
 	testEvent
 		需提供修改 AutomationTestConstantService.breakFlag 的UI / API 
-		TestEventServiceImpl.java
-			参照 cx 另建缓存服务
-		图片储存逻辑修改, 图片不能存在BBT服务路径下, 截图时, 需传至CX服务
 		
     改变思路:
     	crypto coin 
