@@ -187,6 +187,8 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 			options = new ChromeOptions();
 		}
 
+		options.addArguments("--lang=zh");
+		
 		if (!"dev".equals(envName) || !isWindows()) {
 			options.addArguments(WebDriverConstant.headLess);
 		}
