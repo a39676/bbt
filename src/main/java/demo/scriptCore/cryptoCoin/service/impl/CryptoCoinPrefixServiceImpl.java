@@ -20,7 +20,7 @@ public class CryptoCoinPrefixServiceImpl extends AutomationTestCommonService
 	private CryptoCoinPriceService cryptoCoinPriceService;
 
 	@Override
-	public TestEventBO buildTestEventBO(AutomationTestInsertEventDTO dto) {
+	public TestEventBO receiveAndBuildTestEventBO(AutomationTestInsertEventDTO dto) {
 		TestEventBO bo = buildTestEventBOPreHandle(dto, false);
 
 		TestModuleType modultType = TestModuleType.getType(dto.getTestModuleType());
@@ -32,7 +32,7 @@ public class CryptoCoinPrefixServiceImpl extends AutomationTestCommonService
 		bo.setAppointment(dto.getAppointment());
 		bo.setParamStr(dto.getParamStr());
 
-		return testEventService.receiveTestEventAndRun(bo);
+		return bo;
 	}
 
 	@Override

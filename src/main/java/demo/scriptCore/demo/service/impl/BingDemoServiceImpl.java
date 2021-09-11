@@ -1,6 +1,5 @@
 package demo.scriptCore.demo.service.impl;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -36,12 +35,9 @@ public class BingDemoServiceImpl extends BingDemoCommonService implements BingDe
 			JsonReportOfCaseDTO errorReport = buildCaseReportDTO();
 			reportService.caseReportAppendContent(errorReport, e.getMessage());
 			tbo.getReport().getCaseReportList().add(errorReport);
-
-		} finally {
-			tryQuitWebDriver(tbo.getWebDriver());
-			tbo.setEndTime(LocalDateTime.now());
-			sendAutomationTestResult(tbo);
 		}
+		tryQuitWebDriver(tbo.getWebDriver());
+		sendAutomationTestResult(tbo);
 
 		return tbo;
 	}
@@ -59,8 +55,6 @@ public class BingDemoServiceImpl extends BingDemoCommonService implements BingDe
 			reportService.caseReportAppendContent(caseReport, "读取参数异常");
 			return r;
 		}
-
-		addScreenshotToReport(d, caseReport);
 
 		String mainUrl = "https://cn.bing.com/?FORM=BEHPTB";
 
@@ -142,6 +136,7 @@ public class BingDemoServiceImpl extends BingDemoCommonService implements BingDe
 				}
 			}
 		} catch (Exception e) {
+//			e.printStackTrace();
 		}
 		
 		tbo.getCaseResultList().add(r);

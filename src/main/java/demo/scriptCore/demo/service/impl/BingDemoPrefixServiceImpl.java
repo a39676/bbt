@@ -22,7 +22,7 @@ public class BingDemoPrefixServiceImpl extends AutomationTestCommonService
 	private BingDemoService bingDemoService;
 
 	@Override
-	public TestEventBO receiveAndRun(AutomationTestInsertEventDTO dto) {
+	public TestEventBO receiveAndBuildTestEventBO(AutomationTestInsertEventDTO dto) {
 		TestEventBO bo = buildTestEventBOPreHandle(dto);
 
 		TestModuleType modultType = TestModuleType.getType(dto.getTestModuleType());
@@ -34,7 +34,7 @@ public class BingDemoPrefixServiceImpl extends AutomationTestCommonService
 		bo.setAppointment(dto.getAppointment());
 		bo.setParamStr(dto.getParamStr());
 		
-		return testEventService.receiveTestEventAndRun(bo);
+		return bo;
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class BingDemoPrefixServiceImpl extends AutomationTestCommonService
 		mainDTO.setFlowType(t.getId());
 		mainDTO.setTestEventId(snowFlake.getNextId());
 		mainDTO.setParamStr(JSONObject.fromObject(dto).toString());
-		receiveAndRun(mainDTO);
+		receiveAndBuildTestEventBO(mainDTO);
 	}
 
 	@Override

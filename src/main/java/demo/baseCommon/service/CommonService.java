@@ -39,13 +39,13 @@ public abstract class CommonService {
 	@Autowired
 	protected FileUtilCustom ioUtil;
 
-	private static final int normalPageSize = 10;
-	private static final int maxPageSize = 300;
-	protected static final long theStartTime = 946656000000L;
+	private static final int NORMAL_PAGE_SIZE = 10;
+	private static final int MAX_PAGE_SIZE = 300;
+	protected static final long THE_START_TIME = 946656000000L;
 	protected static final String MAIN_FOLDER_PATH = "/home/u2/bbt";
 
 	protected PageParam setPageFromPageNo(Integer pageNo) {
-		return setPageFromPageNo(pageNo, normalPageSize);
+		return setPageFromPageNo(pageNo, NORMAL_PAGE_SIZE);
 	}
 
 	protected PageParam setPageFromPageNo(Integer pageNo, Integer pageSize) {
@@ -55,8 +55,8 @@ public abstract class CommonService {
 		if (pageSize == null || pageSize <= 0) {
 			pageSize = 1;
 		}
-		if (pageSize > maxPageSize) {
-			pageSize = maxPageSize;
+		if (pageSize > MAX_PAGE_SIZE) {
+			pageSize = MAX_PAGE_SIZE;
 		}
 		PageParam pp = new PageParam();
 		if (pageNo == 1) {
@@ -97,19 +97,19 @@ public abstract class CommonService {
 
 	protected CommonResult nullParam() {
 		CommonResult result = new CommonResult();
-		result.fillWithResult(BaseResultType.nullParam);
+		result.fillWithResult(BaseResultType.NULL_PARAM);
 		return result;
 	}
 	
 	protected CommonResult errorParam() {
 		CommonResult result = new CommonResult();
-		result.fillWithResult(BaseResultType.errorParam);
+		result.fillWithResult(BaseResultType.ERROR_PARAM);
 		return result;
 	}
 	
 	protected CommonResult serviceError() {
 		CommonResult result = new CommonResult();
-		result.fillWithResult(BaseResultType.serviceError);
+		result.fillWithResult(BaseResultType.SERVICE_ERROR);
 		return result;
 	}
 	

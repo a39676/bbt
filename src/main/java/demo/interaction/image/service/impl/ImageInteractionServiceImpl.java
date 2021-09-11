@@ -29,7 +29,7 @@ public class ImageInteractionServiceImpl extends CommonService implements ImageI
 		try {
 			JSONObject j = JSONObject.fromObject(dto);
 	        
-			String url = ServerHost.localHost10001 + ImageInteractionUrl.root + ImageInteractionUrl.uploadImageToCloudinary;
+			String url = ServerHost.CX_HOST + ImageInteractionUrl.root + ImageInteractionUrl.uploadImageToCloudinary;
 			String response = String.valueOf(httpUtil.sendPostRestful(url, j.toString()));
 			JSONObject resultJ = JSONObject.fromObject(response);
 			
@@ -49,7 +49,7 @@ public class ImageInteractionServiceImpl extends CommonService implements ImageI
 			JSONObject j = JSONObject.fromObject(dto);
 			j.put("validTime", localDateTimeHandler.dateToStr(dto.getValidTime()));
 	        
-			String url = ServerHost.localHost10001 + ImageInteractionUrl.root + ImageInteractionUrl.imageSavingFromBBT;
+			String url = ServerHost.CX_HOST + ImageInteractionUrl.root + ImageInteractionUrl.IMAGE_SAVING_FROM_BBT;
 			String response = String.valueOf(httpUtil.sendPostRestful(url, j.toString()));
 			JSONObject resultJ = JSONObject.fromObject(response);
 			

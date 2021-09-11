@@ -13,6 +13,8 @@ public abstract class TestEventCommonService extends CommonService {
 
 	@Autowired
 	protected FileUtilCustom fileUtil;
+	@Autowired
+	protected AutomationTestConstantService constantService;
 	
 	protected String runningEventRedisKey = "runningEvent";
 

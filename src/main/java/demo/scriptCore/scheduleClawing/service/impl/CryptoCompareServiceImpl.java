@@ -1,6 +1,5 @@
 package demo.scriptCore.scheduleClawing.service.impl;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -62,7 +61,6 @@ public class CryptoCompareServiceImpl extends AutomationTestCommonService implem
 			 * crypto coin report 未保存 report
 			 * tbo.getReport().getCaseReportList().add(caseReport);
 			 */
-			tbo.setEndTime(LocalDateTime.now());
 			sendAutomationTestResult(tbo);
 		}
 
