@@ -19,7 +19,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.gson.Gson;
 
 import at.report.pojo.dto.JsonReportOfCaseDTO;
-import at.screenshot.pojo.result.ScreenshotSaveResult;
 import at.xpath.pojo.bo.XpathBuilderBO;
 import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testEvent.scheduleClawing.pojo.bo.DailySignAccountBO;
@@ -34,8 +33,6 @@ import demo.scriptCore.scheduleClawing.pojo.po.WuyiWatchMe;
 import demo.scriptCore.scheduleClawing.pojo.po.WuyiWatchMeExample;
 import demo.scriptCore.scheduleClawing.pojo.vo.WuyiWatchMeVO;
 import demo.scriptCore.scheduleClawing.service.WuYiJobRefreshService;
-import image.pojo.result.ImageSavingResult;
-import selenium.pojo.constant.SeleniumConstant;
 
 @Service
 public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService implements WuYiJobRefreshService {
@@ -58,8 +55,6 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 		} catch (Exception e) {
 			redisConnectService.setValByName(wuYiRunCountKey, "1");
 		}
-
-		LocalDateTime screenshotImageValidTime = LocalDateTime.now().plusMonths(SeleniumConstant.maxHistoryMonth);
 
 		try {
 
@@ -93,11 +88,11 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 
 			threadSleepRandomTime();
 
-			ScreenshotSaveResult screenSaveResult = screenshot(tbo.getWebDriver(), tbo.getFlowName());
-
-			ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(),
-					screenSaveResult.getFileName(), screenshotImageValidTime);
-			reportService.caseReportAppendImage(caseReport, uploadImgResult.getImgUrl());
+			// TODO 此任务暂不采取截图, 直至完成规范化
+//			ScreenshotSaveResult screenSaveResult = screenshot(tbo.getWebDriver(), tbo.getFlowName());
+//			ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(),
+//					screenSaveResult.getFileName(), screenshotImageValidTime);
+//			reportService.caseReportAppendImage(caseReport, uploadImgResult.getImgUrl());
 
 			reportService.caseReportAppendContent(caseReport, "完成登录");
 
@@ -124,11 +119,11 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 			e.printStackTrace();
 //			String htmlStr = jsUtil.getHtmlSource(d);
 
-			ScreenshotSaveResult screenSaveResult = screenshot(tbo.getWebDriver(), tbo.getFlowName());
-
-			ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(),
-					screenSaveResult.getFileName(), screenshotImageValidTime);
-			reportService.caseReportAppendImage(caseReport, uploadImgResult.getImgUrl());
+//			TODO 此任务暂不采取截图, 直至完成规范化
+//			ScreenshotSaveResult screenSaveResult = screenshot(tbo.getWebDriver(), tbo.getFlowName());
+//			ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(),
+//					screenSaveResult.getFileName(), screenshotImageValidTime);
+//			reportService.caseReportAppendImage(caseReport, uploadImgResult.getImgUrl());
 			reportService.caseReportAppendContent(caseReport, "异常: " + e.toString());
 //			jsonReporter.appendContent(reportDTO, htmlStr);
 

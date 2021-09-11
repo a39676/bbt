@@ -11,11 +11,11 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import demo.autoTestBase.testEvent.service.impl.AutomationTestConstantService;
 import demo.baseCommon.service.CommonService;
 import demo.selenium.service.OldDataDeleteService;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.tool.captcha.service.CaptchaService;
-import selenium.pojo.constant.SeleniumConstant;
 
 @Service
 public class OldDataDeleteServiceImpl extends CommonService implements OldDataDeleteService {
@@ -24,10 +24,12 @@ public class OldDataDeleteServiceImpl extends CommonService implements OldDataDe
 	private SeleniumGlobalOptionService globalOptionService;
 	@Autowired
 	private CaptchaService captchaService;
+	@Autowired
+	private AutomationTestConstantService automationTestConstantService;
 
 	@Override
 	public void deleteOldDownload() throws IOException {
-		LocalDateTime oldHistoryLimit = LocalDateTime.now().minusMonths(SeleniumConstant.maxHistoryMonth);
+		LocalDateTime oldHistoryLimit = LocalDateTime.now().minusMonths(automationTestConstantService.getOldDataLiveLimitMonth());
 
 		deleting(globalOptionService.getDownloadDir(), oldHistoryLimit);
 
@@ -35,7 +37,7 @@ public class OldDataDeleteServiceImpl extends CommonService implements OldDataDe
 
 	@Override
 	public void deleteOldScreenshot() throws IOException {
-		LocalDateTime oldHistoryLimit = LocalDateTime.now().minusMonths(SeleniumConstant.maxHistoryMonth);
+		LocalDateTime oldHistoryLimit = LocalDateTime.now().minusMonths(automationTestConstantService.getOldDataLiveLimitMonth());
 
 		deleting(globalOptionService.getScreenshotSavingFolder(), oldHistoryLimit);
 
@@ -43,7 +45,7 @@ public class OldDataDeleteServiceImpl extends CommonService implements OldDataDe
 
 	@Override
 	public void deleteOldCaptchaImg() throws IOException {
-		LocalDateTime oldHistoryLimit = LocalDateTime.now().minusMonths(SeleniumConstant.maxHistoryMonth);
+		LocalDateTime oldHistoryLimit = LocalDateTime.now().minusMonths(automationTestConstantService.getOldDataLiveLimitMonth());
 
 		deleting(captchaService.getCaptchaSaveFolder(), oldHistoryLimit);
 

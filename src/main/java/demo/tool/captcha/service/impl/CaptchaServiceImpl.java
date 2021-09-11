@@ -24,7 +24,7 @@ public class CaptchaServiceImpl extends CommonService implements CaptchaService 
 	@Autowired
 	private Tess tess;
 
-	private final String captchaFolder = "/home/u2/tmp/captchas";
+	private final String captchaFolder = MAIN_FOLDER_PATH + "/captchas";
 	
 	public String ocr(String imgPath, boolean numberAndLetterOnly) {
 		File img = new File(imgPath);

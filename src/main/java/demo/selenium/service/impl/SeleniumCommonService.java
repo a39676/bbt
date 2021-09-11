@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import at.report.pojo.dto.JsonReportOfCaseDTO;
 import at.report.service.ATJsonReportService;
+import at.screenshot.pojo.constant.ScreenshotConstant;
 import at.screenshot.pojo.dto.TakeScreenshotSaveDTO;
 import at.screenshot.pojo.result.ScreenshotSaveResult;
 import at.screenshot.service.ScreenshotService;
@@ -28,7 +29,8 @@ import image.pojo.dto.UploadImageToCloudinaryDTO;
 import image.pojo.result.ImageSavingResult;
 import image.pojo.result.UploadImageToCloudinaryResult;
 import net.sf.json.JSONObject;
-import selenium.pojo.constant.SeleniumConstant;
+import toolPack.constant.FileSuffixNameConstant;
+import toolPack.dateTimeHandle.DateTimeUtilCommon;
 import toolPack.ioHandle.FileUtilCustom;
 
 public abstract class SeleniumCommonService extends CommonService {
@@ -73,19 +75,15 @@ public abstract class SeleniumCommonService extends CommonService {
 		return uploadImgResult;
 	}
 
-	protected ImageSavingResult saveImgToCX(String imgFilePath, String imgFileName) {
-		return saveImgToCX(imgFilePath, imgFileName, null);
+	protected ImageSavingResult saveImgToCX(String imgBase64Str, String imgFileName) {
+		return saveImgToCX(imgBase64Str, imgFileName, null);
 	}
 
-	protected ImageSavingResult saveImgToCX(String imgFilePath, String imgFileName, LocalDateTime validTime) {
+	protected ImageSavingResult saveImgToCX(String imgBase64Str, String imgFileName, LocalDateTime validTime) {
 		ImageSavingTransDTO dto = new ImageSavingTransDTO();
 		dto.setImgName(imgFileName);
-		dto.setImgPath(imgFilePath);
-		if (validTime == null) {
-			dto.setValidTime(LocalDateTime.now().plusMonths(SeleniumConstant.maxHistoryMonth));
-		} else {
-			dto.setValidTime(validTime);
-		}
+		dto.setImgBase64Str(imgBase64Str);
+		dto.setValidTime(validTime);
 
 		ImageSavingResult r = imageInteractionService.saveImgToCX(dto);
 		return r;
@@ -142,23 +140,34 @@ public abstract class SeleniumCommonService extends CommonService {
 
 	protected ScreenshotSaveResult screenshot(WebDriver d, String testFlowName) {
 		TakeScreenshotSaveDTO dto = buildScreenshotDTO(d, testFlowName);
-		return screenshotService.screenshot(dto);
+		return screenshotService.takeScreenshotAndSaveAtLocal(dto);
 	}
 	
 	protected ScreenshotSaveResult screenshot(WebDriver d, String testEventName, WebElement ele) {
 		TakeScreenshotSaveDTO dto = buildScreenshotDTO(d, testEventName, ele);
-		return screenshotService.screenshot(dto);
+		return screenshotService.takeScreenshotAndSaveAtLocal(dto);
 	}
 	
 	protected ScreenshotSaveResult screenshot(WebDriver d, String testEventName, int startX, int endX, int startY, int endY) {
 		TakeScreenshotSaveDTO dto = buildScreenshotDTO(d, testEventName, startX, endX, startY, endY);
-		return screenshotService.screenshot(dto);
+		return screenshotService.takeScreenshotAndSaveAtLocal(dto);
+	}
+	
+	protected String takeScreenshotToBase64(WebDriver d, String testFlowName) {
+		TakeScreenshotSaveDTO dto = buildScreenshotDTO(d, testFlowName);
+		return screenshotService.takeScreenshotToBase64(dto);
 	}
 
 	protected void addScreenshotToReport(WebDriver d, JsonReportOfCaseDTO flowReportDTO) {
-		ScreenshotSaveResult screenSaveResult = screenshot(d, flowReportDTO.getCaseTypeName());
-		ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(),
-				screenSaveResult.getFileName());
+		// TODO 图片传输需重构, 非本地保存, 直接将图片依 base64 形式传送到 cx
+		String screenSaveResult = takeScreenshotToBase64(d, flowReportDTO.getCaseTypeName());
+		String targetFileName = 
+				String.format(
+						ScreenshotConstant.screenShotFilenameFormat, 
+						flowReportDTO.getCaseTypeName(), 
+						localDateTimeHandler.dateToStr(LocalDateTime.now(), DateTimeUtilCommon.dateTimeFormatNoSymbol), 
+						FileSuffixNameConstant.PNG);
+		ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult, targetFileName);
 		reportService.caseReportAppendImage(flowReportDTO, uploadImgResult.getImgUrl());
 	}
 

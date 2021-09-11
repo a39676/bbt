@@ -20,6 +20,7 @@ public class AutomationTestConstantService extends CommonService {
 	private String optionFilePath;
 
 	private Boolean breakFlag = false;
+	private Integer oldDataLiveLimitMonth = 3;
 
 	public void refreshConstant() {
 		File optionFile = new File(optionFilePath);
@@ -44,9 +45,18 @@ public class AutomationTestConstantService extends CommonService {
 		this.breakFlag = breakFlag;
 	}
 
+	public Integer getOldDataLiveLimitMonth() {
+		return oldDataLiveLimitMonth;
+	}
+
+	public void setOldDataLiveLimitMonth(Integer oldDataLiveLimitMonth) {
+		this.oldDataLiveLimitMonth = oldDataLiveLimitMonth;
+	}
+
 	@Override
 	public String toString() {
-		return "AutomationTestConstantService [optionFilePath=" + optionFilePath + ", breakFlag=" + breakFlag + "]";
+		return "AutomationTestConstantService [optionFilePath=" + optionFilePath + ", breakFlag=" + breakFlag
+				+ ", oldDataLiveLimitMonth=" + oldDataLiveLimitMonth + "]";
 	}
 
 }
