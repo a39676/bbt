@@ -1,6 +1,6 @@
 ﻿testEvent
 	testEvent
-		需提供修改 AutomationTestConstantService.breakFlag 的UI / API 
+		需提供修改 AutomationTestConstantService.breakFlag 的UI / API
 		
     改变思路:
     	crypto coin 
