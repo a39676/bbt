@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.openqa.selenium.WebDriver;
 
-import at.report.pojo.dto.JsonReportOfFlowDTO;
+import autoTest.report.pojo.dto.JsonReportOfFlowDTO;
 import autoTest.testEvent.pojo.result.AutomationTestCaseResult;
 import autoTest.testEvent.pojo.type.AutomationTestFlowResultType;
 import autoTest.testModule.pojo.type.TestModuleType;

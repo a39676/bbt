@@ -18,8 +18,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
 
-import at.report.pojo.dto.JsonReportOfCaseDTO;
 import at.xpath.pojo.bo.XpathBuilderBO;
+import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
 import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testEvent.scheduleClawing.pojo.bo.DailySignAccountBO;
 import autoTest.testEvent.scheduleClawing.pojo.bo.WuYiJobClawingBO;
