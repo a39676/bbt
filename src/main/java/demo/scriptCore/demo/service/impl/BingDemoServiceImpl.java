@@ -9,8 +9,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 
-import at.report.pojo.dto.JsonReportOfCaseDTO;
 import at.xpath.pojo.bo.XpathBuilderBO;
+import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
 import autoTest.testEvent.pojo.result.AutomationTestCaseResult;
 import autoTest.testEvent.pojo.type.AutomationTestFlowResultType;
 import autoTest.testEvent.searchingDemo.pojo.dto.BingSearchInHomePageDTO;

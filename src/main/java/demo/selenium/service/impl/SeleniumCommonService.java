@@ -11,12 +11,12 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import at.report.pojo.dto.JsonReportOfCaseDTO;
-import at.report.service.ATJsonReportService;
 import at.screenshot.pojo.constant.ScreenshotConstant;
 import at.screenshot.pojo.dto.TakeScreenshotSaveDTO;
 import at.screenshot.pojo.result.ScreenshotSaveResult;
 import at.screenshot.service.ScreenshotService;
+import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
+import autoTest.report.service.ATJsonReportService;
 import demo.autoTestBase.testEvent.pojo.constant.TestEventOptionConstant;
 import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.baseCommon.service.CommonService;

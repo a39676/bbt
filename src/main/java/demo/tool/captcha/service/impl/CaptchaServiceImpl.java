@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import at.tess.service.Tess;
+import autoTest.tess.service.Tess;
 import demo.baseCommon.service.CommonService;
 import demo.tool.captcha.pojo.dto.CleanImageResult;
 import demo.tool.captcha.service.CaptchaService;

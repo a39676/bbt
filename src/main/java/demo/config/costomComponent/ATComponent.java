@@ -4,11 +4,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import at.report.service.ATJsonReportService;
-import at.report.service.ATWordReportService;
 import at.screenshot.service.ScreenshotService;
-import at.tess.service.Tess;
 import at.tool.WebATToolService;
+import autoTest.report.service.ATJsonReportService;
+import autoTest.report.service.ATWordReportService;
+import autoTest.tess.service.Tess;
 
 @Component
 public class ATComponent {

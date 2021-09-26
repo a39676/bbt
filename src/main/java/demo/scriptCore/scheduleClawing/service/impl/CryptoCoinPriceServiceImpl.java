@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import at.report.pojo.dto.JsonReportOfCaseDTO;
+import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
 import autoTest.testEvent.cryptoCoin.pojo.type.CryptoCoinFlowType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
