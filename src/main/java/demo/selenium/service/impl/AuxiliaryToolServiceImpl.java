@@ -1,8 +1,8 @@
 package demo.selenium.service.impl;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 import org.openqa.selenium.By;
@@ -26,8 +26,8 @@ public class AuxiliaryToolServiceImpl extends SeleniumCommonService {
 
 	public WebElement fluentWait(WebDriver driver, final By by) {
 		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
-				.withTimeout(WebDriverConstant.pageWaitingTimeoutSecond, TimeUnit.SECONDS)
-				.pollingEvery(5, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
+				.withTimeout(Duration.ofSeconds(WebDriverConstant.pageWaitingTimeoutSecond))
+				.pollingEvery(Duration.ofSeconds(5)).ignoring(NoSuchElementException.class);
 
 		WebElement foo = wait.until(new Function<WebDriver, WebElement>() {
 			public WebElement apply(WebDriver driver) {
