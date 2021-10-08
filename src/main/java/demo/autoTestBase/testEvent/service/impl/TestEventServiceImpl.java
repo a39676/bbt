@@ -45,7 +45,7 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		if (TestModuleType.ATDemo.getId().equals(dto.getTestModuleType())) {
 			tbo = bingDemoPrefixService.receiveAndBuildTestEventBO(dto);
 		} else if (TestModuleType.CRYPTO_COIN.getId().equals(dto.getTestModuleType())) {
-			return cryptoCoinPrefixService.receiveAndBuildTestEventBO(dto);
+			tbo = cryptoCoinPrefixService.receiveAndBuildTestEventBO(dto);
 		} else if (TestModuleType.SCHEDULE_CLAWING.getId().equals(dto.getTestModuleType())) {
 //			return scheduleClawingPrefixService.
 		}
