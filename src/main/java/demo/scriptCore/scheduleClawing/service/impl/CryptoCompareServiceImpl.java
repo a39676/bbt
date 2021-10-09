@@ -15,6 +15,7 @@ import demo.scriptCore.scheduleClawing.service.CryptoCompareService;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDailyDataQueryDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataSubDTO;
+import finance.cryptoCoin.pojo.type.CryptoCoinDataSourceType;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import toolPack.httpHandel.HttpUtil;
@@ -48,6 +49,7 @@ public class CryptoCompareServiceImpl extends AutomationTestCommonService implem
 			mainDTO.setPriceHistoryData(subDataList);
 			mainDTO.setCryptoCoinTypeName(paramDTO.getCoinName());
 			mainDTO.setCurrencyName(paramDTO.getCurrencyName());
+			mainDTO.setDataSourceCode(CryptoCoinDataSourceType.CRYPTO_COMPARE.getCode());
 
 			r.setData(mainDTO);
 			r.setIsSuccess();
