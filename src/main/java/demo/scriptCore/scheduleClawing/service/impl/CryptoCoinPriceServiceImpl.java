@@ -11,6 +11,7 @@ import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.scheduleClawing.mq.sender.CryptoCoinDailyDataAckProducer;
 import demo.scriptCore.scheduleClawing.pojo.result.CryptoCoinDailyDataResult;
+import demo.scriptCore.scheduleClawing.service.BinanceService;
 import demo.scriptCore.scheduleClawing.service.CryptoCoinPriceService;
 import demo.scriptCore.scheduleClawing.service.CryptoCompareService;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDailyDataQueryDTO;
@@ -23,6 +24,8 @@ public class CryptoCoinPriceServiceImpl extends AutomationTestCommonService impl
 	private CryptoCoinDailyDataAckProducer cryptoCoinDailyDataAckProducer;
 	@Autowired
 	private CryptoCompareService cryptoCompareService;
+	@Autowired
+	private BinanceService binanceService;
 
 	@Override
 	public TestEventBO cryptoCoinDailyDataAPI(TestEventBO tbo) {
@@ -47,7 +50,6 @@ public class CryptoCoinPriceServiceImpl extends AutomationTestCommonService impl
 				reportService.caseReportAppendContent(caseReport, "参数文件参数异常");
 				throw new Exception();
 			}
-			// TODO 正在整理  分 crypto compare / binance api 
 			
 			/*
 			 * 2021-08-13
@@ -60,18 +62,12 @@ public class CryptoCoinPriceServiceImpl extends AutomationTestCommonService impl
 			if(paramDTO.getDataSourceCode() == null || CryptoCoinDataSourceType.CRYPTO_COMPARE.getCode().equals(paramDTO.getDataSourceCode())) {
 				apiResult = cryptoCompareService.cryptoCoinDailyDataAPI(tbo, paramDTO);
 			} else if(CryptoCoinDataSourceType.BINANCE.getCode().equals(paramDTO.getDataSourceCode())){
-//				TODO need binance daily data API
+				apiResult = binanceService.cryptoCoinDailyDataAPI(tbo, paramDTO);
 			}
 			
 			CommonResult r = new CommonResult();
 			
-			if(apiResult.isSuccess()) {
-				cryptoCoinDailyDataAckProducer.sendHistoryPrice(apiResult.getData());
-			} else {
-				/*
-				 * TODO what to do when crypto coin daily data query fail
-				 */
-			}
+			cryptoCoinDailyDataAckProducer.sendHistoryPrice(apiResult.getData());
 			
 			r.setSuccess(apiResult.isSuccess());
 			r.setMessage(apiResult.getMessage());
