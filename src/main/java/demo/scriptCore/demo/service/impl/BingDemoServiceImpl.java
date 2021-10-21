@@ -9,13 +9,14 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 
-import at.xpath.pojo.bo.XpathBuilderBO;
 import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
 import autoTest.testEvent.pojo.result.AutomationTestCaseResult;
 import autoTest.testEvent.pojo.type.AutomationTestFlowResultType;
 import autoTest.testEvent.searchingDemo.pojo.dto.BingSearchInHomePageDTO;
 import autoTest.testEvent.searchingDemo.pojo.type.BingDemoSearchFlowType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
+import demo.scriptCore.demo.pojo.pe.HomePage;
+import demo.scriptCore.demo.pojo.pe.ResultPage;
 import demo.scriptCore.demo.service.BingDemoService;
 
 @Service
@@ -44,8 +45,8 @@ public class BingDemoServiceImpl extends BingDemoCommonService implements BingDe
 
 	private AutomationTestCaseResult keywordSearchInHomepage(TestEventBO tbo) {
 		String casename = "searchInHomepage";
-		AutomationTestCaseResult r = buildCaseResult(casename);
-		JsonReportOfCaseDTO caseReport = buildCaseReportDTO(casename);
+		AutomationTestCaseResult r = initCaseResult(casename);
+		JsonReportOfCaseDTO caseReport = initCaseReportDTO(casename);
 
 		reportService.caseReportAppendContent(caseReport, "准备进行搜索");
 		WebDriver d = tbo.getWebDriver();
@@ -66,12 +67,9 @@ public class BingDemoServiceImpl extends BingDemoCommonService implements BingDe
 			reportService.caseReportAppendContent(caseReport, "访问超时");
 		}
 
-		XpathBuilderBO x = new XpathBuilderBO();
-
 		addScreenshotToReport(d, caseReport);
 
-		x.start("input").addAttribute("id", "sb_form_q");
-		WebElement keywordInput = d.findElement(By.xpath(x.getXpath()));
+		WebElement keywordInput = d.findElement(By.xpath(HomePage.keywordInput));
 		keywordInput.click();
 		keywordInput.clear();
 		keywordInput.sendKeys(dto.getSearchKeyword());
@@ -84,8 +82,7 @@ public class BingDemoServiceImpl extends BingDemoCommonService implements BingDe
 
 		addScreenshotToReport(d, caseReport);
 
-		x.start("label").addId("search_icon");
-		WebElement searchButton = d.findElement(By.xpath(x.getXpath()));
+		WebElement searchButton = d.findElement(By.xpath(HomePage.searchButton));
 		searchButton.click();
 
 		reportService.caseReportAppendContent(caseReport, "点击搜索");
@@ -101,8 +98,8 @@ public class BingDemoServiceImpl extends BingDemoCommonService implements BingDe
 
 	private AutomationTestCaseResult checkResult(TestEventBO tbo) {
 		String casename = "checkResult";
-		AutomationTestCaseResult r = buildCaseResult(casename);
-		JsonReportOfCaseDTO caseReport = buildCaseReportDTO(casename);
+		AutomationTestCaseResult r = initCaseResult(casename);
+		JsonReportOfCaseDTO caseReport = initCaseReportDTO(casename);
 		try {
 			reportService.caseReportAppendContent(caseReport, "准备检查搜索结果");
 
@@ -110,13 +107,11 @@ public class BingDemoServiceImpl extends BingDemoCommonService implements BingDe
 
 			BingSearchInHomePageDTO dto = auxTool.buildParamDTO(tbo, BingSearchInHomePageDTO.class);
 
-			XpathBuilderBO x = new XpathBuilderBO();
 
-			x.start("ol").addId("b_results");
 
 			WebElement resultListOL = null;
 			try {
-				resultListOL = d.findElement(By.xpath(x.getXpath()));
+				resultListOL = d.findElement(By.xpath(ResultPage.resultListOL));
 			} catch (Exception e) {
 				reportService.caseReportAppendContent(caseReport, "无法定位搜索结果");
 				throw new Exception();
@@ -125,8 +120,7 @@ public class BingDemoServiceImpl extends BingDemoCommonService implements BingDe
 			if (!resultListOL.getText().contains(dto.getSearchKeyword())) {
 				reportService.caseReportAppendContent(caseReport, "搜索结果未包含目标关键字");
 			} else {
-				x.findChild("li");
-				List<WebElement> resultListLi = d.findElements(By.xpath(x.getXpath()));
+				List<WebElement> resultListLi = d.findElements(By.xpath(ResultPage.resultListLi));
 
 				for (int i = 0; i < resultListLi.size(); i++) {
 					if (resultListLi.get(i).getText().contains(dto.getSearchKeyword())) {
