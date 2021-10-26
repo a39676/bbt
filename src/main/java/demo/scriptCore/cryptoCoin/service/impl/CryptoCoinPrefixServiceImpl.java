@@ -37,9 +37,9 @@ public class CryptoCoinPrefixServiceImpl extends AutomationTestCommonService
 
 	@Override
 	public TestEventBO runSubEvent(TestEventBO bo) {
-		Long caseId = bo.getFlowId();
+		Long flowId = bo.getFlowId();
 
-		if (CryptoCoinFlowType.DAILY_DATA.getId().equals(caseId)) {
+		if (CryptoCoinFlowType.DAILY_DATA.getId().equals(flowId)) {
 			return cryptoCoinPriceService.cryptoCoinDailyDataAPI(bo);
 		}
 

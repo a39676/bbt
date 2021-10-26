@@ -1,6 +1,10 @@
 package demo.autoTestBase.testEvent.service.impl;
 
 import java.io.File;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +25,10 @@ public class AutomationTestConstantService extends CommonService {
 
 	private Boolean breakFlag = false;
 	private Integer oldDataLiveLimitMonth = 3;
+	private Integer eventFailLimitCounting = 3;
+	private Integer failCountLiveMinutes = 30;
+
+	private Map<Long, List<LocalDateTime>> failedTestResultMap = new HashMap<>();
 
 	public void refreshConstant() {
 		File optionFile = new File(optionFilePath);
@@ -53,10 +61,37 @@ public class AutomationTestConstantService extends CommonService {
 		this.oldDataLiveLimitMonth = oldDataLiveLimitMonth;
 	}
 
+	public Integer getEventFailLimitCounting() {
+		return eventFailLimitCounting;
+	}
+
+	public void setEventFailLimitCounting(Integer eventFailLimitCounting) {
+		this.eventFailLimitCounting = eventFailLimitCounting;
+	}
+
+	
+	public Integer getFailCountLiveMinutes() {
+		return failCountLiveMinutes;
+	}
+
+	public void setFailCountLiveMinutes(Integer failCountLiveMinutes) {
+		this.failCountLiveMinutes = failCountLiveMinutes;
+	}
+
+	public Map<Long, List<LocalDateTime>> getFailedTestResultMap() {
+		return failedTestResultMap;
+	}
+
+	public void setFailedTestResultMap(Map<Long, List<LocalDateTime>> failedTestResultMap) {
+		this.failedTestResultMap = failedTestResultMap;
+	}
+
 	@Override
 	public String toString() {
-		return "AutomationTestConstantService [optionFilePath=" + optionFilePath + ", breakFlag=" + breakFlag
-				+ ", oldDataLiveLimitMonth=" + oldDataLiveLimitMonth + "]";
+		return "AutomationTestConstantService [breakFlag=" + breakFlag + ", oldDataLiveLimitMonth="
+				+ oldDataLiveLimitMonth + ", eventFailLimitCounting=" + eventFailLimitCounting
+				+ ", failCountLiveMinutes=" + failCountLiveMinutes + ", failedTestResultMap=" + failedTestResultMap
+				+ "]";
 	}
 
 }

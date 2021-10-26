@@ -42,13 +42,13 @@ public abstract class AutomationTestCommonService extends SeleniumCommonService 
 		return tbo;
 	}
 
-	protected AutomationTestCaseResult buildCaseResult(String casename) {
+	protected AutomationTestCaseResult initCaseResult(String casename) {
 		AutomationTestCaseResult r = new AutomationTestCaseResult();
 		r.setCaseName(casename);
 		return r;
 	}
 
-	protected JsonReportOfCaseDTO buildCaseReportDTO(String casename) {
+	protected JsonReportOfCaseDTO initCaseReportDTO(String casename) {
 
 		JsonReportOfCaseDTO report = new JsonReportOfCaseDTO();
 		report.setReportElementList(new ArrayList<>());

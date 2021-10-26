@@ -14,4 +14,6 @@ public interface TestEventService {
 
 	void fixRuningEventStatusManual();
 
+	void cleanExpiredFailEventCounting();
+
 }

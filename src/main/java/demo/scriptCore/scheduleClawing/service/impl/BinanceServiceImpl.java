@@ -27,7 +27,7 @@ public class BinanceServiceImpl extends AutomationTestCommonService implements B
 		CryptoCoinDailyDataResult r = new CryptoCoinDailyDataResult();
 
 		CryptoCoinFlowType flowType = CryptoCoinFlowType.DAILY_DATA;
-		JsonReportOfCaseDTO caseReport = buildCaseReportDTO(flowType.getFlowName());
+		JsonReportOfCaseDTO caseReport = initCaseReportDTO(flowType.getFlowName());
 
 		// example:
 		// https://api.binance.com/api/v3/klines?symbol=BNBBTC&interval=1d&startTime=1590710400000&endTime=1590796800000&limit=500

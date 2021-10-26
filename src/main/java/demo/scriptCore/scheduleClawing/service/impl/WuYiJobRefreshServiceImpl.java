@@ -45,7 +45,7 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 		CommonResult r = new CommonResult();
 
 		ScheduleClawingType caseType = ScheduleClawingType.WU_YI_JOB;
-		JsonReportOfCaseDTO caseReport = buildCaseReportDTO(caseType.getFlowName());
+		JsonReportOfCaseDTO caseReport = initCaseReportDTO(caseType.getFlowName());
 
 		String wuYiRunCountKey = "wuYiRunCountKey";
 		String runCountStr = redisConnectService.getValByName(wuYiRunCountKey);
