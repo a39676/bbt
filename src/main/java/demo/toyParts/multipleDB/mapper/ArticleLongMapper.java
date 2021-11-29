@@ -1,30 +1,32 @@
 package demo.toyParts.multipleDB.mapper;
 
-import demo.toyParts.multipleDB.pojo.po.ArticleLong;
-import demo.toyParts.multipleDB.pojo.po.ArticleLongExample;
 import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
+import demo.toyParts.multipleDB.pojo.po.ArticleLong;
+import demo.toyParts.multipleDB.pojo.po.ArticleLongExample;
+
 public interface ArticleLongMapper {
-    long countByExample(ArticleLongExample example);
+	long countByExample(ArticleLongExample example);
 
-    int deleteByExample(ArticleLongExample example);
+	int deleteByExample(ArticleLongExample example);
 
-    int deleteByPrimaryKey(Long articleId);
+	int deleteByPrimaryKey(Long articleId);
 
-    int insert(ArticleLong record);
+	List<ArticleLong> selectByExample(ArticleLongExample example);
 
-    int insertSelective(ArticleLong record);
+	ArticleLong selectByPrimaryKey(Long articleId);
 
-    List<ArticleLong> selectByExample(ArticleLongExample example);
+	int updateByExampleSelective(@Param("record") ArticleLong record, @Param("example") ArticleLongExample example);
 
-    ArticleLong selectByPrimaryKey(Long articleId);
+	int updateByExample(@Param("record") ArticleLong record, @Param("example") ArticleLongExample example);
 
-    int updateByExampleSelective(@Param("record") ArticleLong record, @Param("example") ArticleLongExample example);
+	int updateByPrimaryKeySelective(ArticleLong record);
 
-    int updateByExample(@Param("record") ArticleLong record, @Param("example") ArticleLongExample example);
+	int updateByPrimaryKey(ArticleLong record);
 
-    int updateByPrimaryKeySelective(ArticleLong record);
+	int insert(ArticleLong record);
 
-    int updateByPrimaryKey(ArticleLong record);
+	int insertSelective(ArticleLong record);
 }

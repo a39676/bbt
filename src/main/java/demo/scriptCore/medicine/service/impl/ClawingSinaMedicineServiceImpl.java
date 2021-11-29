@@ -12,7 +12,6 @@ import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import at.xpath.pojo.bo.XpathBuilderBO;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.scriptCore.medicine.mapper.MedicineInfoErrorMapper;
 import demo.scriptCore.medicine.mapper.MedicineInfoMapper;
@@ -32,14 +31,14 @@ public class ClawingSinaMedicineServiceImpl extends SeleniumCommonService implem
 	private WebDriverService webDriverService;
 //	@Autowired
 //	private JavaScriptCommonUtil jsUtil;
-	
+
 	@Autowired
 	private ClawingSinaMedicineFactoryService factoryService;
 	@Autowired
 	private MedicineInfoMapper medicineMapper;
 	@Autowired
 	private MedicineInfoErrorMapper medicinErrorMapper;
-	
+
 	public void sinaMedicineClawing() {
 //		TODO
 	}
@@ -55,9 +54,8 @@ public class ClawingSinaMedicineServiceImpl extends SeleniumCommonService implem
 			String url = "https://med.sina.com/drug/leeDetail_A_15036.html";
 			d.get(url);
 
-			XpathBuilderBO xb = new XpathBuilderBO();
-			xb.start("div").addAttribute("class", "xx2");
-			By medicineDetailBy = By.xpath(xb.getXpath());
+			xPathBuilder.start("div").addAttribute("class", "xx2");
+			By medicineDetailBy = By.xpath(xPathBuilder.getXpath());
 			WebElement medicineDetail = d.findElement(medicineDetailBy);
 			System.out.println(medicineDetail.getText());
 
@@ -72,41 +70,40 @@ public class ClawingSinaMedicineServiceImpl extends SeleniumCommonService implem
 		/*
 		 * TODO
 		 */
-		XpathBuilderBO xb = new XpathBuilderBO();
-			xb.start("div").addAttribute("class", "xx1_text");
-		By medicineDetailHeadBy = By.xpath(xb.getXpath());
+		xPathBuilder.start("div").addAttribute("class", "xx1_text");
+		By medicineDetailHeadBy = By.xpath(xPathBuilder.getXpath());
 		WebElement medicineDetailHead = d.findElement(medicineDetailHeadBy);
 		MedicineInfoError medicineInfoError = null;
 		SinaMedicineDetailHeadHandleResult detailHeadResult = sinaMedicineDetailHeadHandle(medicineDetailHead);
 		if (!detailHeadResult.isSuccess()) {
-			if(medicineInfoError == null) {
+			if (medicineInfoError == null) {
 				medicineInfoError = new MedicineInfoError();
 			}
 			medicineInfoError.setHeadDetailError(true);
 		}
 		Long factoryId = factoryService.findFactoryId(detailHeadResult.getFactoryName());
-		
-		xb.start("div").addAttribute("class", "xx2");
-		By medicineDetailMainBy = By.xpath(xb.getXpath());
+
+		xPathBuilder.start("div").addAttribute("class", "xx2");
+		By medicineDetailMainBy = By.xpath(xPathBuilder.getXpath());
 		WebElement medicineDetailMain = d.findElement(medicineDetailMainBy);
 		SinaMedicineDetailMainHandleResult detailMainResult = sinaMedicineDetailMainHandle(medicineDetailMain);
 		if (!detailMainResult.isSuccess()) {
 			medicineInfoError.setMainDetailError(true);
 		}
-		
+
 		List<WebElement> allTagAList = d.findElements(ByTagName.tagName("a"));
-		List<WebElement> targetTagAList = sinaMedicineTagAListHandle (detailHeadResult, detailMainResult, allTagAList);
-		if(targetTagAList.size() > 0) {
+		List<WebElement> targetTagAList = sinaMedicineTagAListHandle(detailHeadResult, detailMainResult, allTagAList);
+		if (targetTagAList.size() > 0) {
 			/*
 			 * TODO
 			 */
 		} else {
-			if(medicineInfoError == null) {
+			if (medicineInfoError == null) {
 				medicineInfoError = new MedicineInfoError();
 			}
 			medicineInfoError.setDocumentError(true);
 		}
-		
+
 		Long newMedicineId = snowFlake.getNextId();
 		MedicineInfo po = new MedicineInfo();
 		po.setMedicineFactoryId(factoryId);
@@ -119,8 +116,8 @@ public class ClawingSinaMedicineServiceImpl extends SeleniumCommonService implem
 		po.setMedicineManagerPreffix(detailHeadResult.getMedicineManagerCodePrefix());
 		po.setMedicineName(detailHeadResult.getCommodityName());
 		medicineMapper.insertSelective(po);
-		
-		if(medicineInfoError != null) {
+
+		if (medicineInfoError != null) {
 			medicineInfoError.setMedicineId(newMedicineId);
 			medicinErrorMapper.insertSelective(medicineInfoError);
 		}
@@ -229,46 +226,42 @@ public class ClawingSinaMedicineServiceImpl extends SeleniumCommonService implem
 		return r;
 	}
 
-	private List<WebElement> sinaMedicineTagAListHandle(SinaMedicineDetailHeadHandleResult head, SinaMedicineDetailMainHandleResult main, List<WebElement> tagAList) {
+	private List<WebElement> sinaMedicineTagAListHandle(SinaMedicineDetailHeadHandleResult head,
+			SinaMedicineDetailMainHandleResult main, List<WebElement> tagAList) {
 		/*
-		 * TODO
-		 * 脚本难以辨别页面上
-		 * (不良反应, 临床资料/疗效分析, 药理毒理)
-		 * 此三栏目
+		 * TODO 脚本难以辨别页面上 (不良反应, 临床资料/疗效分析, 药理毒理) 此三栏目
 		 * 
-		 * 需要批量获取tagA标签后, 排查
-		 * 暂时选取特征 无title属性, 无target属性
+		 * 需要批量获取tagA标签后, 排查 暂时选取特征 无title属性, 无target属性
 		 */
 		String commodityName = head.getCommodityName();
 		String commonName = head.getCommonName();
 		String mainIngredient = main.getMainIngredient();
-		
+
 		List<WebElement> targetList = new ArrayList<WebElement>();
-		for(WebElement ele : tagAList) {
-			if(StringUtils.isBlank(ele.getAttribute("title")) && StringUtils.isBlank(ele.getAttribute("target"))) {
-				if(ele.getText().contains(commodityName) || ele.getText().contains(commonName) || ele.getText().contains(mainIngredient)) {
+		for (WebElement ele : tagAList) {
+			if (StringUtils.isBlank(ele.getAttribute("title")) && StringUtils.isBlank(ele.getAttribute("target"))) {
+				if (ele.getText().contains(commodityName) || ele.getText().contains(commonName)
+						|| ele.getText().contains(mainIngredient)) {
 					targetList.add(ele);
 				}
 			}
 		}
-		
+
 		return targetList;
 	}
-	
+
 	public void medicineDocumentHandler(WebDriver d, TestEventBO te, List<WebElement> targetEleList) {
 		/*
 		 * TODO
 		 */
-		for(WebElement ele : targetEleList) {
+		for (WebElement ele : targetEleList) {
 			ele.click();
-			XpathBuilderBO xb = new XpathBuilderBO();
-			xb.start("div").addAttribute("class", "Yp_xx_text");
-			By textDivBy = By.xpath(xb.getXpath());
+			xPathBuilder.start("div").addAttribute("class", "Yp_xx_text");
+			By textDivBy = By.xpath(xPathBuilder.getXpath());
 			WebElement textDiv = d.findElement(textDivBy);
 			String text = textDiv.getText();
 			System.out.println(text);
 		}
 	}
-	
-	
+
 }

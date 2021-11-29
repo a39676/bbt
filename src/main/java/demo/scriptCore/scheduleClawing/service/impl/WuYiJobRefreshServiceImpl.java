@@ -18,7 +18,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
 
-import at.xpath.pojo.bo.XpathBuilderBO;
 import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
 import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testEvent.scheduleClawing.pojo.bo.DailySignAccountBO;
@@ -136,12 +135,10 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 	}
 
 	private void findAndCLoseHomePop(WebDriver d, JsonReportOfCaseDTO reportDTO) {
-		XpathBuilderBO x = new XpathBuilderBO();
-
-		x.start("div").addClass("homePop");
+		xPathBuilder.start("div").addClass("homePop");
 
 		try {
-			WebElement homepopDiv = d.findElement(By.xpath(x.getXpath()));
+			WebElement homepopDiv = d.findElement(By.xpath(xPathBuilder.getXpath()));
 			if (homepopDiv == null || !homepopDiv.isDisplayed()) {
 				reportService.caseReportAppendContent(reportDTO, "can not find homepop div");
 				return;
@@ -149,9 +146,9 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 				reportService.caseReportAppendContent(reportDTO, "find homepop div");
 			}
 
-			x.findChild("div").addClass("in").findChild("div").addClass("close");
+			xPathBuilder.findChild("div").addClass("in").findChild("div").addClass("close");
 
-			WebElement homepopCloseDiv = d.findElement(By.xpath(x.getXpath()));
+			WebElement homepopCloseDiv = d.findElement(By.xpath(xPathBuilder.getXpath()));
 			homepopCloseDiv.click();
 			reportService.caseReportAppendContent(reportDTO, "close homepop div");
 
@@ -162,12 +159,11 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 	}
 
 	private void findAndCloseLeadDiv(WebDriver d, JsonReportOfCaseDTO reportDTO) {
-		XpathBuilderBO x = new XpathBuilderBO();
 
-		x.start("div").addClass("lead");
+		xPathBuilder.start("div").addClass("lead");
 
 		try {
-			WebElement leadDiv = d.findElement(By.xpath(x.getXpath()));
+			WebElement leadDiv = d.findElement(By.xpath(xPathBuilder.getXpath()));
 			if (leadDiv == null || !leadDiv.isDisplayed()) {
 				reportService.caseReportAppendContent(reportDTO, "can not find lead div");
 				return;
@@ -175,10 +171,10 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 				reportService.caseReportAppendContent(reportDTO, "find lead div");
 			}
 
-			x.findChild("div").addClass("close");
+			xPathBuilder.findChild("div").addClass("close");
 			;
 
-			WebElement leadCloseDiv = d.findElement(By.xpath(x.getXpath()));
+			WebElement leadCloseDiv = d.findElement(By.xpath(xPathBuilder.getXpath()));
 			leadCloseDiv.click();
 			reportService.caseReportAppendContent(reportDTO, "close lead div");
 
@@ -189,12 +185,10 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 	}
 
 	private void findAndCloseGoAppDiv(WebDriver d, JsonReportOfCaseDTO reportDTO) {
-		XpathBuilderBO x = new XpathBuilderBO();
-
-		x.start("div").addClass("goApp");
+		xPathBuilder.start("div").addClass("goApp");
 
 		try {
-			WebElement goAppDiv = d.findElement(By.xpath(x.getXpath()));
+			WebElement goAppDiv = d.findElement(By.xpath(xPathBuilder.getXpath()));
 			if (goAppDiv == null || !goAppDiv.isDisplayed()) {
 				reportService.caseReportAppendContent(reportDTO, "can not find go app div");
 				return;
@@ -202,10 +196,10 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 				reportService.caseReportAppendContent(reportDTO, "find go app div");
 			}
 
-			x.findChild("em").addClass("close");
+			xPathBuilder.findChild("em").addClass("close");
 			;
 
-			WebElement goAppCloseButton = d.findElement(By.xpath(x.getXpath()));
+			WebElement goAppCloseButton = d.findElement(By.xpath(xPathBuilder.getXpath()));
 			goAppCloseButton.click();
 			reportService.caseReportAppendContent(reportDTO, "close go app div");
 
@@ -216,8 +210,6 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 	}
 
 	private boolean login(WebDriver d, JsonReportOfCaseDTO reportDTO, DailySignAccountBO dailySignBO) {
-		XpathBuilderBO x = new XpathBuilderBO();
-
 		try {
 			try {
 				d.get(dailySignBO.getMainUrl());
@@ -250,9 +242,9 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 //				throw new Exception();
 //			}
 
-			x.start("header").addClass("nologin").findChild("a").addClass("my");
+			xPathBuilder.start("header").addClass("nologin").findChild("a").addClass("my");
 			try {
-				WebElement loginPageButton = d.findElement(By.xpath(x.getXpath()));
+				WebElement loginPageButton = d.findElement(By.xpath(xPathBuilder.getXpath()));
 				for (int i = 0; i < 10 && !loginPageButton.isDisplayed(); i++) {
 					jsUtil.scroll(d, 200);
 				}
@@ -265,9 +257,9 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 			reportService.caseReportAppendContent(reportDTO, "after visit login page");
 			threadSleepRandomTimeLong();
 
-			x.start().addId("tobydefault").findChild("a").addClass("leftlogin");
+			xPathBuilder.start().addId("tobydefault").findChild("a").addClass("leftlogin");
 			try {
-				WebElement loginWithUsernameAndPwdButton = d.findElement(By.xpath(x.getXpath()));
+				WebElement loginWithUsernameAndPwdButton = d.findElement(By.xpath(xPathBuilder.getXpath()));
 				for (int i = 0; i < 10 && !loginWithUsernameAndPwdButton.isDisplayed(); i++) {
 					threadSleepRandomTime();
 				}
@@ -278,10 +270,10 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 			}
 			threadSleepRandomTimeLong();
 
-			x.start().addId("loginname");
+			xPathBuilder.start().addId("loginname");
 			WebElement usernameInput = null;
 			try {
-				usernameInput = d.findElement(By.xpath(x.getXpath()));
+				usernameInput = d.findElement(By.xpath(xPathBuilder.getXpath()));
 			} catch (Exception e) {
 				reportService.caseReportAppendContent(reportDTO, "找不到用户名输入框");
 				throw new Exception();
@@ -293,10 +285,10 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 
 			threadSleepRandomTimeLong();
 
-			x.start("div").addClass("picture");
+			xPathBuilder.start("div").addClass("picture");
 			WebElement logoClick = null;
 			try {
-				logoClick = d.findElement(By.xpath(x.getXpath()));
+				logoClick = d.findElement(By.xpath(xPathBuilder.getXpath()));
 				logoClick.click();
 				reportService.caseReportAppendContent(reportDTO, "close logo");
 				/*
@@ -306,10 +298,10 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 				reportService.caseReportAppendContent(reportDTO, "找不到Logo");
 			}
 
-			x.start().addId("password");
+			xPathBuilder.start().addId("password");
 			WebElement pwdInput = null;
 			try {
-				pwdInput = d.findElement(By.xpath(x.getXpath()));
+				pwdInput = d.findElement(By.xpath(xPathBuilder.getXpath()));
 			} catch (Exception e) {
 				reportService.caseReportAppendContent(reportDTO, "找不到密码输入框");
 			}
@@ -320,10 +312,10 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 
 			threadSleepRandomTime(1000L, 3000L);
 
-			x.start("button").addAttribute("id", "login_btn");
+			xPathBuilder.start("button").addAttribute("id", "login_btn");
 			WebElement loginButton = null;
 			try {
-				loginButton = d.findElement(By.xpath(x.getXpath()));
+				loginButton = d.findElement(By.xpath(xPathBuilder.getXpath()));
 			} catch (Exception e) {
 				reportService.caseReportAppendContent(reportDTO, "找不到登录按钮");
 			}
@@ -340,8 +332,6 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 	}
 
 	private boolean updateDetail(WebDriver d, JsonReportOfCaseDTO reportDTO, WuYiJobClawingBO dailySignBO) {
-		XpathBuilderBO x = new XpathBuilderBO();
-
 		try {
 			try {
 				d.get("https://m.51job.com/my/my51job.php");
@@ -383,10 +373,10 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 
 			threadSleepRandomTime(1000L, 3000L);
 
-			x.start("textarea").addAttribute("id", "intro");
+			xPathBuilder.start("textarea").addAttribute("id", "intro");
 			WebElement intentionDetailTextarea = null;
 			try {
-				intentionDetailTextarea = d.findElement(By.xpath(x.getXpath()));
+				intentionDetailTextarea = d.findElement(By.xpath(xPathBuilder.getXpath()));
 			} catch (Exception e) {
 				reportService.caseReportAppendContent(reportDTO, "无法找到简历简介编辑框");
 				return false;
@@ -432,8 +422,6 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 	}
 
 	private boolean catchWatchMe(WebDriver d, JsonReportOfCaseDTO reportDTO) {
-		XpathBuilderBO x = new XpathBuilderBO();
-
 		try {
 			try {
 				d.get("https://m.51job.com/my/whosawrsm.php");
@@ -443,16 +431,16 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 				reportService.caseReportAppendContent(reportDTO, "进入手机版 我的51job but timeout");
 			}
 
-			String companyLinkX = x.start("div").addAttribute("class", "new_l").findChild("a", 1).getXpath();
-			String companyNameX = x.start("div").addAttribute("class", "new_l").findChild("a", 1).findChild("p")
+			String companyLinkX = xPathBuilder.start("div").addAttribute("class", "new_l").findChild("a", 1).getXpath();
+			String companyNameX = xPathBuilder.start("div").addAttribute("class", "new_l").findChild("a", 1).findChild("p")
 					.addAttribute("class", "gs").getXpath();
-			String resumeNameX = x.start("div").addAttribute("class", "new_l").findChild("a", 1).findChild("div")
+			String resumeNameX = xPathBuilder.start("div").addAttribute("class", "new_l").findChild("a", 1).findChild("div")
 					.addAttribute("class", "ms").findChild("b").findChild("span").getXpath();
-			String likelyX = x.start("div").addAttribute("class", "new_l").findChild("a", 1).findChild("div")
+			String likelyX = xPathBuilder.start("div").addAttribute("class", "new_l").findChild("a", 1).findChild("div")
 					.addAttribute("class", "ms").findChild("p").addAttribute("class", "lk").findChild("object")
 					.findChild("a").findChild("span") // class="s4"
 					.getXpath();
-			String watchTimeX = x.start("div").addAttribute("class", "new_l").findChild("a", 1).findChild("div")
+			String watchTimeX = xPathBuilder.start("div").addAttribute("class", "new_l").findChild("a", 1).findChild("div")
 					.addAttribute("class", "ms").findChild("p").addAttribute("class", "lk").findChild("em") // 查看时间:01-06
 																											// 10:39
 					.getXpath();
