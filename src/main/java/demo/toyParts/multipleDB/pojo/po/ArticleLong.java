@@ -11,7 +11,7 @@ public class ArticleLong {
 
     private String articleTitle;
 
-    private String path;
+    private String filePath;
 
     private LocalDateTime createTime;
 
@@ -63,12 +63,12 @@ public class ArticleLong {
         this.articleTitle = articleTitle == null ? null : articleTitle.trim();
     }
 
-    public String getPath() {
-        return path;
+    public String getFilePath() {
+        return filePath;
     }
 
-    public void setPath(String path) {
-        this.path = path == null ? null : path.trim();
+    public void setFilePath(String filePath) {
+        this.filePath = filePath == null ? null : filePath.trim();
     }
 
     public LocalDateTime getCreateTime() {
