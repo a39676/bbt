@@ -15,6 +15,7 @@ import at.screenshot.pojo.constant.ScreenshotConstant;
 import at.screenshot.pojo.dto.TakeScreenshotSaveDTO;
 import at.screenshot.pojo.result.ScreenshotSaveResult;
 import at.screenshot.service.ScreenshotService;
+import at.xpath.pojo.bo.XpathBuilderBO;
 import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
 import autoTest.report.service.ATJsonReportService;
 import demo.autoTestBase.testEvent.pojo.constant.TestEventOptionConstant;
@@ -38,6 +39,8 @@ public abstract class SeleniumCommonService extends CommonService {
 	@Autowired
 	private FileUtilCustom ioUtil;
 	@Autowired
+	protected XpathBuilderBO xPathBuilder;
+	@Autowired
 	protected ATJsonReportService reportService;
 	@Autowired
 	protected ImageInteractionService imageInteractionService;
@@ -57,7 +60,7 @@ public abstract class SeleniumCommonService extends CommonService {
 	protected SeleniumCaptchaHandleService captchaHandleService;
 	
 	protected JSONObject tryFindParam(Long testEventId) {
-		String paramStr = redisConnectService.getValByName(TestEventOptionConstant.TEST_EVENT_REDIS_PARAM_KEY_PREFIX + "_" + testEventId);
+		String paramStr = redisOriginalConnectService.getValByName(TestEventOptionConstant.TEST_EVENT_REDIS_PARAM_KEY_PREFIX + "_" + testEventId);
 		if(StringUtils.isNotBlank(paramStr)) {
 			try {
 				return JSONObject.fromObject(paramStr);

@@ -28,7 +28,7 @@ public class CryptoCompareServiceImpl extends AutomationTestCommonService implem
 		CryptoCoinDailyDataResult r = new CryptoCoinDailyDataResult();
 
 		CryptoCoinFlowType flowType = CryptoCoinFlowType.DAILY_DATA;
-		JsonReportOfCaseDTO caseReport = buildCaseReportDTO(flowType.getFlowName());
+		JsonReportOfCaseDTO caseReport = initCaseReportDTO(flowType.getFlowName());
 
 		// example:
 		// https://min-api.cryptocompare.com/data/v2/histoday?fsym=BTC&tsym=USD&limit=10

@@ -1,6 +1,8 @@
 package demo.autoTestBase.testEvent.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,18 +31,21 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	@Autowired
 	private CryptoCoinPrefixServiceImpl cryptoCoinPrefixService;
 
-
 	@Override
 	public TestEventBO reciveTestEventAndRun(AutomationTestInsertEventDTO dto) {
 		if (dto == null) {
 			return new TestEventBO();
 		}
-
-		if (existsRuningEvent()) {
+		
+		TestEventBO tbo = null;
+		
+		if(checkIsFailLimitEvent(dto)) {
 			return new TestEventBO();
 		}
 
-		TestEventBO tbo = null;
+		if (canInsertRuningEvent()) {
+			return new TestEventBO();
+		}
 
 		if (TestModuleType.ATDemo.getId().equals(dto.getTestModuleType())) {
 			tbo = bingDemoPrefixService.receiveAndBuildTestEventBO(dto);
@@ -52,6 +57,9 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 
 		tbo.setEndTime(LocalDateTime.now());
 		tbo = runEvent(tbo);
+		if(!tbo.isPass()) {
+			markFailedEvent(tbo.getEventId());
+		}
 		
 		return tbo;
 	}
@@ -99,8 +107,47 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	}
 
 	@Override
-	public void fixRuningEventStatusManual() {
-		redisConnectService.setValByName(runningEventRedisKey, "false");
+	public void fixRuningEventStatusByManual() {
+		fixRuningEventStatus();
+	}
+	
+	@Override
+	public List<String> getRunningEventNameList() {
+		return super.getRunningEventList();
 	}
 
+	private void markFailedEvent(Long eventId) {
+		if (constantService.getFailedTestResultMap().containsKey(eventId)) {
+			constantService.getFailedTestResultMap().get(eventId).add(LocalDateTime.now());
+		} else {
+			constantService.getFailedTestResultMap().put(eventId, Arrays.asList(LocalDateTime.now()));
+		}
+	}
+	
+	private boolean checkIsFailLimitEvent(AutomationTestInsertEventDTO dto) {
+		Long eventId = dto.getTestEventId();
+		if (!constantService.getFailedTestResultMap().containsKey(eventId)) {
+			return false;
+		}
+		
+		int failCcounting = constantService.getFailedTestResultMap().get(eventId).size();
+		
+		return constantService.getEventFailLimitCounting() <= failCcounting;
+	}
+	
+	@Override
+	public void cleanExpiredFailEventCounting() {
+		List<LocalDateTime> tmpTimeList = null;
+		LocalDateTime limitLiveTime = LocalDateTime.now().minusMinutes(constantService.getFailCountLiveMinutes());
+		
+		for(Long key : constantService.getFailedTestResultMap().keySet()) {
+			tmpTimeList = constantService.getFailedTestResultMap().get(key);
+			for(int i = 0; i < tmpTimeList.size(); i++) {
+				if(tmpTimeList.get(i).isBefore(limitLiveTime)) {
+					tmpTimeList.remove(i);
+					i--;
+				}
+			}
+		}
+	}
 }

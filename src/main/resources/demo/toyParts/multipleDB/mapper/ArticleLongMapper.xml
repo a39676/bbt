@@ -6,7 +6,7 @@
     <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="channel_id" jdbcType="BIGINT" property="channelId" />
     <result column="article_title" jdbcType="VARCHAR" property="articleTitle" />
-    <result column="path" jdbcType="VARCHAR" property="path" />
+    <result column="file_path" jdbcType="VARCHAR" property="filePath" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="edit_time" jdbcType="TIMESTAMP" property="editTime" />
     <result column="edit_of" jdbcType="BIGINT" property="editOf" />
@@ -76,8 +76,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    article_id, user_id, channel_id, article_title, path, create_time, edit_time, edit_of, 
-    edit_count, edit_by, is_delete, is_pass, is_edited, is_reject
+    article_id, user_id, channel_id, article_title, file_path, create_time, edit_time, 
+    edit_of, edit_count, edit_by, is_delete, is_pass, is_edited, is_reject
   </sql>
   <select id="selectByExample" parameterType="demo.toyParts.multipleDB.pojo.po.ArticleLongExample" resultMap="BaseResultMap">
     select
@@ -111,12 +111,12 @@
   </delete>
   <insert id="insert" parameterType="demo.toyParts.multipleDB.pojo.po.ArticleLong">
     insert into article_long (article_id, user_id, channel_id, 
-      article_title, path, create_time, 
+      article_title, file_path, create_time, 
       edit_time, edit_of, edit_count, 
       edit_by, is_delete, is_pass, is_edited, 
       is_reject)
     values (#{articleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{channelId,jdbcType=BIGINT}, 
-      #{articleTitle,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{articleTitle,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{editTime,jdbcType=TIMESTAMP}, #{editOf,jdbcType=BIGINT}, #{editCount,jdbcType=INTEGER}, 
       #{editBy,jdbcType=BIGINT}, #{isDelete,jdbcType=BIT}, #{isPass,jdbcType=BIT}, #{isEdited,jdbcType=BIT}, 
       #{isReject,jdbcType=BIT})
@@ -136,8 +136,8 @@
       <if test="articleTitle != null">
         article_title,
       </if>
-      <if test="path != null">
-        path,
+      <if test="filePath != null">
+        file_path,
       </if>
       <if test="createTime != null">
         create_time,
@@ -180,8 +180,8 @@
       <if test="articleTitle != null">
         #{articleTitle,jdbcType=VARCHAR},
       </if>
-      <if test="path != null">
-        #{path,jdbcType=VARCHAR},
+      <if test="filePath != null">
+        #{filePath,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -233,8 +233,8 @@
       <if test="record.articleTitle != null">
         article_title = #{record.articleTitle,jdbcType=VARCHAR},
       </if>
-      <if test="record.path != null">
-        path = #{record.path,jdbcType=VARCHAR},
+      <if test="record.filePath != null">
+        file_path = #{record.filePath,jdbcType=VARCHAR},
       </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -274,7 +274,7 @@
       user_id = #{record.userId,jdbcType=BIGINT},
       channel_id = #{record.channelId,jdbcType=BIGINT},
       article_title = #{record.articleTitle,jdbcType=VARCHAR},
-      path = #{record.path,jdbcType=VARCHAR},
+      file_path = #{record.filePath,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       edit_time = #{record.editTime,jdbcType=TIMESTAMP},
       edit_of = #{record.editOf,jdbcType=BIGINT},
@@ -300,8 +300,8 @@
       <if test="articleTitle != null">
         article_title = #{articleTitle,jdbcType=VARCHAR},
       </if>
-      <if test="path != null">
-        path = #{path,jdbcType=VARCHAR},
+      <if test="filePath != null">
+        file_path = #{filePath,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -338,7 +338,7 @@
     set user_id = #{userId,jdbcType=BIGINT},
       channel_id = #{channelId,jdbcType=BIGINT},
       article_title = #{articleTitle,jdbcType=VARCHAR},
-      path = #{path,jdbcType=VARCHAR},
+      file_path = #{filePath,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       edit_time = #{editTime,jdbcType=TIMESTAMP},
       edit_of = #{editOf,jdbcType=BIGINT},
@@ -350,4 +350,19 @@
       is_reject = #{isReject,jdbcType=BIT}
     where article_id = #{articleId,jdbcType=BIGINT}
   </update>
+  <select id="selectByExampleWithRowbounds" parameterType="demo.toyParts.multipleDB.pojo.po.ArticleLongExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from article_long
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+
 </mapper>

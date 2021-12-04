@@ -52,7 +52,7 @@ public class SystemConstantService extends CommonService {
 	}
 
 	private String getSysValByName(String constantName) {
-		String val = redisConnectService.getValByName(constantName);
+		String val = redisOriginalConnectService.getValByName(constantName);
 
 		if (!val.equals("")) {
 			return val;

@@ -1,4 +1,3 @@
-package demo.scriptCore.scheduleClawing.service.impl;
 //package demo.clawing.scheduleClawing.service.impl;
 //
 //import java.io.File;
@@ -74,10 +73,9 @@ package demo.scriptCore.scheduleClawing.service.impl;
 //				jsonReporter.appendContent(reportDTO, "get home page but timeout");
 //			}
 //			
-//			XpathBuilderBO x = new XpathBuilderBO();
-//			x.start("div").addClass("post-info");
+//			xPathBuilder.start("div").addClass("post-info");
 //			
-//			WebElement targetDiv = d.findElement(By.xpath(x.getXpath()));
+//			WebElement targetDiv = d.findElement(By.xpath(xPathBuilder.getXpath()));
 //			
 //			targetDiv.click();
 //

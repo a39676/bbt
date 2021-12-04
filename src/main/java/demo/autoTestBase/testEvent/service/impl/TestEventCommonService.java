@@ -1,6 +1,7 @@
 package demo.autoTestBase.testEvent.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,27 +16,38 @@ public abstract class TestEventCommonService extends CommonService {
 	protected FileUtilCustom fileUtil;
 	@Autowired
 	protected AutomationTestConstantService constantService;
-	
+
 	protected String runningEventRedisKey = "runningEvent";
 
 	protected void startEvent(TestEventBO te) {
 		te.setStartTime(LocalDateTime.now());
-		redisConnectService.setValByName(runningEventRedisKey, "true");
+		redisHashConnectService.setValByName(runningEventRedisKey, String.valueOf(te.getEventId()), te.getFlowName());
+		if (te.getEventId() == null) {
+			log.error("Get null event ID, flow name: " + te.getFlowName());
+		}
 	}
-	
+
 	protected CommonResult endEvent(TestEventBO te) {
-		redisConnectService.setValByName(runningEventRedisKey, "false");
+		redisHashConnectService.deleteValByName(runningEventRedisKey, String.valueOf(te.getEventId()));
 		CommonResult endEventResult = new CommonResult();
 		endEventResult.setIsSuccess();
 		return endEventResult;
 	}
-	
+
 	protected boolean existsRuningEvent() {
-		String runningEventStatus = redisConnectService.getValByName(runningEventRedisKey);
-		if("false".equals(runningEventStatus)) {
-			return false;
-		}
-		return true;
+		return redisHashConnectService.getSize(runningEventRedisKey) > 0;
 	}
 
+	protected boolean canInsertRuningEvent() {
+		return redisHashConnectService.getSize(runningEventRedisKey) < constantService.getLimitOfRunningInTheSameTime();
+	}
+	
+	protected List<String> getRunningEventList() {
+		return redisHashConnectService.getValsByName(runningEventRedisKey);
+		
+	}
+
+	protected void fixRuningEventStatus() {
+		redisHashConnectService.deleteValByName(runningEventRedisKey);
+	}
 }

@@ -7,6 +7,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import demo.autoTestBase.testEvent.mq.producer.HeartBeatProducer;
+import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.base.system.mapper.BaseMapper;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.task.service.TaskToolService;
@@ -26,6 +27,9 @@ public class TaskToolServiceImpl implements TaskToolService {
 
 	@Autowired
 	private BaseMapper baseMapper;
+	
+	@Autowired
+	protected TestEventService testEventService;
 
 //	@Scheduled(cron="0 */30 * * * ?")   //每30分钟执行一次
 //	@Scheduled(cron="40 49 23 * * *") // 每天23:49:40执行
@@ -50,5 +54,12 @@ public class TaskToolServiceImpl implements TaskToolService {
 	public void sendHeartBeat() {
 		heartBeatProducer.send();
 	}
+	
+	@Scheduled(fixedRate = 1000L * 60 * 10)
+	public void cleanExpiredFailEventCounting() {
+		testEventService.cleanExpiredFailEventCounting();
+	}
+	
+	
 
 }

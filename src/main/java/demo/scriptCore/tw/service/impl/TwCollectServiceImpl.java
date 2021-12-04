@@ -12,7 +12,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 
-import at.xpath.pojo.bo.XpathBuilderBO;
 import demo.scriptCore.tw.service.TwCollectService;
 import demo.selenium.service.impl.SeleniumCommonService;
 
@@ -37,10 +36,9 @@ public class TwCollectServiceImpl extends SeleniumCommonService implements TwCol
 
 	private void monsterCollectHandle(WebDriver d, String url) {
 		d.get(url);
-		XpathBuilderBO x = new XpathBuilderBO();
-		x.start("table").addAttribute("width", "675").addAttribute("border", "1").addAttribute("align", "center")
+		xPathBuilder.start("table").addAttribute("width", "675").addAttribute("border", "1").addAttribute("align", "center")
 				.addAttribute("cellspacing", "0").addAttribute("bordercolor", "#cc9966").findChild("tbody");
-		String targetTbodyPath = x.getXpath();
+		String targetTbodyPath = xPathBuilder.getXpath();
 
 		int trIndex = 1;
 
@@ -52,19 +50,19 @@ public class TwCollectServiceImpl extends SeleniumCommonService implements TwCol
 
 		boolean exceptionFlag = false;
 		while (!exceptionFlag) {
-			x.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 1);
+			xPathBuilder.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 1);
 			try {
-				nameTd = d.findElement(By.xpath(x.getXpath()));
+				nameTd = d.findElement(By.xpath(xPathBuilder.getXpath()));
 				tmpMonsterName = nameTd.getText();
 			} catch (Exception e) {
 				exceptionFlag = true;
 			}
 
 			if (!exceptionFlag) {
-				x.setXpath(targetTbodyPath).findChild("tr", trIndex + 1).findChild("td", 1).findChild("div")
+				xPathBuilder.setXpath(targetTbodyPath).findChild("tr", trIndex + 1).findChild("td", 1).findChild("div")
 						.findChild("img");
 				try {
-					tmpImg = d.findElement(By.xpath(x.getXpath()));
+					tmpImg = d.findElement(By.xpath(xPathBuilder.getXpath()));
 					tmpImageUrl = tmpImg.getAttribute("src");
 				} catch (Exception e) {
 					exceptionFlag = true;
@@ -125,11 +123,9 @@ public class TwCollectServiceImpl extends SeleniumCommonService implements TwCol
 
 	private void skillCollecting(WebDriver d, String url) {
 		d.get(url);
-		XpathBuilderBO x = new XpathBuilderBO();
+		xPathBuilder.start("table").addId("table1").findChild("tbody");
 
-		x.start("table").addId("table1").findChild("tbody");
-
-		String targetTBodyXpath = x.getXpath();
+		String targetTBodyXpath = xPathBuilder.getXpath();
 
 		boolean exceptionFlag = false;
 
@@ -139,24 +135,24 @@ public class TwCollectServiceImpl extends SeleniumCommonService implements TwCol
 		String tmpImageUrl = null;
 
 		for (int trIndex = 4; !exceptionFlag; trIndex += 1) {
-			x.setXpath(targetTBodyXpath).findChild("tr", trIndex);
+			xPathBuilder.setXpath(targetTBodyXpath).findChild("tr", trIndex);
 			try {
-				d.findElement(By.xpath(x.getXpath()));
+				d.findElement(By.xpath(xPathBuilder.getXpath()));
 			} catch (Exception e) {
 				exceptionFlag = true;
 				continue;
 			}
 
-			x.setXpath(targetTBodyXpath).findChild("tr", trIndex).findChild("td", 2);
+			xPathBuilder.setXpath(targetTBodyXpath).findChild("tr", trIndex).findChild("td", 2);
 			try {
-				tmpSkillNameTD = d.findElement(By.xpath(x.getXpath()));
+				tmpSkillNameTD = d.findElement(By.xpath(xPathBuilder.getXpath()));
 			} catch (Exception e) {
 				continue;
 			}
 
-			x.setXpath(targetTBodyXpath).findChild("tr", trIndex).findChild("td", 1).findChild("img");
+			xPathBuilder.setXpath(targetTBodyXpath).findChild("tr", trIndex).findChild("td", 1).findChild("img");
 			try {
-				tmpImg = d.findElement(By.xpath(x.getXpath()));
+				tmpImg = d.findElement(By.xpath(xPathBuilder.getXpath()));
 				tmpImageUrl = tmpImg.getAttribute("src");
 			} catch (Exception e) {
 				continue;
@@ -207,9 +203,8 @@ public class TwCollectServiceImpl extends SeleniumCommonService implements TwCol
 
 	private void equipmentCollectHandle(WebDriver d, String url, boolean itemNameFirst) {
 		d.get(url);
-		XpathBuilderBO x = new XpathBuilderBO();
-		x.start("table").addId("table1").findChild("tbody", 1);
-		String targetTbodyPath = x.getXpath();
+		xPathBuilder.start("table").addId("table1").findChild("tbody", 1);
+		String targetTbodyPath = xPathBuilder.getXpath();
 
 		int trIndex = 2;
 
@@ -222,9 +217,9 @@ public class TwCollectServiceImpl extends SeleniumCommonService implements TwCol
 		boolean exceptionFlag = false;
 		for (; !exceptionFlag; trIndex += 1) {
 
-			x.setXpath(targetTbodyPath).findChild("tr", trIndex);
+			xPathBuilder.setXpath(targetTbodyPath).findChild("tr", trIndex);
 			try {
-				d.findElement(By.xpath(x.getXpath()));
+				d.findElement(By.xpath(xPathBuilder.getXpath()));
 			} catch (Exception e) {
 				exceptionFlag = true;
 				continue;
@@ -232,12 +227,12 @@ public class TwCollectServiceImpl extends SeleniumCommonService implements TwCol
 
 			if (itemNameFirst) {
 				if (tmpName == null) {
-					x.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 2);
+					xPathBuilder.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 2);
 					try {
-						tmpNameElement = d.findElement(By.xpath(x.getXpath()));
+						tmpNameElement = d.findElement(By.xpath(xPathBuilder.getXpath()));
 						if ("赌博".equals(tmpNameElement.getText())) {
-							x.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 1);
-							tmpNameElement = d.findElement(By.xpath(x.getXpath()));
+							xPathBuilder.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 1);
+							tmpNameElement = d.findElement(By.xpath(xPathBuilder.getXpath()));
 							tmpName = tmpNameElement.getText();
 						}
 					} catch (Exception e) {
@@ -246,17 +241,17 @@ public class TwCollectServiceImpl extends SeleniumCommonService implements TwCol
 					continue;
 
 				} else {
-					x.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 1).findChild("img");
+					xPathBuilder.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 1).findChild("img");
 					try {
-						tmpImg = d.findElement(By.xpath(x.getXpath()));
+						tmpImg = d.findElement(By.xpath(xPathBuilder.getXpath()));
 						tmpImageUrl = tmpImg.getAttribute("src");
 						System.out.println("get: " + tmpImageUrl);
 						download(tmpImageUrl, tmpName);
 						tmpName = null;
 					} catch (Exception e) {
-						x.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 1).findChild("div").findChild("img");
+						xPathBuilder.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 1).findChild("div").findChild("img");
 						try {
-							tmpImg = d.findElement(By.xpath(x.getXpath()));
+							tmpImg = d.findElement(By.xpath(xPathBuilder.getXpath()));
 							tmpImageUrl = tmpImg.getAttribute("src");
 							System.out.println("get: " + tmpImageUrl);
 							download(tmpImageUrl, tmpName);
@@ -270,21 +265,21 @@ public class TwCollectServiceImpl extends SeleniumCommonService implements TwCol
 			} else {
 
 				if (tmpImageUrl == null) {
-					x.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 1).findChild("img");
+					xPathBuilder.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 1).findChild("img");
 					try {
-						tmpImg = d.findElement(By.xpath(x.getXpath()));
+						tmpImg = d.findElement(By.xpath(xPathBuilder.getXpath()));
 						tmpImageUrl = tmpImg.getAttribute("src");
 					} catch (Exception e) {
 						continue;
 					}
 
 				} else {
-					x.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 2);
+					xPathBuilder.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 2);
 					try {
-						tmpNameElement = d.findElement(By.xpath(x.getXpath()));
+						tmpNameElement = d.findElement(By.xpath(xPathBuilder.getXpath()));
 						if ("合成".equals(tmpNameElement.getText())) {
-							x.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 1);
-							tmpNameElement = d.findElement(By.xpath(x.getXpath()));
+							xPathBuilder.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 1);
+							tmpNameElement = d.findElement(By.xpath(xPathBuilder.getXpath()));
 							tmpName = tmpNameElement.getText();
 							download(tmpImageUrl, tmpName);
 							tmpImageUrl = null;
@@ -309,9 +304,8 @@ public class TwCollectServiceImpl extends SeleniumCommonService implements TwCol
 
 	private void equipmentCollectHandleImgOnly(WebDriver d, String url) {
 		d.get(url);
-		XpathBuilderBO x = new XpathBuilderBO();
-		x.start("table").addId("table1").findChild("tbody", 1);
-		String targetTbodyPath = x.getXpath();
+		xPathBuilder.start("table").addId("table1").findChild("tbody", 1);
+		String targetTbodyPath = xPathBuilder.getXpath();
 
 		int trIndex = 2;
 
@@ -320,17 +314,17 @@ public class TwCollectServiceImpl extends SeleniumCommonService implements TwCol
 		boolean exceptionFlag = false;
 		for (; !exceptionFlag; trIndex += 1) {
 
-			x.setXpath(targetTbodyPath).findChild("tr", trIndex);
+			xPathBuilder.setXpath(targetTbodyPath).findChild("tr", trIndex);
 			try {
-				d.findElement(By.xpath(x.getXpath()));
+				d.findElement(By.xpath(xPathBuilder.getXpath()));
 			} catch (Exception e) {
 				exceptionFlag = true;
 				continue;
 			}
 
-			x.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 1).findChild("img");
+			xPathBuilder.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 1).findChild("img");
 			try {
-				tmpImg = d.findElement(By.xpath(x.getXpath()));
+				tmpImg = d.findElement(By.xpath(xPathBuilder.getXpath()));
 				download(tmpImg.getAttribute("src"), String.valueOf(snowFlake.getNextId()));
 			} catch (Exception e) {
 				continue;
@@ -350,9 +344,8 @@ public class TwCollectServiceImpl extends SeleniumCommonService implements TwCol
 
 	private void itemCollectHandle(WebDriver d, String url, boolean togetherTD) {
 		d.get(url);
-		XpathBuilderBO x = new XpathBuilderBO();
-		x.start("table").addId("table2").findChild("tbody", 1);
-		String targetTbodyPath = x.getXpath();
+		xPathBuilder.start("table").addId("table2").findChild("tbody", 1);
+		String targetTbodyPath = xPathBuilder.getXpath();
 
 		int trIndex = 2;
 
@@ -367,9 +360,9 @@ public class TwCollectServiceImpl extends SeleniumCommonService implements TwCol
 		boolean exceptionFlag = false;
 		for (; !exceptionFlag; trIndex += 1) {
 
-			x.setXpath(targetTbodyPath).findChild("tr", trIndex);
+			xPathBuilder.setXpath(targetTbodyPath).findChild("tr", trIndex);
 			try {
-				d.findElement(By.xpath(x.getXpath()));
+				d.findElement(By.xpath(xPathBuilder.getXpath()));
 			} catch (Exception e) {
 				exceptionFlag = true;
 				continue;
@@ -377,14 +370,14 @@ public class TwCollectServiceImpl extends SeleniumCommonService implements TwCol
 
 			if (togetherTD) {
 				try {
-					x.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 1).findChild("img");
-					tmpImg = d.findElement(By.xpath(x.getXpath()));
+					xPathBuilder.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 1).findChild("img");
+					tmpImg = d.findElement(By.xpath(xPathBuilder.getXpath()));
 					tmpImageUrl = tmpImg.getAttribute("src");
 					
 				} catch (Exception e) {
-					x.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 1).findChild().findChild("img");
+					xPathBuilder.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 1).findChild().findChild("img");
 					try {
-						tmpImg = d.findElement(By.xpath(x.getXpath()));
+						tmpImg = d.findElement(By.xpath(xPathBuilder.getXpath()));
 						tmpImageUrl = tmpImg.getAttribute("src");
 					} catch (Exception e1) {
 						continue;
@@ -392,8 +385,8 @@ public class TwCollectServiceImpl extends SeleniumCommonService implements TwCol
 				}
 				
 				try {
-					x.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 1);
-					tmpNameElement = d.findElement(By.xpath(x.getXpath()));
+					xPathBuilder.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 1);
+					tmpNameElement = d.findElement(By.xpath(xPathBuilder.getXpath()));
 					tmpName = tmpNameElement.getText();
 					if(itemNameSet.contains(tmpName)) {
 						tmpName = String.valueOf(snowFlake.getNextId());
@@ -406,14 +399,14 @@ public class TwCollectServiceImpl extends SeleniumCommonService implements TwCol
 				download(tmpImageUrl, tmpName);
 				
 			} else {
-				x.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 2).findChild("img");
+				xPathBuilder.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 2).findChild("img");
 				try {
-					tmpImg = d.findElement(By.xpath(x.getXpath()));
+					tmpImg = d.findElement(By.xpath(xPathBuilder.getXpath()));
 					tmpImageUrl = tmpImg.getAttribute("src");
 					System.out.println("get: " + tmpImageUrl);
 					
-					x.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 1);
-					tmpNameElement = d.findElement(By.xpath(x.getXpath()));
+					xPathBuilder.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 1);
+					tmpNameElement = d.findElement(By.xpath(xPathBuilder.getXpath()));
 					tmpName = tmpNameElement.getText();
 					
 					download(tmpImageUrl, tmpName);

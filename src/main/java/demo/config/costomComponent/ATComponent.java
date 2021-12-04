@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import at.screenshot.service.ScreenshotService;
 import at.tool.WebATToolService;
+import at.xpath.pojo.bo.XpathBuilderBO;
 import autoTest.report.service.ATJsonReportService;
 import autoTest.report.service.ATWordReportService;
 import autoTest.tess.service.Tess;
@@ -19,6 +20,11 @@ public class ATComponent {
 	@Bean
 	public ATWordReportService getReportService() {
 		return new ATWordReportService();
+	}
+	
+	@Bean
+	public XpathBuilderBO getXpathBuilderBO() {
+		return new XpathBuilderBO();
 	}
 	
 	@Bean

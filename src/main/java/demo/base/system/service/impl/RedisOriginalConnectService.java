@@ -8,23 +8,15 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.system.pojo.bo.SystemConstant;
-import demo.baseCommon.service.CommonService;
 import net.sf.json.JSONObject;
 import toolPack.ioHandle.FileUtilCustom;
 
-@Scope("singleton")
 @Service
-public class RedisConnectService extends CommonService {
-
-	@Autowired
-	private RedisTemplate<String, Object> redisTemplate;
+public class RedisOriginalConnectService extends RedisConnectCommonService {
 
 	public String getValByName(String constantName) {
 		if (StringUtils.isBlank(constantName)) {
@@ -58,14 +50,6 @@ public class RedisConnectService extends CommonService {
 		Map<String, String> values = systemConstants.stream()
 				.collect(Collectors.toMap(SystemConstant::getConstantName, SystemConstant::getConstantValue));
 		redisTemplate.opsForValue().multiSet(values);
-	}
-
-	public void deleteValByName(String constantName) {
-		redisTemplate.delete(constantName);
-	}
-
-	public Boolean hasKey(String key) {
-		return redisTemplate.hasKey(key);
 	}
 
 	public CommonResult refreshRedisValueFromFile(String filePath) {

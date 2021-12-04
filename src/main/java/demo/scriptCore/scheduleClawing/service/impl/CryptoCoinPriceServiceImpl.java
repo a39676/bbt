@@ -31,7 +31,7 @@ public class CryptoCoinPriceServiceImpl extends AutomationTestCommonService impl
 	public TestEventBO cryptoCoinDailyDataAPI(TestEventBO tbo) {
 
 		CryptoCoinFlowType flowType = CryptoCoinFlowType.DAILY_DATA;
-		JsonReportOfCaseDTO caseReport = buildCaseReportDTO(flowType.getFlowName());
+		JsonReportOfCaseDTO caseReport = initCaseReportDTO(flowType.getFlowName());
 		
 		try {
 			if (StringUtils.isBlank(tbo.getParamStr())) {
