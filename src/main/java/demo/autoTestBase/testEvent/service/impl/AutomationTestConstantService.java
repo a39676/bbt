@@ -27,6 +27,7 @@ public class AutomationTestConstantService extends CommonService {
 	private Integer oldDataLiveLimitMonth = 3;
 	private Integer eventFailLimitCounting = 3;
 	private Integer failCountLiveMinutes = 30;
+	private Integer limitOfRunningInTheSameTime = 1;
 
 	private Map<Long, List<LocalDateTime>> failedTestResultMap = new HashMap<>();
 
@@ -69,13 +70,20 @@ public class AutomationTestConstantService extends CommonService {
 		this.eventFailLimitCounting = eventFailLimitCounting;
 	}
 
-	
 	public Integer getFailCountLiveMinutes() {
 		return failCountLiveMinutes;
 	}
 
 	public void setFailCountLiveMinutes(Integer failCountLiveMinutes) {
 		this.failCountLiveMinutes = failCountLiveMinutes;
+	}
+
+	public Integer getLimitOfRunningInTheSameTime() {
+		return limitOfRunningInTheSameTime;
+	}
+
+	public void setLimitOfRunningInTheSameTime(Integer limitOfRunningInTheSameTime) {
+		this.limitOfRunningInTheSameTime = limitOfRunningInTheSameTime;
 	}
 
 	public Map<Long, List<LocalDateTime>> getFailedTestResultMap() {
@@ -88,10 +96,11 @@ public class AutomationTestConstantService extends CommonService {
 
 	@Override
 	public String toString() {
-		return "AutomationTestConstantService [breakFlag=" + breakFlag + ", oldDataLiveLimitMonth="
-				+ oldDataLiveLimitMonth + ", eventFailLimitCounting=" + eventFailLimitCounting
-				+ ", failCountLiveMinutes=" + failCountLiveMinutes + ", failedTestResultMap=" + failedTestResultMap
-				+ "]";
+		return "AutomationTestConstantService [optionFilePath=" + optionFilePath + ", breakFlag=" + breakFlag
+				+ ", oldDataLiveLimitMonth=" + oldDataLiveLimitMonth + ", eventFailLimitCounting="
+				+ eventFailLimitCounting + ", failCountLiveMinutes=" + failCountLiveMinutes
+				+ ", limitOfRunningInTheSameTime=" + limitOfRunningInTheSameTime + ", failedTestResultMap="
+				+ failedTestResultMap + "]";
 	}
 
 }

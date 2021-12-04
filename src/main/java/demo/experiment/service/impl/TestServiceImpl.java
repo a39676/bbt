@@ -2,14 +2,14 @@ package demo.experiment.service.impl;
 
 import org.springframework.stereotype.Service;
 
-import demo.baseCommon.service.CommonService;
+import demo.autoTestBase.testEvent.service.impl.TestEventCommonService;
 import demo.config.costomAnnotation.CustomAfterAnnotation;
 import demo.config.costomAnnotation.CustomBeforeAnnotation;
 import demo.config.costomAnnotation.LogExecutionTime;
 import demo.experiment.service.TestService;
 
 @Service
-public class TestServiceImpl extends CommonService implements TestService {
+public class TestServiceImpl extends TestEventCommonService implements TestService {
 
 	
 	@Override

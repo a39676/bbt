@@ -47,12 +47,12 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 		JsonReportOfCaseDTO caseReport = initCaseReportDTO(caseType.getFlowName());
 
 		String wuYiRunCountKey = "wuYiRunCountKey";
-		String runCountStr = redisConnectService.getValByName(wuYiRunCountKey);
+		String runCountStr = redisOriginalConnectService.getValByName(wuYiRunCountKey);
 		int runCount = 1;
 		try {
 			runCount = Integer.parseInt(runCountStr);
 		} catch (Exception e) {
-			redisConnectService.setValByName(wuYiRunCountKey, "1");
+			redisOriginalConnectService.setValByName(wuYiRunCountKey, "1");
 		}
 
 		try {
@@ -109,7 +109,7 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 				reportService.caseReportAppendContent(caseReport, "暂不新简历");
 			}
 
-			redisConnectService.setValByName(wuYiRunCountKey, String.valueOf(runCount + 1));
+			redisOriginalConnectService.setValByName(wuYiRunCountKey, String.valueOf(runCount + 1));
 			reportService.caseReportAppendContent(caseReport, "更新 redis 计数: " + (runCount));
 
 			r.setIsSuccess();

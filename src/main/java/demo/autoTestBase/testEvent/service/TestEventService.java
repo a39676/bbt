@@ -1,5 +1,7 @@
 package demo.autoTestBase.testEvent.service;
 
+import java.util.List;
+
 import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 
@@ -12,8 +14,10 @@ public interface TestEventService {
 
 	boolean checkExistsRuningEvent();
 
-	void fixRuningEventStatusManual();
+	void fixRuningEventStatusByManual();
 
 	void cleanExpiredFailEventCounting();
+
+	List<String> getRunningEventNameList();
 
 }

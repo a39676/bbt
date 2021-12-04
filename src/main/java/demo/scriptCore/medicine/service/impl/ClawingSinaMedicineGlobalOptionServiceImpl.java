@@ -23,7 +23,7 @@ public class ClawingSinaMedicineGlobalOptionServiceImpl extends SeleniumCommonSe
 	
 	@Override
 	public String getMedicineDocumentDir() {
-		String medicineDocumentFolderPath = redisConnectService.getValByName(medicineDocumentFolder);
+		String medicineDocumentFolderPath = redisOriginalConnectService.getValByName(medicineDocumentFolder);
 
 		if (StringUtils.isNotBlank(medicineDocumentFolderPath)) {
 			ioUtil.checkFolderExists(medicineDocumentFolderPath);
@@ -40,7 +40,7 @@ public class ClawingSinaMedicineGlobalOptionServiceImpl extends SeleniumCommonSe
 		SystemConstant constant = new SystemConstant();
 		constant.setConstantName(medicineDocumentFolder);
 		constant.setConstantValue(medicineDocumentFolderPath);
-		redisConnectService.setValByName(constant);
+		redisOriginalConnectService.setValByName(constant);
 
 		ioUtil.checkFolderExists(medicineDocumentFolderPath);
 		return medicineDocumentFolderPath;

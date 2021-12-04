@@ -43,7 +43,7 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 			return new TestEventBO();
 		}
 
-		if (existsRuningEvent()) {
+		if (canInsertRuningEvent()) {
 			return new TestEventBO();
 		}
 
@@ -107,8 +107,13 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	}
 
 	@Override
-	public void fixRuningEventStatusManual() {
-		redisConnectService.setValByName(runningEventRedisKey, "false");
+	public void fixRuningEventStatusByManual() {
+		fixRuningEventStatus();
+	}
+	
+	@Override
+	public List<String> getRunningEventNameList() {
+		return super.getRunningEventList();
 	}
 
 	private void markFailedEvent(Long eventId) {
