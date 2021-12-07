@@ -1,8 +1,5 @@
 ﻿testEvent
 
-	testEvent
-		需提供修改 AutomationTestConstantService.breakFlag 的UI / API
-		
     改变思路:
     	crypto coin 
 			bbt 服务新增逻辑: 同一个任务接收多次, 且因异常而执行失败时, 直接返回执行失败, 防止MQ队列拥堵

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
+import autoTest.testEvent.pojo.result.AutomationTestCaseResult;
+import autoTest.testEvent.pojo.type.AutomationTestFlowResultType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.service.TestEventService;
@@ -65,11 +67,17 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	}
 
 	private TestEventBO runEvent(TestEventBO event) {
+		TestEventBO runResult = null;
 		if (constantService.getBreakFlag()) {
-			return new TestEventBO();
+			runResult = new TestEventBO();
+			AutomationTestCaseResult caseResult = new AutomationTestCaseResult();
+			caseResult.setResultType(AutomationTestFlowResultType.BREAK_BY_FLAG);
+			caseResult.setCaseName("Running break");
+			runResult.getCaseResultList().add(caseResult);
+			return runResult;
 		}
 
-		TestEventBO runResult = null;
+		
 		if (event.getAppointment() == null || event.getAppointment().isBefore(LocalDateTime.now())) {
 			startEvent(event);
 			try {
@@ -149,5 +157,11 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 				}
 			}
 		}
+	}
+
+	@Override
+	public Boolean setBreakFlag(Integer flag) {
+		constantService.setBreakFlag("1".equals(String.valueOf(flag)));
+		return constantService.getBreakFlag();
 	}
 }
