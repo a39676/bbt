@@ -20,4 +20,6 @@ public interface TestEventService {
 
 	List<String> getRunningEventNameList();
 
+	Boolean setBreakFlag(Integer flag);
+
 }

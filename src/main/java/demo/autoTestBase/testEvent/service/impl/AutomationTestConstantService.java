@@ -2,6 +2,7 @@ package demo.autoTestBase.testEvent.service.impl;
 
 import java.io.File;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,6 +93,16 @@ public class AutomationTestConstantService extends CommonService {
 
 	public void setFailedTestResultMap(Map<Long, List<LocalDateTime>> failedTestResultMap) {
 		this.failedTestResultMap = failedTestResultMap;
+	}
+	
+	public void addFailedTestResult(Long eventId) {
+		if (failedTestResultMap.containsKey(eventId)) {
+			failedTestResultMap.get(eventId).add(LocalDateTime.now());
+		} else {
+			List<LocalDateTime> list = new ArrayList<>();
+			list.add(LocalDateTime.now());
+			failedTestResultMap.put(eventId, list);
+		}
 	}
 
 	@Override
