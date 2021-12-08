@@ -1,7 +1,6 @@
 package demo.autoTestBase.testEvent.service.impl;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +59,7 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		tbo.setEndTime(LocalDateTime.now());
 		tbo = runEvent(tbo);
 		if(!tbo.isPass()) {
-			markFailedEvent(tbo.getEventId());
+			constantService.addFailedTestResult(tbo.getEventId());
 		}
 		
 		return tbo;
@@ -124,14 +123,6 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		return super.getRunningEventList();
 	}
 
-	private void markFailedEvent(Long eventId) {
-		if (constantService.getFailedTestResultMap().containsKey(eventId)) {
-			constantService.getFailedTestResultMap().get(eventId).add(LocalDateTime.now());
-		} else {
-			constantService.getFailedTestResultMap().put(eventId, Arrays.asList(LocalDateTime.now()));
-		}
-	}
-	
 	private boolean checkIsFailLimitEvent(AutomationTestInsertEventDTO dto) {
 		Long eventId = dto.getTestEventId();
 		if (!constantService.getFailedTestResultMap().containsKey(eventId)) {
