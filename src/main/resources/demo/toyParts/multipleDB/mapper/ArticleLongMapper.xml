@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="demo.toyParts.multipleDB.mapper.ArticleLongMapper">
+
   <resultMap id="BaseResultMap" type="demo.toyParts.multipleDB.pojo.po.ArticleLong">
     <id column="article_id" jdbcType="BIGINT" property="articleId" />
     <result column="user_id" jdbcType="BIGINT" property="userId" />
@@ -17,6 +18,7 @@
     <result column="is_edited" jdbcType="BIT" property="isEdited" />
     <result column="is_reject" jdbcType="BIT" property="isReject" />
   </resultMap>
+
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -76,7 +78,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    article_id, user_id, channel_id, article_title, file_path, create_time, edit_time, 
+    article_id, user_id, channel_id, article_title, file_path, create_time, edit_time,
     edit_of, edit_count, edit_by, is_delete, is_pass, is_edited, is_reject
   </sql>
   <select id="selectByExample" parameterType="demo.toyParts.multipleDB.pojo.po.ArticleLongExample" resultMap="BaseResultMap">
@@ -94,7 +96,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from article_long
     where article_id = #{articleId,jdbcType=BIGINT}
@@ -110,15 +112,15 @@
     </if>
   </delete>
   <insert id="insert" parameterType="demo.toyParts.multipleDB.pojo.po.ArticleLong">
-    insert into article_long (article_id, user_id, channel_id, 
-      article_title, file_path, create_time, 
-      edit_time, edit_of, edit_count, 
-      edit_by, is_delete, is_pass, is_edited, 
+    insert into article_long (article_id, user_id, channel_id,
+      article_title, file_path, create_time,
+      edit_time, edit_of, edit_count,
+      edit_by, is_delete, is_pass, is_edited,
       is_reject)
-    values (#{articleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{channelId,jdbcType=BIGINT}, 
-      #{articleTitle,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{editTime,jdbcType=TIMESTAMP}, #{editOf,jdbcType=BIGINT}, #{editCount,jdbcType=INTEGER}, 
-      #{editBy,jdbcType=BIGINT}, #{isDelete,jdbcType=BIT}, #{isPass,jdbcType=BIT}, #{isEdited,jdbcType=BIT}, 
+    values (#{articleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{channelId,jdbcType=BIGINT},
+      #{articleTitle,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+      #{editTime,jdbcType=TIMESTAMP}, #{editOf,jdbcType=BIGINT}, #{editCount,jdbcType=INTEGER},
+      #{editBy,jdbcType=BIGINT}, #{isDelete,jdbcType=BIT}, #{isPass,jdbcType=BIT}, #{isEdited,jdbcType=BIT},
       #{isReject,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="demo.toyParts.multipleDB.pojo.po.ArticleLong">
@@ -365,4 +367,15 @@
     </if>
   </select>
 
+  <select id="testMultipleDB" resultType="Long">
+  	select
+      count(*)
+    from
+      article_long
+    <where>
+      1=1
+      and is_delete = false
+      and create_time > #{targetTime}
+    </where>
+  </select>
 </mapper>

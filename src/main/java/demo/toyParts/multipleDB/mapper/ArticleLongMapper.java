@@ -1,5 +1,6 @@
 package demo.toyParts.multipleDB.mapper;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -29,4 +30,6 @@ public interface ArticleLongMapper {
 	int insert(ArticleLong record);
 
 	int insertSelective(ArticleLong record);
+	
+	Long testMultipleDB(LocalDateTime targetTime);
 }
