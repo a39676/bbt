@@ -44,7 +44,7 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 			return new TestEventBO();
 		}
 
-		if (canInsertRuningEvent()) {
+		if (!canInsertRuningEvent()) {
 			return new TestEventBO();
 		}
 
