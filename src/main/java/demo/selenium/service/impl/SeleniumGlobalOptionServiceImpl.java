@@ -18,7 +18,7 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 	private String winSeleniumWebDriverFolder = "d:/auxiliary/seleniumWebDriver";
 	private String linuxSeleniumWebDriverFolder = "/home/u2/seleniumWebDriver";
 
-	private String chromePath_win = winSeleniumWebDriverFolder + "/chromeDriver.exe";
+	private String chromePath_win = winSeleniumWebDriverFolder + "/chromedriver.exe";
 	private String chrome45Path_win = winSeleniumWebDriverFolder + "/chrome45Driver.exe";
 	private String chromePath_linux = linuxSeleniumWebDriverFolder + "/chromeDriver";
 	private String chrome45Path_linux = linuxSeleniumWebDriverFolder + "/chrome45Driver";

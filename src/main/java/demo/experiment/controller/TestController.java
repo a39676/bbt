@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import demo.baseCommon.controller.CommonController;
 import demo.experiment.pojo.constant.TestUrl;
 import demo.experiment.service.TestService;
+import demo.scriptCore.localClawing.service.HsbcService;
 
 @Controller
 @RequestMapping(value = { TestUrl.testRoot })
@@ -24,4 +25,14 @@ public class TestController extends CommonController {
 		return testService.testing("something");
 	}
 	
+	@Autowired
+	private HsbcService hsbcService;
+	
+	
+	@GetMapping(value = "/t1")
+	@ResponseBody
+	public String t1() {
+		hsbcService.weixinPreReg();
+		return "done";
+	}
 }
