@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
+import demo.base.system.service.impl.RedisHashConnectService;
+import demo.base.system.service.impl.RedisOriginalConnectService;
 import demo.baseCommon.service.CommonService;
 import toolPack.ioHandle.FileUtilCustom;
 
@@ -16,6 +18,10 @@ public abstract class TestEventCommonService extends CommonService {
 	protected FileUtilCustom fileUtil;
 	@Autowired
 	protected AutomationTestConstantService constantService;
+	@Autowired
+	protected RedisOriginalConnectService redisOriginalConnectService;
+	@Autowired
+	protected RedisHashConnectService redisHashConnectService;
 
 	protected String runningEventRedisKey = "runningEvent";
 

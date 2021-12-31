@@ -19,10 +19,10 @@ import at.xpath.pojo.bo.XpathBuilderBO;
 import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
 import autoTest.report.service.ATJsonReportService;
 import demo.autoTestBase.testEvent.pojo.constant.TestEventOptionConstant;
-import demo.autoTestBase.testEvent.service.TestEventService;
+import demo.base.system.service.impl.RedisHashConnectService;
+import demo.base.system.service.impl.RedisOriginalConnectService;
 import demo.baseCommon.service.CommonService;
 import demo.interaction.image.service.ImageInteractionService;
-import demo.selenium.service.SeleniumCaptchaHandleService;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.WebDriverService;
 import image.pojo.dto.ImageSavingTransDTO;
@@ -45,8 +45,6 @@ public abstract class SeleniumCommonService extends CommonService {
 	@Autowired
 	protected ImageInteractionService imageInteractionService;
 	@Autowired
-	protected TestEventService testEventService;
-	@Autowired
 	protected WebDriverService webDriverService;
 	@Autowired
 	protected AuxiliaryToolServiceImpl auxTool;
@@ -57,7 +55,9 @@ public abstract class SeleniumCommonService extends CommonService {
 	@Autowired
 	protected SeleniumGlobalOptionService globalOptionService;
 	@Autowired
-	protected SeleniumCaptchaHandleService captchaHandleService;
+	protected RedisOriginalConnectService redisOriginalConnectService;
+	@Autowired
+	protected RedisHashConnectService redisHashConnectService;
 	
 	protected JSONObject tryFindParam(Long testEventId) {
 		String paramStr = redisOriginalConnectService.getValByName(TestEventOptionConstant.TEST_EVENT_REDIS_PARAM_KEY_PREFIX + "_" + testEventId);

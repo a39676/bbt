@@ -6,6 +6,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import demo.autoTestBase.testEvent.service.impl.AutomationTestConstantService;
+import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.service.CommonService;
 
 @Component
@@ -13,6 +14,8 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 
 	@Autowired
 	private AutomationTestConstantService automationTestConstantService;
+	@Autowired
+	private SystemConstantService systemConstantService;
 
 	@Override
 	public void onApplicationEvent(ApplicationReadyEvent event) {
@@ -23,6 +26,7 @@ public class DatabaseFillerOnStartup extends CommonService implements Applicatio
 
 			log.error("loading automation test option");
 			automationTestConstantService.refreshConstant();
+			systemConstantService.refreshConstant();
 			
 		}
 		

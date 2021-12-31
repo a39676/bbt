@@ -44,6 +44,7 @@ endpoints:
     enabled: true
     
 optionFilePath:
+  system: "/home/u2/bbt/optionFile/system/option.json"
   automationTest: "/home/u2/bbt/optionFile/automationTest/option.json"
 
 logging:

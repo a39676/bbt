@@ -31,8 +31,8 @@ public class TestController extends CommonController {
 	
 	@GetMapping(value = "/t1")
 	@ResponseBody
-	public String t1() {
-		hsbcService.weixinPreReg();
+	public String t1() throws InterruptedException {
+		hsbcService.weixinPreRegBatch();
 		return "done";
 	}
 }

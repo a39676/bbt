@@ -9,9 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.BaseResultType;
-import demo.base.system.service.impl.RedisHashConnectService;
-import demo.base.system.service.impl.RedisOriginalConnectService;
-import demo.base.system.service.impl.SystemConstantService;
 import demo.baseCommon.pojo.param.PageParam;
 import demo.config.costomComponent.SnowFlake;
 import toolPack.dateTimeHandle.DateHandler;
@@ -31,12 +28,6 @@ public abstract class CommonService {
 	@Autowired
 	protected SnowFlake snowFlake;
 	
-	@Autowired
-	protected SystemConstantService systemConstantService;
-	@Autowired
-	protected RedisOriginalConnectService redisOriginalConnectService;
-	@Autowired
-	protected RedisHashConnectService redisHashConnectService;
 	@Autowired
 	protected NumericUtilCustom numericUtil;
 	@Autowired

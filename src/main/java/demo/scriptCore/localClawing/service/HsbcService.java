@@ -1,7 +1,11 @@
 package demo.scriptCore.localClawing.service;
 
+import demo.scriptCore.localClawing.pojo.dto.HsbcTabletQuickFixDataDTO;
+
 public interface HsbcService {
 
-	void weixinPreReg();
+	void weixinPreRegBatch();
+
+	void weixinPreReg(HsbcTabletQuickFixDataDTO dto);
 
 }

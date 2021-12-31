@@ -19,10 +19,11 @@ import com.google.gson.Gson;
 
 import at.webDriver.pojo.constant.WebDriverConstant;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
+import demo.baseCommon.service.CommonService;
 import net.sf.json.JSONObject;
 
 @Service
-public class AuxiliaryToolServiceImpl extends SeleniumCommonService {
+public class AuxiliaryToolServiceImpl extends CommonService {
 
 	public WebElement fluentWait(WebDriver driver, final By by) {
 		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
