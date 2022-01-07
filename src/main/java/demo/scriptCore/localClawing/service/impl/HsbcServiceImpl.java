@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.localClawing.pojo.dto.HsbcTabletQuickFixDataDTO;
 import demo.scriptCore.localClawing.service.HsbcService;
+import io.netty.util.internal.ThreadLocalRandom;
 
 @Service
 public class HsbcServiceImpl extends AutomationTestCommonService implements HsbcService {
@@ -18,19 +19,22 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 	private String mainUrl = "https://www.hkg2vl0830-cn.p2g.netd2.hsbc.com.hk/PublicContent/wechat/wechat_library/VTM/prd-branch/index.html#/";
 	private boolean mainlandFlag = true;
 	private Long mainlandIdNumber = 417827198001018003L;
-	private String staffId = "45124808";
+	private String staffId = "";
+	private int stepLong = 5;
+	private Long indexNum = 9990031L;
 	
 	@Override
 	public void weixinPreRegBatch() {
-		Long startPhone = 9990009L;
-		Long startIdNumber = 9990009L;
+		Long startPhone = indexNum;
+		Long startIdNumber = indexNum;
 		HsbcTabletQuickFixDataDTO dto = null;
 		
 		if(mainlandFlag) {
-			dto = new HsbcTabletQuickFixDataDTO(18024534453L, mainlandIdNumber);
+			int randomNum = ThreadLocalRandom.current().nextInt(1000000, 9000000 + 1);
+			dto = new HsbcTabletQuickFixDataDTO(11110000000L + randomNum, mainlandIdNumber);
 			weixinPreReg(dto);
 		} else {
-			for(int i = 1; i < 20; i++) {
+			for(int i = 1; i < stepLong; i++) {
 				dto = new HsbcTabletQuickFixDataDTO(startPhone + i, startIdNumber + i);
 				weixinPreReg(dto);
 			}
@@ -79,6 +83,8 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 			confirm(d);
 
 			threadSleepRandomTime();
+			
+			System.out.println(dto.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -217,7 +223,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		Select createIdCardDaySelector = new Select(createIdCardDaySelectEle);
 		createIdCardDaySelector.selectByValue("string:03");
 
-		WebElement idCardValidYearSelectEle = d.findElement(By.xpath("//select[@id='auto_nationality']"));
+		WebElement idCardValidYearSelectEle = d.findElement(By.xpath("//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[30]/div[1]/span[1]/select[1]"));
 		Select idCardValidYearSelector = new Select(idCardValidYearSelectEle);
 		idCardValidYearSelector.selectByIndex(3);
 
