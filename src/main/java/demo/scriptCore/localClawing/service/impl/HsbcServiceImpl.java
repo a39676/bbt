@@ -17,11 +17,11 @@ import io.netty.util.internal.ThreadLocalRandom;
 public class HsbcServiceImpl extends AutomationTestCommonService implements HsbcService {
 
 	private String mainUrl = "https://www.hkg2vl0830-cn.p2g.netd2.hsbc.com.hk/PublicContent/wechat/wechat_library/VTM/prd-branch/index.html#/";
-	private boolean mainlandFlag = true;
-	private Long mainlandIdNumber = 417827198001018003L;
-	private String staffId = "";
-	private int stepLong = 5;
-	private Long indexNum = 9990031L;
+	private boolean mainlandFlag = false;
+	private Long mainlandIdNumber = 114723198001016548L;
+	private String staffId = "44123708"; // 
+	private int stepLong = 2;
+	private Long indexNum = 9990051L;
 	
 	@Override
 	public void weixinPreRegBatch() {
@@ -34,7 +34,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 			dto = new HsbcTabletQuickFixDataDTO(11110000000L + randomNum, mainlandIdNumber);
 			weixinPreReg(dto);
 		} else {
-			for(int i = 1; i < stepLong; i++) {
+			for(int i = 0; i < stepLong; i++) {
 				dto = new HsbcTabletQuickFixDataDTO(startPhone + i, startIdNumber + i);
 				weixinPreReg(dto);
 			}
@@ -213,6 +213,11 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		idCardNumbersInput.clear();
 		idCardNumbersInput.sendKeys(String.valueOf(dto.getIdNumber()));
 
+		WebElement createIdCardYearSelectEle = d.findElement(By
+				.xpath("//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[29]/div[1]/span[1]/select[1]"));
+		Select createIdCardYearSelector = new Select(createIdCardYearSelectEle);
+		createIdCardYearSelector.selectByValue("number:2015");
+		
 		WebElement createIdCardMonthSelectEle = d.findElement(By
 				.xpath("//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[29]/div[1]/span[2]/select[1]"));
 		Select createIdCardMonthSelector = new Select(createIdCardMonthSelectEle);
@@ -309,38 +314,15 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 	}
 
 	public void jobInfos(WebDriver d) {
-		WebElement provinceSelectEle = d.findElement(
-				By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[2]/div[2]/select[1]"));
-		Select provinceSelector = new Select(provinceSelectEle);
-		provinceSelector.selectByIndex(1);
+		WebElement jobSelectEle = d.findElement(
+				By.xpath("//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[2]/div[2]/select[1]"));
+		Select provinceSelector = new Select(jobSelectEle);
+		provinceSelector.selectByIndex(4); // 家庭主妇
 
-		WebElement jotTitleInput = d.findElement(By
-				.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[2]/div[3]/div[1]/input[1]"));
-		jotTitleInput.click();
-		jotTitleInput.clear();
-		jotTitleInput.sendKeys(String.valueOf(snowFlake.getNextId()));
-
-		WebElement companyNameInput = d.findElement(By
-				.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[2]/div[3]/div[3]/input[1]"));
-		companyNameInput.click();
-		companyNameInput.clear();
-		companyNameInput.sendKeys(String.valueOf(snowFlake.getNextId()));
-
-		WebElement addressCheckbox = d.findElement(By.xpath(
-				"/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[2]/div[3]/div[5]/a[1]/label[1]"));
-		addressCheckbox.click();
-
-		WebElement salaryInput = d.findElement(
-				By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[2]/div[5]/input[1]"));
-		salaryInput.click();
-		salaryInput.clear();
-		salaryInput.sendKeys(String.valueOf("50000"));
-
-		WebElement otherIncomInput = d.findElement(
-				By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[2]/div[7]/input[1]"));
-		otherIncomInput.click();
-		otherIncomInput.clear();
-		otherIncomInput.sendKeys(String.valueOf("30000"));
+		WebElement salarySelectEle = d.findElement(
+				By.xpath("//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[2]/div[8]/select[1]"));
+		Select salarySelector = new Select(salarySelectEle);
+		salarySelector.selectByIndex(10); 
 
 		WebElement continueButton = d.findElement(
 				By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[2]/div[9]/div[1]/button[1]"));
