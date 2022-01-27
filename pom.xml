@@ -17,13 +17,12 @@
 	<packaging>jar</packaging>
 
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<start-class>demo.BBTApplication</start-class>
-		<localRepository>d:/myMavenPacks/commonTool</localRepository>
 	</properties>
 
 	<repositories>
@@ -245,29 +244,21 @@
 			<groupId>com.demo</groupId>
 			<artifactId>ToolPacks</artifactId>
 			<version>0.0.1</version>
-			<scope>system</scope>
-			<systemPath>${localRepository}/ToolPacks-0.0.1.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>com.demo</groupId>
 			<artifactId>AuxiliaryCommon</artifactId>
 			<version>0.0.1</version>
-			<scope>system</scope>
-			<systemPath>${localRepository}/AuxiliaryCommon-0.0.1.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>com.demo</groupId>
 			<artifactId>ATTool</artifactId>
 			<version>0.0.1</version>
-			<scope>system</scope>
-			<systemPath>${localRepository}/ATTool-0.0.1.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>com.demo</groupId>
 			<artifactId>WebATTool</artifactId>
 			<version>0.0.1</version>
-			<scope>system</scope>
-			<systemPath>${localRepository}/WebATTool-0.0.1.jar</systemPath>
 		</dependency>
 	</dependencies>
 
