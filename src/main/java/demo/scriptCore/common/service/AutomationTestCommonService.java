@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import at.tool.WebATToolService;
 import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
 import autoTest.report.pojo.dto.JsonReportOfFlowDTO;
 import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
@@ -16,6 +17,8 @@ import demo.selenium.service.impl.SeleniumCommonService;
 
 public abstract class AutomationTestCommonService extends SeleniumCommonService {
 
+	@Autowired
+	protected WebATToolService webATToolService;
 	@Autowired
 	protected AutomationTestResultProducer automationTestResultProducer;
 

@@ -17,11 +17,12 @@ import io.netty.util.internal.ThreadLocalRandom;
 public class HsbcServiceImpl extends AutomationTestCommonService implements HsbcService {
 
 	private String mainUrl = "https://www.hkg2vl0830-cn.p2g.netd2.hsbc.com.hk/PublicContent/wechat/wechat_library/VTM/prd-branch/index.html#/";
-	private boolean mainlandFlag = false;
-	private Long mainlandIdNumber = 114723198001016548L;
-	private String staffId = "44123708"; // 
-	private int stepLong = 2;
-	private Long indexNum = 9990051L;
+	private boolean mainlandFlag = true;
+	private Long mainlandIdNumber = 431963198001011126L;
+	private String staffId = "44123708"; //   
+	private int stepLong = 23;
+	private Long indexNum = 9990077L;
+//	private Long indexNum = 88888892L;
 	
 	@Override
 	public void weixinPreRegBatch() {
@@ -50,35 +51,35 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 
 			welcomePage(d);
 
-			threadSleepRandomTime();
+			threadSleepRandomTimeLong();
 
 			phoneInfoRecord(d, dto);
 
-			threadSleepRandomTime();
+			threadSleepRandomTimeLong();
 
 			selectBankBranch(d);
 
-			threadSleepRandomTime();
+			threadSleepRandomTimeLong();
 
 			inputPersonalInfo(d, dto);
 
-			threadSleepRandomTime();
+			threadSleepRandomTimeLong();
 
 			connections(d);
 
-			threadSleepRandomTime();
+			threadSleepRandomTimeLong();
 			
 			jobInfos(d);
 			
-			threadSleepRandomTime();
+			threadSleepRandomTimeLong();
 			
 			taxDeclaration(d);
 			
-			threadSleepRandomTime();
+			threadSleepRandomTimeLong();
 			
 			tAndC(d);
 			
-			threadSleepRandomTime();
+			threadSleepRandomTimeLong();
 			
 			confirm(d);
 
@@ -107,7 +108,8 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		WebElement regionEle = d.findElement(By.xpath(regionPath));
 		Select regionSelector = new Select(regionEle);
 		if(!mainlandFlag) {
-			regionSelector.selectByValue("object:65");	
+//			regionSelector.selectByValue("object:65");
+			regionSelector.selectByIndex(2); // 澳门
 		}
 
 		String phoneInputPath = xPathBuilder.start("div").addClass("help-block1 phone-block").findChild("input")
@@ -161,12 +163,12 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		String branchSelectPath = "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[3]/div[1]/select[1]";
 		WebElement branchSelectorEle = d.findElement(By.xpath(branchSelectPath));
 		Select branchSelector = new Select(branchSelectorEle);
-		branchSelector.selectByValue("哈尔滨");
+		branchSelector.selectByIndex(8); // 哈尔滨
 
 		String branchSelectPath2 = "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[5]/div[1]/select[1]";
 		WebElement branchSelectorEle2 = d.findElement(By.xpath(branchSelectPath2));
 		Select branchSelector2 = new Select(branchSelectorEle2);
-		branchSelector2.selectByValue("哈尔滨分行");
+		branchSelector2.selectByIndex(1); // 哈尔滨分行
 
 		String employIdInputPath = "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[7]/div[1]/input[2]";
 		WebElement employIdInput = d.findElement(By.xpath(employIdInputPath));
@@ -354,6 +356,14 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 				By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[4]/div[1]/button[1]"));
 		continueButton.click();
 		
+		if(webATToolService.alertExists(d)) {
+			try {
+				d.switchTo().alert().accept();
+				threadSleepRandomTime();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
 	}
 	
 	public void confirm(WebDriver d) {
@@ -361,7 +371,6 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		WebElement confirmButton = d.findElement(By.xpath(
 				"/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[3]/div[3]/div[1]/button[1]"));
 		confirmButton.click();
-
 		
 	}
 	
