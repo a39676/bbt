@@ -2,6 +2,7 @@ package demo.scriptCore.localClawing.service.impl;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -12,7 +13,6 @@ import com.google.gson.Gson;
 
 import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.localClawing.pojo.dto.HsbcOptionDTO;
-import demo.scriptCore.localClawing.pojo.dto.HsbcTabletQuickFixDataDTO;
 import demo.scriptCore.localClawing.service.HsbcService;
 import io.netty.util.internal.ThreadLocalRandom;
 import toolPack.ioHandle.FileUtilCustom;
@@ -21,7 +21,10 @@ import toolPack.ioHandle.FileUtilCustom;
 public class HsbcServiceImpl extends AutomationTestCommonService implements HsbcService {
 
 	private static String optionFilePath = "d:/home/u2/bbt/optionFile/tmp/hsbcOption.json";
-
+	private static HsbcOptionDTO optionDTO = null;
+	private String phone = null;
+	private String idNumber = null;
+	
 	private HsbcOptionDTO loadOption() {
 		FileUtilCustom ioUtil = new FileUtilCustom();
 		String optionJsonStr = ioUtil.getStringFromFile(optionFilePath);
@@ -29,33 +32,34 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		HsbcOptionDTO dto = new Gson().fromJson(optionJsonStr, HsbcOptionDTO.class);
 		return dto;
 	}
-	
+
 	@Override
 	public void weixinPreRegBatch() {
-		HsbcOptionDTO optionDTO = loadOption();
-		Long startPhone = null;
-		Long startIdNumber = optionDTO.getIndexNum();
-		HsbcTabletQuickFixDataDTO dto = null;
-
-		if (optionDTO.getMainlandFlag()) {
-			startPhone = 11110000000L + ThreadLocalRandom.current().nextLong(1000000, 9000000 + 1);
+		optionDTO = loadOption();
+		
+		if(StringUtils.isBlank(optionDTO.getPhoneNumber())) {
+			if (optionDTO.getMainlandPhoneFlag()) {
+				phone = String.valueOf(11110000000L + ThreadLocalRandom.current().nextLong(1000000, 9000000 + 1));
+			} else {
+				phone = String.valueOf(optionDTO.getIndexNum());
+			}
 		} else {
-			startPhone = optionDTO.getIndexNum();
+			phone = optionDTO.getPhoneNumber();
 		}
 
 		if (optionDTO.getMainlandFlag()) {
-			dto = new HsbcTabletQuickFixDataDTO(startPhone, optionDTO.getMainlandIdNumber());
-			weixinPreReg(dto, optionDTO);
+			idNumber = optionDTO.getMainlandIdNumber().toString();
+			weixinPreReg();
 		} else {
 			for (int i = 0; i < optionDTO.getStepLong(); i++) {
-				dto = new HsbcTabletQuickFixDataDTO(startPhone + i, startIdNumber + i);
-				weixinPreReg(dto, optionDTO);
+				idNumber = String.valueOf(optionDTO.getIndexNum() + i);
+				weixinPreReg();
 			}
 		}
 	}
 
 	@Override
-	public void weixinPreReg(HsbcTabletQuickFixDataDTO dto, HsbcOptionDTO optionDTO) {
+	public void weixinPreReg() {
 		WebDriver d = webDriverService.buildChromeWebDriver();
 
 		try {
@@ -63,41 +67,42 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 
 			welcomePage(d);
 
-			threadSleepRandomTimeLong();
+			threadSleepRandomTime();
 
-			phoneInfoRecord(d, dto, optionDTO);
-
-			threadSleepRandomTimeLong();
-
-			selectBankBranch(d, optionDTO);
-
-			threadSleepRandomTimeLong();
-
-			inputPersonalInfo(d, dto, optionDTO);
-
-			threadSleepRandomTimeLong();
-
-			connections(d);
-
-			threadSleepRandomTimeLong();
-
-			jobInfos(d);
-
-			threadSleepRandomTimeLong();
-
-			taxDeclaration(d);
-
-			threadSleepRandomTimeLong();
-
-			tAndC(d);
-
-			threadSleepRandomTimeLong();
-
-			confirm(d);
+			phoneInfoRecord(d);
 
 			threadSleepRandomTime();
 
-			System.out.println(dto.toString());
+			selectBankBranch(d);
+
+			threadSleepRandomTime();
+
+			inputPersonalInfo(d);
+
+			threadSleepRandomTime();
+
+			connections(d);
+
+			threadSleepRandomTime();
+
+			jobInfos(d);
+
+			threadSleepRandomTime();
+
+			taxDeclaration(d);
+
+			threadSleepRandomTime();
+
+			tAndC(d);
+
+			threadSleepRandomTime();
+
+			confirm(d);
+
+			threadSleepRandomTimeLong();
+			threadSleepRandomTimeLong();
+
+			System.out.println("phone: " + phone + ", idNumber: " + idNumber);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -105,7 +110,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		d.quit();
 	}
 
-	public void welcomePage(WebDriver d) {
+	private void welcomePage(WebDriver d) {
 		WebElement accept1 = d.findElement(By.id("landing_accept_input"));
 		accept1.click();
 		WebElement accept2 = d.findElement(By.id("landing_accept_callback"));
@@ -114,12 +119,12 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		start.click();
 	}
 
-	public void phoneInfoRecord(WebDriver d, HsbcTabletQuickFixDataDTO dto, HsbcOptionDTO optionDTO) {
+	private void phoneInfoRecord(WebDriver d) {
 		String regionPath = xPathBuilder.start("div").addClass("help-block1 phone-block").findChild("select")
 				.getXpath();
 		WebElement regionEle = d.findElement(By.xpath(regionPath));
 		Select regionSelector = new Select(regionEle);
-		if (!optionDTO.getMainlandFlag()) {
+		if (!optionDTO.getMainlandPhoneFlag()) {
 //			regionSelector.selectByValue("object:65");
 			regionSelector.selectByIndex(2); // 澳门
 		}
@@ -129,7 +134,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		WebElement phoneInput = d.findElement(By.xpath(phoneInputPath));
 		phoneInput.click();
 		phoneInput.clear();
-		phoneInput.sendKeys(String.valueOf(dto.getPhone()));
+		phoneInput.sendKeys(phone);
 
 		try {
 			threadSleepRandomTime();
@@ -171,7 +176,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 
 	}
 
-	public void selectBankBranch(WebDriver d, HsbcOptionDTO optionDTO) {
+	private void selectBankBranch(WebDriver d) {
 		String branchSelectPath = "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[3]/div[1]/select[1]";
 		WebElement branchSelectorEle = d.findElement(By.xpath(branchSelectPath));
 		Select branchSelector = new Select(branchSelectorEle);
@@ -199,7 +204,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 
 	}
 
-	public void inputPersonalInfo(WebDriver d, HsbcTabletQuickFixDataDTO dto, HsbcOptionDTO optionDTO) {
+	private void inputPersonalInfo(WebDriver d) {
 		WebElement lastNameInput = d.findElement(By.xpath("//input[@id='lastName']"));
 		lastNameInput.click();
 		lastNameInput.clear();
@@ -226,7 +231,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		WebElement idCardNumbersInput = d.findElement(By.xpath("//input[@id='idCardNumbers']"));
 		idCardNumbersInput.click();
 		idCardNumbersInput.clear();
-		idCardNumbersInput.sendKeys(String.valueOf(dto.getIdNumber()));
+		idCardNumbersInput.sendKeys(idNumber);
 
 		WebElement createIdCardYearSelectEle = d.findElement(By
 				.xpath("//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[29]/div[1]/span[1]/select[1]"));
@@ -262,7 +267,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		continueButton.click();
 	}
 
-	public void connections(WebDriver d) {
+	private void connections(WebDriver d) {
 
 		WebElement provinceSelectEle = d.findElement(By.xpath("//select[@id='auto_contactProvince']"));
 		Select provinceSelector = new Select(provinceSelectEle);
@@ -329,7 +334,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		continueButton.click();
 	}
 
-	public void jobInfos(WebDriver d) {
+	private void jobInfos(WebDriver d) {
 		WebElement jobSelectEle = d
 				.findElement(By.xpath("//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[2]/div[2]/select[1]"));
 		Select provinceSelector = new Select(jobSelectEle);
@@ -346,44 +351,55 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 
 	}
 
-	public void taxDeclaration(WebDriver d) {
+	private void taxDeclaration(WebDriver d) {
 
 		WebElement declarationCheckbox = d.findElement(By.xpath(
 				"/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[2]/div[1]/div[4]/div[1]/div[1]/label[1]"));
 		declarationCheckbox.click();
 
+		tryClickAlert(d);
+		
 		WebElement continueButton = d.findElement(By.xpath(
 				"/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[3]/div[1]/div[1]/div[1]/button[1]"));
 		continueButton.click();
 
+		tryClickAlert(d);
 	}
 
-	public void tAndC(WebDriver d) {
+	private void tAndC(WebDriver d) {
 
 		WebElement declarationCheckbox = d
 				.findElement(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[5]/input[1]"));
 		declarationCheckbox.click();
 
+		tryClickAlert(d);
+		
 		WebElement continueButton = d
 				.findElement(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[4]/div[1]/button[1]"));
 		continueButton.click();
 
+		tryClickAlert(d);
+	}
+
+	private void confirm(WebDriver d) {
+
+		tryClickAlert(d);
+		
+		WebElement confirmButton = d.findElement(By.xpath(
+				"/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[3]/div[3]/div[1]/button[1]"));
+		confirmButton.click();
+
+		tryClickAlert(d);
+	}
+	
+	private void tryClickAlert(WebDriver d) {
 		if (webATToolService.alertExists(d)) {
 			try {
 				d.switchTo().alert().accept();
 				threadSleepRandomTime();
 			} catch (Exception e) {
-				// TODO: handle exception
 			}
 		}
-	}
-
-	public void confirm(WebDriver d) {
-
-		WebElement confirmButton = d.findElement(By.xpath(
-				"/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[3]/div[3]/div[1]/button[1]"));
-		confirmButton.click();
-
 	}
 
 }

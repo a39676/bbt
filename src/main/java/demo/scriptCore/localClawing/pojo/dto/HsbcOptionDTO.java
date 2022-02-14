@@ -9,6 +9,7 @@ public class HsbcOptionDTO {
 	private String staffId = "44123708"; //
 	private int stepLong = 1;
 	private Long indexNum = 9990104L;
+	private String phoneNumber;
 
 	public String getMainUrl() {
 		return mainUrl;
@@ -66,11 +67,19 @@ public class HsbcOptionDTO {
 		this.indexNum = indexNum;
 	}
 
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
 	@Override
 	public String toString() {
 		return "HsbcOptionDTO [mainUrl=" + mainUrl + ", mainlandFlag=" + mainlandFlag + ", mainlandPhoneFlag="
 				+ mainlandPhoneFlag + ", mainlandIdNumber=" + mainlandIdNumber + ", staffId=" + staffId + ", stepLong="
-				+ stepLong + ", indexNum=" + indexNum + "]";
+				+ stepLong + ", indexNum=" + indexNum + ", phoneNumber=" + phoneNumber + "]";
 	}
 
 }
