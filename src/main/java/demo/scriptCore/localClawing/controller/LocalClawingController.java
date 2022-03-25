@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.baseCommon.controller.CommonController;
 import demo.scriptCore.localClawing.service.HsbcService;
+import demo.scriptCore.localClawing.service.LinkedinService;
 
 @Controller
 @RequestMapping(value = "/l")
@@ -15,11 +16,20 @@ public class LocalClawingController extends CommonController {
 
 	@Autowired
 	private HsbcService hsbcService;
+	@Autowired
+	private LinkedinService linkedinService;
 
 	@GetMapping(value = "/l1")
 	@ResponseBody
 	public String l1() throws InterruptedException {
 		hsbcService.weixinPreRegBatch();
+		return "done";
+	}
+	
+	@GetMapping(value = "/l2")
+	@ResponseBody
+	public String l2() throws InterruptedException {
+		linkedinService.buildRelationship();
 		return "done";
 	}
 
