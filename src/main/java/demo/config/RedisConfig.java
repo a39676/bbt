@@ -11,7 +11,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisConfig {
 	
 	/**
-     *  定义 StringRedisTemplate ，指定序列化和反序列化的处理类
+     *  定义 StringRedisTemplate , 指定序列化和反序列化的处理类
      * @param factory
      * @return
      */

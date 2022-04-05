@@ -220,7 +220,7 @@ public class CaptchaServiceImpl extends CommonService implements CaptchaService 
 		return threshold;
 	}
 
-	// 图片灰度，黑白
+	// 图片灰度, 黑白
 	public boolean gray(File srcImageFile, String outputPath) {
 		try {
 			BufferedImage src = ImageIO.read(srcImageFile);

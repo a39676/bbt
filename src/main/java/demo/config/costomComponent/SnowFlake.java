@@ -14,7 +14,7 @@ public class SnowFlake {
 	private final static long datacenterIdBits = 5L;
 
 	/**
-	 * 支持的最大机器id，结果是31 (这个移位算法可以很快的计算出几位二进制数所能表示的最大十进制数)
+	 * 支持的最大机器id, 结果是31 (这个移位算法可以很快的计算出几位二进制数所能表示的最大十进制数)
 	 */
 	private static final long maxWorkerId = -1L ^ (-1L << workerIdBits);
 
@@ -26,7 +26,7 @@ public class SnowFlake {
 	private final static long datacenterIdShift = sequenceBits + workerIdBits;
 	// 时间毫秒左移22位
 	private final static long timestampLeftShift = sequenceBits + workerIdBits + datacenterIdBits;
-	// sequence掩码，确保sequnce不会超出上限
+	// sequence掩码, 确保sequnce不会超出上限
 	private final static long sequenceMask = -1L ^ (-1L << sequenceBits);
 	// 上次时间戳
 	private static long lastTimestamp = -1L;
@@ -71,17 +71,17 @@ public class SnowFlake {
 		}
 		// 如果时间戳与上次时间戳相同
 		if (lastTimestamp == timestamp) {
-			// 当前毫秒内，则+1，与sequenceMask确保sequence不会超出上限
+			// 当前毫秒内, 则+1, 与sequenceMask确保sequence不会超出上限
 			sequence = (sequence + 1) & sequenceMask;
 			if (sequence == 0) {
-				// 当前毫秒内计数满了，则等待下一秒
+				// 当前毫秒内计数满了, 则等待下一秒
 				timestamp = tilNextMillis(lastTimestamp);
 			}
 		} else {
 			sequence = 0;
 		}
 		lastTimestamp = timestamp;
-		// ID偏移组合生成最终的ID，并返回ID
+		// ID偏移组合生成最终的ID, 并返回ID
 		long nextId = ((timestamp - twepoch) << timestampLeftShift) | (processId << datacenterIdShift)
 				| (workerId << workerIdShift) | sequence;
 		return nextId;
