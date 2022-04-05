@@ -489,7 +489,7 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 			newPO.setId(snowFlake.getNextId());
 			newPO.setCompanyLink(companyLinkDiv.getAttribute("href"));
 			newPO.setCompanyName(companyNameP.getText().replaceAll("企业搜索", ""));
-			newPO.setMyResumeName(resumeNameDiv.getText().replaceAll("查看：", ""));
+			newPO.setMyResumeName(resumeNameDiv.getText().replaceAll("查看:", ""));
 			try {
 				String likelyClass = likelySpan.getAttribute("class");
 				newPO.setDegreeOfInterest(Integer.parseInt(likelyClass.replaceAll("s", "")));
