@@ -20,7 +20,7 @@ import toolPack.ioHandle.FileUtilCustom;
 @Service
 public class HsbcServiceImpl extends AutomationTestCommonService implements HsbcService {
 
-	private static String optionFilePath = "d:/home/u2/bbt/optionFile/tmp/linkedOption.json";
+	private static String optionFilePath = "d:/home/u2/bbt/optionFile/tmp/hsbcOption.json";
 	private static HsbcOptionDTO optionDTO = null;
 	private String phone = null;
 	private String idNumber = null;
@@ -29,8 +29,8 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		FileUtilCustom ioUtil = new FileUtilCustom();
 		String optionJsonStr = ioUtil.getStringFromFile(optionFilePath);
 
-		HsbcOptionDTO dto = new Gson().fromJson(optionJsonStr, HsbcOptionDTO.class);
-		return dto;
+		optionDTO = new Gson().fromJson(optionJsonStr, HsbcOptionDTO.class);
+		return optionDTO;
 	}
 
 	@Override
