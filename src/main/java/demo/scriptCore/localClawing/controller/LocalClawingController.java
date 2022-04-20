@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import demo.baseCommon.controller.CommonController;
 import demo.scriptCore.localClawing.service.HsbcService;
 import demo.scriptCore.localClawing.service.LinkedinService;
+import demo.scriptCore.localClawing.service.MathBattleService;
 import demo.scriptCore.localClawing.service.PrankService;
 
 @Controller
@@ -21,6 +22,8 @@ public class LocalClawingController extends CommonController {
 	private LinkedinService linkedinService;
 	@Autowired
 	private PrankService prankService;
+	@Autowired
+	private MathBattleService mathBattleService;
 
 	@GetMapping(value = "/l1")
 	@ResponseBody
@@ -42,5 +45,11 @@ public class LocalClawingController extends CommonController {
 		prankService.prankBatch();
 		return "done";
 	}
-
+	
+	@GetMapping(value = "/l4")
+	@ResponseBody
+	public String l4() throws Exception {
+		mathBattleService.start();
+		return "done";
+	}
 }
