@@ -11,6 +11,7 @@ import demo.scriptCore.localClawing.service.HsbcService;
 import demo.scriptCore.localClawing.service.LinkedinService;
 import demo.scriptCore.localClawing.service.MathBattleService;
 import demo.scriptCore.localClawing.service.PrankService;
+import demo.scriptCore.localClawing.service.TextbookDownloadService;
 
 @Controller
 @RequestMapping(value = "/l")
@@ -24,6 +25,8 @@ public class LocalClawingController extends CommonController {
 	private PrankService prankService;
 	@Autowired
 	private MathBattleService mathBattleService;
+	@Autowired
+	private TextbookDownloadService textbookDownloadService;
 
 	@GetMapping(value = "/l1")
 	@ResponseBody
@@ -50,6 +53,13 @@ public class LocalClawingController extends CommonController {
 	@ResponseBody
 	public String l4() throws Exception {
 		mathBattleService.start();
+		return "done";
+	}
+	
+	@GetMapping(value = "/l5")
+	@ResponseBody
+	public String l5() throws Exception {
+		textbookDownloadService.downloading();
 		return "done";
 	}
 }
