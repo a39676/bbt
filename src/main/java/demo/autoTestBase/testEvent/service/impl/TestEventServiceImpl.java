@@ -100,7 +100,7 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 			return searchingDemoService.runSubEvent(te);
 		} else if (TestModuleType.SCHEDULE_CLAWING.getId().equals(moduleId)) {
 			return scheduleClawingPrefixService.runSubEvent(te);
-		} else if (TestModuleType.localClawing.getId().equals(moduleId)) {
+		} else if (TestModuleType.LOCAL_CLAWING.getId().equals(moduleId)) {
 			return localClawingPrefixService.runSubEvent(te);
 		} else if (TestModuleType.CRYPTO_COIN.getId().equals(moduleId)) {
 			return cryptoCoinPrefixService.runSubEvent(te);
