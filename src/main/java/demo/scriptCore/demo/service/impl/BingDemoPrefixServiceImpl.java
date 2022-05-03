@@ -7,7 +7,6 @@ import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testEvent.searchingDemo.pojo.type.BingDemoSearchFlowType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
-import demo.autoTestBase.testEvent.service.RunSubEventPrefixService;
 import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.demo.pojo.dto.InsertBingSearchDemoDTO;
 import demo.scriptCore.demo.service.BingDemoPrefixService;
@@ -16,7 +15,7 @@ import net.sf.json.JSONObject;
 
 @Service
 public class BingDemoPrefixServiceImpl extends AutomationTestCommonService
-		implements BingDemoPrefixService, RunSubEventPrefixService {
+		implements BingDemoPrefixService {
 
 	@Autowired
 	private BingDemoService bingDemoService;

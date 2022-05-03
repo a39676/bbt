@@ -28,28 +28,30 @@ public class BingDemoServiceImpl extends BingDemoCommonService implements BingDe
 		tbo.setFlowId(flowType.getId());
 		tbo.setFlowName(flowType.getFlowName());
 
+		WebDriver webDriver = null;
+		
 		try {
-			keywordSearchInHomepage(tbo);
-			checkResult(tbo);
+			webDriver = webDriverService.buildChromeWebDriver();
+			keywordSearchInHomepage(tbo, webDriver);
+			checkResult(tbo, webDriver);
 
 		} catch (Exception e) {
 			JsonReportOfCaseDTO errorReport = buildCaseReportDTO();
 			reportService.caseReportAppendContent(errorReport, e.getMessage());
 			tbo.getReport().getCaseReportList().add(errorReport);
 		}
-		tryQuitWebDriver(tbo.getWebDriver());
+		tryQuitWebDriver(webDriver);
 		sendAutomationTestResult(tbo);
 
 		return tbo;
 	}
 
-	private AutomationTestCaseResult keywordSearchInHomepage(TestEventBO tbo) {
+	private AutomationTestCaseResult keywordSearchInHomepage(TestEventBO tbo, WebDriver webDriver) {
 		String casename = "searchInHomepage";
 		AutomationTestCaseResult r = initCaseResult(casename);
 		JsonReportOfCaseDTO caseReport = initCaseReportDTO(casename);
 
 		reportService.caseReportAppendContent(caseReport, "准备进行搜索");
-		WebDriver d = tbo.getWebDriver();
 
 		BingSearchInHomePageDTO dto = auxTool.buildParamDTO(tbo, BingSearchInHomePageDTO.class);
 		if (dto == null) {
@@ -60,16 +62,16 @@ public class BingDemoServiceImpl extends BingDemoCommonService implements BingDe
 		String mainUrl = "https://cn.bing.com/?FORM=BEHPTB";
 
 		try {
-			d.get(mainUrl);
+			webDriver.get(mainUrl);
 			reportService.caseReportAppendContent(caseReport, "打开: " + mainUrl);
 		} catch (TimeoutException e) {
-			jsUtil.windowStop(d);
+			jsUtil.windowStop(webDriver);
 			reportService.caseReportAppendContent(caseReport, "访问超时");
 		}
 
-		addScreenshotToReport(d, caseReport);
+		addScreenshotToReport(webDriver, caseReport);
 
-		WebElement keywordInput = d.findElement(By.xpath(HomePage.keywordInput));
+		WebElement keywordInput = webDriver.findElement(By.xpath(HomePage.keywordInput));
 		keywordInput.click();
 		keywordInput.clear();
 		keywordInput.sendKeys(dto.getSearchKeyword());
@@ -80,14 +82,14 @@ public class BingDemoServiceImpl extends BingDemoCommonService implements BingDe
 			reportService.caseReportAppendContent(caseReport, "输入关键词: " + dto.getSearchKeyword());
 		}
 
-		addScreenshotToReport(d, caseReport);
+		addScreenshotToReport(webDriver, caseReport);
 
-		WebElement searchButton = d.findElement(By.xpath(HomePage.searchButton));
+		WebElement searchButton = webDriver.findElement(By.xpath(HomePage.searchButton));
 		searchButton.click();
 
 		reportService.caseReportAppendContent(caseReport, "点击搜索");
 
-		addScreenshotToReport(d, caseReport);
+		addScreenshotToReport(webDriver, caseReport);
 
 		reportService.caseReportAppendContent(caseReport, "完成搜索");
 		r.setResultType(AutomationTestFlowResultType.PASS);
@@ -96,14 +98,14 @@ public class BingDemoServiceImpl extends BingDemoCommonService implements BingDe
 		return r;
 	}
 
-	private AutomationTestCaseResult checkResult(TestEventBO tbo) {
+	private AutomationTestCaseResult checkResult(TestEventBO tbo, WebDriver webDriver) {
 		String casename = "checkResult";
 		AutomationTestCaseResult r = initCaseResult(casename);
 		JsonReportOfCaseDTO caseReport = initCaseReportDTO(casename);
 		try {
 			reportService.caseReportAppendContent(caseReport, "准备检查搜索结果");
 
-			WebDriver d = tbo.getWebDriver();
+			WebDriver d = webDriver;
 
 			BingSearchInHomePageDTO dto = auxTool.buildParamDTO(tbo, BingSearchInHomePageDTO.class);
 

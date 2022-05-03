@@ -19,11 +19,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.gson.Gson;
 
 import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
-import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testEvent.scheduleClawing.pojo.bo.DailySignAccountBO;
 import autoTest.testEvent.scheduleClawing.pojo.bo.WuYiJobClawingBO;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
-import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.scriptCore.common.service.AutomationTestCommonService;
@@ -54,6 +52,8 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 		} catch (Exception e) {
 			redisOriginalConnectService.setValByName(wuYiRunCountKey, "1");
 		}
+		
+		WebDriver webDriver = null;
 
 		try {
 
@@ -79,8 +79,10 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 			if (runCount % clawingOptionBO.getRefreshStep() == 0) {
 				runCount = 0;
 			}
+			
+			webDriver = webDriverService.buildChromeWebDriver();
 
-			if (!login(tbo.getWebDriver(), caseReport, clawingOptionBO)) {
+			if (!login(webDriver, caseReport, clawingOptionBO)) {
 				r.failWithMessage("登录失败");
 				throw new Exception();
 			}
@@ -88,17 +90,17 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 			threadSleepRandomTime();
 
 			// TODO 此任务暂不采取截图, 直至完成规范化
-//			ScreenshotSaveResult screenSaveResult = screenshot(tbo.getWebDriver(), tbo.getFlowName());
+//			ScreenshotSaveResult screenSaveResult = screenshot(webDriver, tbo.getFlowName());
 //			ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(),
 //					screenSaveResult.getFileName(), screenshotImageValidTime);
 //			reportService.caseReportAppendImage(caseReport, uploadImgResult.getImgUrl());
 
 			reportService.caseReportAppendContent(caseReport, "完成登录");
 
-			catchWatchMe(tbo.getWebDriver(), caseReport);
+			catchWatchMe(webDriver, caseReport);
 
 			if (runCount == 0 && "1".equals(clawingOptionBO.getRefreshCV())) {
-				if (!updateDetail(tbo.getWebDriver(), caseReport, clawingOptionBO)) {
+				if (!updateDetail(webDriver, caseReport, clawingOptionBO)) {
 					reportService.caseReportAppendContent(caseReport, "刷新简历失败");
 					r.failWithMessage("更新失败");
 					throw new Exception();
@@ -119,7 +121,7 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 //			String htmlStr = jsUtil.getHtmlSource(d);
 
 //			TODO 此任务暂不采取截图, 直至完成规范化
-//			ScreenshotSaveResult screenSaveResult = screenshot(tbo.getWebDriver(), tbo.getFlowName());
+//			ScreenshotSaveResult screenSaveResult = screenshot(webDriver, tbo.getFlowName());
 //			ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(),
 //					screenSaveResult.getFileName(), screenshotImageValidTime);
 //			reportService.caseReportAppendImage(caseReport, uploadImgResult.getImgUrl());
@@ -127,7 +129,7 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 //			jsonReporter.appendContent(reportDTO, htmlStr);
 
 		} finally {
-			tryQuitWebDriver(tbo.getWebDriver());
+			tryQuitWebDriver(webDriver);
 			sendAutomationTestResult(tbo);
 		}
 
@@ -552,19 +554,4 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 		return v;
 	}
 
-	@Override
-	public TestEventBO receiveAndBuildTestEventBO(AutomationTestInsertEventDTO dto) {
-		TestEventBO bo = buildTestEventBOPreHandle(dto);
-
-		TestModuleType modultType = TestModuleType.getType(dto.getTestModuleType());
-		bo.setModuleType(modultType);
-		ScheduleClawingType caseType = ScheduleClawingType.getType(dto.getFlowType());
-		bo.setFlowName(caseType.getFlowName());
-		bo.setFlowId(caseType.getId());
-		bo.setEventId(dto.getTestEventId());
-		bo.setAppointment(dto.getAppointment());
-		bo.setParamStr(dto.getParamStr());
-		
-		return bo;
-	}
 }

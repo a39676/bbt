@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openqa.selenium.WebDriver;
-
 import autoTest.report.pojo.dto.JsonReportOfFlowDTO;
 import autoTest.testEvent.pojo.result.AutomationTestCaseResult;
 import autoTest.testEvent.pojo.type.AutomationTestFlowResultType;
@@ -20,7 +18,6 @@ public class TestEventBO {
 
 	private LocalDateTime appointment;
 
-	private WebDriver webDriver;
 	private JsonReportOfFlowDTO report;
 	private List<AutomationTestCaseResult> caseResultList = new ArrayList<>();
 	private LocalDateTime screenshotImageValidTime;
@@ -68,14 +65,6 @@ public class TestEventBO {
 
 	public void setAppointment(LocalDateTime appointment) {
 		this.appointment = appointment;
-	}
-
-	public WebDriver getWebDriver() {
-		return webDriver;
-	}
-
-	public void setWebDriver(WebDriver webDriver) {
-		this.webDriver = webDriver;
 	}
 
 	public JsonReportOfFlowDTO getReport() {
@@ -149,10 +138,9 @@ public class TestEventBO {
 	@Override
 	public String toString() {
 		return "TestEventBO [eventId=" + eventId + ", moduleType=" + moduleType + ", flowId=" + flowId + ", flowName="
-				+ flowName + ", appointment=" + appointment + ", webDriver=" + webDriver + ", report=" + report
-				+ ", caseResultList=" + caseResultList + ", screenshotImageValidTime=" + screenshotImageValidTime
-				+ ", paramStr=" + paramStr + ", startTime=" + startTime + ", endTime=" + endTime + ", remark=" + remark
-				+ "]";
+				+ flowName + ", appointment=" + appointment + ", report=" + report + ", caseResultList="
+				+ caseResultList + ", screenshotImageValidTime=" + screenshotImageValidTime + ", paramStr=" + paramStr
+				+ ", startTime=" + startTime + ", endTime=" + endTime + ", remark=" + remark + "]";
 	}
 
 }

@@ -15,8 +15,7 @@ import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.scriptCore.cryptoCoin.service.impl.CryptoCoinPrefixServiceImpl;
 import demo.scriptCore.demo.service.BingDemoPrefixService;
 import demo.scriptCore.demo.service.impl.BingDemoPrefixServiceImpl;
-import demo.scriptCore.localClawing.service.impl.LocalClawingPrefixServiceImpl;
-import demo.scriptCore.scheduleClawing.service.impl.ScheduleClawingPrefixServiceImpl;
+import demo.scriptCore.scheduleClawing.service.ScheduleClawingPrefixService;
 
 @Service
 public class TestEventServiceImpl extends TestEventCommonService implements TestEventService {
@@ -26,9 +25,7 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 	@Autowired
 	private BingDemoPrefixService bingDemoPrefixService;
 	@Autowired
-	private ScheduleClawingPrefixServiceImpl scheduleClawingPrefixService;
-	@Autowired
-	private LocalClawingPrefixServiceImpl localClawingPrefixService;
+	private ScheduleClawingPrefixService scheduleClawingPrefixService;
 	@Autowired
 	private CryptoCoinPrefixServiceImpl cryptoCoinPrefixService;
 
@@ -53,7 +50,7 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		} else if (TestModuleType.CRYPTO_COIN.getId().equals(dto.getTestModuleType())) {
 			tbo = cryptoCoinPrefixService.receiveAndBuildTestEventBO(dto);
 		} else if (TestModuleType.SCHEDULE_CLAWING.getId().equals(dto.getTestModuleType())) {
-//			return scheduleClawingPrefixService.
+			tbo = scheduleClawingPrefixService.receiveAndBuildTestEventBO(dto);
 		}
 
 		tbo.setEndTime(LocalDateTime.now());
@@ -100,8 +97,6 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 			return searchingDemoService.runSubEvent(te);
 		} else if (TestModuleType.SCHEDULE_CLAWING.getId().equals(moduleId)) {
 			return scheduleClawingPrefixService.runSubEvent(te);
-		} else if (TestModuleType.localClawing.getId().equals(moduleId)) {
-			return localClawingPrefixService.runSubEvent(te);
 		} else if (TestModuleType.CRYPTO_COIN.getId().equals(moduleId)) {
 			return cryptoCoinPrefixService.runSubEvent(te);
 		}

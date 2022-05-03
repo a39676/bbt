@@ -9,5 +9,7 @@ public interface BingDemoPrefixService {
 	void insertSearchInHomeEvent(InsertBingSearchDemoDTO dto);
 
 	TestEventBO receiveAndBuildTestEventBO(AutomationTestInsertEventDTO dto);
+
+	TestEventBO runSubEvent(TestEventBO te);
 	
 }

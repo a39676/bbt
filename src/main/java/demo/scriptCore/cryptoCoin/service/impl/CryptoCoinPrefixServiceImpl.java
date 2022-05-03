@@ -7,21 +7,20 @@ import autoTest.testEvent.cryptoCoin.pojo.type.CryptoCoinFlowType;
 import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
-import demo.autoTestBase.testEvent.service.RunSubEventPrefixService;
 import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.cryptoCoin.service.CryptoCoinPrefixService;
 import demo.scriptCore.scheduleClawing.service.CryptoCoinPriceService;
 
 @Service
 public class CryptoCoinPrefixServiceImpl extends AutomationTestCommonService
-		implements CryptoCoinPrefixService, RunSubEventPrefixService {
+		implements CryptoCoinPrefixService {
 
 	@Autowired
 	private CryptoCoinPriceService cryptoCoinPriceService;
 
 	@Override
 	public TestEventBO receiveAndBuildTestEventBO(AutomationTestInsertEventDTO dto) {
-		TestEventBO bo = buildTestEventBOPreHandle(dto, false);
+		TestEventBO bo = buildTestEventBOPreHandle(dto);
 
 		TestModuleType modultType = TestModuleType.getType(dto.getTestModuleType());
 		bo.setModuleType(modultType);

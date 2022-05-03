@@ -23,24 +23,11 @@ public abstract class AutomationTestCommonService extends SeleniumCommonService 
 	protected AutomationTestResultProducer automationTestResultProducer;
 
 	protected TestEventBO buildTestEventBOPreHandle(AutomationTestInsertEventDTO dto) {
-		return buildTestEventBOPreHandle(dto, true);
-	}
-	
-	protected TestEventBO buildTestEventBOPreHandle(AutomationTestInsertEventDTO dto, Boolean needWebDriver) {
 		TestEventBO tbo = new TestEventBO();
 		tbo.setStartTime(LocalDateTime.now());
 		
 		JsonReportOfFlowDTO reportDTO = new JsonReportOfFlowDTO();
 		tbo.setReport(reportDTO);
-
-		if(needWebDriver != null && needWebDriver) {
-			try {
-				tbo.setWebDriver(webDriverService.buildChromeWebDriver());
-			} catch (Exception e) {
-				log.error("automation test build web driver error");
-				return null;
-			}
-		}
 
 		return tbo;
 	}
