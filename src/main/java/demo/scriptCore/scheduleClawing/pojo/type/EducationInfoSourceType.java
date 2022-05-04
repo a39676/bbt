@@ -2,8 +2,8 @@ package demo.scriptCore.scheduleClawing.pojo.type;
 
 public enum EducationInfoSourceType {
 	
-	GZEDUCMS_CN("gzeducms.cn", 1),
-	HAIZHU_GOV_CN("haizhu.gov.cn", 2),
+	GZEDUCMS_CN("gzeducms", 1),
+	HAIZHU_GOV_CN("haizhu", 2),
 	;
 	
 	private String name;
