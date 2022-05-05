@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.baseCommon.controller.CommonController;
-import demo.scriptCore.localClawing.service.HsbcService;
 import demo.scriptCore.localClawing.service.LinkedinService;
 import demo.scriptCore.localClawing.service.MathBattleService;
 import demo.scriptCore.localClawing.service.PrankService;
@@ -18,8 +17,6 @@ import demo.scriptCore.localClawing.service.TextbookDownloadService;
 public class LocalClawingController extends CommonController {
 
 	@Autowired
-	private HsbcService hsbcService;
-	@Autowired
 	private LinkedinService linkedinService;
 	@Autowired
 	private PrankService prankService;
@@ -27,13 +24,6 @@ public class LocalClawingController extends CommonController {
 	private MathBattleService mathBattleService;
 	@Autowired
 	private TextbookDownloadService textbookDownloadService;
-
-	@GetMapping(value = "/l1")
-	@ResponseBody
-	public String l1() throws InterruptedException {
-		hsbcService.weixinPreRegBatch();
-		return "done";
-	}
 	
 	@GetMapping(value = "/l2")
 	@ResponseBody

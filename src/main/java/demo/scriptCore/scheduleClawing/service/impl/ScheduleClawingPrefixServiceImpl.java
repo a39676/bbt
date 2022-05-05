@@ -9,6 +9,7 @@ import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.scheduleClawing.service.EducationInfoCollectionService;
+import demo.scriptCore.scheduleClawing.service.HsbcService;
 import demo.scriptCore.scheduleClawing.service.ScheduleClawingPrefixService;
 import demo.scriptCore.scheduleClawing.service.WuYiJobRefreshService;
 
@@ -20,6 +21,8 @@ public class ScheduleClawingPrefixServiceImpl extends AutomationTestCommonServic
 	private WuYiJobRefreshService wuYiSign;
 	@Autowired
 	private EducationInfoCollectionService educationInfoCollectionService;
+	@Autowired
+	private HsbcService hsbcService;
 
 	@Override
 	public TestEventBO runSubEvent(TestEventBO te) {
@@ -29,6 +32,8 @@ public class ScheduleClawingPrefixServiceImpl extends AutomationTestCommonServic
 			return wuYiSign.clawing(te);
 		} else if (ScheduleClawingType.EDUCATION_INFO.getId().equals(caseId)) {
 			return educationInfoCollectionService.clawing(te);
+		}else if (ScheduleClawingType.HSBC_WECHAT_PREREGIST.getId().equals(caseId)) {
+			return hsbcService.weixinPreReg(te);
 		}
 
 		return new TestEventBO();

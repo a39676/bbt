@@ -2,7 +2,7 @@ package demo.scriptCore.localClawing.pojo.dto;
 
 public class HsbcOptionDTO {
 
-	private String mainUrl = "https://www.hkg2vl0830-cn.p2g.netd2.hsbc.com.hk/PublicContent/wechat/wechat_library/VTM/prd-branch/index.html#/";
+	private String mainUrl;
 	private boolean mainlandFlag = false;
 	private boolean mainlandPhoneFlag = false;
 	private Long mainlandIdNumber = 352962198001016765L;

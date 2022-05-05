@@ -1,83 +1,53 @@
-package demo.scriptCore.localClawing.service.impl;
+package demo.scriptCore.scheduleClawing.service.impl;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.Gson;
-
+import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
+import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
+import autoTest.testEvent.searchingDemo.pojo.dto.HsbcWechatPreregistDTO;
+import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.scriptCore.common.service.AutomationTestCommonService;
-import demo.scriptCore.localClawing.pojo.dto.HsbcOptionDTO;
-import demo.scriptCore.localClawing.service.HsbcService;
-import io.netty.util.internal.ThreadLocalRandom;
-import toolPack.ioHandle.FileUtilCustom;
+import demo.scriptCore.scheduleClawing.service.HsbcService;
 
 @Service
 public class HsbcServiceImpl extends AutomationTestCommonService implements HsbcService {
 
-	private static String optionFilePath = "d:/home/u2/bbt/optionFile/tmp/hsbcOption.json";
-	private static HsbcOptionDTO optionDTO = null;
-	private String phone = null;
-	private String idNumber = null;
-	
-	private HsbcOptionDTO loadOption() {
-		FileUtilCustom ioUtil = new FileUtilCustom();
-		String optionJsonStr = ioUtil.getStringFromFile(optionFilePath);
-
-		optionDTO = new Gson().fromJson(optionJsonStr, HsbcOptionDTO.class);
-		return optionDTO;
-	}
-
 	@Override
-	public void weixinPreRegBatch() {
-		optionDTO = loadOption();
-		
-		if(StringUtils.isBlank(optionDTO.getPhoneNumber())) {
-			if (optionDTO.getMainlandPhoneFlag()) {
-				phone = String.valueOf(11110000000L + ThreadLocalRandom.current().nextLong(1000000, 9000000 + 1));
-			} else {
-				phone = String.valueOf(optionDTO.getIndexNum());
-			}
-		} else {
-			phone = optionDTO.getPhoneNumber();
-		}
-
-		if (optionDTO.getMainlandFlag()) {
-			idNumber = optionDTO.getMainlandIdNumber().toString();
-			weixinPreReg();
-		} else {
-			for (int i = 0; i < optionDTO.getStepLong(); i++) {
-				idNumber = String.valueOf(optionDTO.getIndexNum() + i);
-				weixinPreReg();
-			}
-		}
-	}
-
-	@Override
-	public void weixinPreReg() {
-		WebDriver d = webDriverService.buildChromeWebDriver();
+	public TestEventBO weixinPreReg(TestEventBO tbo) {
+		WebDriver d = null;
+		ScheduleClawingType caseType = ScheduleClawingType.HSBC_WECHAT_PREREGIST;
+		JsonReportOfCaseDTO caseReport = initCaseReportDTO(caseType.getFlowName());
 
 		try {
-			d.get(optionDTO.getMainUrl());
+			HsbcWechatPreregistDTO dto = auxTool.buildParamDTO(tbo, HsbcWechatPreregistDTO.class);
+			if (dto == null) {
+				reportService.caseReportAppendContent(caseReport, "读取参数异常");
+				return tbo;
+			}
+
+			d = webDriverService.buildChromeWebDriver();
+
+			d.get(dto.getMainUrl());
 
 			welcomePage(d);
 
 			threadSleepRandomTime();
 
-			phoneInfoRecord(d);
+			phoneInfoRecord(d, dto);
 
 			threadSleepRandomTime();
 
-			selectBankBranch(d);
+			selectBankBranch(d, dto);
 
 			threadSleepRandomTime();
 
-			inputPersonalInfo(d);
+			inputPersonalInfo(d, dto);
 
 			threadSleepRandomTime();
 
@@ -98,16 +68,22 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 			threadSleepRandomTime();
 
 			confirm(d);
+			
+			threadSleepRandomTime();
 
-			threadSleepRandomTimeLong();
-			threadSleepRandomTimeLong();
+			confirm(d);
 
-			System.out.println("phone: " + phone + ", idNumber: " + idNumber);
+			Thread.sleep(16000);
+
 		} catch (Exception e) {
-			e.printStackTrace();
+			reportService.caseReportAppendContent(caseReport, "异常: " + e.toString());
+
+		} finally {
+			tryQuitWebDriver(d);
+			sendAutomationTestResult(tbo);
 		}
 
-		d.quit();
+		return tbo;
 	}
 
 	private void welcomePage(WebDriver d) {
@@ -119,12 +95,12 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		start.click();
 	}
 
-	private void phoneInfoRecord(WebDriver d) {
+	private void phoneInfoRecord(WebDriver d, HsbcWechatPreregistDTO dto) {
 		String regionPath = xPathBuilder.start("div").addClass("help-block1 phone-block").findChild("select")
 				.getXpath();
 		WebElement regionEle = d.findElement(By.xpath(regionPath));
 		Select regionSelector = new Select(regionEle);
-		if (!optionDTO.getMainlandPhoneFlag()) {
+		if (!dto.getMainlandPhoneFlag()) {
 //			regionSelector.selectByValue("object:65");
 			regionSelector.selectByIndex(2); // 澳门
 		}
@@ -134,7 +110,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		WebElement phoneInput = d.findElement(By.xpath(phoneInputPath));
 		phoneInput.click();
 		phoneInput.clear();
-		phoneInput.sendKeys(phone);
+		phoneInput.sendKeys(dto.getPhoneNumber());
 
 		try {
 			threadSleepRandomTime();
@@ -176,7 +152,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 
 	}
 
-	private void selectBankBranch(WebDriver d) {
+	private void selectBankBranch(WebDriver d, HsbcWechatPreregistDTO dto) {
 		String branchSelectPath = "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[3]/div[1]/select[1]";
 		WebElement branchSelectorEle = d.findElement(By.xpath(branchSelectPath));
 		Select branchSelector = new Select(branchSelectorEle);
@@ -191,7 +167,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		WebElement employIdInput = d.findElement(By.xpath(employIdInputPath));
 		employIdInput.click();
 		employIdInput.clear();
-		employIdInput.sendKeys(optionDTO.getStaffId());
+		employIdInput.sendKeys(dto.getStaffId());
 
 		try {
 			threadSleepRandomTime();
@@ -204,7 +180,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 
 	}
 
-	private void inputPersonalInfo(WebDriver d) {
+	private void inputPersonalInfo(WebDriver d, HsbcWechatPreregistDTO dto) {
 		WebElement lastNameInput = d.findElement(By.xpath("//input[@id='lastName']"));
 		lastNameInput.click();
 		lastNameInput.clear();
@@ -217,7 +193,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 
 		WebElement regionSelectEle = d.findElement(By.xpath("//select[@id='auto_nationality']"));
 		Select regionSelector = new Select(regionSelectEle);
-		if (optionDTO.getMainlandFlag()) {
+		if (dto.getMainlandFlag()) {
 			regionSelector.selectByIndex(0);
 			WebElement idCardCreatorInput = d.findElement(
 					By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[28]/input[1]"));
@@ -231,7 +207,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		WebElement idCardNumbersInput = d.findElement(By.xpath("//input[@id='idCardNumbers']"));
 		idCardNumbersInput.click();
 		idCardNumbersInput.clear();
-		idCardNumbersInput.sendKeys(idNumber);
+		idCardNumbersInput.sendKeys(dto.getIdNumber());
 
 		WebElement createIdCardYearSelectEle = d.findElement(By
 				.xpath("//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[29]/div[1]/span[1]/select[1]"));
@@ -358,7 +334,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		declarationCheckbox.click();
 
 		tryClickAlert(d);
-		
+
 		WebElement continueButton = d.findElement(By.xpath(
 				"/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[3]/div[1]/div[1]/div[1]/button[1]"));
 		continueButton.click();
@@ -373,7 +349,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		declarationCheckbox.click();
 
 		tryClickAlert(d);
-		
+
 		WebElement continueButton = d
 				.findElement(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[4]/div[1]/button[1]"));
 		continueButton.click();
@@ -384,14 +360,14 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 	private void confirm(WebDriver d) {
 
 		tryClickAlert(d);
-		
+
 		WebElement confirmButton = d.findElement(By.xpath(
 				"/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[3]/div[3]/div[1]/button[1]"));
 		confirmButton.click();
 
 		tryClickAlert(d);
 	}
-	
+
 	private void tryClickAlert(WebDriver d) {
 		if (webATToolService.alertExists(d)) {
 			try {
