@@ -1,51 +1,22 @@
 package demo.scriptCore.localClawing.pojo.dto;
 
+import java.util.List;
+
 public class TextbookDownloadOptionDTO {
 
-	private String mainUrl;
+	private List<TextbookDownloadSubOption> optionList;
 
-	private Integer startNum;
-
-	private Integer endNum;
-
-	private String savePath;
-
-	public String getSavePath() {
-		return savePath;
+	public List<TextbookDownloadSubOption> getOptionList() {
+		return optionList;
 	}
 
-	public void setSavePath(String savePath) {
-		this.savePath = savePath;
-	}
-
-	public String getMainUrl() {
-		return mainUrl;
-	}
-
-	public void setMainUrl(String mainUrl) {
-		this.mainUrl = mainUrl;
-	}
-
-	public Integer getStartNum() {
-		return startNum;
-	}
-
-	public void setStartNum(Integer startNum) {
-		this.startNum = startNum;
-	}
-
-	public Integer getEndNum() {
-		return endNum;
-	}
-
-	public void setEndNum(Integer endNum) {
-		this.endNum = endNum;
+	public void setOptionList(List<TextbookDownloadSubOption> optionList) {
+		this.optionList = optionList;
 	}
 
 	@Override
 	public String toString() {
-		return "TextbookDownloadOptionDTO [mainUrl=" + mainUrl + ", startNum=" + startNum + ", endNum=" + endNum
-				+ ", savePath=" + savePath + "]";
+		return "TextbookDownloadOptionDTO [optionList=" + optionList + "]";
 	}
 
 }
