@@ -38,42 +38,16 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 			welcomePage(d);
 
 			threadSleepRandomTime();
-
-			phoneInfoRecord(d, dto);
-
-			threadSleepRandomTime();
-
-			selectBankBranch(d, dto);
-
-			threadSleepRandomTime();
-
-			inputPersonalInfo(d, dto);
-
-			threadSleepRandomTime();
-
-			connections(d);
-
-			threadSleepRandomTime();
-
-			jobInfos(d);
-
-			threadSleepRandomTime();
-
-			taxDeclaration(d);
-
-			threadSleepRandomTime();
-
-			tAndC(d);
-
-			threadSleepRandomTime();
-
-			confirm(d);
 			
-			threadSleepRandomTime();
-
-			confirm(d);
-
-			Thread.sleep(16000);
+			phoneInfoRecordPrefixPart(d, dto);
+			
+			threadSleepRandomTimeLong();
+			
+			if(phoneIsReuse(d)) {
+				phoneReusePreregistFlow(d, dto);
+			} else {
+				normalPreregistFlow(d, dto);
+			}
 
 		} catch (Exception e) {
 			reportService.caseReportAppendContent(caseReport, "异常: " + e.toString());
@@ -85,6 +59,94 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 
 		return tbo;
 	}
+	
+	private void normalPreregistFlow(WebDriver d, HsbcWechatPreregistDTO dto) throws InterruptedException {
+		
+		phoneInfoRecordSuffixPart(d, dto);
+
+		threadSleepRandomTime();
+
+		selectBankBranch(d, dto);
+
+		threadSleepRandomTime();
+
+		inputPersonalInfo(d, dto);
+
+		threadSleepRandomTime();
+
+		connections(d);
+
+		threadSleepRandomTime();
+
+		jobInfos(d);
+
+		threadSleepRandomTime();
+
+		taxDeclaration(d);
+
+		threadSleepRandomTime();
+
+		tAndC(d);
+
+		threadSleepRandomTime();
+
+		confirm(d);
+		
+		threadSleepRandomTime();
+
+		confirm(d);
+
+		Thread.sleep(16000);
+	}
+	
+	private void phoneReusePreregistFlow(WebDriver d, HsbcWechatPreregistDTO dto) throws InterruptedException {
+
+		d.get(dto.getMainUrl());
+		
+		threadSleepRandomTime();
+		
+		welcomePageForPhoneReuse(d);
+		
+		phoneInfoRecordPrefixPart(d, dto);
+		
+		threadSleepRandomTime();
+		
+		phoneInfoRecordSuffixPart(d, dto);
+
+		threadSleepRandomTime();
+
+		selectBankBranch(d, dto);
+
+		threadSleepRandomTime();
+
+		inputPersonalInfo(d, dto);
+
+		threadSleepRandomTime();
+
+		connections(d);
+
+		threadSleepRandomTime();
+
+		jobInfos(d);
+
+		threadSleepRandomTime();
+
+		taxDeclaration(d);
+
+		threadSleepRandomTime();
+
+		tAndC(d);
+
+		threadSleepRandomTime();
+
+		confirm(d);
+		
+		threadSleepRandomTime();
+
+		confirm(d);
+
+		Thread.sleep(16000);
+	}
 
 	private void welcomePage(WebDriver d) {
 		WebElement accept1 = d.findElement(By.id("landing_accept_input"));
@@ -94,8 +156,17 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		WebElement start = d.findElement(By.id("landing_start"));
 		start.click();
 	}
-
-	private void phoneInfoRecord(WebDriver d, HsbcWechatPreregistDTO dto) {
+	
+	private void welcomePageForPhoneReuse(WebDriver d) {
+		WebElement accept1 = d.findElement(By.id("landing_accept_input"));
+		accept1.click();
+		WebElement accept2 = d.findElement(By.id("landing_accept_callback"));
+		accept2.click();
+		WebElement start = d.findElement(By.id("landing_retrieve"));
+		start.click();
+	}
+	
+	private void phoneInfoRecordPrefixPart(WebDriver d, HsbcWechatPreregistDTO dto) {
 		String regionPath = xPathBuilder.start("div").addClass("help-block1 phone-block").findChild("select")
 				.getXpath();
 		WebElement regionEle = d.findElement(By.xpath(regionPath));
@@ -111,23 +182,24 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		phoneInput.click();
 		phoneInput.clear();
 		phoneInput.sendKeys(dto.getPhoneNumber());
-
-		try {
-			threadSleepRandomTime();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
+		
 		String nextStepPath = xPathBuilder.start("div").addClass("fadeIn5").getXpath();
 		WebElement nextStep = d.findElement(By.xpath(nextStepPath));
 		nextStep.click();
 
-		try {
-			threadSleepRandomTimeLong();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+	}
+	
+	private boolean phoneIsReuse(WebDriver d) {
 
+		try {
+			WebElement reuseReminder = d.findElement(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[7]/div[1]"));
+			return reuseReminder.isDisplayed();
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	private void phoneInfoRecordSuffixPart(WebDriver d, HsbcWechatPreregistDTO dto) {
 		String smsVerifyPath = xPathBuilder.start("div").addClass("account-tile__inner verifiDive").findChild("div", 1)
 				.findChild("div", 1).findChild("div", 1).findChild("input").addType("tel").getXpath();
 		WebElement smsVerifyInput = d.findElement(By.xpath(smsVerifyPath));
@@ -151,7 +223,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		}
 
 	}
-
+	
 	private void selectBankBranch(WebDriver d, HsbcWechatPreregistDTO dto) {
 		String branchSelectPath = "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[3]/div[1]/select[1]";
 		WebElement branchSelectorEle = d.findElement(By.xpath(branchSelectPath));
