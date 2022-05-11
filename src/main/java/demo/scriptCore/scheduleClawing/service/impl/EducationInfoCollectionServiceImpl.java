@@ -61,16 +61,24 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 
 			webDriver = webDriverService.buildChromeWebDriver();
 			
-			List<String> newUrlList = runHaizhuGovInfoCollector(
-					dto.getSourceUrl().get(EducationInfoSourceType.HAIZHU_GOV_CN.getName()), dto.getUrlHistory());
-			if (!newUrlList.isEmpty()) {
-				dto.getUrlHistory().addAll(newUrlList);
+			List<String> newUrlList = null;
+			
+			try {
+				newUrlList = runHaizhuGovInfoCollector(
+						dto.getSourceUrl().get(EducationInfoSourceType.HAIZHU_GOV_CN.getName()), dto.getUrlHistory());
+				if (!newUrlList.isEmpty()) {
+					dto.getUrlHistory().addAll(newUrlList);
+				}
+			} catch (Exception e) {
 			}
 
-			newUrlList = runGzEduCmsInfoCollector(webDriver,
-					dto.getSourceUrl().get(EducationInfoSourceType.GZEDUCMS_CN.getName()), dto.getUrlHistory());
-			if (!newUrlList.isEmpty()) {
-				dto.getUrlHistory().addAll(newUrlList);
+			try {
+				newUrlList = runGzEduCmsInfoCollector(webDriver,
+						dto.getSourceUrl().get(EducationInfoSourceType.GZEDUCMS_CN.getName()), dto.getUrlHistory());
+				if (!newUrlList.isEmpty()) {
+					dto.getUrlHistory().addAll(newUrlList);
+				}
+			} catch (Exception e) {
 			}
 
 			JSONObject json = JSONObject.fromObject(dto);
