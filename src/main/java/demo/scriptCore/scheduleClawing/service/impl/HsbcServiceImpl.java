@@ -277,17 +277,13 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		
 		WebElement certificateTypeSelectEle = d.findElement(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[17]/div[2]/select[1]"));
 		Select certificateTypeSelector = new Select(certificateTypeSelectEle);
-		if(HsbcIdType.PASSPORT.getId().equals(dto.getIdType())) {
-			certificateTypeSelector.selectByIndex(1);
-		} else if(HsbcIdType.TAIWAN_TRAVEL_PERMIT.getId().equals(dto.getIdType())) {
-			certificateTypeSelector.selectByIndex(2);
-		} else if(HsbcIdType.HK_MC_LAISSEZ_PASSER.getId().equals(dto.getIdType())) {
-			certificateTypeSelector.selectByIndex(3);
-		} else if(HsbcIdType.FOREIGN_PERMANENT_RESIDENT_ID.getId().equals(dto.getIdType())) {
-			certificateTypeSelector.selectByIndex(5);
-		} else if(HsbcIdType.HK_MC_TW_LIVING_ID_CARD.getId().equals(dto.getIdType())) {
-			certificateTypeSelector.selectByIndex(6);
+		
+		HsbcIdType idType = HsbcIdType.getType(dto.getIdType());
+		i = findTargetOptionIndex(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[17]/div[2]/select[1]/option", idType.getCnName());
+		if(i == -1) {
+			i = 0;
 		}
+		certificateTypeSelector.selectByIndex(i);
 		
 		WebElement idCardCreatorInput = d.findElement(
 				By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[28]/input[1]"));
