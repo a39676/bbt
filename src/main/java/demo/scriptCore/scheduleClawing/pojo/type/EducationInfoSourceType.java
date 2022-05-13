@@ -4,6 +4,7 @@ public enum EducationInfoSourceType {
 	
 	GZEDUCMS_CN("gzeducms", 1),
 	HAIZHU_GOV_CN("haizhu", 2),
+	JYJ_GZ("jyjgzgovcn", 3),
 	;
 	
 	private String name;

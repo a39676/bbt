@@ -4,6 +4,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -11,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
 import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
@@ -73,6 +77,16 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 			}
 
 			try {
+				newUrlList = runGzJyjInfoCollector(
+						dto.getSourceUrl().get(EducationInfoSourceType.JYJ_GZ.getName()), dto.getUrlHistory());
+				if (!newUrlList.isEmpty()) {
+					dto.getUrlHistory().addAll(newUrlList);
+				}
+			} catch (Exception e) {
+			}
+
+			
+			try {
 				newUrlList = runGzEduCmsInfoCollector(webDriver,
 						dto.getSourceUrl().get(EducationInfoSourceType.GZEDUCMS_CN.getName()), dto.getUrlHistory());
 				if (!newUrlList.isEmpty()) {
@@ -81,8 +95,9 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 			} catch (Exception e) {
 			}
 
-			JSONObject json = JSONObject.fromObject(dto);
-			ioUtil.byteToFile(json.toString().getBytes(StandardCharsets.UTF_8), PARAM_PATH_STR);
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			String jsonString = gson.toJson(dto);
+			ioUtil.byteToFile(jsonString.toString().getBytes(StandardCharsets.UTF_8), PARAM_PATH_STR);
 
 			r.setIsSuccess();
 
@@ -138,6 +153,34 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 		}
 
 		return newInfoUrlList;
+	}
+	
+	private List<String> runGzJyjInfoCollector(String mainUrl, List<String> urlHistoryList) {
+//		for http://jyj.gz.gov.cn/yw/zsks/index.html
+		HttpUtil h = new HttpUtil();
+		List<String> newInfoUrlList = new ArrayList<>();
+
+		try {
+			String content = h.sendGet(mainUrl);
+			
+			Element doc = Jsoup.parse(content);
+			Elements newsListDiv = doc.select("div.news_list");
+			Elements targetUl = newsListDiv.select("ul");
+			Elements targetAlinkList = targetUl.select("a[href]");
+			for (Element eleA : targetAlinkList) {
+				String title = eleA.attr("title");
+				String url = eleA.attr("href");
+				if (!urlHistoryList.contains(url)) {
+					newInfoUrlList.add(url);
+					sendMsg("New url: " + url + " , title: " + title);
+				}
+			}
+		} catch (Exception e) {
+		}
+
+		return newInfoUrlList;
+		
+		
 	}
 	
 	private List<String> runGzEduCmsInfoCollector(WebDriver d, String mainUrl, List<String> urlHistoryList) {
