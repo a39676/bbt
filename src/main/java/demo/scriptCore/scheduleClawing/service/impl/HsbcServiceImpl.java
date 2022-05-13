@@ -11,9 +11,11 @@ import org.springframework.stereotype.Service;
 import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import autoTest.testEvent.searchingDemo.pojo.dto.HsbcWechatPreregistDTO;
+import autoTest.testEvent.searchingDemo.pojo.type.HsbcIdType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.scheduleClawing.service.HsbcService;
+import tool.pojo.type.InternationalityType;
 
 @Service
 public class HsbcServiceImpl extends AutomationTestCommonService implements HsbcService {
@@ -167,14 +169,14 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 	}
 	
 	private void phoneInfoRecordPrefixPart(WebDriver d, HsbcWechatPreregistDTO dto) {
-		String regionPath = xPathBuilder.start("div").addClass("help-block1 phone-block").findChild("select")
-				.getXpath();
-		WebElement regionEle = d.findElement(By.xpath(regionPath));
+		WebElement regionEle = d.findElement(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[4]/div[1]/select[1]"));
 		Select regionSelector = new Select(regionEle);
-		if (!dto.getMainlandPhoneFlag()) {
-//			regionSelector.selectByValue("object:65");
-			regionSelector.selectByIndex(2); // 澳门
+		InternationalityType areaType = InternationalityType.getType(dto.getPhoneAreaType(), dto.getPhoneAreaName());
+		int i = findTargetOptionIndex(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[4]/div[1]/select[1]/option", areaType.getCnName());
+		if(i == -1) {
+			i = 0;
 		}
+		regionSelector.selectByIndex(i);
 
 		String phoneInputPath = xPathBuilder.start("div").addClass("help-block1 phone-block").findChild("input")
 				.getXpath();
@@ -256,26 +258,43 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		WebElement lastNameInput = d.findElement(By.xpath("//input[@id='lastName']"));
 		lastNameInput.click();
 		lastNameInput.clear();
-		lastNameInput.sendKeys("测");
+		lastNameInput.sendKeys(dto.getCustomerLastName());
 
 		WebElement firstNameInput = d.findElement(By.xpath("//input[@id='firstName']"));
 		firstNameInput.click();
 		firstNameInput.clear();
-		firstNameInput.sendKeys("试");
-
+		firstNameInput.sendKeys(dto.getCustomerFirstName());
+		
 		WebElement regionSelectEle = d.findElement(By.xpath("//select[@id='auto_nationality']"));
 		Select regionSelector = new Select(regionSelectEle);
-		if (dto.getMainlandFlag()) {
-			regionSelector.selectByIndex(0);
-			WebElement idCardCreatorInput = d.findElement(
-					By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[28]/input[1]"));
-			idCardCreatorInput.click();
-			idCardCreatorInput.clear();
-			idCardCreatorInput.sendKeys("发证机关");
-		} else {
-			regionSelector.selectByIndex(3);
+		
+		InternationalityType areaType = InternationalityType.getType(dto.getAreaType(), dto.getAreaName());
+		int i = findTargetOptionIndex(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[12]/select[1]/option", areaType.getCnName());
+		if(i == -1) {
+			i = 0;
 		}
-
+		regionSelector.selectByIndex(i);
+		
+		WebElement certificateTypeSelectEle = d.findElement(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[17]/div[2]/select[1]"));
+		Select certificateTypeSelector = new Select(certificateTypeSelectEle);
+		if(HsbcIdType.PASSPORT.getId().equals(dto.getIdType())) {
+			certificateTypeSelector.selectByIndex(1);
+		} else if(HsbcIdType.TAIWAN_TRAVEL_PERMIT.getId().equals(dto.getIdType())) {
+			certificateTypeSelector.selectByIndex(2);
+		} else if(HsbcIdType.HK_MC_LAISSEZ_PASSER.getId().equals(dto.getIdType())) {
+			certificateTypeSelector.selectByIndex(3);
+		} else if(HsbcIdType.FOREIGN_PERMANENT_RESIDENT_ID.getId().equals(dto.getIdType())) {
+			certificateTypeSelector.selectByIndex(5);
+		} else if(HsbcIdType.HK_MC_TW_LIVING_ID_CARD.getId().equals(dto.getIdType())) {
+			certificateTypeSelector.selectByIndex(6);
+		}
+		
+		WebElement idCardCreatorInput = d.findElement(
+				By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[28]/input[1]"));
+		idCardCreatorInput.click();
+		idCardCreatorInput.clear();
+		idCardCreatorInput.sendKeys("发证机关");
+		
 		WebElement idCardNumbersInput = d.findElement(By.xpath("//input[@id='idCardNumbers']"));
 		idCardNumbersInput.click();
 		idCardNumbersInput.clear();
@@ -310,6 +329,34 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 				.xpath("//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[30]/div[1]/span[3]/select[1]"));
 		Select idCardValidDaySelector = new Select(idCardValidDaySelectEle);
 		idCardValidDaySelector.selectByValue("string:03");
+		
+		if(InternationalityType.CN.equals(areaType) && HsbcIdType.PASSPORT.getId().equals(dto.getIdType())) {
+			WebElement otherIdNumberInput = d.findElement(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[34]/input[1]"));
+			otherIdNumberInput.click();
+			otherIdNumberInput.clear();
+			otherIdNumberInput.sendKeys("123456");
+			
+			WebElement otherIdCardValidYearSelectEle = d.findElement(By
+					.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[35]/div[1]/span[1]/select[1]"));
+			Select otherIdCardValidYearSelector = new Select(otherIdCardValidYearSelectEle);
+			otherIdCardValidYearSelector.selectByIndex(2);
+
+			WebElement otheridCardValidMonthSelectEle = d.findElement(By
+					.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[35]/div[1]/span[2]/select[1]"));
+			Select otherIdCardValidMonthSelector = new Select(otheridCardValidMonthSelectEle);
+			otherIdCardValidMonthSelector.selectByIndex(2);
+
+			WebElement otherIdCardValidDaySelectEle = d.findElement(By
+					.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[35]/div[1]/span[3]/select[1]"));
+			Select otherIdCardValidDaySelector = new Select(otherIdCardValidDaySelectEle);
+			otherIdCardValidDaySelector.selectByIndex(2);
+			
+			WebElement otherIdCardCertificateIssuingAgencySelectEle = d.findElement(By
+					.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[37]/div[2]/select[1]"));
+			Select otherIdCardCertificateIssuingAgencySelector = new Select(otherIdCardCertificateIssuingAgencySelectEle);
+			otherIdCardCertificateIssuingAgencySelector.selectByIndex(2);
+			
+		}
 
 		WebElement continueButton = d.findElement(By.xpath("//button[contains(text(),'继续')]"));
 		continueButton.click();
@@ -448,6 +495,22 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 			} catch (Exception e) {
 			}
 		}
+	}
+	
+	private int findTargetOptionIndex(WebDriver d, String optionXpath, String keyword) {
+		List<WebElement> optionList = d.findElements(By.xpath(optionXpath));
+		int i = 0;
+		boolean findout = false;
+		WebElement ele = null;
+		String attrStr = null;
+		for(; i < optionList.size() && !findout; i++) {
+			ele = optionList.get(i);
+			attrStr = ele.getAttribute("label");
+			if(attrStr != null && attrStr.contains(keyword)) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 }

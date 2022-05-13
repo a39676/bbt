@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import at.screenshot.service.ScreenshotService;
-import at.tool.WebATToolService;
+import at.tool.WebDriverATToolService;
 import at.xpath.pojo.bo.XpathBuilderBO;
 import autoTest.report.service.ATJsonReportService;
 import autoTest.report.service.ATWordReportService;
@@ -49,8 +49,8 @@ public class ATComponent {
 	}
 	
 	@Bean
-	public WebATToolService getWebATToolService() {
-		return new WebATToolService();
+	public WebDriverATToolService getWebATToolService() {
+		return new WebDriverATToolService();
 	}
 	
 	@Bean
