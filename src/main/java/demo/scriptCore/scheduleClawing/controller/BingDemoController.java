@@ -1,4 +1,4 @@
-package demo.scriptCore.demo.controller;
+package demo.scriptCore.scheduleClawing.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import autoTest.testEvent.searchingDemo.pojo.constant.SearchingDemoUrl;
-import demo.scriptCore.demo.pojo.dto.InsertBingSearchDemoDTO;
-import demo.scriptCore.demo.service.BingDemoPrefixService;
+import demo.scriptCore.scheduleClawing.pojo.dto.InsertBingSearchDemoDTO;
+import demo.scriptCore.scheduleClawing.service.BingDemoPrefixService;
 
 @Controller
 @RequestMapping(value = SearchingDemoUrl.ROOT)

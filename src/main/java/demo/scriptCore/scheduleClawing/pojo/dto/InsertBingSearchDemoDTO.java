@@ -1,4 +1,4 @@
-package demo.scriptCore.demo.pojo.dto;
+package demo.scriptCore.scheduleClawing.pojo.dto;
 
 import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testEvent.searchingDemo.pojo.dto.BingSearchInHomePageDTO;

@@ -1,7 +1,8 @@
 package demo.selenium.service.impl;
 
-import java.io.IOException;
+import java.lang.reflect.Type;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Random;
 import java.util.function.Function;
 
@@ -16,11 +17,20 @@ import org.openqa.selenium.support.ui.Wait;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 
 import at.webDriver.pojo.constant.WebDriverConstant;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.baseCommon.service.CommonService;
 import net.sf.json.JSONObject;
+import toolPack.dateTimeHandle.LocalDateTimeHandler;
 
 @Service
 public class AuxiliaryToolServiceImpl extends CommonService {
@@ -88,25 +98,39 @@ public class AuxiliaryToolServiceImpl extends CommonService {
 		String className = clazz.getSimpleName();
 
 		String paramStr = bo.getParamStr();
-		
+
 		try {
 			JSONObject paramJson = JSONObject.fromObject(paramStr);
-			
+
 			JSONObject targetJson = paramJson.getJSONObject(className);
-			
-			return new Gson().fromJson(targetJson.toString(), clazz);
+
+			Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
+
+			return gson.fromJson(targetJson.toString(), clazz);
 
 		} catch (Exception e) {
-			String msg = String.format("get param DTO error, module: %s, test flow: %s, param name: %s ", bo.getModuleType().getModuleName(), bo.getFlowName(), className);
+			String msg = String.format("get param DTO error, module: %s, test flow: %s, param name: %s ",
+					bo.getModuleType().getModuleName(), bo.getFlowName(), className);
 			log.error(msg);
 		}
 		return null;
 
 	}
 
-	public static void main(String[] args) throws IOException {
-//		SeleniumAuxiliaryToolServiceImpl t = new SeleniumAuxiliaryToolServiceImpl();
-//		Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36
-//		t.byXpathBuilder("a", "class", "value");
+	private final static class LocalDateTimeAdapter
+			implements JsonSerializer<LocalDateTime>, JsonDeserializer<LocalDateTime> {
+
+		@Override
+		public JsonElement serialize(LocalDateTime date, Type typeOfSrc, JsonSerializationContext context) {
+			LocalDateTimeHandler l = new LocalDateTimeHandler();
+			return new JsonPrimitive(l.dateToStr(date));
+		}
+
+		@Override
+		public LocalDateTime deserialize(JsonElement element, Type type, JsonDeserializationContext context)
+				throws JsonParseException {
+			LocalDateTimeHandler l = new LocalDateTimeHandler();
+			return l.jsonStrToLocalDateTime(String.valueOf(element));
+		}
 	}
 }

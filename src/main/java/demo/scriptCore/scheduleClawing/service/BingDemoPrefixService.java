@@ -1,8 +1,8 @@
-package demo.scriptCore.demo.service;
+package demo.scriptCore.scheduleClawing.service;
 
 import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
-import demo.scriptCore.demo.pojo.dto.InsertBingSearchDemoDTO;
+import demo.scriptCore.scheduleClawing.pojo.dto.InsertBingSearchDemoDTO;
 
 public interface BingDemoPrefixService {
 

@@ -1,4 +1,4 @@
-package demo.scriptCore.demo.pojo.type.testCase;
+package demo.scriptCore.scheduleClawing.pojo.type.testCase;
 
 public enum BingSearchCaseType {
 

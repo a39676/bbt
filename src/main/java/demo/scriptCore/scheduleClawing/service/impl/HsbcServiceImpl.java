@@ -1,5 +1,6 @@
 package demo.scriptCore.scheduleClawing.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -50,6 +51,8 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 			} else {
 				normalPreregistFlow(d, dto);
 			}
+			
+			reportService.caseReportAppendContent(caseReport, "Done, " + localDateTimeHandler.dateToStr(LocalDateTime.now()));
 
 		} catch (Exception e) {
 			reportService.caseReportAppendContent(caseReport, "异常: " + e.toString());

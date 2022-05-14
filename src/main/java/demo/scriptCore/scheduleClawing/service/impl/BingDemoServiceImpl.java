@@ -1,4 +1,4 @@
-package demo.scriptCore.demo.service.impl;
+package demo.scriptCore.scheduleClawing.service.impl;
 
 import java.util.List;
 
@@ -15,9 +15,9 @@ import autoTest.testEvent.pojo.type.AutomationTestFlowResultType;
 import autoTest.testEvent.searchingDemo.pojo.dto.BingSearchInHomePageDTO;
 import autoTest.testEvent.searchingDemo.pojo.type.BingDemoSearchFlowType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
-import demo.scriptCore.demo.pojo.pe.HomePage;
-import demo.scriptCore.demo.pojo.pe.ResultPage;
-import demo.scriptCore.demo.service.BingDemoService;
+import demo.scriptCore.scheduleClawing.pojo.pe.HomePage;
+import demo.scriptCore.scheduleClawing.pojo.pe.ResultPage;
+import demo.scriptCore.scheduleClawing.service.BingDemoService;
 
 @Service
 public class BingDemoServiceImpl extends BingDemoCommonService implements BingDemoService {

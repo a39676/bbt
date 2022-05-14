@@ -1,4 +1,4 @@
-package demo.scriptCore.demo.service.impl;
+package demo.scriptCore.scheduleClawing.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,9 +8,9 @@ import autoTest.testEvent.searchingDemo.pojo.type.BingDemoSearchFlowType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.scriptCore.common.service.AutomationTestCommonService;
-import demo.scriptCore.demo.pojo.dto.InsertBingSearchDemoDTO;
-import demo.scriptCore.demo.service.BingDemoPrefixService;
-import demo.scriptCore.demo.service.BingDemoService;
+import demo.scriptCore.scheduleClawing.pojo.dto.InsertBingSearchDemoDTO;
+import demo.scriptCore.scheduleClawing.service.BingDemoPrefixService;
+import demo.scriptCore.scheduleClawing.service.BingDemoService;
 import net.sf.json.JSONObject;
 
 @Service

@@ -1,4 +1,4 @@
-package demo.scriptCore.demo.service.impl;
+package demo.scriptCore.scheduleClawing.service.impl;
 
 import demo.scriptCore.common.service.AutomationTestCommonService;
 

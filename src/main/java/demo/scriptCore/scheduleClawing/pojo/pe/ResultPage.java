@@ -1,4 +1,4 @@
-package demo.scriptCore.demo.pojo.pe;
+package demo.scriptCore.scheduleClawing.pojo.pe;
 
 public class ResultPage {
 

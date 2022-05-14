@@ -1,4 +1,4 @@
-package demo.scriptCore.demo.service;
+package demo.scriptCore.scheduleClawing.service;
 
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 
