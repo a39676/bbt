@@ -10,6 +10,8 @@ import org.openqa.selenium.support.ui.Select;
 import org.springframework.stereotype.Service;
 
 import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
+import autoTest.testEvent.pojo.result.AutomationTestCaseResult;
+import autoTest.testEvent.pojo.type.AutomationTestFlowResultType;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import autoTest.testEvent.searchingDemo.pojo.dto.HsbcWechatPreregistDTO;
 import autoTest.testEvent.searchingDemo.pojo.type.HsbcIdType;
@@ -26,6 +28,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		WebDriver d = null;
 		ScheduleClawingType caseType = ScheduleClawingType.HSBC_WECHAT_PREREGIST;
 		JsonReportOfCaseDTO caseReport = initCaseReportDTO(caseType.getFlowName());
+		AutomationTestCaseResult r = initCaseResult(caseType.getFlowName());
 
 		try {
 			HsbcWechatPreregistDTO dto = auxTool.buildParamDTO(tbo, HsbcWechatPreregistDTO.class);
@@ -53,11 +56,14 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 			}
 			
 			reportService.caseReportAppendContent(caseReport, "Done, " + localDateTimeHandler.dateToStr(LocalDateTime.now()));
-
+			r.setResultType(AutomationTestFlowResultType.PASS);
+			
 		} catch (Exception e) {
 			reportService.caseReportAppendContent(caseReport, "异常: " + e.toString());
 
 		} finally {
+			tbo.getCaseResultList().add(r);
+			tbo.getReport().getCaseReportList().add(caseReport);
 			tryQuitWebDriver(d);
 			sendAutomationTestResult(tbo);
 		}
@@ -111,6 +117,8 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		threadSleepRandomTime();
 		
 		welcomePageForPhoneReuse(d);
+		
+		threadSleepRandomTime();
 		
 		phoneInfoRecordPrefixPart(d, dto);
 		
