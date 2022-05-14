@@ -53,7 +53,6 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 			tbo = scheduleClawingPrefixService.receiveAndBuildTestEventBO(dto);
 		}
 
-		tbo.setEndTime(LocalDateTime.now());
 		tbo = runEvent(tbo);
 		if(!tbo.isPass()) {
 			constantService.addFailedTestResult(tbo.getEventId());

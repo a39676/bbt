@@ -67,6 +67,7 @@ public abstract class AutomationTestCommonService extends SeleniumCommonService 
 	}
 	
 	protected void sendAutomationTestResult(TestEventBO bo) {
+		bo.setEndTime(LocalDateTime.now());
 		AutomationTestResultDTO dto = buildAutomationTestResultDTO(bo);
 		automationTestResultProducer.send(dto);
 	}
