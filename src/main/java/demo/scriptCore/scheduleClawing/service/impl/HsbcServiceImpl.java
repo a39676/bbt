@@ -51,8 +51,47 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 			
 			if(phoneIsReuse(d)) {
 				phoneReusePreregistFlow(d, dto);
-			} else {
-				normalPreregistFlow(d, dto);
+			}
+			
+			threadSleepRandomTime();
+			
+			phoneInfoRecordSuffixPart(d, dto);
+
+			threadSleepRandomTime();
+
+			selectBankBranch(d, dto);
+
+			threadSleepRandomTime();
+
+			inputPersonalInfo(d, dto);
+
+			threadSleepRandomTime();
+
+			connections(d);
+
+			threadSleepRandomTime();
+
+			jobInfos(d);
+
+			threadSleepRandomTime();
+
+			taxDeclaration(d);
+
+			threadSleepRandomTime();
+
+			tAndC(d);
+
+			threadSleepRandomTime();
+
+			confirm(d);
+			
+			try {
+				threadSleepRandomTime();
+				
+				confirm(d);
+				
+				Thread.sleep(16000);
+			} catch (Exception e) {
 			}
 			
 			reportService.caseReportAppendContent(caseReport, "Done, " + localDateTimeHandler.dateToStr(LocalDateTime.now()));
@@ -71,47 +110,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		return tbo;
 	}
 	
-	private void normalPreregistFlow(WebDriver d, HsbcWechatPreregistDTO dto) throws InterruptedException {
-		
-		phoneInfoRecordSuffixPart(d, dto);
-
-		threadSleepRandomTime();
-
-		selectBankBranch(d, dto);
-
-		threadSleepRandomTime();
-
-		inputPersonalInfo(d, dto);
-
-		threadSleepRandomTime();
-
-		connections(d);
-
-		threadSleepRandomTime();
-
-		jobInfos(d);
-
-		threadSleepRandomTime();
-
-		taxDeclaration(d);
-
-		threadSleepRandomTime();
-
-		tAndC(d);
-
-		threadSleepRandomTime();
-
-		confirm(d);
-		
-		threadSleepRandomTime();
-
-		confirm(d);
-
-		Thread.sleep(16000);
-	}
-	
 	private void phoneReusePreregistFlow(WebDriver d, HsbcWechatPreregistDTO dto) throws InterruptedException {
-
 		d.get(dto.getMainUrl());
 		
 		threadSleepRandomTime();
@@ -121,44 +120,6 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		threadSleepRandomTime();
 		
 		phoneInfoRecordPrefixPart(d, dto);
-		
-		threadSleepRandomTime();
-		
-		phoneInfoRecordSuffixPart(d, dto);
-
-		threadSleepRandomTime();
-
-		selectBankBranch(d, dto);
-
-		threadSleepRandomTime();
-
-		inputPersonalInfo(d, dto);
-
-		threadSleepRandomTime();
-
-		connections(d);
-
-		threadSleepRandomTime();
-
-		jobInfos(d);
-
-		threadSleepRandomTime();
-
-		taxDeclaration(d);
-
-		threadSleepRandomTime();
-
-		tAndC(d);
-
-		threadSleepRandomTime();
-
-		confirm(d);
-		
-		threadSleepRandomTime();
-
-		confirm(d);
-
-		Thread.sleep(16000);
 	}
 
 	private void welcomePage(WebDriver d) {
