@@ -39,7 +39,7 @@ public class CryptoCoinPriceServiceImpl extends AutomationTestCommonService impl
 				throw new Exception();
 			}
 
-			CryptoCoinDailyDataQueryDTO paramDTO = auxTool.buildParamDTO(tbo, CryptoCoinDailyDataQueryDTO.class);
+			CryptoCoinDailyDataQueryDTO paramDTO = buildTestEventParamFromJsonCustomization(tbo.getParamStr(), CryptoCoinDailyDataQueryDTO.class);
 			
 			if (paramDTO == null) {
 				reportService.caseReportAppendContent(caseReport, "参数文件结构异常");

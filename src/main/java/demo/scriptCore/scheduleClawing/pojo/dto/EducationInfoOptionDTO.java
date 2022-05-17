@@ -6,7 +6,7 @@ import java.util.Map;
 public class EducationInfoOptionDTO {
 
 	private Map<String, String> sourceUrl;
-	private List<String> urlHistory;
+	private Map<String, List<EducationInfoOptionUrlDTO>> urlHistory;
 
 	public Map<String, String> getSourceUrl() {
 		return sourceUrl;
@@ -16,11 +16,11 @@ public class EducationInfoOptionDTO {
 		this.sourceUrl = sourceUrl;
 	}
 
-	public List<String> getUrlHistory() {
+	public Map<String, List<EducationInfoOptionUrlDTO>> getUrlHistory() {
 		return urlHistory;
 	}
 
-	public void setUrlHistory(List<String> urlHistory) {
+	public void setUrlHistory(Map<String, List<EducationInfoOptionUrlDTO>> urlHistory) {
 		this.urlHistory = urlHistory;
 	}
 

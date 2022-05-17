@@ -53,7 +53,7 @@ public class BingDemoServiceImpl extends BingDemoCommonService implements BingDe
 
 		reportService.caseReportAppendContent(caseReport, "准备进行搜索");
 
-		BingSearchInHomePageDTO dto = auxTool.buildParamDTO(tbo, BingSearchInHomePageDTO.class);
+		BingSearchInHomePageDTO dto = buildTestEventParamFromJsonCustomization(tbo.getParamStr(), BingSearchInHomePageDTO.class);
 		if (dto == null) {
 			reportService.caseReportAppendContent(caseReport, "读取参数异常");
 			return r;
@@ -107,7 +107,7 @@ public class BingDemoServiceImpl extends BingDemoCommonService implements BingDe
 
 			WebDriver d = webDriver;
 
-			BingSearchInHomePageDTO dto = auxTool.buildParamDTO(tbo, BingSearchInHomePageDTO.class);
+			BingSearchInHomePageDTO dto = buildTestEventParamFromJsonCustomization(tbo.getParamStr(), BingSearchInHomePageDTO.class);
 
 
 

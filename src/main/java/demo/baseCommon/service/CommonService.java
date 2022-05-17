@@ -1,5 +1,6 @@
 package demo.baseCommon.service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
@@ -7,11 +8,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.BaseResultType;
 import demo.baseCommon.pojo.param.PageParam;
 import demo.config.costomComponent.SnowFlake;
+import net.sf.json.JSONObject;
 import toolPack.dateTimeHandle.DateHandler;
+import toolPack.dateTimeHandle.LocalDateTimeAdapter;
 import toolPack.dateTimeHandle.LocalDateTimeHandler;
 import toolPack.ioHandle.FileUtilCustom;
 import toolPack.numericHandel.NumericUtilCustom;
@@ -22,6 +28,8 @@ public abstract class CommonService {
 	protected LocalDateTimeHandler localDateTimeHandler;
 	@Autowired
 	protected DateHandler dateHandler;
+	@Autowired
+	protected LocalDateTimeAdapter localDateTimeAdapter;
 	
 	protected final Logger log = LoggerFactory.getLogger(getClass());
 	
@@ -153,4 +161,37 @@ public abstract class CommonService {
 			return oldPath.replaceAll("\\\\", "/");
 		}
 	}
+	
+	protected <T> T buildTestEventParamFromJsonCustomization(String jsonStr, Class<T> clazz) {
+		String className = clazz.getSimpleName();
+
+		try {
+			JSONObject paramJson = JSONObject.fromObject(jsonStr);
+
+			return buildObjFromJsonCustomization(paramJson.getString(className), clazz);
+
+		} catch (Exception e) {
+			String msg = String.format("Build gson error, param name: %s ", className);
+			log.error(msg);
+		}
+		return null;
+
+	}
+	
+	protected <T> T buildObjFromJsonCustomization(String jsonStr, Class<T> clazz) {
+		String className = clazz.getSimpleName();
+
+		try {
+			Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, localDateTimeAdapter).create();
+
+			return gson.fromJson(jsonStr, clazz);
+
+		} catch (Exception e) {
+			String msg = String.format("Build gson error, param name: %s ", className);
+			log.error(msg);
+		}
+		return null;
+
+	}
+
 }

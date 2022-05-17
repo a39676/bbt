@@ -1,8 +1,11 @@
 package demo.scriptCore.scheduleClawing.service.impl;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -24,6 +27,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.scheduleClawing.pojo.dto.EducationInfoOptionDTO;
+import demo.scriptCore.scheduleClawing.pojo.dto.EducationInfoOptionUrlDTO;
 import demo.scriptCore.scheduleClawing.pojo.type.EducationInfoSourceType;
 import demo.scriptCore.scheduleClawing.service.EducationInfoCollectionService;
 import demo.tool.mq.producer.TelegramCalendarNoticeMessageAckProducer;
@@ -57,45 +61,70 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 			FileUtilCustom ioUtil = new FileUtilCustom();
 			String content = ioUtil.getStringFromFile(PARAM_PATH_STR);
 
-			EducationInfoOptionDTO dto = new Gson().fromJson(content, EducationInfoOptionDTO.class);
+			EducationInfoOptionDTO dto = buildObjFromJsonCustomization(content, EducationInfoOptionDTO.class);
 			if (dto == null) {
 				reportService.caseReportAppendContent(caseReport, "参数文件结构异常");
 				throw new Exception();
 			}
 
 			webDriver = webDriverService.buildChromeWebDriver();
-			
-			List<String> newUrlList = null;
-			
+
+			List<EducationInfoOptionUrlDTO> newUrlList = null;
+			EducationInfoSourceType sourceType = null;
+
 			try {
-				newUrlList = runHaizhuGovInfoCollector(
-						dto.getSourceUrl().get(EducationInfoSourceType.HAIZHU_GOV_CN.getName()), dto.getUrlHistory());
+				sourceType = EducationInfoSourceType.HAIZHU_GOV_CN;
+				newUrlList = runHaizhuGovInfoCollector(dto.getSourceUrl().get(sourceType.getName()),
+						dto.getUrlHistory().get(sourceType.getName()));
 				if (!newUrlList.isEmpty()) {
-					dto.getUrlHistory().addAll(newUrlList);
+					if (!dto.getUrlHistory().containsKey(sourceType.getName())) {
+						dto.getUrlHistory().put(sourceType.getName(), new ArrayList<>());
+					}
+					dto.getUrlHistory().get(sourceType.getName()).addAll(newUrlList);
 				}
 			} catch (Exception e) {
 			}
 
 			try {
-				newUrlList = runGzJyjInfoCollector(
-						dto.getSourceUrl().get(EducationInfoSourceType.JYJ_GZ.getName()), dto.getUrlHistory());
+				sourceType = EducationInfoSourceType.JYJ_GZ;
+				newUrlList = runGzJyjInfoCollector(dto.getSourceUrl().get(sourceType.getName()),
+						dto.getUrlHistory().get(sourceType.getName()));
 				if (!newUrlList.isEmpty()) {
-					dto.getUrlHistory().addAll(newUrlList);
+					if (!dto.getUrlHistory().containsKey(sourceType.getName())) {
+						dto.getUrlHistory().put(sourceType.getName(), new ArrayList<>());
+					}
+					dto.getUrlHistory().get(sourceType.getName()).addAll(newUrlList);
 				}
 			} catch (Exception e) {
 			}
-
 			
 			try {
-				newUrlList = runGzEduCmsInfoCollector(webDriver,
-						dto.getSourceUrl().get(EducationInfoSourceType.GZEDUCMS_CN.getName()), dto.getUrlHistory());
+				sourceType = EducationInfoSourceType.GZZK_1;
+				newUrlList = runGZZK_1Collector(dto.getSourceUrl().get(sourceType.getName()),
+						dto.getUrlHistory().get(sourceType.getName()));
 				if (!newUrlList.isEmpty()) {
-					dto.getUrlHistory().addAll(newUrlList);
+					if (!dto.getUrlHistory().containsKey(sourceType.getName())) {
+						dto.getUrlHistory().put(sourceType.getName(), new ArrayList<>());
+					}
+					dto.getUrlHistory().get(sourceType.getName()).addAll(newUrlList);
 				}
 			} catch (Exception e) {
 			}
 
-			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			try {
+				sourceType = EducationInfoSourceType.GZEDUCMS_CN;
+				newUrlList = runGzEduCmsInfoCollector(webDriver, dto.getSourceUrl().get(sourceType.getName()),
+						dto.getUrlHistory().get(sourceType.getName()));
+				if (!newUrlList.isEmpty()) {
+					if (!dto.getUrlHistory().containsKey(sourceType.getName())) {
+						dto.getUrlHistory().put(sourceType.getName(), new ArrayList<>());
+					}
+					dto.getUrlHistory().get(sourceType.getName()).addAll(newUrlList);
+				}
+			} catch (Exception e) {
+			}
+
+			Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, localDateTimeAdapter).setPrettyPrinting().create();
 			String jsonString = gson.toJson(dto);
 			ioUtil.byteToFile(jsonString.toString().getBytes(StandardCharsets.UTF_8), PARAM_PATH_STR);
 
@@ -128,11 +157,17 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 		return bo;
 	}
 
-	private List<String> runHaizhuGovInfoCollector(String mainUrl, List<String> urlHistoryList) {
+	private List<EducationInfoOptionUrlDTO> runHaizhuGovInfoCollector(String mainUrl, List<EducationInfoOptionUrlDTO> urlHistoryList) {
 //		text 参数可配置搜索关键字
 		HttpUtil h = new HttpUtil();
 
-		List<String> newInfoUrlList = new ArrayList<>();
+		List<EducationInfoOptionUrlDTO> newInfoUrlList = new ArrayList<>();
+		Set<String> urlStrHistorySet = new HashSet<>();
+		if(urlHistoryList != null) {
+			for (EducationInfoOptionUrlDTO urlDTO : urlHistoryList) {
+				urlStrHistorySet.add(urlDTO.getUrl());
+			}
+		}
 
 		try {
 			String content = h.sendGet(mainUrl);
@@ -140,12 +175,16 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 			content = content.substring(1, content.length() - 1);
 			JSONObject json = JSONObject.fromObject(content);
 			JSONArray resultList = json.getJSONArray("results");
+			EducationInfoOptionUrlDTO tmpDTO = null;
 			for (int i = 0; i < resultList.size(); i++) {
 				JSONObject j = resultList.getJSONObject(i);
 				String title = j.getString("title");
 				String url = j.getString("url");
-				if (!urlHistoryList.contains(url)) {
-					newInfoUrlList.add(url);
+				if (!urlStrHistorySet.contains(url)) {
+					tmpDTO = new EducationInfoOptionUrlDTO();
+					tmpDTO.setRecrodDate(LocalDateTime.now());
+					tmpDTO.setUrl(url);
+					newInfoUrlList.add(tmpDTO);
 					sendMsg("New url: " + url + " , title: " + title);
 				}
 			}
@@ -154,24 +193,34 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 
 		return newInfoUrlList;
 	}
-	
-	private List<String> runGzJyjInfoCollector(String mainUrl, List<String> urlHistoryList) {
-//		for http://jyj.gz.gov.cn/yw/zsks/index.html
-		HttpUtil h = new HttpUtil();
-		List<String> newInfoUrlList = new ArrayList<>();
 
+	private List<EducationInfoOptionUrlDTO> runGzJyjInfoCollector(String mainUrl, List<EducationInfoOptionUrlDTO> urlHistoryList) {
+		HttpUtil h = new HttpUtil();
+		List<EducationInfoOptionUrlDTO> newInfoUrlList = new ArrayList<>();
+
+		Set<String> urlStrHistorySet = new HashSet<>();
+		if(urlHistoryList != null) {
+			for (EducationInfoOptionUrlDTO urlDTO : urlHistoryList) {
+				urlStrHistorySet.add(urlDTO.getUrl());
+			}
+		}
+		
 		try {
 			String content = h.sendGet(mainUrl);
-			
+
 			Element doc = Jsoup.parse(content);
 			Elements newsListDiv = doc.select("div.news_list");
 			Elements targetUl = newsListDiv.select("ul");
 			Elements targetAlinkList = targetUl.select("a[href]");
+			EducationInfoOptionUrlDTO tmpDTO = null;
 			for (Element eleA : targetAlinkList) {
 				String title = eleA.attr("title");
 				String url = eleA.attr("href");
-				if (!urlHistoryList.contains(url)) {
-					newInfoUrlList.add(url);
+				if (!urlStrHistorySet.contains(url)) {
+					tmpDTO = new EducationInfoOptionUrlDTO();
+					tmpDTO.setRecrodDate(LocalDateTime.now());
+					tmpDTO.setUrl(url);
+					newInfoUrlList.add(tmpDTO);
 					sendMsg("New url: " + url + " , title: " + title);
 				}
 			}
@@ -179,18 +228,18 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 		}
 
 		return newInfoUrlList;
-		
-		
+
 	}
-	
-	private List<String> runGzEduCmsInfoCollector(WebDriver d, String mainUrl, List<String> urlHistoryList) {
+
+	private List<EducationInfoOptionUrlDTO> runGzEduCmsInfoCollector(WebDriver d, String mainUrl,
+			List<EducationInfoOptionUrlDTO> urlHistoryList) {
 		d.get(mainUrl);
 
 		try {
 			threadSleepRandomTime();
 		} catch (Exception e) {
 		}
-		
+
 //		尝试关闭悬浮窗
 		try {
 			WebElement floEleCloseSpan = d.findElement(By.xpath("//span[@id='ClickRemoveFlo']"));
@@ -198,7 +247,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 		} catch (Exception e) {
 		}
 
-		List<String> newInfoUrlList = new ArrayList<>();
+		List<EducationInfoOptionUrlDTO> newInfoUrlList = new ArrayList<>();
 
 //		尝试获取所有通知的列表
 		String infosXpath = xPathBuilder.start().addClass("c1-bline").getXpath();
@@ -211,8 +260,16 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 			threadSleepRandomTime();
 		} catch (Exception e) {
 		}
-		
+
+		Set<String> urlStrHistorySet = new HashSet<>();
+		if(urlHistoryList != null) {
+			for (EducationInfoOptionUrlDTO urlDTO : urlHistoryList) {
+				urlStrHistorySet.add(urlDTO.getUrl());
+			}
+		}
+
 //		逐个 url 匹配
+		EducationInfoOptionUrlDTO tmpDTO = null;
 		for (int i = 1; i < infoDivList.size() + 1; i++) {
 			try {
 				String tmpPath = normalXpath.replaceAll("_", String.valueOf(i));
@@ -220,8 +277,11 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 				String urlStr = urlA.getAttribute("href");
 				String title = urlA.getAttribute("title");
 				urlStr = mainUrl + urlStr;
-				if (!urlHistoryList.contains(urlStr)) {
-					newInfoUrlList.add(urlStr);
+				if (!urlStrHistorySet.contains(urlStr)) {
+					tmpDTO = new EducationInfoOptionUrlDTO();
+					tmpDTO.setRecrodDate(LocalDateTime.now());
+					tmpDTO.setUrl(urlStr);
+					newInfoUrlList.add(tmpDTO);
 					sendMsg("New url: " + urlStr + " , title: " + title);
 				}
 			} catch (Exception e) {
@@ -230,7 +290,43 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 
 		return newInfoUrlList;
 	}
+	
+	private List<EducationInfoOptionUrlDTO> runGZZK_1Collector(String mainUrl, List<EducationInfoOptionUrlDTO> urlHistoryList) {
+		HttpUtil h = new HttpUtil();
+		List<EducationInfoOptionUrlDTO> newInfoUrlList = new ArrayList<>();
 
+		Set<String> urlStrHistorySet = new HashSet<>();
+		if(urlHistoryList != null) {
+			for (EducationInfoOptionUrlDTO urlDTO : urlHistoryList) {
+				urlStrHistorySet.add(urlDTO.getUrl());
+			}
+		}
+		
+		try {
+			String content = h.sendGet(mainUrl);
+
+			Element doc = Jsoup.parse(content);
+			Elements targetUL = doc.select("ul.clearfix");
+			Elements targetAlinkList = targetUL.select("a[href]");
+			EducationInfoOptionUrlDTO tmpDTO = null;
+			for (Element eleA : targetAlinkList) {
+				String title = eleA.attr("title");
+				String url = eleA.attr("href");
+				if (!urlStrHistorySet.contains(url)) {
+					tmpDTO = new EducationInfoOptionUrlDTO();
+					tmpDTO.setRecrodDate(LocalDateTime.now());
+					tmpDTO.setUrl(url);
+					newInfoUrlList.add(tmpDTO);
+					sendMsg("New url: " + url + " , title: " + title);
+				}
+			}
+		} catch (Exception e) {
+		}
+
+		return newInfoUrlList;
+
+	}
+	
 	private void sendMsg(String msg) {
 		TelegramMessageDTO dto = new TelegramMessageDTO();
 		dto.setId(TelegramStaticChatID.MY_ID);

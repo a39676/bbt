@@ -31,7 +31,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		AutomationTestCaseResult r = initCaseResult(caseType.getFlowName());
 
 		try {
-			HsbcWechatPreregistDTO dto = auxTool.buildParamDTO(tbo, HsbcWechatPreregistDTO.class);
+			HsbcWechatPreregistDTO dto = buildTestEventParamFromJsonCustomization(tbo.getParamStr(), HsbcWechatPreregistDTO.class);
 			if (dto == null) {
 				reportService.caseReportAppendContent(caseReport, "读取参数异常");
 				return tbo;
