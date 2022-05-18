@@ -3,8 +3,11 @@ package demo.scriptCore.scheduleClawing.service.impl;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.jsoup.Jsoup;
@@ -51,6 +54,8 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 	@Override
 	public TestEventBO clawing(TestEventBO tbo) {
 		CommonResult r = new CommonResult();
+		
+		deleteOldUrls();
 
 		ScheduleClawingType caseType = ScheduleClawingType.EDUCATION_INFO;
 		JsonReportOfCaseDTO caseReport = initCaseReportDTO(caseType.getFlowName());
@@ -335,4 +340,41 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 		telegramMessageAckProducer.send(dto);
 	}
 
+	@Override
+	public void deleteOldUrls() {
+		FileUtilCustom ioUtil = new FileUtilCustom();
+		EducationInfoOptionDTO dto = null;
+		
+		int maxSize = 30;
+		int overloadCounting = 0;
+		
+		try {
+			String content = ioUtil.getStringFromFile(PARAM_PATH_STR);
+			dto = buildObjFromJsonCustomization(content, EducationInfoOptionDTO.class);
+		} catch (Exception e) {
+			log.error("Read EducationInfoOptionDTO record error");
+			return;
+		}
+
+		Map<String, List<EducationInfoOptionUrlDTO>> urlHistoryMap = dto.getUrlHistory();
+		
+		for(Entry<String, List<EducationInfoOptionUrlDTO>> entrySet : urlHistoryMap.entrySet()) {
+			List<EducationInfoOptionUrlDTO> tmpList = entrySet.getValue();
+			if(tmpList.size() <= maxSize) {
+				continue;
+			}
+			
+			Collections.sort(tmpList);
+			
+			overloadCounting = tmpList.size() - maxSize;
+			
+			tmpList = tmpList.subList(overloadCounting, tmpList.size());
+			
+			entrySet.setValue(tmpList);
+		}
+		
+		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, localDateTimeAdapter).setPrettyPrinting().create();
+		String jsonString = gson.toJson(dto);
+		ioUtil.byteToFile(jsonString.toString().getBytes(StandardCharsets.UTF_8), PARAM_PATH_STR);
+	}
 }

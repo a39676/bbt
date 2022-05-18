@@ -2,7 +2,7 @@ package demo.scriptCore.scheduleClawing.pojo.dto;
 
 import java.time.LocalDateTime;
 
-public class EducationInfoOptionUrlDTO {
+public class EducationInfoOptionUrlDTO implements Comparable<EducationInfoOptionUrlDTO> {
 
 	private LocalDateTime recrodDate;
 
@@ -29,4 +29,27 @@ public class EducationInfoOptionUrlDTO {
 		return "EducationInfoOptionUrlDTO [recrodDate=" + recrodDate + ", url=" + url + "]";
 	}
 
+	@Override
+	public int compareTo(EducationInfoOptionUrlDTO o) {
+		if (o.getRecrodDate() == null || this.getRecrodDate() == null) {
+			if (o.getRecrodDate() == null && this.getRecrodDate() == null) {
+				return 0;
+			} else if (o.getRecrodDate() == null) {
+				return 1;
+			} else if (this.getRecrodDate() == null) {
+				return -1;
+			} else {
+				return 0;
+			}
+		} else {
+			if (this.getRecrodDate().isAfter(o.getRecrodDate())) {
+				return 1;
+			} else if (this.getRecrodDate().isBefore(o.getRecrodDate())) {
+				return -1;
+			} else {
+				return 0;
+			}
+		}
+	}
+	
 }

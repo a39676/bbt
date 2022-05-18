@@ -9,4 +9,6 @@ public interface EducationInfoCollectionService {
 
 	TestEventBO receiveAndBuildTestEventBO(AutomationTestInsertEventDTO dto);
 
+	void deleteOldUrls();
+
 }
