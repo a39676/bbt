@@ -1,4 +1,8 @@
-﻿testEvent
+﻿education info
+	需要限制 url 单个列表的数量上限, 收集时清除
+	sub url dto, 实现比较功能, 需要时按时间排列, 然后删除最旧的, 暂时设置保留 30 个? 
+
+testEvent
 
 工作需要, 项目内需要增加类似 fake ftp 的"本地目录"式搜查报告
 	搜索栏应配备
