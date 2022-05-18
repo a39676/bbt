@@ -47,7 +47,7 @@ public class TestEventInsertQueueAckReceiver extends CommonService {
 			AutomationTestInsertEventDTO dto = new AutomationTestInsertEventDTO();
 			
 			if(json.has("appointment")) {
-				dto.setAppointment(localDateTimeHandler.jsonStrToLocalDateTime(json.getString("appointment")));
+				dto.setAppointment(localDateTimeHandler.stringToLocalDateTimeUnkonwFormat(json.getString("appointment")));
 			}
 			if(json.has("testEventId")) {
 				dto.setTestEventId(json.getLong("testEventId"));
