@@ -13,25 +13,25 @@ import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
 import autoTest.testEvent.pojo.result.AutomationTestCaseResult;
 import autoTest.testEvent.pojo.type.AutomationTestFlowResultType;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
-import autoTest.testEvent.searchingDemo.pojo.dto.HsbcWechatPreregistDTO;
-import autoTest.testEvent.searchingDemo.pojo.type.HsbcIdType;
+import autoTest.testEvent.searchingDemo.pojo.dto.HeShaBiCaoWechatPreregistDTO;
+import autoTest.testEvent.searchingDemo.pojo.type.HeShaBiCaoIdType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.scriptCore.common.service.AutomationTestCommonService;
-import demo.scriptCore.scheduleClawing.service.HsbcService;
+import demo.scriptCore.scheduleClawing.service.HeShaBiCaoService;
 import tool.pojo.type.InternationalityType;
 
 @Service
-public class HsbcServiceImpl extends AutomationTestCommonService implements HsbcService {
+public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implements HeShaBiCaoService {
 
 	@Override
 	public TestEventBO weixinPreReg(TestEventBO tbo) {
 		WebDriver d = null;
-		ScheduleClawingType caseType = ScheduleClawingType.HSBC_WECHAT_PREREGIST;
+		ScheduleClawingType caseType = ScheduleClawingType.HE_SHA_BI_CAO_WECHAT_PREREGIST;
 		JsonReportOfCaseDTO caseReport = initCaseReportDTO(caseType.getFlowName());
 		AutomationTestCaseResult r = initCaseResult(caseType.getFlowName());
 
 		try {
-			HsbcWechatPreregistDTO dto = buildTestEventParamFromJsonCustomization(tbo.getParamStr(), HsbcWechatPreregistDTO.class);
+			HeShaBiCaoWechatPreregistDTO dto = buildTestEventParamFromJsonCustomization(tbo.getParamStr(), HeShaBiCaoWechatPreregistDTO.class);
 			if (dto == null) {
 				reportService.caseReportAppendContent(caseReport, "读取参数异常");
 				return tbo;
@@ -110,7 +110,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		return tbo;
 	}
 	
-	private void phoneReusePreregistFlow(WebDriver d, HsbcWechatPreregistDTO dto) throws InterruptedException {
+	private void phoneReusePreregistFlow(WebDriver d, HeShaBiCaoWechatPreregistDTO dto) throws InterruptedException {
 		d.get(dto.getMainUrl());
 		
 		threadSleepRandomTime();
@@ -140,7 +140,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		start.click();
 	}
 	
-	private void phoneInfoRecordPrefixPart(WebDriver d, HsbcWechatPreregistDTO dto) {
+	private void phoneInfoRecordPrefixPart(WebDriver d, HeShaBiCaoWechatPreregistDTO dto) {
 		WebElement regionEle = d.findElement(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[4]/div[1]/select[1]"));
 		Select regionSelector = new Select(regionEle);
 		InternationalityType areaType = InternationalityType.getType(dto.getPhoneAreaType(), dto.getPhoneAreaName());
@@ -173,7 +173,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		}
 	}
 
-	private void phoneInfoRecordSuffixPart(WebDriver d, HsbcWechatPreregistDTO dto) {
+	private void phoneInfoRecordSuffixPart(WebDriver d, HeShaBiCaoWechatPreregistDTO dto) {
 		String smsVerifyPath = xPathBuilder.start("div").addClass("account-tile__inner verifiDive").findChild("div", 1)
 				.findChild("div", 1).findChild("div", 1).findChild("input").addType("tel").getXpath();
 		WebElement smsVerifyInput = d.findElement(By.xpath(smsVerifyPath));
@@ -198,7 +198,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 
 	}
 	
-	private void selectBankBranch(WebDriver d, HsbcWechatPreregistDTO dto) {
+	private void selectBankBranch(WebDriver d, HeShaBiCaoWechatPreregistDTO dto) {
 		String branchSelectPath = "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[3]/div[1]/select[1]";
 		WebElement branchSelectorEle = d.findElement(By.xpath(branchSelectPath));
 		Select branchSelector = new Select(branchSelectorEle);
@@ -226,7 +226,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 
 	}
 
-	private void inputPersonalInfo(WebDriver d, HsbcWechatPreregistDTO dto) {
+	private void inputPersonalInfo(WebDriver d, HeShaBiCaoWechatPreregistDTO dto) {
 		WebElement lastNameInput = d.findElement(By.xpath("//input[@id='lastName']"));
 		lastNameInput.click();
 		lastNameInput.clear();
@@ -250,7 +250,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		WebElement certificateTypeSelectEle = d.findElement(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[17]/div[2]/select[1]"));
 		Select certificateTypeSelector = new Select(certificateTypeSelectEle);
 		
-		HsbcIdType idType = HsbcIdType.getType(dto.getIdType());
+		HeShaBiCaoIdType idType = HeShaBiCaoIdType.getType(dto.getIdType());
 		i = findTargetOptionIndex(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[17]/div[2]/select[1]/option", idType.getCnName());
 		if(i == -1) {
 			i = 0;
@@ -298,7 +298,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		Select idCardValidDaySelector = new Select(idCardValidDaySelectEle);
 		idCardValidDaySelector.selectByValue("string:03");
 		
-		if(InternationalityType.CN.equals(areaType) && HsbcIdType.PASSPORT.getId().equals(dto.getIdType())) {
+		if(InternationalityType.CN.equals(areaType) && HeShaBiCaoIdType.PASSPORT.getId().equals(dto.getIdType())) {
 			WebElement otherIdNumberInput = d.findElement(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[34]/input[1]"));
 			otherIdNumberInput.click();
 			otherIdNumberInput.clear();
