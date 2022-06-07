@@ -2,6 +2,7 @@ package demo.scriptCore.scheduleClawing.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -32,10 +33,12 @@ public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implement
 
 		try {
 			HeShaBiCaoWechatPreregistDTO dto = buildTestEventParamFromJsonCustomization(tbo.getParamStr(), HeShaBiCaoWechatPreregistDTO.class);
+			
 			if (dto == null) {
 				reportService.caseReportAppendContent(caseReport, "读取参数异常");
 				return tbo;
 			}
+			dto.setStaffId(String.valueOf(ThreadLocalRandom.current().nextLong(44000000L, 44999999L)));
 
 			d = webDriverService.buildChromeWebDriver();
 
