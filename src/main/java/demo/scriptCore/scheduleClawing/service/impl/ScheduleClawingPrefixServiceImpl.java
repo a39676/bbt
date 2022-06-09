@@ -11,6 +11,7 @@ import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.scheduleClawing.service.EducationInfoCollectionService;
 import demo.scriptCore.scheduleClawing.service.HeShaBiCaoService;
 import demo.scriptCore.scheduleClawing.service.ScheduleClawingPrefixService;
+import demo.scriptCore.scheduleClawing.service.UnderWayMonthTestService;
 import demo.scriptCore.scheduleClawing.service.WuYiJobRefreshService;
 
 @Service
@@ -23,6 +24,8 @@ public class ScheduleClawingPrefixServiceImpl extends AutomationTestCommonServic
 	private EducationInfoCollectionService educationInfoCollectionService;
 	@Autowired
 	private HeShaBiCaoService heShaBiCaoService;
+	@Autowired
+	private UnderWayMonthTestService underWayMonthTestService;
 
 	@Override
 	public TestEventBO runSubEvent(TestEventBO te) {
@@ -32,8 +35,10 @@ public class ScheduleClawingPrefixServiceImpl extends AutomationTestCommonServic
 			return wuYiSign.clawing(te);
 		} else if (ScheduleClawingType.EDUCATION_INFO.getId().equals(caseId)) {
 			return educationInfoCollectionService.clawing(te);
-		}else if (ScheduleClawingType.HE_SHA_BI_CAO_WECHAT_PREREGIST.getId().equals(caseId)) {
+		} else if (ScheduleClawingType.HE_SHA_BI_CAO_WECHAT_PREREGIST.getId().equals(caseId)) {
 			return heShaBiCaoService.weixinPreReg(te);
+		} else if (ScheduleClawingType.UNDER_WAY_MONTH_TEST.getId().equals(caseId)) {
+			return underWayMonthTestService.monthTest(te);
 		}
 
 		return new TestEventBO();
