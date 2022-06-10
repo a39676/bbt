@@ -4,7 +4,6 @@ import java.io.File;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -18,7 +17,6 @@ import at.screenshot.service.ScreenshotService;
 import at.xpath.pojo.bo.XpathBuilderBO;
 import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
 import autoTest.report.service.ATJsonReportService;
-import demo.autoTestBase.testEvent.pojo.constant.TestEventOptionConstant;
 import demo.base.system.service.impl.RedisHashConnectService;
 import demo.base.system.service.impl.RedisOriginalConnectService;
 import demo.baseCommon.service.CommonService;
@@ -29,7 +27,6 @@ import image.pojo.dto.ImageSavingTransDTO;
 import image.pojo.dto.UploadImageToCloudinaryDTO;
 import image.pojo.result.ImageSavingResult;
 import image.pojo.result.UploadImageToCloudinaryResult;
-import net.sf.json.JSONObject;
 import toolPack.constant.FileSuffixNameConstant;
 import toolPack.dateTimeHandle.DateTimeUtilCommon;
 import toolPack.ioHandle.FileUtilCustom;
@@ -58,18 +55,6 @@ public abstract class SeleniumCommonService extends CommonService {
 	protected RedisOriginalConnectService redisOriginalConnectService;
 	@Autowired
 	protected RedisHashConnectService redisHashConnectService;
-	
-	protected JSONObject tryFindParam(Long testEventId) {
-		String paramStr = redisOriginalConnectService.getValByName(TestEventOptionConstant.TEST_EVENT_REDIS_PARAM_KEY_PREFIX + "_" + testEventId);
-		if(StringUtils.isNotBlank(paramStr)) {
-			try {
-				return JSONObject.fromObject(paramStr);
-			} catch (Exception e) {
-				log.error("find error param: " + paramStr);
-			}
-		}
-		return null;
-	}
 	
 	protected UploadImageToCloudinaryResult uploadImgToCloudinary(String imgFilePath) {
 		UploadImageToCloudinaryDTO uploadImgDTO = new UploadImageToCloudinaryDTO();

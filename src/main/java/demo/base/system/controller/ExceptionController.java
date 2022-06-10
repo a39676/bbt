@@ -15,7 +15,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import demo.base.system.service.impl.SystemConstantService;
+import demo.base.system.service.impl.SystemOptionService;
 import demo.baseCommon.controller.CommonController;
 
 @ControllerAdvice
@@ -24,7 +24,7 @@ public class ExceptionController extends CommonController implements HandlerExce
 	private static final Logger log = LoggerFactory.getLogger(ExceptionController.class);
 
 	@Autowired
-	protected SystemConstantService systemConstantService;
+	protected SystemOptionService systemConstantService;
 
 	@ExceptionHandler({ Exception.class })
 	public ModelAndView handleException(HttpServletRequest request, Exception e, String message) {

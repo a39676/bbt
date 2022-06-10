@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
@@ -32,6 +34,7 @@ public class AutomationTestConstantService extends CommonService {
 
 	private Map<Long, List<LocalDateTime>> failedTestResultMap = new HashMap<>();
 
+	@PostConstruct
 	public void refreshConstant() {
 		File optionFile = new File(optionFilePath);
 		if (!optionFile.exists()) {
@@ -43,7 +46,7 @@ public class AutomationTestConstantService extends CommonService {
 			AutomationTestConstantService tmp = new Gson().fromJson(jsonStr, AutomationTestConstantService.class);
 			BeanUtils.copyProperties(tmp, this);
 		} catch (Exception e) {
-			log.error("automation test constant loading error: " + e.getLocalizedMessage());
+			log.error("automation test option loading error: " + e.getLocalizedMessage());
 		}
 	}
 

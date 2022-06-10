@@ -2,6 +2,8 @@ package demo.base.system.service.impl;
 
 import java.io.File;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
@@ -14,7 +16,7 @@ import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")
 @Service
-public class SystemConstantService extends CommonService {
+public class SystemOptionService extends CommonService {
 
 	@Value("${optionFilePath.system}")
 	private String optionFilePath;
@@ -47,6 +49,7 @@ public class SystemConstantService extends CommonService {
 		this.shutdownKey = shutdownKey;
 	}
 
+	@PostConstruct
 	public void refreshConstant() {
 		File optionFile = new File(optionFilePath);
 		if (!optionFile.exists()) {
@@ -55,10 +58,10 @@ public class SystemConstantService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
-			SystemConstantService tmp = new Gson().fromJson(jsonStr, SystemConstantService.class);
+			SystemOptionService tmp = new Gson().fromJson(jsonStr, SystemOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
 		} catch (Exception e) {
-			log.error("system constant loading error: " + e.getLocalizedMessage());
+			log.error("system option loading error: " + e.getLocalizedMessage());
 		}
 	}
 }

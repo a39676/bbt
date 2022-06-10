@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 import at.webDriver.pojo.constant.ChromeConstant;
 import at.webDriver.pojo.constant.FireFoxConstant;
 import at.webDriver.pojo.constant.WebDriverConstant;
-import demo.base.system.service.impl.SystemConstantService;
+import demo.base.system.service.impl.SystemOptionService;
 import demo.baseCommon.service.CommonService;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.WebDriverService;
@@ -35,7 +35,7 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 	@Autowired
 	private SeleniumGlobalOptionService globalOptionService;
 	@Autowired
-	private SystemConstantService systemConstantService;
+	private SystemOptionService systemConstantService;
 	
 	@Override
 	public WebDriver buildFireFoxWebDriver(FirefoxOptions options) {

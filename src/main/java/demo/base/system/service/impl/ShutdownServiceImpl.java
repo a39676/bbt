@@ -19,7 +19,7 @@ public class ShutdownServiceImpl extends CommonService implements ShutdownServic
 	@Autowired
 	private TestEventService testEventService;
 	@Autowired
-	private SystemConstantService systemConstantService;
+	private SystemOptionService systemConstantService;
 	
 	@Override
     public void setApplicationContext(ApplicationContext ctx) throws BeansException {

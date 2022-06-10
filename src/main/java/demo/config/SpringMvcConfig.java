@@ -36,10 +36,6 @@ public class SpringMvcConfig implements WebMvcConfigurer {
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/static_resources/**").addResourceLocations("classpath:/static_resources/");
-		/* for swagger start */
-		registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
-		registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-		/* for swagger end */
 	}
 	
 	@Override
