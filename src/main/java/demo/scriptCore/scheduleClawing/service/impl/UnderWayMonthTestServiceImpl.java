@@ -24,6 +24,7 @@ import demo.scriptCore.scheduleClawing.service.UnderWayMonthTestService;
 import net.sf.json.JSONObject;
 import toolPack.ioHandle.FileUtilCustom;
 
+@SuppressWarnings("unused")
 @Service
 public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService implements UnderWayMonthTestService {
 
@@ -57,18 +58,35 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 
 //			answerCollect(d, dto);
 
-			findExam(d, dto);
+			findExam2(d, dto);
 
 			threadSleepRandomTime();
 
 			if (!examEnterCheck(d, dto)) {
-				reportService.caseReportAppendContent(caseReport, "未正常进入问卷");
 				throw new Exception("未正常进入问卷");
 			}
 
 			startExam(d, dto);
 
-			threadSleepRandomTime(15000L, 20000L);
+			threadSleepRandomTime();
+
+			fillExam(d, dto);
+
+			threadSleepRandomTime();
+			
+			backHome(d, dto);
+			
+			findExam3(d, dto);
+
+			threadSleepRandomTime();
+
+			if (!examEnterCheck(d, dto)) {
+				throw new Exception("未正常进入问卷");
+			}
+
+			startExam(d, dto);
+
+			threadSleepRandomTime();
 
 			fillExam(d, dto);
 
@@ -109,8 +127,14 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 		WebElement loginButton = d.findElement(By.xpath("//a[@id='sign_in_button_standard']"));
 		loginButton.click();
 	}
+	
+	private void backHome(WebDriver d, UnderWayMonthTestDTO dto) {
+		if (!d.getCurrentUrl().equals(dto.getHomePageUrl())) {
+			d.get(dto.getHomePageUrl());
+		}
+	}
 
-	private void findExam(WebDriver d, UnderWayMonthTestDTO dto) {
+	private void findExam1(WebDriver d, UnderWayMonthTestDTO dto) {
 		if (!d.getCurrentUrl().equals(dto.getHomePageUrl())) {
 			d.get(dto.getHomePageUrl());
 		}
@@ -120,7 +144,35 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 		} catch (Exception e) {
 		}
 
-		WebElement examEnter = d.findElement(By.xpath(dto.getExamEnterXPath()));
+		WebElement examEnter = d.findElement(By.xpath(dto.getExamEnterXPath_1()));
+		examEnter.click();
+	}
+	
+	private void findExam2(WebDriver d, UnderWayMonthTestDTO dto) {
+		if (!d.getCurrentUrl().equals(dto.getHomePageUrl())) {
+			d.get(dto.getHomePageUrl());
+		}
+
+		try {
+			threadSleepRandomTime(1000L, 5000L);
+		} catch (Exception e) {
+		}
+
+		WebElement examEnter = d.findElement(By.xpath(dto.getExamEnterXPath_2()));
+		examEnter.click();
+	}
+	
+	private void findExam3(WebDriver d, UnderWayMonthTestDTO dto) {
+		if (!d.getCurrentUrl().equals(dto.getHomePageUrl())) {
+			d.get(dto.getHomePageUrl());
+		}
+
+		try {
+			threadSleepRandomTime(1000L, 5000L);
+		} catch (Exception e) {
+		}
+
+		WebElement examEnter = d.findElement(By.xpath(dto.getExamEnterXPath_3()));
 		examEnter.click();
 	}
 
@@ -131,16 +183,24 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 	private void startExam(WebDriver d, UnderWayMonthTestDTO dto) {
 		WebElement examEnter = d.findElement(By.xpath("//a[contains(text(),'已阅读完毕，确认进入考场')]"));
 		examEnter.click();
-		System.out.println("startExam end");
 	}
 
-	private void fillExam(WebDriver d, UnderWayMonthTestDTO dto) {
-		System.out.println("fillExam start");
+	private void fillExam(WebDriver d, UnderWayMonthTestDTO dto) throws InterruptedException {
+		/*
+		 * TODO 关闭初始提示 
+		 * 暂时被关闭全屏限制, 无法再获取 xpath 
+		 */
+		
 		String questionAndAnswerStr = ioUtil.getStringFromFile(questionAndAnswerFilePathStr);
 		UnderWayExamFormDTO formDTO = buildObjFromJsonCustomization(questionAndAnswerStr, UnderWayExamFormDTO.class);
 
+		if(!auxTool.loadingCheck(d, "//a[contains(text(),'提交试卷')]")) {
+			return;
+		}
+		
 //		/html[1]/body[1]/div[2]/div[1]/div[2]/form[1]/div[1]/div[questionIndex]/p[1]
-		for (Integer questionIndex = 1; questionIndex < 135; questionIndex++) {
+		List<WebElement> questionList = d.findElements(By.xpath("/html[1]/body[1]/div[2]/div[1]/div[2]/form[1]/div[1]/div"));
+		for (Integer questionIndex = 1; questionIndex <= questionList.size(); questionIndex++) {
 			WebElement questionP = d.findElement(
 					By.xpath("/html[1]/body[1]/div[2]/div[1]/div[2]/form[1]/div[1]/div[" + questionIndex + "]/p[1]"));
 			String questionStr = questionP.getText();
@@ -150,14 +210,8 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 
 			List<String> answerList = questionDTO.getAnswer();
 
-			if (questionIndex > 90) {
-				System.out.println((questionIndex - 90) + ", ");
-			} else if (questionIndex > 61) {
-				System.out.println((questionIndex - 61) + ", ");
-			} else {
-				System.out.println(questionIndex + ", ");
-			}
-			for(String ans : answerList) {
+			System.out.println(questionIndex + ", ");
+			for (String ans : answerList) {
 				System.out.println(ans);
 			}
 
@@ -171,11 +225,11 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 									+ questionIndex + "]/ul[1]/li[" + answerSelectorIndex + "]/label[1]"));
 					answerStr = answerLabel.getText();
 					answerStr = answerStr.substring(2, answerStr.length());
-					
+
 					WebElement answerInput = d
-							.findElement(By.xpath("/html[1]/body[1]/div[2]/div[1]/div[2]/form[1]/div[1]/div[" + questionIndex + "]/ul[1]/li[" + answerSelectorIndex + "]/input[1]"));
+							.findElement(By.xpath("/html[1]/body[1]/div[2]/div[1]/div[2]/form[1]/div[1]/div["
+									+ questionIndex + "]/ul[1]/li[" + answerSelectorIndex + "]/input[1]"));
 					String inputId = answerInput.getAttribute("id");
-					
 
 					if (answerList.contains(answerStr)) {
 //						try {
@@ -184,7 +238,7 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 //						} catch (Exception e) {
 //							jsUtil.execute(d, "document.getElementById('"+inputId+"').checked = true;");
 //						}
-						jsUtil.execute(d, "document.getElementById('"+inputId+"').checked = true;");
+						jsUtil.execute(d, "document.getElementById('" + inputId + "').checked = true;");
 						answerList.remove(answerStr);
 					}
 				} catch (NoSuchElementException noElement) {
@@ -197,11 +251,22 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 				} catch (Exception e) {
 				}
 			}
-			try {
-//				threadSleepRandomTime(2000L, 3000L);
-			} catch (Exception e2) {
-			}
+			
 		}
+		
+		try {
+			threadSleepRandomTime(310000L, 330000L);
+		} catch (Exception e2) {
+		}
+		
+		WebElement submitButton = d.findElement(By.xpath("//a[contains(text(),'提交试卷')]"));
+		submitButton.click();
+		try {
+			threadSleepRandomTime(2000L, 3000L);
+		} catch (Exception e2) {
+		}
+		WebElement ensureSubmitButton = d.findElement(By.xpath("//a[contains(text(),'确定')]"));
+		ensureSubmitButton.click();
 	}
 
 	private UnderWayTestQuestionAndAnswerSubDTO findQuestionSubDTO(UnderWayExamFormDTO formDTO, String question) {
@@ -213,7 +278,6 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 		return null;
 	}
 
-	@SuppressWarnings("unused")
 	private void answerCollect(WebDriver d, UnderWayMonthTestDTO dto) {
 		d.get(dto.getAnswerFormUrl());
 
