@@ -58,6 +58,24 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 
 //			answerCollect(d, dto);
 
+			findExam1(d, dto);
+
+			threadSleepRandomTime();
+
+			if (!examEnterCheck(d, dto)) {
+				throw new Exception("未正常进入问卷");
+			}
+
+			startExam(d, dto);
+
+			threadSleepRandomTime();
+
+			fillExam(d, dto);
+
+			threadSleepRandomTime();
+			
+			backHome(d, dto);
+			
 			findExam2(d, dto);
 
 			threadSleepRandomTime();
