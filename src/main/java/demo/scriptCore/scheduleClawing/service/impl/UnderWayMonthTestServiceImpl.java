@@ -56,57 +56,27 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 
 			threadSleepRandomTime();
 
-//			answerCollect(d, dto);
+			while (!dto.getExamNameList().isEmpty()) {
 
-			findExam1(d, dto);
+				findExam(d, dto);
 
-			threadSleepRandomTime();
+				threadSleepRandomTime();
 
-			if (!examEnterCheck(d, dto)) {
-				throw new Exception("未正常进入问卷");
+				if (!examEnterCheck(d, dto)) {
+					throw new Exception("未正常进入问卷");
+				}
+
+				startExam(d, dto);
+
+				threadSleepRandomTime();
+
+				fillExam(d, dto);
+
+				threadSleepRandomTime();
+
+				backHome(d, dto);
+
 			}
-
-			startExam(d, dto);
-
-			threadSleepRandomTime();
-
-			fillExam(d, dto);
-
-			threadSleepRandomTime();
-			
-			backHome(d, dto);
-			
-			findExam2(d, dto);
-
-			threadSleepRandomTime();
-
-			if (!examEnterCheck(d, dto)) {
-				throw new Exception("未正常进入问卷");
-			}
-
-			startExam(d, dto);
-
-			threadSleepRandomTime();
-
-			fillExam(d, dto);
-
-			threadSleepRandomTime();
-			
-			backHome(d, dto);
-			
-			findExam3(d, dto);
-
-			threadSleepRandomTime();
-
-			if (!examEnterCheck(d, dto)) {
-				throw new Exception("未正常进入问卷");
-			}
-
-			startExam(d, dto);
-
-			threadSleepRandomTime();
-
-			fillExam(d, dto);
 
 			threadSleepRandomTime();
 
@@ -152,48 +122,41 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 		}
 	}
 
-	private void findExam1(WebDriver d, UnderWayMonthTestDTO dto) {
+	private void findExam(WebDriver d, UnderWayMonthTestDTO dto) throws Exception {
 		if (!d.getCurrentUrl().equals(dto.getHomePageUrl())) {
 			d.get(dto.getHomePageUrl());
 		}
 
-		try {
-			threadSleepRandomTime(1000L, 5000L);
-		} catch (Exception e) {
+		if (!auxTool.loadingCheck(d, "//span[contains(text(),'考试练习')]")) {
+			System.out.println("Can NOT load: " + dto.getHomePageUrl());
 		}
 
-		WebElement examEnter = d.findElement(By.xpath(dto.getExamEnterXPath_1()));
-		examEnter.click();
+		threadSleepRandomTime();
+
+		List<WebElement> examList = d.findElements(By.xpath("//body[1]/div[5]/div[1]/div[2]/div[2]/div[1]/ul[1]/li"));
+		System.out.println("Find " + examList.size() + " exams");
+
+		if (examList.isEmpty()) {
+			throw new Exception("Can not find any exams");
+		}
+
+		jsUtil.scrollToButton(d);
+		
+		for (Integer examIndex = 0; examIndex < examList.size(); examIndex++) {
+			WebElement exam = examList.get(examIndex);
+			String examName = exam.getText();
+			for (int i = 0; i < dto.getExamNameList().size(); i++) {
+				if (examName.contains(dto.getExamNameList().get(i))) {
+					exam = d.findElement(
+							By.xpath("//body[1]/div[5]/div[1]/div[2]/div[2]/div[1]/ul[1]/li[" + (examIndex + 1) + "]/a[1]/h5[1]"));
+					exam.click();
+					dto.getExamNameList().remove(i);
+					return;
+				}
+			}
+		}
 	}
 	
-	private void findExam2(WebDriver d, UnderWayMonthTestDTO dto) {
-		if (!d.getCurrentUrl().equals(dto.getHomePageUrl())) {
-			d.get(dto.getHomePageUrl());
-		}
-
-		try {
-			threadSleepRandomTime(1000L, 5000L);
-		} catch (Exception e) {
-		}
-
-		WebElement examEnter = d.findElement(By.xpath(dto.getExamEnterXPath_2()));
-		examEnter.click();
-	}
-	
-	private void findExam3(WebDriver d, UnderWayMonthTestDTO dto) {
-		if (!d.getCurrentUrl().equals(dto.getHomePageUrl())) {
-			d.get(dto.getHomePageUrl());
-		}
-
-		try {
-			threadSleepRandomTime(1000L, 5000L);
-		} catch (Exception e) {
-		}
-
-		WebElement examEnter = d.findElement(By.xpath(dto.getExamEnterXPath_3()));
-		examEnter.click();
-	}
-
 	private boolean examEnterCheck(WebDriver d, UnderWayMonthTestDTO dto) throws InterruptedException {
 		return auxTool.loadingCheck(d, "//h4[contains(text(),'进入考试前请仔细阅读考试说明')]");
 	}
@@ -205,19 +168,21 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 
 	private void fillExam(WebDriver d, UnderWayMonthTestDTO dto) throws InterruptedException {
 		/*
-		 * TODO 关闭初始提示 
-		 * 暂时被关闭全屏限制, 无法再获取 xpath 
+		 * TODO 关闭初始提示 暂时被关闭全屏限制, 无法再获取 xpath
 		 */
-		
+
 		String questionAndAnswerStr = ioUtil.getStringFromFile(questionAndAnswerFilePathStr);
 		UnderWayExamFormDTO formDTO = buildObjFromJsonCustomization(questionAndAnswerStr, UnderWayExamFormDTO.class);
 
-		if(!auxTool.loadingCheck(d, "//a[contains(text(),'提交试卷')]")) {
+		if (!auxTool.loadingCheck(d, "//a[contains(text(),'提交试卷')]")) {
 			return;
 		}
-		
+
+		jsUtil.scrollToButton(d);
+
 //		/html[1]/body[1]/div[2]/div[1]/div[2]/form[1]/div[1]/div[questionIndex]/p[1]
-		List<WebElement> questionList = d.findElements(By.xpath("/html[1]/body[1]/div[2]/div[1]/div[2]/form[1]/div[1]/div"));
+		List<WebElement> questionList = d
+				.findElements(By.xpath("/html[1]/body[1]/div[2]/div[1]/div[2]/form[1]/div[1]/div"));
 		for (Integer questionIndex = 1; questionIndex <= questionList.size(); questionIndex++) {
 			WebElement questionP = d.findElement(
 					By.xpath("/html[1]/body[1]/div[2]/div[1]/div[2]/form[1]/div[1]/div[" + questionIndex + "]/p[1]"));
@@ -269,23 +234,32 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 				} catch (Exception e) {
 				}
 			}
-			
+
 		}
-		
-		try {
-			threadSleepRandomTime(310000L, 330000L);
-		} catch (Exception e2) {
-		}
-		
-		WebElement submitButton = d.findElement(By.xpath("//a[contains(text(),'提交试卷')]"));
-		submitButton.click();
+
+//		提交试卷
+//		WebElement submitButton = d.findElement(By.xpath("//a[contains(text(),'提交试卷')]"));
+//		submitButton.click();
+//		try {
+//			threadSleepRandomTime(2000L, 3000L);
+//		} catch (Exception e2) {
+//		}
+//		WebElement ensureSubmitButton = d.findElement(By.xpath("//a[contains(text(),'确定')]"));
+//		ensureSubmitButton.click();
+
+//		保存试卷
+		String saveExamXpath = xPathBuilder.start("a").addAttribute("data-action", "saveExam").getXpath();
+		WebElement saveButton = d.findElement(By.xpath(saveExamXpath));
+		saveButton.click();
 		try {
 			threadSleepRandomTime(2000L, 3000L);
 		} catch (Exception e2) {
 		}
-		WebElement ensureSubmitButton = d.findElement(By.xpath("//a[contains(text(),'确定')]"));
-		ensureSubmitButton.click();
+		WebElement ensureSaveButton = d.findElement(By.xpath("//a[contains(text(),'确定')]"));
+		ensureSaveButton.click();
+
 	}
+
 
 	private UnderWayTestQuestionAndAnswerSubDTO findQuestionSubDTO(UnderWayExamFormDTO formDTO, String question) {
 		for (UnderWayTestQuestionAndAnswerSubDTO questionDTO : formDTO.getQuestionAndAnswerList()) {
