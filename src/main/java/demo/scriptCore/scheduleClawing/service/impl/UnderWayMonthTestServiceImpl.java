@@ -267,11 +267,7 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 					if (answerList.contains(answerStr)) {
 						WebElement targetInput = d.findElement(By.id(inputId));
 						targetInput.click();
-						threadSleepRandomTime();
-//						try {
-//						} catch (Exception e) {
-//							jsUtil.execute(d, "document.getElementById('"+inputId+"').checked = true;");
-//						}
+						threadSleepRandomTime(1000L, 2000L);
 //						jsUtil.execute(d, "document.getElementById('" + inputId + "').checked = true;");
 						answerList.remove(answerStr);
 					}
