@@ -50,19 +50,23 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 			}
 
 			d = webDriverService.buildChromeWebDriver();
-			d.manage().timeouts().pageLoadTimeout(15L, TimeUnit.SECONDS);
+			d.manage().timeouts().pageLoadTimeout(60L, TimeUnit.SECONDS);
 
-			login(d, dto);
+			login(d, dto, caseReport);
 
 			threadSleepRandomTime();
 
-			while (!dto.getExamNameList().isEmpty()) {
+			findExam(d, dto, caseReport);
 
-				findExam(d, dto);
+			threadSleepRandomTime();
+
+			while (!dto.getExamUrlList().isEmpty()) {
+
+				getInExam(d, dto, caseReport);
 
 				threadSleepRandomTime();
 
-				if (!examEnterCheck(d, dto)) {
+				if (!examEnterCheck(d)) {
 					throw new Exception("未正常进入问卷");
 				}
 
@@ -70,12 +74,13 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 
 				threadSleepRandomTime();
 
-				fillExam(d, dto);
+				fillExam(d, dto, caseReport);
 
 				threadSleepRandomTime();
 
-				backHome(d, dto);
+				backHome(d, dto, caseReport);
 
+				threadSleepRandomTime();
 			}
 
 			threadSleepRandomTime();
@@ -97,8 +102,10 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 		return tbo;
 	}
 
-	private void login(WebDriver d, UnderWayMonthTestDTO dto) throws InterruptedException {
+	private void login(WebDriver d, UnderWayMonthTestDTO dto, JsonReportOfCaseDTO caseReport)
+			throws InterruptedException {
 		d.get(dto.getLoginUrl());
+		reportService.caseReportAppendContent(caseReport, "Login with, " + dto.getUsername());
 		auxTool.loadingCheck(d, "//input[@id='username_text']");
 
 		WebElement usernameInput = d.findElement(By.xpath("//input[@id='username_text']"));
@@ -115,49 +122,93 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 		WebElement loginButton = d.findElement(By.xpath("//a[@id='sign_in_button_standard']"));
 		loginButton.click();
 	}
-	
-	private void backHome(WebDriver d, UnderWayMonthTestDTO dto) {
+
+	private void backHome(WebDriver d, UnderWayMonthTestDTO dto, JsonReportOfCaseDTO caseReport) {
 		if (!d.getCurrentUrl().equals(dto.getHomePageUrl())) {
 			d.get(dto.getHomePageUrl());
 		}
 	}
 
-	private void findExam(WebDriver d, UnderWayMonthTestDTO dto) throws Exception {
+	private void findExam(WebDriver d, UnderWayMonthTestDTO dto, JsonReportOfCaseDTO caseReport) throws Exception {
+		reportService.caseReportAppendContent(caseReport, "Try to find exam");
 		if (!d.getCurrentUrl().equals(dto.getHomePageUrl())) {
 			d.get(dto.getHomePageUrl());
 		}
 
-		if (!auxTool.loadingCheck(d, "//span[contains(text(),'考试练习')]")) {
-			System.out.println("Can NOT load: " + dto.getHomePageUrl());
+		if (!auxTool.loadingCheck(d, "/html[1]/body[1]/div[5]/div[1]/div[2]/div[2]/div[1]/h4[1]")) {
+			throw new Exception("Can NOT load: " + dto.getHomePageUrl());
+		} else {
+			reportService.caseReportAppendContent(caseReport, "Load exam home page");
 		}
 
 		threadSleepRandomTime();
 
-		List<WebElement> examList = d.findElements(By.xpath("//body[1]/div[5]/div[1]/div[2]/div[2]/div[1]/ul[1]/li"));
-		System.out.println("Find " + examList.size() + " exams");
+		String examLinkListXpath = xPathBuilder.start("a").getXpath();
 
-		if (examList.isEmpty()) {
-			throw new Exception("Can not find any exams");
-		}
+		int searchCount = 5;
+		while (searchCount > 0 && (dto.getExamUrlList() == null || dto.getExamUrlList().isEmpty())) {
+			List<WebElement> examLinkList = d.findElements(By.xpath(examLinkListXpath));
 
-		jsUtil.scrollToButton(d);
-		
-		for (Integer examIndex = 0; examIndex < examList.size(); examIndex++) {
-			WebElement exam = examList.get(examIndex);
-			String examName = exam.getText();
-			for (int i = 0; i < dto.getExamNameList().size(); i++) {
-				if (examName.contains(dto.getExamNameList().get(i))) {
-					exam = d.findElement(
-							By.xpath("//body[1]/div[5]/div[1]/div[2]/div[2]/div[1]/ul[1]/li[" + (examIndex + 1) + "]/a[1]/h5[1]"));
-					exam.click();
-					dto.getExamNameList().remove(i);
-					return;
+			for (int i = 0; i < examLinkList.size(); i++) {
+				String url = examLinkList.get(i).getAttribute("href");
+				if (url != null && url.contains("examId")) {
+					reportService.caseReportAppendContent(caseReport, "Find exam: " + url);
+					dto.addExamUrlList(url);
 				}
 			}
+
+			if (dto.getExamUrlList() == null && searchCount > 0) {
+				reportService.caseReportAppendContent(caseReport,
+						"Can not find any exams, will try again, count down: " + searchCount);
+				searchCount--;
+				threadSleepRandomTime();
+			}
+		}
+
+		if (dto.getExamUrlList() == null || dto.getExamUrlList().isEmpty()) {
+			throw new Exception("Can not find any exams");
+		} else {
+			reportService.caseReportAppendContent(caseReport, "Find " + dto.getExamUrlList().size() + " exams");
 		}
 	}
-	
-	private boolean examEnterCheck(WebDriver d, UnderWayMonthTestDTO dto) throws InterruptedException {
+
+	private boolean getInExam(WebDriver d, UnderWayMonthTestDTO dto, JsonReportOfCaseDTO caseReport)
+			throws InterruptedException {
+		boolean isTarget = false;
+		for (int examIndex = 0; examIndex < dto.getExamUrlList().size(); examIndex++) {
+			String url = dto.getExamUrlList().get(examIndex);
+
+			try {
+				d.get(url);
+			} catch (Exception e) {
+				reportService.caseReportAppendContent(caseReport, "Can NOT visit: " + url + ", will try again later");
+			}
+			if (!examEnterCheck(d)) {
+				examIndex--;
+				continue;
+			}
+
+			WebElement examTitle = d.findElement(By.xpath("/html[1]/body[1]/div[5]/div[1]/div[2]/h2[1]"));
+			String examName = examTitle.getText();
+
+			for (int i = 0; i < dto.getExamNameList().size() && !isTarget; i++) {
+				isTarget = (examName.contains(dto.getExamNameList().get(i)));
+			}
+
+			if (!isTarget) {
+				reportService.caseReportAppendContent(caseReport, examName + ", is NOT in target, skip");
+				dto.getExamUrlList().remove(examIndex);
+				examIndex--;
+			} else {
+				reportService.caseReportAppendContent(caseReport, examName + ", had found, ready to start exam");
+				dto.getExamUrlList().remove(examIndex);
+				return isTarget;
+			}
+		}
+		return isTarget;
+	}
+
+	private boolean examEnterCheck(WebDriver d) throws InterruptedException {
 		return auxTool.loadingCheck(d, "//h4[contains(text(),'进入考试前请仔细阅读考试说明')]");
 	}
 
@@ -166,7 +217,8 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 		examEnter.click();
 	}
 
-	private void fillExam(WebDriver d, UnderWayMonthTestDTO dto) throws InterruptedException {
+	private void fillExam(WebDriver d, UnderWayMonthTestDTO dto, JsonReportOfCaseDTO caseReport)
+			throws InterruptedException {
 		/*
 		 * TODO 关闭初始提示 暂时被关闭全屏限制, 无法再获取 xpath
 		 */
@@ -193,10 +245,8 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 
 			List<String> answerList = questionDTO.getAnswer();
 
-			System.out.println(questionIndex + ", ");
-			for (String ans : answerList) {
-				System.out.println(ans);
-			}
+			reportService.caseReportAppendContent(caseReport, questionIndex + ", " + questionStr);
+			reportService.caseReportAppendContent(caseReport, answerList.toString());
 
 			answerSelectorTag: for (Integer answerSelectorIndex = 1; answerSelectorIndex < 7
 					&& !answerList.isEmpty(); answerSelectorIndex++) {
@@ -215,17 +265,19 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 					String inputId = answerInput.getAttribute("id");
 
 					if (answerList.contains(answerStr)) {
+						WebElement targetInput = d.findElement(By.id(inputId));
+						targetInput.click();
+						threadSleepRandomTime();
 //						try {
-//							WebElement targetInput = d.findElement(By.id(inputId));
-//							targetInput.click();
 //						} catch (Exception e) {
 //							jsUtil.execute(d, "document.getElementById('"+inputId+"').checked = true;");
 //						}
-						jsUtil.execute(d, "document.getElementById('" + inputId + "').checked = true;");
+//						jsUtil.execute(d, "document.getElementById('" + inputId + "').checked = true;");
 						answerList.remove(answerStr);
 					}
 				} catch (NoSuchElementException noElement) {
-					System.out.println("can NOT find Element :" + answerSelectorIndex + "for: " + answerStr);
+					reportService.caseReportAppendContent(caseReport,
+							"Can NOT find Element :" + answerSelectorIndex + "for: " + answerStr);
 					try {
 						threadSleepRandomTime(9000L, 10000L);
 					} catch (Exception e2) {
@@ -260,7 +312,6 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 
 	}
 
-
 	private UnderWayTestQuestionAndAnswerSubDTO findQuestionSubDTO(UnderWayExamFormDTO formDTO, String question) {
 		for (UnderWayTestQuestionAndAnswerSubDTO questionDTO : formDTO.getQuestionAndAnswerList()) {
 			if (questionDTO.getQuestion().equals(question)) {
@@ -270,7 +321,7 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 		return null;
 	}
 
-	private void answerCollect(WebDriver d, UnderWayMonthTestDTO dto) {
+	private void answerCollect(WebDriver d, UnderWayMonthTestDTO dto, JsonReportOfCaseDTO caseReport) {
 		d.get(dto.getAnswerFormUrl());
 
 		try {
