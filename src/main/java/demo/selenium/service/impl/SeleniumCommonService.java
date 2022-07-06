@@ -19,6 +19,7 @@ import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
 import autoTest.report.service.ATJsonReportService;
 import demo.base.system.service.impl.RedisHashConnectService;
 import demo.base.system.service.impl.RedisOriginalConnectService;
+import demo.base.system.service.impl.SystemOptionService;
 import demo.baseCommon.service.CommonService;
 import demo.interaction.image.service.ImageInteractionService;
 import demo.selenium.service.SeleniumGlobalOptionService;
@@ -55,6 +56,8 @@ public abstract class SeleniumCommonService extends CommonService {
 	protected RedisOriginalConnectService redisOriginalConnectService;
 	@Autowired
 	protected RedisHashConnectService redisHashConnectService;
+	@Autowired
+	protected SystemOptionService systemOptionService;
 	
 	protected UploadImageToCloudinaryResult uploadImgToCloudinary(String imgFilePath) {
 		UploadImageToCloudinaryDTO uploadImgDTO = new UploadImageToCloudinaryDTO();

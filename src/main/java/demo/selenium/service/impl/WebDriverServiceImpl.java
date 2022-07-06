@@ -35,11 +35,11 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 	@Autowired
 	private SeleniumGlobalOptionService globalOptionService;
 	@Autowired
-	private SystemOptionService systemConstantService;
+	private SystemOptionService systemOptionService;
 	
 	@Override
 	public WebDriver buildFireFoxWebDriver(FirefoxOptions options) {
-		String envName = systemConstantService.getEnvName();
+		String envName = systemOptionService.getEnvName();
 		String path = globalOptionService.getGeckoPath();
 		String driverType = WebDriverConstant.geckoDriver;
 		System.setProperty(driverType, path);
@@ -83,7 +83,7 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 
 	@Override
 	public WebDriver buildFireFoxWebDriverMobileEmulation(FirefoxOptions options) {
-		String envName = systemConstantService.getEnvName();
+		String envName = systemOptionService.getEnvName();
 		String path = globalOptionService.getGeckoPath();
 		String driverType = WebDriverConstant.geckoDriver;
 		System.setProperty(driverType, path);
@@ -155,7 +155,7 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 		System.setProperty(driverType, path);
 		WebDriver driver = null;
 
-		String envName = systemConstantService.getEnvName();
+		String envName = systemOptionService.getEnvName();
 		log.debug("envName: " + envName);
 		if (options == null) {
 			options = new ChromeOptions();
@@ -184,7 +184,7 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 		System.setProperty(driverType, path);
 		WebDriver driver = null;
 
-		String envName = systemConstantService.getEnvName();
+		String envName = systemOptionService.getEnvName();
 		log.debug("envName: " + envName);
 		if (options == null) {
 			options = new ChromeOptions();
@@ -209,7 +209,7 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 
 	@Override
 	public WebDriver buildChrome45WebDriver(ChromeOptions options) {
-		String envName = systemConstantService.getEnvName();
+		String envName = systemOptionService.getEnvName();
 		String path = globalOptionService.getChrome45Path();
 		String driverType = WebDriverConstant.chromeDriver;
 		System.setProperty(driverType, path);

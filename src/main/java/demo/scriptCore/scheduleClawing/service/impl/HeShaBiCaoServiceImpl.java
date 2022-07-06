@@ -2,6 +2,7 @@ package demo.scriptCore.scheduleClawing.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.openqa.selenium.By;
@@ -101,6 +102,9 @@ public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implement
 			r.setResultType(AutomationTestFlowResultType.PASS);
 			
 		} catch (Exception e) {
+			if(systemOptionService.isDev()) {
+				e.printStackTrace();
+			}
 			reportService.caseReportAppendContent(caseReport, "异常: " + e.toString());
 
 		} finally {
@@ -182,7 +186,8 @@ public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implement
 		WebElement smsVerifyInput = d.findElement(By.xpath(smsVerifyPath));
 		smsVerifyInput.click();
 		smsVerifyInput.clear();
-		smsVerifyInput.sendKeys("456789");
+		Double randomSms = ((Math.random() * (999999 - 100001)) + 100001);
+		smsVerifyInput.sendKeys(String.valueOf(randomSms.intValue()));
 
 		try {
 			threadSleepRandomTime();
@@ -201,16 +206,16 @@ public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implement
 
 	}
 	
-	private void selectBankBranch(WebDriver d, HeShaBiCaoWechatPreregistDTO dto) {
-		String branchSelectPath = "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[3]/div[1]/select[1]";
-		WebElement branchSelectorEle = d.findElement(By.xpath(branchSelectPath));
-		Select branchSelector = new Select(branchSelectorEle);
-		branchSelector.selectByIndex(8); // 哈尔滨
+	private void selectBankBranch(WebDriver d, HeShaBiCaoWechatPreregistDTO dto) throws InterruptedException {
+		auxTool.loadingCheck(d, "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[3]/div[1]/select[1]");
+		
+		threadSleepRandomTime();
+		
+		auxTool.selectorRandomSelect(d, "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[3]/div[1]/select[1]", 1, null);
+		
+		threadSleepRandomTime();
 
-		String branchSelectPath2 = "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[5]/div[1]/select[1]";
-		WebElement branchSelectorEle2 = d.findElement(By.xpath(branchSelectPath2));
-		Select branchSelector2 = new Select(branchSelectorEle2);
-		branchSelector2.selectByIndex(1); // 哈尔滨分行
+		auxTool.selectorRandomSelect(d, "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[5]/div[1]/select[1]", 1, null);
 
 		String employIdInputPath = "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[7]/div[1]/input[2]";
 		WebElement employIdInput = d.findElement(By.xpath(employIdInputPath));
@@ -229,7 +234,8 @@ public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implement
 
 	}
 
-	private void inputPersonalInfo(WebDriver d, HeShaBiCaoWechatPreregistDTO dto) {
+	private void inputPersonalInfo(WebDriver d, HeShaBiCaoWechatPreregistDTO dto) throws InterruptedException {
+		auxTool.loadingCheck(d, "//input[@id='lastName']");
 		WebElement lastNameInput = d.findElement(By.xpath("//input[@id='lastName']"));
 		lastNameInput.click();
 		lastNameInput.clear();
@@ -271,61 +277,42 @@ public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implement
 		idCardNumbersInput.clear();
 		idCardNumbersInput.sendKeys(dto.getIdNumber());
 
-		WebElement createIdCardYearSelectEle = d.findElement(By
-				.xpath("//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[29]/div[1]/span[1]/select[1]"));
-		Select createIdCardYearSelector = new Select(createIdCardYearSelectEle);
-		createIdCardYearSelector.selectByValue("number:2015");
+		// createIdCardYearSelectEle
+		auxTool.selectorRandomSelect(d, "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[29]/div[1]/span[1]/select[1]", 3, null);
 
-		WebElement createIdCardMonthSelectEle = d.findElement(By
-				.xpath("//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[29]/div[1]/span[2]/select[1]"));
-		Select createIdCardMonthSelector = new Select(createIdCardMonthSelectEle);
-		createIdCardMonthSelector.selectByValue("string:03");
+		// createIdCardMonthSelectEle
+		auxTool.selectorRandomSelect(d, "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[29]/div[1]/span[2]/select[1]", 1, null);
 
-		WebElement createIdCardDaySelectEle = d.findElement(By
-				.xpath("//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[29]/div[1]/span[3]/select[1]"));
-		Select createIdCardDaySelector = new Select(createIdCardDaySelectEle);
-		createIdCardDaySelector.selectByValue("string:03");
+		// createIdCardDaySelectEle
+		auxTool.selectorRandomSelect(d, "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[29]/div[1]/span[3]/select[1]", 1, null);
 
-		WebElement idCardValidYearSelectEle = d.findElement(By
-				.xpath("//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[30]/div[1]/span[1]/select[1]"));
-		Select idCardValidYearSelector = new Select(idCardValidYearSelectEle);
-		idCardValidYearSelector.selectByIndex(3);
+		// idCardValidYearSelector
+		auxTool.selectorRandomSelect(d, "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[30]/div[1]/span[1]/select[1]", 1, 5);
 
-		WebElement idCardValidMonthSelectEle = d.findElement(By
-				.xpath("//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[30]/div[1]/span[2]/select[1]"));
-		Select idCardValidMonthSelector = new Select(idCardValidMonthSelectEle);
-		idCardValidMonthSelector.selectByValue("string:03");
+		// idCardValidMonthSelector
+		auxTool.selectorRandomSelect(d, "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[30]/div[1]/span[2]/select[1]", 1, null);
 
-		WebElement idCardValidDaySelectEle = d.findElement(By
-				.xpath("//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[30]/div[1]/span[3]/select[1]"));
-		Select idCardValidDaySelector = new Select(idCardValidDaySelectEle);
-		idCardValidDaySelector.selectByValue("string:03");
+		// idCardValidDaySelector
+		auxTool.selectorRandomSelect(d, "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[30]/div[1]/span[3]/select[1]", 1, null);
 		
 		if(InternationalityType.CN.equals(areaType) && HeShaBiCaoIdType.PASSPORT.getId().equals(dto.getIdType())) {
 			WebElement otherIdNumberInput = d.findElement(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[34]/input[1]"));
 			otherIdNumberInput.click();
 			otherIdNumberInput.clear();
-			otherIdNumberInput.sendKeys("123456");
+			Random random = new Random();
+			otherIdNumberInput.sendKeys(String.valueOf(random.nextInt(999999 - 100000) + 100000));
 			
-			WebElement otherIdCardValidYearSelectEle = d.findElement(By
-					.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[35]/div[1]/span[1]/select[1]"));
-			Select otherIdCardValidYearSelector = new Select(otherIdCardValidYearSelectEle);
-			otherIdCardValidYearSelector.selectByIndex(2);
+			// otherIdCardValidYearSelectEle			
+			auxTool.selectorRandomSelect(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[35]/div[1]/span[1]/select[1]", 1, null);			
 
-			WebElement otheridCardValidMonthSelectEle = d.findElement(By
-					.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[35]/div[1]/span[2]/select[1]"));
-			Select otherIdCardValidMonthSelector = new Select(otheridCardValidMonthSelectEle);
-			otherIdCardValidMonthSelector.selectByIndex(2);
+			// otheridCardValidMonthSelectEle
+			auxTool.selectorRandomSelect(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[35]/div[1]/span[2]/select[1]", 1, null);
 
-			WebElement otherIdCardValidDaySelectEle = d.findElement(By
-					.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[35]/div[1]/span[3]/select[1]"));
-			Select otherIdCardValidDaySelector = new Select(otherIdCardValidDaySelectEle);
-			otherIdCardValidDaySelector.selectByIndex(2);
+			// otherIdCardValidDaySelectEle
+			auxTool.selectorRandomSelect(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[35]/div[1]/span[3]/select[1]", 1, null);
 			
-			WebElement otherIdCardCertificateIssuingAgencySelectEle = d.findElement(By
-					.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[37]/div[2]/select[1]"));
-			Select otherIdCardCertificateIssuingAgencySelector = new Select(otherIdCardCertificateIssuingAgencySelectEle);
-			otherIdCardCertificateIssuingAgencySelector.selectByIndex(2);
+			// otherIdCardCertificateIssuingAgencySelectEle			
+			auxTool.selectorRandomSelect(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[37]/div[2]/select[1]", 1, null);			
 			
 		}
 
@@ -333,32 +320,20 @@ public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implement
 		continueButton.click();
 	}
 
-	private void connections(WebDriver d) {
+	private void connections(WebDriver d) throws InterruptedException {
+		auxTool.loadingCheck(d, "//select[@id='auto_contactProvince']");
+		
+		threadSleepRandomTime();
+		
+		auxTool.selectorRandomSelect(d, "//select[@id='auto_contactProvince']", 1, 10);
 
-		WebElement provinceSelectEle = d.findElement(By.xpath("//select[@id='auto_contactProvince']"));
-		Select provinceSelector = new Select(provinceSelectEle);
-		provinceSelector.selectByIndex(4);
+		threadSleepRandomTime();
 
-		try {
-			threadSleepRandomTime();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		auxTool.selectorRandomSelect(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[3]/div[1]/div[2]/select[2]", 1, null);
 
-		WebElement regionSelectEle = d.findElement(By.xpath(
-				"/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[3]/div[1]/div[2]/select[2]"));
-		Select regionSelector = new Select(regionSelectEle);
-		regionSelector.selectByIndex(2);
+		threadSleepRandomTime();
 
-		try {
-			threadSleepRandomTime();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
-		WebElement regionSelectEle2 = d.findElement(By.xpath("//select[@id='auto_contactDistrict']"));
-		Select regionSelector2 = new Select(regionSelectEle2);
-		regionSelector2.selectByIndex(3);
+		auxTool.selectorRandomSelect(d, "//select[@id='auto_contactDistrict']", 1, null);
 
 		WebElement addressInput = d.findElement(By.xpath("//input[@id='auto_conAddress']"));
 		addressInput.click();
@@ -400,7 +375,9 @@ public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implement
 		continueButton.click();
 	}
 
-	private void jobInfos(WebDriver d) {
+	private void jobInfos(WebDriver d) throws InterruptedException {
+		auxTool.loadingCheck(d, "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[2]/div[2]/select[1]");
+		
 		WebElement jobSelectEle = d
 				.findElement(By.xpath("//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[2]/div[2]/select[1]"));
 		Select provinceSelector = new Select(jobSelectEle);
@@ -417,8 +394,9 @@ public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implement
 
 	}
 
-	private void taxDeclaration(WebDriver d) {
-
+	private void taxDeclaration(WebDriver d) throws InterruptedException {
+		auxTool.loadingCheck(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[2]/div[1]/div[4]/div[1]/div[1]/label[1]");
+		
 		WebElement declarationCheckbox = d.findElement(By.xpath(
 				"/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[2]/div[1]/div[4]/div[1]/div[1]/label[1]"));
 		declarationCheckbox.click();
@@ -432,8 +410,9 @@ public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implement
 		tryClickAlert(d);
 	}
 
-	private void tAndC(WebDriver d) {
-
+	private void tAndC(WebDriver d) throws InterruptedException {
+		auxTool.loadingCheck(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[5]/input[1]");
+		
 		WebElement declarationCheckbox = d
 				.findElement(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[5]/input[1]"));
 		declarationCheckbox.click();
@@ -447,10 +426,12 @@ public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implement
 		tryClickAlert(d);
 	}
 
-	private void confirm(WebDriver d) {
+	private void confirm(WebDriver d) throws InterruptedException {
 
 		tryClickAlert(d);
 
+		auxTool.loadingCheck(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[3]/div[3]/div[1]/button[1]");
+		
 		WebElement confirmButton = d.findElement(By.xpath(
 				"/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[3]/div[3]/div[1]/button[1]"));
 		confirmButton.click();

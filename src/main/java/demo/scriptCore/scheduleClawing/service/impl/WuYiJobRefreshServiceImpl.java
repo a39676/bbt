@@ -89,12 +89,8 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 
 			threadSleepRandomTime();
 
-			// TODO 此任务暂不采取截图, 直至完成规范化
-//			ScreenshotSaveResult screenSaveResult = screenshot(webDriver, tbo.getFlowName());
-//			ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(),
-//					screenSaveResult.getFileName(), screenshotImageValidTime);
-//			reportService.caseReportAppendImage(caseReport, uploadImgResult.getImgUrl());
-
+			addScreenshotToReport(webDriver, caseReport);
+			
 			reportService.caseReportAppendContent(caseReport, "完成登录");
 
 			catchWatchMe(webDriver, caseReport);
@@ -120,11 +116,7 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 			e.printStackTrace();
 //			String htmlStr = jsUtil.getHtmlSource(d);
 
-//			TODO 此任务暂不采取截图, 直至完成规范化
-//			ScreenshotSaveResult screenSaveResult = screenshot(webDriver, tbo.getFlowName());
-//			ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult.getSavingPath(),
-//					screenSaveResult.getFileName(), screenshotImageValidTime);
-//			reportService.caseReportAppendImage(caseReport, uploadImgResult.getImgUrl());
+			addScreenshotToReport(webDriver, caseReport);
 			reportService.caseReportAppendContent(caseReport, "异常: " + e.toString());
 //			jsonReporter.appendContent(reportDTO, htmlStr);
 
@@ -136,7 +128,7 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 		return tbo;
 	}
 
-	private void findAndCLoseHomePop(WebDriver d, JsonReportOfCaseDTO reportDTO) {
+	private void findAndCloseHomePop(WebDriver d, JsonReportOfCaseDTO reportDTO) {
 		xPathBuilder.start("div").addClass("homePop");
 
 		try {
@@ -150,7 +142,7 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 
 			xPathBuilder.findChild("div").addClass("in").findChild("div").addClass("close");
 
-			WebElement homepopCloseDiv = d.findElement(By.xpath(xPathBuilder.getXpath()));
+			WebElement homepopCloseDiv = d.findElement(By.xpath("body:nth-child(2) div.homePop:nth-child(3) div.in > div.close"));
 			homepopCloseDiv.click();
 			reportService.caseReportAppendContent(reportDTO, "close homepop div");
 
@@ -222,7 +214,7 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 			}
 
 			reportService.caseReportAppendContent(reportDTO, "try find lead div and go app div");
-			findAndCLoseHomePop(d, reportDTO);
+			findAndCloseHomePop(d, reportDTO);
 			threadSleepRandomTime();
 			findAndCloseLeadDiv(d, reportDTO);
 			threadSleepRandomTime();
@@ -234,19 +226,8 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 			jsUtil.scroll(d, 200);
 			reportService.caseReportAppendContent(reportDTO, "after scroll");
 
-//			try {
-//				d.get("https://login.51job.com/login.php?display=h5");
-//			} catch (TimeoutException te) {
-//				jsonReporter.appendContent(reportDTO, "visit login page timeout");
-//			} catch (Exception e) {
-//				jsonReporter.appendContent(reportDTO, e.getLocalizedMessage());
-//				jsonReporter.appendContent(reportDTO, "visit login page fail");
-//				throw new Exception();
-//			}
-
-			xPathBuilder.start("header").addClass("nologin").findChild("a").addClass("my");
 			try {
-				WebElement loginPageButton = d.findElement(By.xpath(xPathBuilder.getXpath()));
+				WebElement loginPageButton = d.findElement(By.xpath("body:nth-child(2) div.bb:nth-child(1) div:nth-child(2) header:nth-child(1) > a.login"));
 				for (int i = 0; i < 10 && !loginPageButton.isDisplayed(); i++) {
 					jsUtil.scroll(d, 200);
 				}
@@ -259,9 +240,8 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 			reportService.caseReportAppendContent(reportDTO, "after visit login page");
 			threadSleepRandomTimeLong();
 
-			xPathBuilder.start().addId("tobydefault").findChild("a").addClass("leftlogin");
 			try {
-				WebElement loginWithUsernameAndPwdButton = d.findElement(By.xpath(xPathBuilder.getXpath()));
+				WebElement loginWithUsernameAndPwdButton = d.findElement(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[3]/p[2]"));
 				for (int i = 0; i < 10 && !loginWithUsernameAndPwdButton.isDisplayed(); i++) {
 					threadSleepRandomTime();
 				}
@@ -272,10 +252,9 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 			}
 			threadSleepRandomTimeLong();
 
-			xPathBuilder.start().addId("loginname");
 			WebElement usernameInput = null;
 			try {
-				usernameInput = d.findElement(By.xpath(xPathBuilder.getXpath()));
+				usernameInput = d.findElement(By.xpath("//input[@id='loginname']"));
 			} catch (Exception e) {
 				reportService.caseReportAppendContent(reportDTO, "找不到用户名输入框");
 				throw new Exception();
@@ -300,10 +279,9 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 				reportService.caseReportAppendContent(reportDTO, "找不到Logo");
 			}
 
-			xPathBuilder.start().addId("password");
 			WebElement pwdInput = null;
 			try {
-				pwdInput = d.findElement(By.xpath(xPathBuilder.getXpath()));
+				pwdInput = d.findElement(By.xpath("//input[@id='password']"));
 			} catch (Exception e) {
 				reportService.caseReportAppendContent(reportDTO, "找不到密码输入框");
 			}
@@ -311,13 +289,15 @@ public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService imple
 			pwdInput.clear();
 			pwdInput.sendKeys(dailySignBO.getPwd());
 			reportService.caseReportAppendContent(reportDTO, "input pwd");
+			
+			WebElement tAndCCheckBox = d.findElement(By.xpath("//i[@id='sureBtn']"));
+			tAndCCheckBox.click();
 
 			threadSleepRandomTime(1000L, 3000L);
 
-			xPathBuilder.start("button").addAttribute("id", "login_btn");
 			WebElement loginButton = null;
 			try {
-				loginButton = d.findElement(By.xpath(xPathBuilder.getXpath()));
+				loginButton = d.findElement(By.xpath("//button[@id='login_btn']"));
 			} catch (Exception e) {
 				reportService.caseReportAppendContent(reportDTO, "找不到登录按钮");
 			}

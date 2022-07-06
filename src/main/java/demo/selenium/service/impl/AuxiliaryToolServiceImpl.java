@@ -1,6 +1,7 @@
 package demo.selenium.service.impl;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
 
@@ -11,6 +12,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
 import org.springframework.stereotype.Service;
 
@@ -77,6 +79,24 @@ public class AuxiliaryToolServiceImpl extends CommonService {
 			Thread.sleep(waitGap);
 		}
 		return false;
+	}
+
+	public void selectorRandomSelect(WebDriver d, String selectorXpath, Integer min, Integer max) {
+		try {
+			WebElement selectorElement = d.findElement(By.xpath(selectorXpath));
+			Select selector = new Select(selectorElement);
+			List<WebElement> optionList = selector.getOptions();
+			if (max == null || max > optionList.size()) {
+				max = optionList.size();
+			}
+			if (min == null || min < 0) {
+				min = 0;
+			}
+			Double randomIndex = ((Math.random() * (max - min)) + min);
+			selector.selectByIndex(randomIndex.intValue());
+		} catch (Exception e) {
+
+		}
 	}
 
 }

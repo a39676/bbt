@@ -40,6 +40,10 @@ public class SystemOptionService extends CommonService {
 	public void setIsDebuging(Boolean isDebuging) {
 		this.isDebuging = isDebuging;
 	}
+	
+	public boolean isDev() {
+		return "dev".equals(getEnvName());
+	}
 
 	public String getShutdownKey() {
 		return shutdownKey;
