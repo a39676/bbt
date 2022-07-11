@@ -12,11 +12,11 @@ import org.openqa.selenium.support.ui.Select;
 import org.springframework.stereotype.Service;
 
 import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
+import autoTest.testEvent.hsbc.pojo.dto.HeShaBiCaoWechatPreregistDTO;
+import autoTest.testEvent.hsbc.pojo.type.HeShaBiCaoIdType;
 import autoTest.testEvent.pojo.result.AutomationTestCaseResult;
 import autoTest.testEvent.pojo.type.AutomationTestFlowResultType;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
-import autoTest.testEvent.searchingDemo.pojo.dto.HeShaBiCaoWechatPreregistDTO;
-import autoTest.testEvent.searchingDemo.pojo.type.HeShaBiCaoIdType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.scheduleClawing.service.HeShaBiCaoService;
@@ -207,15 +207,21 @@ public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implement
 	}
 	
 	private void selectBankBranch(WebDriver d, HeShaBiCaoWechatPreregistDTO dto) throws InterruptedException {
-		auxTool.loadingCheck(d, "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[3]/div[1]/select[1]");
 		
+		String branchCitySelectorXpath = "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[3]/div[1]/select[1]";
+		String bankBranchSelectorXpath = "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[5]/div[1]/select[1]";
+		
+		auxTool.loadingCheck(d, branchCitySelectorXpath);
 		threadSleepRandomTime();
 		
-		auxTool.selectorRandomSelect(d, "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[3]/div[1]/select[1]", 1, null);
-		
-		threadSleepRandomTime();
+		if(dto.getOpenAccountInLivingCity()) {
+			auxTool.selectorSelectByKeyword(d, branchCitySelectorXpath, dto.getCityNameOfOpeningAccountBranch());
+		} else {
+			auxTool.selectorRandomSelect(d, branchCitySelectorXpath, 1, null);
+		}
 
-		auxTool.selectorRandomSelect(d, "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[5]/div[1]/select[1]", 1, null);
+		threadSleepRandomTime();
+		auxTool.selectorRandomSelect(d, bankBranchSelectorXpath, 1, null);
 
 		String employIdInputPath = "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[7]/div[1]/input[2]";
 		WebElement employIdInput = d.findElement(By.xpath(employIdInputPath));

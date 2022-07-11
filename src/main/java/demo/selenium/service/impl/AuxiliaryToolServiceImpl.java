@@ -99,4 +99,26 @@ public class AuxiliaryToolServiceImpl extends CommonService {
 		}
 	}
 
+	public void selectorSelectByKeyword(WebDriver d, String selectorXpath, String keyword) {
+		try {
+			WebElement selectorElement = d.findElement(By.xpath(selectorXpath));
+			Select selector = new Select(selectorElement);
+			List<WebElement> optionList = selector.getOptions();
+			WebElement option = null;
+			String value = null;
+			String text = null;
+			for (int i = 0; i < optionList.size(); i++) {
+				option = optionList.get(i);
+				value = option.getAttribute("value");
+				text = option.getText();
+				if((value != null && value.contains(keyword)) || (text != null && text.contains(keyword))) {
+					selector.selectByIndex(i);
+					return;
+				}
+			}
+		} catch (Exception e) {
+
+		}
+	}
+
 }
