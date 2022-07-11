@@ -2,6 +2,7 @@ package demo.scriptCore.scheduleClawing.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -12,28 +13,28 @@ import org.openqa.selenium.support.ui.Select;
 import org.springframework.stereotype.Service;
 
 import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
-import autoTest.testEvent.hsbc.pojo.dto.HeShaBiCaoWechatPreregistDTO;
-import autoTest.testEvent.hsbc.pojo.type.HeShaBiCaoIdType;
+import autoTest.testEvent.hsbc.pojo.dto.HsbcWechatPreregistDTO;
+import autoTest.testEvent.hsbc.pojo.type.HsbcIdType;
 import autoTest.testEvent.pojo.result.AutomationTestCaseResult;
 import autoTest.testEvent.pojo.type.AutomationTestFlowResultType;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.scriptCore.common.service.AutomationTestCommonService;
-import demo.scriptCore.scheduleClawing.service.HeShaBiCaoService;
+import demo.scriptCore.scheduleClawing.service.HsbcService;
 import tool.pojo.type.InternationalityType;
 
 @Service
-public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implements HeShaBiCaoService {
+public class HsbcServiceImpl extends AutomationTestCommonService implements HsbcService {
 
 	@Override
 	public TestEventBO weixinPreReg(TestEventBO tbo) {
 		WebDriver d = null;
-		ScheduleClawingType caseType = ScheduleClawingType.HE_SHA_BI_CAO_WECHAT_PREREGIST;
+		ScheduleClawingType caseType = ScheduleClawingType.HSBC_WECHAT_PREREGIST;
 		JsonReportOfCaseDTO caseReport = initCaseReportDTO(caseType.getFlowName());
 		AutomationTestCaseResult r = initCaseResult(caseType.getFlowName());
 
 		try {
-			HeShaBiCaoWechatPreregistDTO dto = buildTestEventParamFromJsonCustomization(tbo.getParamStr(), HeShaBiCaoWechatPreregistDTO.class);
+			HsbcWechatPreregistDTO dto = buildTestEventParamFromJsonCustomization(tbo.getParamStr(), HsbcWechatPreregistDTO.class);
 			
 			if (dto == null) {
 				reportService.caseReportAppendContent(caseReport, "读取参数异常");
@@ -71,7 +72,7 @@ public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implement
 
 			threadSleepRandomTime();
 
-			connections(d);
+			connections(d, dto);
 
 			threadSleepRandomTime();
 
@@ -117,7 +118,7 @@ public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implement
 		return tbo;
 	}
 	
-	private void phoneReusePreregistFlow(WebDriver d, HeShaBiCaoWechatPreregistDTO dto) throws InterruptedException {
+	private void phoneReusePreregistFlow(WebDriver d, HsbcWechatPreregistDTO dto) throws InterruptedException {
 		d.get(dto.getMainUrl());
 		
 		threadSleepRandomTime();
@@ -147,7 +148,7 @@ public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implement
 		start.click();
 	}
 	
-	private void phoneInfoRecordPrefixPart(WebDriver d, HeShaBiCaoWechatPreregistDTO dto) {
+	private void phoneInfoRecordPrefixPart(WebDriver d, HsbcWechatPreregistDTO dto) {
 		WebElement regionEle = d.findElement(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[4]/div[1]/select[1]"));
 		Select regionSelector = new Select(regionEle);
 		InternationalityType areaType = InternationalityType.getType(dto.getPhoneAreaType(), dto.getPhoneAreaName());
@@ -180,7 +181,7 @@ public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implement
 		}
 	}
 
-	private void phoneInfoRecordSuffixPart(WebDriver d, HeShaBiCaoWechatPreregistDTO dto) {
+	private void phoneInfoRecordSuffixPart(WebDriver d, HsbcWechatPreregistDTO dto) {
 		String smsVerifyPath = xPathBuilder.start("div").addClass("account-tile__inner verifiDive").findChild("div", 1)
 				.findChild("div", 1).findChild("div", 1).findChild("input").addType("tel").getXpath();
 		WebElement smsVerifyInput = d.findElement(By.xpath(smsVerifyPath));
@@ -206,7 +207,7 @@ public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implement
 
 	}
 	
-	private void selectBankBranch(WebDriver d, HeShaBiCaoWechatPreregistDTO dto) throws InterruptedException {
+	private void selectBankBranch(WebDriver d, HsbcWechatPreregistDTO dto) throws InterruptedException {
 		
 		String branchCitySelectorXpath = "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[3]/div[1]/select[1]";
 		String bankBranchSelectorXpath = "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[5]/div[1]/select[1]";
@@ -214,7 +215,7 @@ public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implement
 		auxTool.loadingCheck(d, branchCitySelectorXpath);
 		threadSleepRandomTime();
 		
-		if(dto.getOpenAccountInLivingCity()) {
+		if(dto.getCityNameOfOpeningAccountBranch() != null) {
 			auxTool.selectorSelectByKeyword(d, branchCitySelectorXpath, dto.getCityNameOfOpeningAccountBranch());
 		} else {
 			auxTool.selectorRandomSelect(d, branchCitySelectorXpath, 1, null);
@@ -240,7 +241,7 @@ public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implement
 
 	}
 
-	private void inputPersonalInfo(WebDriver d, HeShaBiCaoWechatPreregistDTO dto) throws InterruptedException {
+	private void inputPersonalInfo(WebDriver d, HsbcWechatPreregistDTO dto) throws InterruptedException {
 		auxTool.loadingCheck(d, "//input[@id='lastName']");
 		WebElement lastNameInput = d.findElement(By.xpath("//input[@id='lastName']"));
 		lastNameInput.click();
@@ -265,7 +266,7 @@ public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implement
 		WebElement certificateTypeSelectEle = d.findElement(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[17]/div[2]/select[1]"));
 		Select certificateTypeSelector = new Select(certificateTypeSelectEle);
 		
-		HeShaBiCaoIdType idType = HeShaBiCaoIdType.getType(dto.getIdType());
+		HsbcIdType idType = HsbcIdType.getType(dto.getIdType());
 		i = findTargetOptionIndex(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[17]/div[2]/select[1]/option", idType.getCnName());
 		if(i == -1) {
 			i = 0;
@@ -301,7 +302,7 @@ public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implement
 		// idCardValidDaySelector
 		auxTool.selectorRandomSelect(d, "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[30]/div[1]/span[3]/select[1]", 1, null);
 		
-		if(InternationalityType.CN.equals(areaType) && HeShaBiCaoIdType.PASSPORT.getId().equals(dto.getIdType())) {
+		if(InternationalityType.CN.equals(areaType) && HsbcIdType.PASSPORT.getId().equals(dto.getIdType())) {
 			WebElement otherIdNumberInput = d.findElement(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[34]/input[1]"));
 			otherIdNumberInput.click();
 			otherIdNumberInput.clear();
@@ -326,20 +327,30 @@ public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implement
 		continueButton.click();
 	}
 
-	private void connections(WebDriver d) throws InterruptedException {
-		auxTool.loadingCheck(d, "//select[@id='auto_contactProvince']");
+	private void connections(WebDriver d, HsbcWechatPreregistDTO dto) throws InterruptedException {
+		String provinceSelectorXpath = "//select[@id='auto_contactProvince']";
+		String citySelectorXpath = "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[3]/div[1]/div[2]/select[2]";
+		String districtSelectorXpath = "//select[@id='auto_contactDistrict']";
 		
-		threadSleepRandomTime();
+		auxTool.loadingCheck(d, provinceSelectorXpath);
+
+		if(dto.getOpenAccountInLivingCity()) {
+			String provinceName = findProvinceNameByCityName(dto);
+			
+			auxTool.selectorSelectByKeyword(d, provinceSelectorXpath, provinceName);
+			threadSleepRandomTime();
+			auxTool.selectorSelectByKeyword(d, citySelectorXpath, dto.getCityNameOfOpeningAccountBranch());
+			threadSleepRandomTime();
+			auxTool.selectorRandomSelect(d, districtSelectorXpath, 1, null);
+			
+		} else {
+			auxTool.selectorRandomSelect(d, provinceSelectorXpath, 1, 10);
+			threadSleepRandomTime();
+			auxTool.selectorRandomSelect(d, citySelectorXpath, 1, null);
+			threadSleepRandomTime();
+			auxTool.selectorRandomSelect(d, districtSelectorXpath, 1, null);
+		}
 		
-		auxTool.selectorRandomSelect(d, "//select[@id='auto_contactProvince']", 1, 10);
-
-		threadSleepRandomTime();
-
-		auxTool.selectorRandomSelect(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[3]/div[1]/div[2]/select[2]", 1, null);
-
-		threadSleepRandomTime();
-
-		auxTool.selectorRandomSelect(d, "//select[@id='auto_contactDistrict']", 1, null);
 
 		WebElement addressInput = d.findElement(By.xpath("//input[@id='auto_conAddress']"));
 		addressInput.click();
@@ -356,29 +367,34 @@ public class HeShaBiCaoServiceImpl extends AutomationTestCommonService implement
 				By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[5]/ul[1]/li[1]"));
 		addressCheckbox.click();
 
-		WebElement addressSinceYearSelectEle = d.findElement(
-				By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[6]/select[1]"));
-		Select addressSinceYearSelector = new Select(addressSinceYearSelectEle);
-		addressSinceYearSelector.selectByIndex(13);
-		WebElement addressSinceMonthSelectEle = d.findElement(
-				By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[6]/select[2]"));
-		Select addressSinceMonthSelector = new Select(addressSinceMonthSelectEle);
-		addressSinceMonthSelector.selectByIndex(3);
+//		addressSinceYearSelectEle
+		auxTool.selectorRandomSelect(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[6]/select[1]", 5, 10);
+//		addressSinceMonthSelectEle
+		auxTool.selectorRandomSelect(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[6]/select[2]", 5, 10);
+		threadSleepRandomTime();
+//		addressSinceDaySelectEle
+		auxTool.selectorRandomSelect(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[6]/select[3]", 5, 10);
 
-		try {
-			threadSleepRandomTime();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
-		WebElement addressSinceDaySelectEle = d.findElement(
-				By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[6]/select[3]"));
-		Select addressSinceDaySelector = new Select(addressSinceDaySelectEle);
-		addressSinceDaySelector.selectByIndex(3);
 
 		WebElement continueButton = d.findElement(By.xpath(
 				"/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[9]/div[1]/div[1]/button[1]"));
 		continueButton.click();
+	}
+	
+	private String findProvinceNameByCityName(HsbcWechatPreregistDTO dto) {
+		if(dto.getProvinceRegionMap() == null) {
+			return null;
+		}
+		String inputCityname = dto.getCityNameOfOpeningAccountBranch();
+		for(Entry<String, List<String>> entry : dto.getProvinceRegionMap().entrySet()) {
+			List<String> citynameList = entry.getValue();
+			for(String cityname : citynameList) {
+				if(cityname.contains(inputCityname)) {
+					return entry.getKey();
+				}
+			}
+		}
+		return null;
 	}
 
 	private void jobInfos(WebDriver d) throws InterruptedException {

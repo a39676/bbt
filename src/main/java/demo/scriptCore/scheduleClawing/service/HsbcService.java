@@ -2,7 +2,7 @@ package demo.scriptCore.scheduleClawing.service;
 
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 
-public interface HeShaBiCaoService {
+public interface HsbcService {
 
 	TestEventBO weixinPreReg(TestEventBO tbo);
 
