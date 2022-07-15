@@ -215,7 +215,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		auxTool.loadingCheck(d, branchCitySelectorXpath);
 		threadSleepRandomTime();
 		
-		if(dto.getCityNameOfOpeningAccountBranch() != null) {
+		if(dto.getOpenAccountInLivingCity() && dto.getCityNameOfOpeningAccountBranch() != null) {
 			auxTool.selectorSelectByKeyword(d, branchCitySelectorXpath, dto.getCityNameOfOpeningAccountBranch());
 		} else {
 			auxTool.selectorRandomSelect(d, branchCitySelectorXpath, 1, null);
@@ -301,6 +301,23 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 
 		// idCardValidDaySelector
 		auxTool.selectorRandomSelect(d, "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[30]/div[1]/span[3]/select[1]", 1, null);
+		
+		if(HsbcIdType.MAIN_LAND_ID.getId().equals(dto.getIdType())) {
+			WebElement femaleRadio = d.findElement(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[10]/div[2]/ul[1]/li[1]/label[1]"));
+			WebElement maleRadio = d.findElement(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[10]/div[2]/ul[1]/li[2]/label[1]"));
+			
+			String idNum = dto.getIdNumber();
+			String genderCodeStr = String.valueOf(idNum.charAt(idNum.length() - 2));
+			try {
+				int genderCode = Integer.parseInt(genderCodeStr);
+				if(genderCode % 2 == 0) {
+					femaleRadio.click();
+				} else {
+					maleRadio.click();
+				}
+			} catch (Exception e) {
+			}
+		}
 		
 		if(InternationalityType.CN.equals(areaType) && HsbcIdType.PASSPORT.getId().equals(dto.getIdType())) {
 			WebElement otherIdNumberInput = d.findElement(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[34]/input[1]"));
