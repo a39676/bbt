@@ -23,5 +23,5 @@ public class TestController extends CommonController {
 	public String test() throws Exception {
 		return testService.testing("something");
 	}
-	
+
 }
