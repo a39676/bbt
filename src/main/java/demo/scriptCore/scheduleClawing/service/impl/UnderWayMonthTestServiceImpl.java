@@ -230,7 +230,7 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 			return;
 		}
 
-		jsUtil.scrollToButton(d);
+		jsUtil.scrollToBottom(d);
 
 //		/html[1]/body[1]/div[2]/div[1]/div[2]/form[1]/div[1]/div[questionIndex]/p[1]
 		List<WebElement> questionList = d

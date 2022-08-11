@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import demo.baseCommon.controller.CommonController;
 import demo.experiment.pojo.constant.TestUrl;
 import demo.experiment.service.TestService;
+import demo.scriptCore.localClawing.service.TmpTaskService;
 
 @Controller
 @RequestMapping(value = { TestUrl.testRoot })
@@ -24,4 +25,11 @@ public class TestController extends CommonController {
 		return testService.testing("something");
 	}
 
+	@Autowired
+	private TmpTaskService tmpTaskService;
+	
+	@GetMapping(value = "/t1")
+	public void t1() {
+		tmpTaskService.t1();
+	}
 }

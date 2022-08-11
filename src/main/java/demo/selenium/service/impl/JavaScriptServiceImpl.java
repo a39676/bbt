@@ -41,7 +41,7 @@ public class JavaScriptServiceImpl extends CommonService implements JavaScriptSe
 	}
 	
 	@Override
-	public void scrollToButton(WebDriver driver) {
+	public void scrollToBottom(WebDriver driver) {
 		JavascriptExecutor jse = (JavascriptExecutor) driver;
 		jse.executeScript("window.scrollTo(0, document.body.scrollHeight)");
 	}

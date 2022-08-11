@@ -11,7 +11,7 @@ public interface JavaScriptService {
 
 	String getHtmlSource(WebDriver driver);
 
-	void scrollToButton(WebDriver driver);
+	void scrollToBottom(WebDriver driver);
 
 	void windowStop(WebDriver driver);
 
