@@ -23,23 +23,6 @@ public class TmpTaskServiceImpl extends BingDemoCommonService implements TmpTask
 	private String counterStr = null;
 
 	static {
-//		targetUrlList.add("https://www.maofly.com/manga/13916/430996.html");
-//		targetUrlList.add("https://www.maofly.com/manga/13916/463121.html");
-//		targetUrlList.add("https://www.maofly.com/manga/13916/464186.html");
-//		targetUrlList.add("https://www.maofly.com/manga/13916/468918.html");
-//		targetUrlList.add("https://www.maofly.com/manga/13916/469621.html");
-		targetUrlList.add("https://www.maofly.com/manga/13916/470246.html");
-		targetUrlList.add("https://www.maofly.com/manga/13916/471159.html");
-		targetUrlList.add("https://www.maofly.com/manga/13916/471925.html");
-		targetUrlList.add("https://www.maofly.com/manga/13916/472599.html");
-		targetUrlList.add("https://www.maofly.com/manga/13916/473367.html");
-		targetUrlList.add("https://www.maofly.com/manga/13916/474003.html");
-		targetUrlList.add("https://www.maofly.com/manga/13916/474285.html");
-		targetUrlList.add("https://www.maofly.com/manga/13916/474803.html");
-		targetUrlList.add("https://www.maofly.com/manga/13916/475057.html");
-		targetUrlList.add("https://www.maofly.com/manga/13916/475256.html");
-		targetUrlList.add("https://www.maofly.com/manga/13916/475454.html");
-		targetUrlList.add("https://www.maofly.com/manga/13916/475662.html");
 		targetUrlList.add("https://www.maofly.com/manga/13916/475873.html");
 		targetUrlList.add("https://www.maofly.com/manga/13916/476026.html");
 		targetUrlList.add("https://www.maofly.com/manga/13916/476193.html");
@@ -47,16 +30,17 @@ public class TmpTaskServiceImpl extends BingDemoCommonService implements TmpTask
 		targetUrlList.add("https://www.maofly.com/manga/13916/476485.html");
 		targetUrlList.add("https://www.maofly.com/manga/13916/476485.html");
 	}
-	
+
 	@Override
 	public void t1() {
-		
+
 		WebDriver wd1 = null;
 		WebDriver wd2 = null;
 		String savingFloder = null;
 		String url;
-		Integer count = 16;
-		
+		Integer count = 33;
+		String loadallButtonXpath = "//body/div[1]/div[2]/nav[1]/div[1]/a[6]";
+
 		url = targetUrlList.get(0);
 		counterStr = String.format("%02d", count);
 		savingFloder = mainSavingFloder + "/" + counterStr;
@@ -66,14 +50,21 @@ public class TmpTaskServiceImpl extends BingDemoCommonService implements TmpTask
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		for(int i = 1; i < targetUrlList.size(); i++) {
+
+		for (int i = 1; i < targetUrlList.size(); i++) {
 			url = targetUrlList.get(i);
 			counterStr = String.format("%02d", count);
 			savingFloder = mainSavingFloder + "/" + counterStr;
 			try {
 				wd2 = webDriverService.buildChromeWebDriver();
 				wd2.get(url);
+				if (!auxTool.loadingCheck(wd1, loadallButtonXpath)) {
+					return;
+				} else {
+					WebElement loadallButton = wd1.findElement(By.xpath(loadallButtonXpath));
+					loadallButton.click();
+				}
+
 				collectionImg(wd1, url, savingFloder);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -85,16 +76,8 @@ public class TmpTaskServiceImpl extends BingDemoCommonService implements TmpTask
 	}
 
 	private void collectionImg(WebDriver d, String url, String targetFolder) throws InterruptedException {
-//		String loadallButtonXpath = "//body/div[1]/div[2]/nav[1]/div[1]/a[6]";
 		String allComicImgXpath = xPathBuilder.setXpath("//body/div[1]/div[3]/div[1]/div[2]/div[1]").findChild("img")
 				.getXpath();
-
-//		if (!auxTool.loadingCheck(d, loadallButtonXpath)) {
-//			return;
-//		}
-
-//		WebElement loadallButton = d.findElement(By.xpath(loadallButtonXpath));
-//		loadallButton.click();
 
 		List<WebElement> comicImgList = d.findElements(By.xpath(allComicImgXpath));
 
@@ -116,13 +99,12 @@ public class TmpTaskServiceImpl extends BingDemoCommonService implements TmpTask
 		}
 		filename = filename.trim();
 		try {
-			FileUtils.copyURLToFile(new URL(urlStr), new File(targetFloder + "/" + filename + ".png"), 10000,
-					10000);
+			FileUtils.copyURLToFile(new URL(urlStr), new File(targetFloder + "/" + filename + ".png"), 10000, 10000);
 		} catch (Exception e) {
 			e.printStackTrace();
 			try {
-				FileUtils.copyURLToFile(new URL(urlStr),
-						new File(targetFloder + "/" + snowFlake.getNextId() + ".png"), 10000, 10000);
+				FileUtils.copyURLToFile(new URL(urlStr), new File(targetFloder + "/" + snowFlake.getNextId() + ".png"),
+						10000, 10000);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
