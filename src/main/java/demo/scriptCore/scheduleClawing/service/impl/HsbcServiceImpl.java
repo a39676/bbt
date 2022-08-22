@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -118,7 +119,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		return tbo;
 	}
 	
-	private void phoneReusePreregistFlow(WebDriver d, HsbcWechatPreregistDTO dto) throws InterruptedException {
+	private void phoneReusePreregistFlow(WebDriver d, HsbcWechatPreregistDTO dto) throws Exception {
 		d.get(dto.getMainUrl());
 		
 		threadSleepRandomTime();
@@ -148,7 +149,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		start.click();
 	}
 	
-	private void phoneInfoRecordPrefixPart(WebDriver d, HsbcWechatPreregistDTO dto) {
+	private void phoneInfoRecordPrefixPart(WebDriver d, HsbcWechatPreregistDTO dto) throws Exception {
 		WebElement regionEle = d.findElement(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[4]/div[1]/select[1]"));
 		Select regionSelector = new Select(regionEle);
 		InternationalityType areaType = InternationalityType.getType(dto.getPhoneAreaType(), dto.getPhoneAreaName());
@@ -168,6 +169,11 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		String nextStepPath = xPathBuilder.start("div").addClass("fadeIn5").getXpath();
 		WebElement nextStep = d.findElement(By.xpath(nextStepPath));
 		nextStep.click();
+		
+		if(webATToolService.alertExists(d)) {
+			Alert alert = d.switchTo().alert();
+			throw new Exception(alert.getText());
+		}
 
 	}
 	
