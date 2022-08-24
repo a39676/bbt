@@ -31,4 +31,15 @@ public class TestController extends CommonController {
 //	public void t1() {
 //		tmpTaskService.t1();
 //	}
+	
+//	@Autowired
+//	private V2exJobInfoCollectionService s;
+//	
+//	@GetMapping(value = "/t2")
+//	@ResponseBody
+//	public String t2() {
+//		TestEventBO tbo = new TestEventBO();
+//		s.clawing(tbo);
+//		return ":";
+//	}
 }

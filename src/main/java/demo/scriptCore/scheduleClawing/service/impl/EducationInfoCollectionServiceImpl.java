@@ -30,7 +30,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.scheduleClawing.pojo.dto.EducationInfoOptionDTO;
-import demo.scriptCore.scheduleClawing.pojo.dto.EducationInfoOptionUrlDTO;
+import demo.scriptCore.scheduleClawing.pojo.dto.CollectUrlHistoryDTO;
 import demo.scriptCore.scheduleClawing.pojo.type.EducationInfoSourceType;
 import demo.scriptCore.scheduleClawing.service.EducationInfoCollectionService;
 import demo.tool.mq.producer.TelegramCalendarNoticeMessageAckProducer;
@@ -74,7 +74,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 
 			webDriver = webDriverService.buildChromeWebDriver();
 
-			List<EducationInfoOptionUrlDTO> newUrlList = null;
+			List<CollectUrlHistoryDTO> newUrlList = null;
 			EducationInfoSourceType sourceType = null;
 
 			try {
@@ -162,14 +162,14 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 		return bo;
 	}
 
-	private List<EducationInfoOptionUrlDTO> runHaizhuGovInfoCollector(String mainUrl, List<EducationInfoOptionUrlDTO> urlHistoryList) {
+	private List<CollectUrlHistoryDTO> runHaizhuGovInfoCollector(String mainUrl, List<CollectUrlHistoryDTO> urlHistoryList) {
 //		text 参数可配置搜索关键字
 		HttpUtil h = new HttpUtil();
 
-		List<EducationInfoOptionUrlDTO> newInfoUrlList = new ArrayList<>();
+		List<CollectUrlHistoryDTO> newInfoUrlList = new ArrayList<>();
 		Set<String> urlStrHistorySet = new HashSet<>();
 		if(urlHistoryList != null) {
-			for (EducationInfoOptionUrlDTO urlDTO : urlHistoryList) {
+			for (CollectUrlHistoryDTO urlDTO : urlHistoryList) {
 				urlStrHistorySet.add(urlDTO.getUrl());
 			}
 		}
@@ -180,13 +180,13 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 			content = content.substring(1, content.length() - 1);
 			JSONObject json = JSONObject.fromObject(content);
 			JSONArray resultList = json.getJSONArray("results");
-			EducationInfoOptionUrlDTO tmpDTO = null;
+			CollectUrlHistoryDTO tmpDTO = null;
 			for (int i = 0; i < resultList.size(); i++) {
 				JSONObject j = resultList.getJSONObject(i);
 				String title = j.getString("title");
 				String url = j.getString("url");
 				if (!urlStrHistorySet.contains(url)) {
-					tmpDTO = new EducationInfoOptionUrlDTO();
+					tmpDTO = new CollectUrlHistoryDTO();
 					tmpDTO.setRecrodDate(LocalDateTime.now());
 					tmpDTO.setUrl(url);
 					newInfoUrlList.add(tmpDTO);
@@ -199,13 +199,13 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 		return newInfoUrlList;
 	}
 
-	private List<EducationInfoOptionUrlDTO> runGzJyjInfoCollector(String mainUrl, List<EducationInfoOptionUrlDTO> urlHistoryList) {
+	private List<CollectUrlHistoryDTO> runGzJyjInfoCollector(String mainUrl, List<CollectUrlHistoryDTO> urlHistoryList) {
 		HttpUtil h = new HttpUtil();
-		List<EducationInfoOptionUrlDTO> newInfoUrlList = new ArrayList<>();
+		List<CollectUrlHistoryDTO> newInfoUrlList = new ArrayList<>();
 
 		Set<String> urlStrHistorySet = new HashSet<>();
 		if(urlHistoryList != null) {
-			for (EducationInfoOptionUrlDTO urlDTO : urlHistoryList) {
+			for (CollectUrlHistoryDTO urlDTO : urlHistoryList) {
 				urlStrHistorySet.add(urlDTO.getUrl());
 			}
 		}
@@ -217,12 +217,12 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 			Elements newsListDiv = doc.select("div.news_list");
 			Elements targetUl = newsListDiv.select("ul");
 			Elements targetAlinkList = targetUl.select("a[href]");
-			EducationInfoOptionUrlDTO tmpDTO = null;
+			CollectUrlHistoryDTO tmpDTO = null;
 			for (Element eleA : targetAlinkList) {
 				String title = eleA.attr("title");
 				String url = eleA.attr("href");
 				if (!urlStrHistorySet.contains(url)) {
-					tmpDTO = new EducationInfoOptionUrlDTO();
+					tmpDTO = new CollectUrlHistoryDTO();
 					tmpDTO.setRecrodDate(LocalDateTime.now());
 					tmpDTO.setUrl(url);
 					newInfoUrlList.add(tmpDTO);
@@ -236,8 +236,8 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 
 	}
 
-	private List<EducationInfoOptionUrlDTO> runGzEduCmsInfoCollector(WebDriver d, String mainUrl,
-			List<EducationInfoOptionUrlDTO> urlHistoryList) {
+	private List<CollectUrlHistoryDTO> runGzEduCmsInfoCollector(WebDriver d, String mainUrl,
+			List<CollectUrlHistoryDTO> urlHistoryList) {
 		d.get(mainUrl);
 
 		try {
@@ -252,7 +252,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 		} catch (Exception e) {
 		}
 
-		List<EducationInfoOptionUrlDTO> newInfoUrlList = new ArrayList<>();
+		List<CollectUrlHistoryDTO> newInfoUrlList = new ArrayList<>();
 
 //		尝试获取所有通知的列表
 		String infosXpath = xPathBuilder.start().addClass("c1-bline").getXpath();
@@ -268,13 +268,13 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 
 		Set<String> urlStrHistorySet = new HashSet<>();
 		if(urlHistoryList != null) {
-			for (EducationInfoOptionUrlDTO urlDTO : urlHistoryList) {
+			for (CollectUrlHistoryDTO urlDTO : urlHistoryList) {
 				urlStrHistorySet.add(urlDTO.getUrl());
 			}
 		}
 
 //		逐个 url 匹配
-		EducationInfoOptionUrlDTO tmpDTO = null;
+		CollectUrlHistoryDTO tmpDTO = null;
 		for (int i = 1; i < infoDivList.size() + 1; i++) {
 			try {
 				String tmpPath = normalXpath.replaceAll("_", String.valueOf(i));
@@ -283,7 +283,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 				String title = urlA.getAttribute("title");
 				urlStr = mainUrl + urlStr;
 				if (!urlStrHistorySet.contains(urlStr)) {
-					tmpDTO = new EducationInfoOptionUrlDTO();
+					tmpDTO = new CollectUrlHistoryDTO();
 					tmpDTO.setRecrodDate(LocalDateTime.now());
 					tmpDTO.setUrl(urlStr);
 					newInfoUrlList.add(tmpDTO);
@@ -296,13 +296,13 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 		return newInfoUrlList;
 	}
 	
-	private List<EducationInfoOptionUrlDTO> runGZZK_1Collector(String mainUrl, List<EducationInfoOptionUrlDTO> urlHistoryList) {
+	private List<CollectUrlHistoryDTO> runGZZK_1Collector(String mainUrl, List<CollectUrlHistoryDTO> urlHistoryList) {
 		HttpUtil h = new HttpUtil();
-		List<EducationInfoOptionUrlDTO> newInfoUrlList = new ArrayList<>();
+		List<CollectUrlHistoryDTO> newInfoUrlList = new ArrayList<>();
 
 		Set<String> urlStrHistorySet = new HashSet<>();
 		if(urlHistoryList != null) {
-			for (EducationInfoOptionUrlDTO urlDTO : urlHistoryList) {
+			for (CollectUrlHistoryDTO urlDTO : urlHistoryList) {
 				urlStrHistorySet.add(urlDTO.getUrl());
 			}
 		}
@@ -313,12 +313,12 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 			Element doc = Jsoup.parse(content);
 			Elements targetUL = doc.select("ul.clearfix");
 			Elements targetAlinkList = targetUL.select("a[href]");
-			EducationInfoOptionUrlDTO tmpDTO = null;
+			CollectUrlHistoryDTO tmpDTO = null;
 			for (Element eleA : targetAlinkList) {
 				String title = eleA.attr("title");
 				String url = eleA.attr("href");
 				if (!urlStrHistorySet.contains(url)) {
-					tmpDTO = new EducationInfoOptionUrlDTO();
+					tmpDTO = new CollectUrlHistoryDTO();
 					tmpDTO.setRecrodDate(LocalDateTime.now());
 					tmpDTO.setUrl(url);
 					newInfoUrlList.add(tmpDTO);
@@ -356,10 +356,10 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 			return;
 		}
 
-		Map<String, List<EducationInfoOptionUrlDTO>> urlHistoryMap = dto.getUrlHistory();
+		Map<String, List<CollectUrlHistoryDTO>> urlHistoryMap = dto.getUrlHistory();
 		
-		for(Entry<String, List<EducationInfoOptionUrlDTO>> entrySet : urlHistoryMap.entrySet()) {
-			List<EducationInfoOptionUrlDTO> tmpList = entrySet.getValue();
+		for(Entry<String, List<CollectUrlHistoryDTO>> entrySet : urlHistoryMap.entrySet()) {
+			List<CollectUrlHistoryDTO> tmpList = entrySet.getValue();
 			if(tmpList.size() <= maxSize) {
 				continue;
 			}
