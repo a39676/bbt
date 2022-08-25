@@ -12,6 +12,7 @@ import demo.scriptCore.scheduleClawing.service.EducationInfoCollectionService;
 import demo.scriptCore.scheduleClawing.service.HsbcService;
 import demo.scriptCore.scheduleClawing.service.ScheduleClawingPrefixService;
 import demo.scriptCore.scheduleClawing.service.UnderWayMonthTestService;
+import demo.scriptCore.scheduleClawing.service.V2exJobInfoCollectionService;
 import demo.scriptCore.scheduleClawing.service.WuYiJobRefreshService;
 
 @Service
@@ -22,6 +23,8 @@ public class ScheduleClawingPrefixServiceImpl extends AutomationTestCommonServic
 	private WuYiJobRefreshService wuYiSign;
 	@Autowired
 	private EducationInfoCollectionService educationInfoCollectionService;
+	@Autowired
+	private V2exJobInfoCollectionService v2exJobInfoCollectionService;
 	@Autowired
 	private HsbcService hsbcService;
 	@Autowired
@@ -35,6 +38,8 @@ public class ScheduleClawingPrefixServiceImpl extends AutomationTestCommonServic
 			return wuYiSign.clawing(te);
 		} else if (ScheduleClawingType.EDUCATION_INFO.getId().equals(caseId)) {
 			return educationInfoCollectionService.clawing(te);
+		} else if (ScheduleClawingType.V2EX_JOB_INFO.getId().equals(caseId)) {
+			return v2exJobInfoCollectionService.clawing(te);
 		} else if (ScheduleClawingType.HSBC_WECHAT_PREREGIST.getId().equals(caseId)) {
 			return hsbcService.weixinPreReg(te);
 		} else if (ScheduleClawingType.UNDER_WAY_MONTH_TEST.getId().equals(caseId)) {
