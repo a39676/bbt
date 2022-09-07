@@ -12,10 +12,10 @@ import autoTest.testEvent.pojo.type.AutomationTestFlowResultType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.service.TestEventService;
-import demo.scriptCore.cryptoCoin.service.impl.CryptoCoinPrefixServiceImpl;
-import demo.scriptCore.scheduleClawing.service.BingDemoPrefixService;
-import demo.scriptCore.scheduleClawing.service.ScheduleClawingPrefixService;
-import demo.scriptCore.scheduleClawing.service.impl.BingDemoPrefixServiceImpl;
+import demo.scriptCore.scheduleClawing.bingDemo.servcie.BingDemoPrefixService;
+import demo.scriptCore.scheduleClawing.bingDemo.servcie.impl.BingDemoPrefixServiceImpl;
+import demo.scriptCore.scheduleClawing.complex.service.ScheduleClawingPrefixService;
+import demo.scriptCore.scheduleClawing.cryptoCoin.service.impl.CryptoCoinPrefixServiceImpl;
 
 @Service
 public class TestEventServiceImpl extends TestEventCommonService implements TestEventService {

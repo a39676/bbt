@@ -13,7 +13,7 @@ import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 
 import demo.scriptCore.localClawing.service.TmpTaskService;
-import demo.scriptCore.scheduleClawing.service.impl.BingDemoCommonService;
+import demo.scriptCore.scheduleClawing.bingDemo.servcie.impl.BingDemoCommonService;
 
 @Service
 public class TmpTaskServiceImpl extends BingDemoCommonService implements TmpTaskService {
