@@ -9,6 +9,4 @@ public interface V2exJobInfoCollectionService {
 
 	TestEventBO receiveAndBuildTestEventBO(AutomationTestInsertEventDTO dto);
 
-	void deleteOldUrls();
-
 }

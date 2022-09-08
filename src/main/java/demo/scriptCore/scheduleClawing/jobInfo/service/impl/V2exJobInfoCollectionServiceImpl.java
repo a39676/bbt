@@ -3,7 +3,6 @@ package demo.scriptCore.scheduleClawing.jobInfo.service.impl;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,9 +23,9 @@ import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
-import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.scheduleClawing.common.pojo.dto.CollectUrlHistoryDTO;
 import demo.scriptCore.scheduleClawing.jobInfo.pojo.dto.V2exJobInfoOptionDTO;
+import demo.scriptCore.scheduleClawing.jobInfo.service.JobInfoCollectionCommonService;
 import demo.scriptCore.scheduleClawing.jobInfo.service.V2exJobInfoCollectionService;
 import demo.tool.mq.producer.TelegramCalendarNoticeMessageAckProducer;
 import telegram.pojo.constant.TelegramBotType;
@@ -35,7 +34,7 @@ import telegram.pojo.dto.TelegramMessageDTO;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
-public class V2exJobInfoCollectionServiceImpl extends AutomationTestCommonService
+public class V2exJobInfoCollectionServiceImpl extends JobInfoCollectionCommonService
 		implements V2exJobInfoCollectionService {
 
 	private static final String PARAM_PATH_STR = "/home/u2/bbt/optionFile/automationTest/v2exJobInfoOption.json";
@@ -47,7 +46,7 @@ public class V2exJobInfoCollectionServiceImpl extends AutomationTestCommonServic
 	public TestEventBO clawing(TestEventBO tbo) {
 		CommonResult r = new CommonResult();
 
-		deleteOldUrls();
+		deleteOldUrls(PARAM_PATH_STR);
 
 		ScheduleClawingType caseType = ScheduleClawingType.V2EX_JOB_INFO;
 		JsonReportOfCaseDTO caseReport = initCaseReportDTO(caseType.getFlowName());
@@ -173,37 +172,4 @@ public class V2exJobInfoCollectionServiceImpl extends AutomationTestCommonServic
 		telegramMessageAckProducer.send(dto);
 	}
 
-	@Override
-	public void deleteOldUrls() {
-		FileUtilCustom ioUtil = new FileUtilCustom();
-		V2exJobInfoOptionDTO dto = null;
-
-		int overloadCounting = 0;
-
-		try {
-			String content = ioUtil.getStringFromFile(PARAM_PATH_STR);
-			dto = buildObjFromJsonCustomization(content, V2exJobInfoOptionDTO.class);
-		} catch (Exception e) {
-			log.error("Read EducationInfoOptionDTO record error");
-			return;
-		}
-
-		List<CollectUrlHistoryDTO> urlHistory = dto.getUrlHistory();
-		if (urlHistory == null || urlHistory.size() < dto.getMaxHistorySize()) {
-			return;
-		}
-
-		Collections.sort(urlHistory);
-
-		overloadCounting = urlHistory.size() - dto.getMaxHistorySize();
-
-		urlHistory = urlHistory.subList(overloadCounting, urlHistory.size());
-
-		dto.setUrlHistory(urlHistory);
-
-		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, localDateTimeAdapter).setPrettyPrinting()
-				.create();
-		String jsonString = gson.toJson(dto);
-		ioUtil.byteToFile(jsonString.toString().getBytes(StandardCharsets.UTF_8), PARAM_PATH_STR);
-	}
 }
