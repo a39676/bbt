@@ -6,9 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
-import autoTest.testEvent.pojo.result.AutomationTestCaseResult;
-import autoTest.testEvent.pojo.type.AutomationTestFlowResultType;
+import autoTest.testEvent.common.pojo.dto.AutomationTestInsertEventDTO;
+import autoTest.testEvent.common.pojo.result.AutomationTestCaseResult;
+import autoTest.testEvent.common.pojo.type.AutomationTestFlowResultType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.service.TestEventService;

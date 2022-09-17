@@ -1,30 +1,30 @@
-package demo.scriptCore.scheduleClawing.cryptoCoin.service.impl;
+package demo.scriptCore.scheduleClawing.currencyExchangeRate.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import autoTest.testEvent.common.pojo.dto.AutomationTestInsertEventDTO;
-import autoTest.testEvent.scheduleClawing.cryptoCoin.pojo.type.CryptoCoinFlowType;
+import autoTest.testEvent.scheduleClawing.currencyExchangeRate.pojo.type.CurrencyExchangeRateFlowType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.scriptCore.common.service.AutomationTestCommonService;
-import demo.scriptCore.scheduleClawing.cryptoCoin.service.CryptoCoinPrefixService;
-import demo.scriptCore.scheduleClawing.cryptoCoin.service.CryptoCoinPriceService;
+import demo.scriptCore.scheduleClawing.currencyExchangeRate.service.CurrencyExchangeRatePrefixService;
+import demo.scriptCore.scheduleClawing.currencyExchangeRate.service.CurrencyExchangeRateService;
 
 @Service
-public class CryptoCoinPrefixServiceImpl extends AutomationTestCommonService
-		implements CryptoCoinPrefixService {
+public class CurrencyExchangeRatePrefixServiceImpl extends AutomationTestCommonService
+		implements CurrencyExchangeRatePrefixService {
 
 	@Autowired
-	private CryptoCoinPriceService cryptoCoinPriceService;
-
+	private CurrencyExchangeRateService currencyExchangeRateService;
+	
 	@Override
 	public TestEventBO receiveAndBuildTestEventBO(AutomationTestInsertEventDTO dto) {
 		TestEventBO bo = buildTestEventBOPreHandle(dto);
 
 		TestModuleType modultType = TestModuleType.getType(dto.getTestModuleType());
 		bo.setModuleType(modultType);
-		CryptoCoinFlowType caseType = CryptoCoinFlowType.getType(dto.getFlowType());
+		CurrencyExchangeRateFlowType caseType = CurrencyExchangeRateFlowType.getType(dto.getFlowType());
 		bo.setFlowName(caseType.getFlowName());
 		bo.setFlowId(caseType.getId());
 		bo.setEventId(dto.getTestEventId());
@@ -33,13 +33,13 @@ public class CryptoCoinPrefixServiceImpl extends AutomationTestCommonService
 
 		return bo;
 	}
-
+	
 	@Override
 	public TestEventBO runSubEvent(TestEventBO bo) {
 		Long flowId = bo.getFlowId();
 
-		if (CryptoCoinFlowType.DAILY_DATA.getId().equals(flowId)) {
-			return cryptoCoinPriceService.cryptoCoinDailyDataAPI(bo);
+		if (CurrencyExchangeRateFlowType.DAILY_DATA.getId().equals(flowId)) {
+			return currencyExchangeRateService.getDailyData(bo);
 		}
 
 		return new TestEventBO();

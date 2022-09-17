@@ -14,10 +14,10 @@ import org.openqa.selenium.support.ui.Select;
 import org.springframework.stereotype.Service;
 
 import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
-import autoTest.testEvent.hsbc.pojo.dto.HsbcWechatPreregistDTO;
-import autoTest.testEvent.hsbc.pojo.type.HsbcIdType;
-import autoTest.testEvent.pojo.result.AutomationTestCaseResult;
-import autoTest.testEvent.pojo.type.AutomationTestFlowResultType;
+import autoTest.testEvent.common.pojo.result.AutomationTestCaseResult;
+import autoTest.testEvent.common.pojo.type.AutomationTestFlowResultType;
+import autoTest.testEvent.scheduleClawing.hsbc.pojo.dto.HsbcWechatPreregistDTO;
+import autoTest.testEvent.scheduleClawing.hsbc.pojo.type.HsbcIdType;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.scriptCore.common.service.AutomationTestCommonService;

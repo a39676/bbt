@@ -1,4 +1,4 @@
-package demo.scriptCore.scheduleClawing.common.pojo.pe;
+package demo.scriptCore.scheduleClawing.bingDemo.pojo.pe;
 
 public class HomePage {
 

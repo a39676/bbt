@@ -1,7 +1,7 @@
 package demo.scriptCore.scheduleClawing.bingDemo.pojo.dto;
 
-import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
-import autoTest.testEvent.searchingDemo.pojo.dto.BingSearchInHomePageDTO;
+import autoTest.testEvent.common.pojo.dto.AutomationTestInsertEventDTO;
+import autoTest.testEvent.scheduleClawing.searchingDemo.pojo.dto.BingSearchInHomePageDTO;
 
 public class InsertBingSearchDemoDTO extends AutomationTestInsertEventDTO {
 

@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import autoTest.testEvent.pojo.constant.AutomationTestMQConstant;
-import autoTest.testEvent.pojo.dto.AutomationTestResultDTO;
+import autoTest.testEvent.common.pojo.constant.AutomationTestMQConstant;
+import autoTest.testEvent.common.pojo.dto.AutomationTestResultDTO;
 import demo.baseCommon.service.CommonService;
 
 @Component

@@ -3,7 +3,7 @@ package demo.scriptCore.scheduleClawing.complex.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
+import autoTest.testEvent.common.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;

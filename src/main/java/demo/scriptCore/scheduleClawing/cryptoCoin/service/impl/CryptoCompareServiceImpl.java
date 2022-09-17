@@ -7,7 +7,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
-import autoTest.testEvent.cryptoCoin.pojo.type.CryptoCoinFlowType;
+import autoTest.testEvent.scheduleClawing.cryptoCoin.pojo.type.CryptoCoinFlowType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.scheduleClawing.cryptoCoin.pojo.result.CryptoCoinDailyDataResult;

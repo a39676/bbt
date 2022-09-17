@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 
 import com.rabbitmq.client.Channel;
 
-import autoTest.testEvent.pojo.constant.AutomationTestMQConstant;
-import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
+import autoTest.testEvent.common.pojo.constant.AutomationTestMQConstant;
+import autoTest.testEvent.common.pojo.dto.AutomationTestInsertEventDTO;
 import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.baseCommon.service.CommonService;
 import net.sf.json.JSONObject;

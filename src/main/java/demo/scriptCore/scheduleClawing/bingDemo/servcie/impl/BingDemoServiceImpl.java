@@ -10,14 +10,14 @@ import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 
 import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
-import autoTest.testEvent.pojo.result.AutomationTestCaseResult;
-import autoTest.testEvent.pojo.type.AutomationTestFlowResultType;
-import autoTest.testEvent.searchingDemo.pojo.dto.BingSearchInHomePageDTO;
-import autoTest.testEvent.searchingDemo.pojo.type.BingDemoSearchFlowType;
+import autoTest.testEvent.common.pojo.result.AutomationTestCaseResult;
+import autoTest.testEvent.common.pojo.type.AutomationTestFlowResultType;
+import autoTest.testEvent.scheduleClawing.searchingDemo.pojo.dto.BingSearchInHomePageDTO;
+import autoTest.testEvent.scheduleClawing.searchingDemo.pojo.type.BingDemoSearchFlowType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
+import demo.scriptCore.scheduleClawing.bingDemo.pojo.pe.HomePage;
+import demo.scriptCore.scheduleClawing.bingDemo.pojo.pe.ResultPage;
 import demo.scriptCore.scheduleClawing.bingDemo.servcie.BingDemoService;
-import demo.scriptCore.scheduleClawing.common.pojo.pe.HomePage;
-import demo.scriptCore.scheduleClawing.common.pojo.pe.ResultPage;
 
 @Service
 public class BingDemoServiceImpl extends BingDemoCommonService implements BingDemoService {

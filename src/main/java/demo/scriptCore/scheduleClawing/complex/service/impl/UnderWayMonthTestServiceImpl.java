@@ -12,10 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
-import autoTest.testEvent.pojo.result.AutomationTestCaseResult;
-import autoTest.testEvent.pojo.type.AutomationTestFlowResultType;
+import autoTest.testEvent.common.pojo.result.AutomationTestCaseResult;
+import autoTest.testEvent.common.pojo.type.AutomationTestFlowResultType;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
-import autoTest.testEvent.searchingDemo.pojo.dto.UnderWayMonthTestDTO;
+import autoTest.testEvent.scheduleClawing.searchingDemo.pojo.dto.UnderWayMonthTestDTO;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.scheduleClawing.complex.pojo.dto.UnderWayExamFormDTO;

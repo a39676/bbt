@@ -1,14 +1,12 @@
-package demo.scriptCore.scheduleClawing.educationInfo.service;
+package demo.scriptCore.scheduleClawing.currencyExchangeRate.service;
 
 import autoTest.testEvent.common.pojo.dto.AutomationTestInsertEventDTO;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 
-public interface EducationInfoCollectionService {
-
-	TestEventBO clawing(TestEventBO tbo);
+public interface CurrencyExchangeRatePrefixService {
 
 	TestEventBO receiveAndBuildTestEventBO(AutomationTestInsertEventDTO dto);
 
-	void deleteOldUrls();
+	TestEventBO runSubEvent(TestEventBO bo);
 
 }

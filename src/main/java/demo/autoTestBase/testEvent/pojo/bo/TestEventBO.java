@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import autoTest.report.pojo.dto.JsonReportOfFlowDTO;
-import autoTest.testEvent.pojo.result.AutomationTestCaseResult;
-import autoTest.testEvent.pojo.type.AutomationTestFlowResultType;
+import autoTest.testEvent.common.pojo.result.AutomationTestCaseResult;
+import autoTest.testEvent.common.pojo.type.AutomationTestFlowResultType;
 import autoTest.testModule.pojo.type.TestModuleType;
 
 public class TestEventBO {

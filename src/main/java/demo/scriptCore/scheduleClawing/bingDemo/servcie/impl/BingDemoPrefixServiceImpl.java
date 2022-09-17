@@ -3,8 +3,8 @@ package demo.scriptCore.scheduleClawing.bingDemo.servcie.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import autoTest.testEvent.pojo.dto.AutomationTestInsertEventDTO;
-import autoTest.testEvent.searchingDemo.pojo.type.BingDemoSearchFlowType;
+import autoTest.testEvent.common.pojo.dto.AutomationTestInsertEventDTO;
+import autoTest.testEvent.scheduleClawing.searchingDemo.pojo.type.BingDemoSearchFlowType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.scriptCore.common.service.AutomationTestCommonService;
