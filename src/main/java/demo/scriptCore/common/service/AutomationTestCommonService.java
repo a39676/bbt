@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import at.tool.WebDriverATToolService;
 import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
-import autoTest.report.pojo.dto.JsonReportOfFlowDTO;
-import autoTest.testEvent.common.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testEvent.common.pojo.dto.AutomationTestResultDTO;
 import autoTest.testEvent.common.pojo.result.AutomationTestCaseResult;
 import demo.autoTestBase.testEvent.mq.producer.AutomationTestResultProducer;
@@ -21,16 +19,6 @@ public abstract class AutomationTestCommonService extends SeleniumCommonService 
 	protected WebDriverATToolService webATToolService;
 	@Autowired
 	protected AutomationTestResultProducer automationTestResultProducer;
-
-	protected TestEventBO buildTestEventBOPreHandle(AutomationTestInsertEventDTO dto) {
-		TestEventBO tbo = new TestEventBO();
-		tbo.setStartTime(LocalDateTime.now());
-		
-		JsonReportOfFlowDTO reportDTO = new JsonReportOfFlowDTO();
-		tbo.setReport(reportDTO);
-
-		return tbo;
-	}
 
 	protected AutomationTestCaseResult initCaseResult(String casename) {
 		AutomationTestCaseResult r = new AutomationTestCaseResult();

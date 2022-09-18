@@ -23,9 +23,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
-import autoTest.testEvent.common.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
-import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.scriptCore.common.service.AutomationTestCommonService;
@@ -144,22 +142,6 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 		}
 
 		return tbo;
-	}
-
-	@Override
-	public TestEventBO receiveAndBuildTestEventBO(AutomationTestInsertEventDTO dto) {
-		TestEventBO bo = buildTestEventBOPreHandle(dto);
-
-		TestModuleType modultType = TestModuleType.getType(dto.getTestModuleType());
-		bo.setModuleType(modultType);
-		ScheduleClawingType caseType = ScheduleClawingType.getType(dto.getFlowType());
-		bo.setFlowName(caseType.getFlowName());
-		bo.setFlowId(caseType.getId());
-		bo.setEventId(dto.getTestEventId());
-		bo.setAppointment(dto.getAppointment());
-		bo.setParamStr(dto.getParamStr());
-
-		return bo;
 	}
 
 	private List<CollectUrlHistoryDTO> runHaizhuGovInfoCollector(String mainUrl, List<CollectUrlHistoryDTO> urlHistoryList) {

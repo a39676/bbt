@@ -6,28 +6,26 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import autoTest.report.pojo.dto.JsonReportOfFlowDTO;
 import autoTest.testEvent.common.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testEvent.common.pojo.result.AutomationTestCaseResult;
 import autoTest.testEvent.common.pojo.type.AutomationTestFlowResultType;
+import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
+import autoTest.testEvent.scheduleClawing.searchingDemo.pojo.type.BingDemoSearchFlowType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.service.TestEventService;
-import demo.scriptCore.scheduleClawing.bingDemo.servcie.BingDemoPrefixService;
-import demo.scriptCore.scheduleClawing.bingDemo.servcie.impl.BingDemoPrefixServiceImpl;
+import demo.scriptCore.bingDemo.servcie.BingDemoPrefixService;
 import demo.scriptCore.scheduleClawing.complex.service.ScheduleClawingPrefixService;
-import demo.scriptCore.scheduleClawing.cryptoCoin.service.impl.CryptoCoinPrefixServiceImpl;
 
 @Service
 public class TestEventServiceImpl extends TestEventCommonService implements TestEventService {
 
 	@Autowired
-	private BingDemoPrefixServiceImpl searchingDemoService;
-	@Autowired
-	private BingDemoPrefixService bingDemoPrefixService;
+	private BingDemoPrefixService searchingDemoService;
 	@Autowired
 	private ScheduleClawingPrefixService scheduleClawingPrefixService;
-	@Autowired
-	private CryptoCoinPrefixServiceImpl cryptoCoinPrefixService;
+	
 
 	@Override
 	public TestEventBO reciveTestEventAndRun(AutomationTestInsertEventDTO dto) {
@@ -46,11 +44,11 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		}
 
 		if (TestModuleType.ATDemo.getId().equals(dto.getTestModuleType())) {
-			tbo = bingDemoPrefixService.receiveAndBuildTestEventBO(dto);
-		} else if (TestModuleType.CRYPTO_COIN.getId().equals(dto.getTestModuleType())) {
-			tbo = cryptoCoinPrefixService.receiveAndBuildTestEventBO(dto);
+			BingDemoSearchFlowType caseType = BingDemoSearchFlowType.getType(dto.getFlowType());
+			tbo = receiveAndBuildTestEventBO(dto, caseType.getFlowName(), caseType.getId());
 		} else if (TestModuleType.SCHEDULE_CLAWING.getId().equals(dto.getTestModuleType())) {
-			tbo = scheduleClawingPrefixService.receiveAndBuildTestEventBO(dto);
+			ScheduleClawingType caseType = ScheduleClawingType.getType(dto.getFlowType());
+			tbo = receiveAndBuildTestEventBO(dto, caseType.getFlowName(), caseType.getId());
 		}
 
 		tbo = runEvent(tbo);
@@ -61,6 +59,30 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		return tbo;
 	}
 
+	private TestEventBO buildTestEventBOPreHandle(AutomationTestInsertEventDTO dto) {
+		TestEventBO tbo = new TestEventBO();
+		tbo.setStartTime(LocalDateTime.now());
+		
+		JsonReportOfFlowDTO reportDTO = new JsonReportOfFlowDTO();
+		tbo.setReport(reportDTO);
+
+		return tbo;
+	}
+	
+	private TestEventBO receiveAndBuildTestEventBO(AutomationTestInsertEventDTO dto, String flowName, Long eventId) {
+		TestEventBO bo = buildTestEventBOPreHandle(dto);
+
+		TestModuleType modultType = TestModuleType.getType(dto.getTestModuleType());
+		bo.setModuleType(modultType);
+		bo.setFlowName(flowName);
+		bo.setFlowId(eventId);
+		bo.setEventId(dto.getTestEventId());
+		bo.setAppointment(dto.getAppointment());
+		bo.setParamStr(dto.getParamStr());
+
+		return bo;
+	}
+	
 	private TestEventBO runEvent(TestEventBO event) {
 		TestEventBO runResult = null;
 		if (constantService.getBreakFlag()) {
@@ -96,16 +118,16 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 			return searchingDemoService.runSubEvent(te);
 		} else if (TestModuleType.SCHEDULE_CLAWING.getId().equals(moduleId)) {
 			return scheduleClawingPrefixService.runSubEvent(te);
-		} else if (TestModuleType.CRYPTO_COIN.getId().equals(moduleId)) {
-			return cryptoCoinPrefixService.runSubEvent(te);
 		}
 		return new TestEventBO();
 	}
+
 
 	@Override
 	public boolean checkExistsRuningEvent() {
 		return existsRuningEvent();
 	}
+	
 
 	@Override
 	public void fixRuningEventStatusByManual() {

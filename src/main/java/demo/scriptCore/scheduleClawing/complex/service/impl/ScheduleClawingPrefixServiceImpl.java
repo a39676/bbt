@@ -3,14 +3,14 @@ package demo.scriptCore.scheduleClawing.complex.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import autoTest.testEvent.common.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
-import autoTest.testModule.pojo.type.TestModuleType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.scriptCore.common.service.AutomationTestCommonService;
+import demo.scriptCore.cryptoCoin.service.CryptoCoinPriceService;
 import demo.scriptCore.scheduleClawing.complex.service.HsbcService;
 import demo.scriptCore.scheduleClawing.complex.service.ScheduleClawingPrefixService;
 import demo.scriptCore.scheduleClawing.complex.service.UnderWayMonthTestService;
+import demo.scriptCore.scheduleClawing.currencyExchangeRate.service.CurrencyExchangeRateService;
 import demo.scriptCore.scheduleClawing.educationInfo.service.EducationInfoCollectionService;
 import demo.scriptCore.scheduleClawing.jobInfo.service.V2exJobInfoCollectionService;
 import demo.scriptCore.scheduleClawing.jobInfo.service.WuYiJobRefreshService;
@@ -29,6 +29,10 @@ public class ScheduleClawingPrefixServiceImpl extends AutomationTestCommonServic
 	private HsbcService hsbcService;
 	@Autowired
 	private UnderWayMonthTestService underWayMonthTestService;
+	@Autowired
+	private CryptoCoinPriceService cryptoCoinPriceService;
+	@Autowired
+	private CurrencyExchangeRateService currencyExchangeRateService;
 
 	@Override
 	public TestEventBO runSubEvent(TestEventBO te) {
@@ -44,24 +48,13 @@ public class ScheduleClawingPrefixServiceImpl extends AutomationTestCommonServic
 			return hsbcService.weixinPreReg(te);
 		} else if (ScheduleClawingType.UNDER_WAY_MONTH_TEST.getId().equals(caseId)) {
 			return underWayMonthTestService.monthTest(te);
+		} else if (ScheduleClawingType.CRYPTO_COIN.getId().equals(caseId)) {
+			return cryptoCoinPriceService.cryptoCoinDailyDataAPI(te);
+		} else if (ScheduleClawingType.CURRENCY_EXCHANGE_RAGE.getId().equals(caseId)) {
+			currencyExchangeRateService.getDailyData(te);
 		}
 
 		return new TestEventBO();
 	}
 
-	@Override
-	public TestEventBO receiveAndBuildTestEventBO(AutomationTestInsertEventDTO dto) {
-		TestEventBO bo = buildTestEventBOPreHandle(dto);
-
-		TestModuleType modultType = TestModuleType.getType(dto.getTestModuleType());
-		bo.setModuleType(modultType);
-		ScheduleClawingType caseType = ScheduleClawingType.getType(dto.getFlowType());
-		bo.setFlowName(caseType.getFlowName());
-		bo.setFlowId(caseType.getId());
-		bo.setEventId(dto.getTestEventId());
-		bo.setAppointment(dto.getAppointment());
-		bo.setParamStr(dto.getParamStr());
-
-		return bo;
-	}
 }
