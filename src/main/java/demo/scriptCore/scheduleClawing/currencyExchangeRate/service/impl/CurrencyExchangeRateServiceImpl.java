@@ -80,6 +80,7 @@ public class CurrencyExchangeRateServiceImpl extends AutomationTestCommonService
 
 		CurrencyExchageRateDataDTO dataDTO = null;
 		CurrencyExchageRateCollectResult collectResult = new CurrencyExchageRateCollectResult();
+		collectResult.setIsDailyQuery(paramDTO.getIsDailyQuery());
 		CurrencyType fromCurrency = null;
 		CurrencyType toCurrency = null;
 		for(CurrencyExchangeRatePairDTO currencyPairDTO : paramDTO.getPairList()) {
@@ -114,11 +115,9 @@ public class CurrencyExchangeRateServiceImpl extends AutomationTestCommonService
 
 		WebElement currencyNameInputOfFrom = d.findElement(By.xpath(currencyNameInputOfFromXpathStr));
 		currencyNameInputOfFrom.click();
-		currencyNameInputOfFrom.sendKeys(Keys.BACK_SPACE);
-		currencyNameInputOfFrom.sendKeys(Keys.BACK_SPACE);
-		currencyNameInputOfFrom.sendKeys(Keys.BACK_SPACE);
-		currencyNameInputOfFrom.sendKeys(Keys.BACK_SPACE);
-		currencyNameInputOfFrom.sendKeys(Keys.BACK_SPACE);
+		for(int i = 0; i < 10; i++) {
+			currencyNameInputOfFrom.sendKeys(Keys.BACK_SPACE);
+		}
 		currencyNameInputOfFrom.sendKeys(currencyFrom.getName());
 		threadSleepRandomTime(100L, 200L);
 		currencyNameInputOfFrom.sendKeys(Keys.DOWN);
@@ -127,11 +126,9 @@ public class CurrencyExchangeRateServiceImpl extends AutomationTestCommonService
 
 		WebElement currencyNameInputOfTo = d.findElement(By.xpath(currencyNameInputOfToXpathStr));
 		currencyNameInputOfTo.click();
-		currencyNameInputOfFrom.sendKeys(Keys.BACK_SPACE);
-		currencyNameInputOfFrom.sendKeys(Keys.BACK_SPACE);
-		currencyNameInputOfFrom.sendKeys(Keys.BACK_SPACE);
-		currencyNameInputOfFrom.sendKeys(Keys.BACK_SPACE);
-		currencyNameInputOfFrom.sendKeys(Keys.BACK_SPACE);
+		for(int i = 0; i < 10; i++) {
+			currencyNameInputOfFrom.sendKeys(Keys.BACK_SPACE);
+		}
 		currencyNameInputOfTo.sendKeys(currencyTo.getName());
 		threadSleepRandomTime(100L, 200L);
 		currencyNameInputOfTo.sendKeys(Keys.DOWN);
