@@ -11,7 +11,6 @@ import demo.experiment.service.TestService;
 @Service
 public class TestServiceImpl extends TestEventCommonService implements TestService {
 
-	
 	@Override
 	@LogExecutionTime
 	@CustomBeforeAnnotation
