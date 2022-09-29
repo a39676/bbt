@@ -36,7 +36,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
-import telegram.pojo.dto.TelegramMessageDTO;
+import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
 import toolPack.httpHandel.HttpUtil;
 import toolPack.ioHandle.FileUtilCustom;
 
@@ -315,7 +315,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 	}
 	
 	private void sendMsg(String msg) {
-		TelegramMessageDTO dto = new TelegramMessageDTO();
+		TelegramBotNoticeMessageDTO dto = new TelegramBotNoticeMessageDTO();
 		dto.setId(TelegramStaticChatID.MY_ID);
 		dto.setBotName(TelegramBotType.CX_CALENDAR_NOTICE_BOT.getName());
 		dto.setMsg(msg);

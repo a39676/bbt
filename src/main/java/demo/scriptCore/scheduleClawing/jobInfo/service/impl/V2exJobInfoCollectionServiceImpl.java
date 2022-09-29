@@ -28,7 +28,7 @@ import demo.scriptCore.scheduleClawing.jobInfo.service.V2exJobInfoCollectionServ
 import demo.tool.mq.producer.TelegramCalendarNoticeMessageAckProducer;
 import telegram.pojo.constant.TelegramBotType;
 import telegram.pojo.constant.TelegramStaticChatID;
-import telegram.pojo.dto.TelegramMessageDTO;
+import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -147,7 +147,7 @@ public class V2exJobInfoCollectionServiceImpl extends JobInfoCollectionCommonSer
 	}
 
 	private void sendMsg(String msg) {
-		TelegramMessageDTO dto = new TelegramMessageDTO();
+		TelegramBotNoticeMessageDTO dto = new TelegramBotNoticeMessageDTO();
 		dto.setId(TelegramStaticChatID.MY_ID);
 		dto.setBotName(TelegramBotType.CX_CALENDAR_NOTICE_BOT.getName());
 		dto.setMsg(msg);

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import demo.baseCommon.service.CommonService;
 import net.sf.json.JSONObject;
 import telegram.pojo.constant.TelegramMessageMQConstant;
-import telegram.pojo.dto.TelegramMessageDTO;
+import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
 
 @Component
 public class TelegramCalendarNoticeMessageAckProducer extends CommonService {
@@ -15,7 +15,7 @@ public class TelegramCalendarNoticeMessageAckProducer extends CommonService {
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
 
-	public void send(TelegramMessageDTO dto) {
+	public void send(TelegramBotNoticeMessageDTO dto) {
 		if (dto == null) {
 			return;
 		}
@@ -23,7 +23,7 @@ public class TelegramCalendarNoticeMessageAckProducer extends CommonService {
 		rabbitTemplate.convertAndSend(TelegramMessageMQConstant.TELEGRAM_CALENDAR_NOTICE_MSG_QUEUE, json.toString());
 	}
 
-	private JSONObject dtoToJSON(TelegramMessageDTO te) {
+	private JSONObject dtoToJSON(TelegramBotNoticeMessageDTO te) {
 		JSONObject json = new JSONObject();
 
 		if (te.getId() != null) {
