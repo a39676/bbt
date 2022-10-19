@@ -31,7 +31,7 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 	@Autowired
 	private FileUtilCustom ioUtil;
 
-	private final String questionAndAnswerFilePathStr = "/home/u2/bbt/tmp/underWayQuestionAndAnswer.json";
+	private final String questionAndAnswerFilePathStr = MAIN_FOLDER_PATH + "/tmp/underWayQuestionAndAnswer.json";
 
 	@Override
 	public TestEventBO monthTest(TestEventBO tbo) {
@@ -366,6 +366,6 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 		}
 
 		JSONObject json = JSONObject.fromObject(formDTO);
-		ioUtil.byteToFile(json.toString().getBytes(), "/home/u2/bbt/tmp/underWayQuestionAndAnswer.json");
+		ioUtil.byteToFile(json.toString().getBytes(), (MAIN_FOLDER_PATH + "/tmp/underWayQuestionAndAnswer.json"));
 	}
 }

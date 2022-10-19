@@ -16,7 +16,7 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 	private String captchaScreenshotSavingFolder = MAIN_FOLDER_PATH + "/captchaScreenshotSavingFolder";
 
 	private String winSeleniumWebDriverFolder = "d:/auxiliary/seleniumWebDriver";
-	private String linuxSeleniumWebDriverFolder = "/home/u2/seleniumWebDriver";
+	private String linuxSeleniumWebDriverFolder = MAIN_FOLDER_PATH + "/seleniumWebDriver";
 
 	private String chromePath_win = winSeleniumWebDriverFolder + "/chromedriver.exe";
 	private String chrome45Path_win = winSeleniumWebDriverFolder + "/chrome45Driver.exe";

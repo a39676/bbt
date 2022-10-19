@@ -35,7 +35,7 @@ import toolPack.ioHandle.FileUtilCustom;
 public class V2exJobInfoCollectionServiceImpl extends JobInfoCollectionCommonService
 		implements V2exJobInfoCollectionService {
 
-	private static final String PARAM_PATH_STR = "/home/u2/bbt/optionFile/automationTest/v2exJobInfoOption.json";
+	private static final String PARAM_PATH_STR = MAIN_FOLDER_PATH + "/optionFile/automationTest/v2exJobInfoOption.json";
 
 	@Autowired
 	private TelegramCalendarNoticeMessageAckProducer telegramMessageAckProducer;
@@ -66,7 +66,7 @@ public class V2exJobInfoCollectionServiceImpl extends JobInfoCollectionCommonSer
 			List<CollectUrlHistoryDTO> newUrlList = null;
 
 			try {
-				for(int pageNum = 1; pageNum <= dto.getMaxPageSize(); pageNum++) {
+				for (int pageNum = 1; pageNum <= dto.getMaxPageSize(); pageNum++) {
 					newUrlList = runCollector(webDriver, dto, pageNum);
 					if (!newUrlList.isEmpty()) {
 						if (dto.getUrlHistory() == null) {
@@ -121,10 +121,11 @@ public class V2exJobInfoCollectionServiceImpl extends JobInfoCollectionCommonSer
 		boolean containKeyword = false;
 		for (WebElement ele : aList) {
 			for (int i = 0; !containKeyword && i < dto.getKeywords().size(); i++) {
-				containKeyword = ele.getText() != null && ele.getText().toLowerCase().contains(dto.getKeywords().get(i));
+				containKeyword = ele.getText() != null
+						&& ele.getText().toLowerCase().contains(dto.getKeywords().get(i));
 			}
-			
-			if(!containKeyword) {
+
+			if (!containKeyword) {
 				continue;
 			}
 
@@ -139,7 +140,7 @@ public class V2exJobInfoCollectionServiceImpl extends JobInfoCollectionCommonSer
 					sendMsg("New url: " + tmpUrl + " , title: " + ele.getText());
 				}
 			}
-			
+
 			containKeyword = false;
 		}
 

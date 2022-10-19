@@ -44,7 +44,7 @@ import toolPack.ioHandle.FileUtilCustom;
 public class EducationInfoCollectionServiceImpl extends AutomationTestCommonService
 		implements EducationInfoCollectionService {
 
-	private static final String PARAM_PATH_STR = "/home/u2/bbt/optionFile/automationTest/educationInfoOption.json";
+	private static final String PARAM_PATH_STR = MAIN_FOLDER_PATH + "/optionFile/automationTest/educationInfoOption.json";
 
 	@Autowired
 	private TelegramCalendarNoticeMessageAckProducer telegramMessageAckProducer;
