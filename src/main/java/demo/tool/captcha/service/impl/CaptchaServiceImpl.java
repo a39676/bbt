@@ -81,7 +81,7 @@ public class CaptchaServiceImpl extends CommonService implements CaptchaService 
 		for (int x = 0; x < w; x++) {
 			for (int y = 0; y < h; y++) {
 				int argb = bufferedImage.getRGB(x, y);
-				// 图像加亮（调整亮度识别率非常高）
+				// 图像加亮
 				int r = (int) (((argb >> 16) & 0xFF) * 1.1 + 30);
 				int g = (int) (((argb >> 8) & 0xFF) * 1.1 + 30);
 				int b = (int) (((argb >> 0) & 0xFF) * 1.1 + 30);

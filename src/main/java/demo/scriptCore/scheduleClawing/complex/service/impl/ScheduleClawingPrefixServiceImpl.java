@@ -37,24 +37,35 @@ public class ScheduleClawingPrefixServiceImpl extends AutomationTestCommonServic
 	@Override
 	public TestEventBO runSubEvent(TestEventBO te) {
 		Long caseId = te.getFlowId();
+		
+		ScheduleClawingType clawingType = ScheduleClawingType.getType(caseId);
 
-		if (ScheduleClawingType.WU_YI_JOB.getId().equals(caseId)) {
+		switch (clawingType) {
+		case WU_YI_JOB: {
 			return wuYiSign.clawing(te);
-		} else if (ScheduleClawingType.EDUCATION_INFO.getId().equals(caseId)) {
+		}
+		case EDUCATION_INFO: {
 			return educationInfoCollectionService.clawing(te);
-		} else if (ScheduleClawingType.V2EX_JOB_INFO.getId().equals(caseId)) {
+		}
+		case V2EX_JOB_INFO: {
 			return v2exJobInfoCollectionService.clawing(te);
-		} else if (ScheduleClawingType.HSBC_WECHAT_PREREGIST.getId().equals(caseId)) {
+		}
+		case HSBC_WECHAT_PREREGIST: {
 			return hsbcService.weixinPreReg(te);
-		} else if (ScheduleClawingType.UNDER_WAY_MONTH_TEST.getId().equals(caseId)) {
+		}
+		case UNDER_WAY_MONTH_TEST: {
 			return underWayMonthTestService.monthTest(te);
-		} else if (ScheduleClawingType.CRYPTO_COIN.getId().equals(caseId)) {
+		}
+		case CRYPTO_COIN: {
 			return cryptoCoinPriceService.cryptoCoinDailyDataAPI(te);
-		} else if (ScheduleClawingType.CURRENCY_EXCHANGE_RAGE.getId().equals(caseId)) {
-			currencyExchangeRateService.getDailyData(te);
+		}
+		case CURRENCY_EXCHANGE_RAGE: {
+			return currencyExchangeRateService.getDailyData(te);
+		}
+		default:
+			return new TestEventBO();
 		}
 
-		return new TestEventBO();
 	}
 
 }
