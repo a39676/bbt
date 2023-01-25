@@ -31,15 +31,11 @@ public class TaskToolServiceImpl implements TaskToolService {
 	@Autowired
 	protected TestEventService testEventService;
 
-//	@Scheduled(cron="0 */30 * * * ?")   //每30分钟执行一次
-//	@Scheduled(cron="40 49 23 * * *") // 每天23:49:40执行
-//	@Scheduled(fixedRate = 1000) // 上次任务结束后 1000 毫秒后再执行
-
 	/**
 	 * 2021-06-17 keep database connection alive after update JDK and update MySQL
 	 * and SpringBoot database connection will lose automation
 	 */
-	@Scheduled(cron = "*/31 * * * * ?")
+	@Scheduled(fixedDelay = 1000L * 20)
 	public void keepDatabaseConnectionAlive() {
 		baseMapper.keepDatabaseAlive();
 	}
