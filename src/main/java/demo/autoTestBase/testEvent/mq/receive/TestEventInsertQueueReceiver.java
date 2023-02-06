@@ -18,7 +18,7 @@ import net.sf.json.JSONObject;
 
 @Component
 @RabbitListener(queues = AutomationTestMQConstant.TEST_EVENT_INSERT_QUEUE)
-public class TestEventInsertQueueAckReceiver extends CommonService {
+public class TestEventInsertQueueReceiver extends CommonService {
 
 	@Autowired
 	private TestEventService testEventService;
@@ -26,19 +26,12 @@ public class TestEventInsertQueueAckReceiver extends CommonService {
 	@RabbitHandler
 	public void process(String messageStr, Channel channel, Message message) throws IOException {
 
-		try {
-			AutomationTestInsertEventDTO dto = msgToAutomationTestInsertEventDTO(messageStr);
-
-			if (dto != null) {
-				testEventService.reciveTestEventAndRun(dto);
-			}
-
-			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
-		} catch (Exception e) {
-
-			channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);
+		AutomationTestInsertEventDTO dto = msgToAutomationTestInsertEventDTO(messageStr);
+		
+		if (dto != null) {
+			testEventService.reciveTestEventAndRun(dto);
 		}
-
+		
 	}
 
 	private AutomationTestInsertEventDTO msgToAutomationTestInsertEventDTO(String msgStr) {
