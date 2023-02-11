@@ -60,7 +60,7 @@ public class TaskToolServiceImpl extends CommonService implements TaskToolServic
 	
 	@Scheduled(fixedRate = 1000L * 30)
 	public void killChromeWebDriverWhenIdle() {
-		if(isLinux()) {
+		if(isLinux() && !testEventService.checkExistsRuningEvent()) {
 			try {
 				ProcessBuilder builder = new ProcessBuilder();
 				builder.command("sh ps -ef | grep chrome | grep -v grep | awk '{print $2}' | xargs kill -9");
