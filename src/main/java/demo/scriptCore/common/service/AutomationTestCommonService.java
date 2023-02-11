@@ -12,6 +12,10 @@ import autoTest.testEvent.common.pojo.result.AutomationTestCaseResult;
 import demo.autoTestBase.testEvent.mq.producer.AutomationTestResultProducer;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.selenium.service.impl.SeleniumCommonService;
+import demo.tool.mq.producer.TelegramCalendarNoticeMessageAckProducer;
+import telegram.pojo.constant.TelegramBotType;
+import telegram.pojo.constant.TelegramStaticChatID;
+import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
 
 public abstract class AutomationTestCommonService extends SeleniumCommonService {
 
@@ -19,6 +23,8 @@ public abstract class AutomationTestCommonService extends SeleniumCommonService 
 	protected WebDriverATToolService webATToolService;
 	@Autowired
 	protected AutomationTestResultProducer automationTestResultProducer;
+	@Autowired
+	private TelegramCalendarNoticeMessageAckProducer telegramMessageAckProducer;
 
 	protected AutomationTestCaseResult initCaseResult(String casename) {
 		AutomationTestCaseResult r = new AutomationTestCaseResult();
@@ -58,5 +64,13 @@ public abstract class AutomationTestCommonService extends SeleniumCommonService 
 		bo.setEndTime(LocalDateTime.now());
 		AutomationTestResultDTO dto = buildAutomationTestResultDTO(bo);
 		automationTestResultProducer.send(dto);
+	}
+	
+	protected void sendTelegramMsg(String msg) {
+		TelegramBotNoticeMessageDTO dto = new TelegramBotNoticeMessageDTO();
+		dto.setId(TelegramStaticChatID.MY_ID);
+		dto.setBotName(TelegramBotType.CX_CALENDAR_NOTICE_BOT.getName());
+		dto.setMsg(msg);
+		telegramMessageAckProducer.send(dto);
 	}
 }

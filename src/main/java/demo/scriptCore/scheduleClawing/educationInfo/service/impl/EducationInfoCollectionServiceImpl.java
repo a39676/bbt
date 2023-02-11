@@ -137,7 +137,9 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 			e.printStackTrace();
 		}
 
-		tryQuitWebDriver(webDriver);
+		if(!tryQuitWebDriver(webDriver)) {
+			sendMsg("Web driver quit failed, " + caseType.getFlowName());
+		}
 		sendAutomationTestResult(tbo);
 
 		return tbo;

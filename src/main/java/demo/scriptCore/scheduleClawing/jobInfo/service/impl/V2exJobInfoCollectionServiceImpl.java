@@ -11,7 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
@@ -25,10 +24,6 @@ import demo.scriptCore.scheduleClawing.common.pojo.dto.CollectUrlHistoryDTO;
 import demo.scriptCore.scheduleClawing.jobInfo.pojo.dto.V2exJobInfoOptionDTO;
 import demo.scriptCore.scheduleClawing.jobInfo.service.JobInfoCollectionCommonService;
 import demo.scriptCore.scheduleClawing.jobInfo.service.V2exJobInfoCollectionService;
-import demo.tool.mq.producer.TelegramCalendarNoticeMessageAckProducer;
-import telegram.pojo.constant.TelegramBotType;
-import telegram.pojo.constant.TelegramStaticChatID;
-import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -36,9 +31,6 @@ public class V2exJobInfoCollectionServiceImpl extends JobInfoCollectionCommonSer
 		implements V2exJobInfoCollectionService {
 
 	private static final String PARAM_PATH_STR = MAIN_FOLDER_PATH + "/optionFile/automationTest/v2exJobInfoOption.json";
-
-	@Autowired
-	private TelegramCalendarNoticeMessageAckProducer telegramMessageAckProducer;
 
 	@Override
 	public TestEventBO clawing(TestEventBO tbo) {
@@ -89,7 +81,9 @@ public class V2exJobInfoCollectionServiceImpl extends JobInfoCollectionCommonSer
 			e.printStackTrace();
 		}
 
-		tryQuitWebDriver(webDriver);
+		if(!tryQuitWebDriver(webDriver)) {
+			sendTelegramMsg("Web driver quit failed, " + caseType.getFlowName());
+		}
 		sendAutomationTestResult(tbo);
 
 		return tbo;
@@ -136,7 +130,7 @@ public class V2exJobInfoCollectionServiceImpl extends JobInfoCollectionCommonSer
 					tmpDTO.setRecrodDate(LocalDateTime.now());
 					tmpDTO.setUrl(tmpUrl);
 					newInfoUrlList.add(tmpDTO);
-					sendMsg("New url: " + tmpUrl + " , title: " + ele.getText());
+					sendTelegramMsg("New url: " + tmpUrl + " , title: " + ele.getText());
 				}
 			}
 
@@ -144,14 +138,6 @@ public class V2exJobInfoCollectionServiceImpl extends JobInfoCollectionCommonSer
 		}
 
 		return newInfoUrlList;
-	}
-
-	private void sendMsg(String msg) {
-		TelegramBotNoticeMessageDTO dto = new TelegramBotNoticeMessageDTO();
-		dto.setId(TelegramStaticChatID.MY_ID);
-		dto.setBotName(TelegramBotType.CX_CALENDAR_NOTICE_BOT.getName());
-		dto.setMsg(msg);
-		telegramMessageAckProducer.send(dto);
 	}
 
 }

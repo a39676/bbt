@@ -91,13 +91,13 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 
 		} catch (Exception e) {
 			reportService.caseReportAppendContent(caseReport, "异常: " + e.toString());
-
-		} finally {
-			tbo.getCaseResultList().add(r);
-			tbo.getReport().getCaseReportList().add(caseReport);
-			tryQuitWebDriver(d);
-			sendAutomationTestResult(tbo);
 		}
+		tbo.getCaseResultList().add(r);
+		tbo.getReport().getCaseReportList().add(caseReport);
+		if(!tryQuitWebDriver(d)) {
+			sendTelegramMsg("Web driver quit failed, " + caseType.getFlowName());
+		}
+		sendAutomationTestResult(tbo);
 
 		return tbo;
 	}

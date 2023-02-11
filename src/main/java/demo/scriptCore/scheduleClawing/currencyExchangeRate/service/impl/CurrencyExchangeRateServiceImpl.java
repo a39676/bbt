@@ -47,7 +47,9 @@ public class CurrencyExchangeRateServiceImpl extends AutomationTestCommonService
 			reportService.caseReportAppendContent(errorReport, e.getMessage());
 			tbo.getReport().getCaseReportList().add(errorReport);
 		}
-		tryQuitWebDriver(webDriver);
+		if(!tryQuitWebDriver(webDriver)) {
+			sendTelegramMsg("Web driver quit failed, " + flowType.getFlowName());
+		}
 		sendAutomationTestResult(tbo);
 
 		return tbo;
@@ -216,4 +218,5 @@ public class CurrencyExchangeRateServiceImpl extends AutomationTestCommonService
 		
 		return dto;
 	}
+	
 }
