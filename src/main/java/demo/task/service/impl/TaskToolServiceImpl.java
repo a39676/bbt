@@ -1,5 +1,6 @@
 package demo.task.service.impl;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +10,13 @@ import org.springframework.stereotype.Component;
 import demo.autoTestBase.testEvent.mq.producer.HeartBeatProducer;
 import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.base.system.mapper.BaseMapper;
+import demo.baseCommon.service.CommonService;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.task.service.TaskToolService;
 import demo.tool.service.ComplexToolService;
 
 @Component
-public class TaskToolServiceImpl implements TaskToolService {
+public class TaskToolServiceImpl extends CommonService implements TaskToolService {
 
 	@Autowired
 	private SeleniumGlobalOptionService seleniumGlobalOptionService;
@@ -46,7 +48,7 @@ public class TaskToolServiceImpl implements TaskToolService {
 				LocalDateTime.now().minusMonths(1));
 	}
 	
-	@Scheduled(cron="0 */3 * ? * *")
+	@Scheduled(fixedRate = 1000L * 3)
 	public void sendHeartBeat() {
 		heartBeatProducer.send();
 	}
@@ -56,6 +58,16 @@ public class TaskToolServiceImpl implements TaskToolService {
 		testEventService.cleanExpiredFailEventCounting();
 	}
 	
-	
+	@Scheduled(fixedRate = 1000L * 30)
+	public void killChromeWebDriverWhenIdle() {
+		if(isLinux()) {
+			try {
+				ProcessBuilder builder = new ProcessBuilder();
+				builder.command("sh ps -ef | grep chrome | grep -v grep | awk '{print $2}' | xargs kill -9");
+				builder.start();
+			} catch (IOException e) {
+			}
+		}
+	}
 
 }
