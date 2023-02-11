@@ -108,13 +108,12 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 				e.printStackTrace();
 			}
 			reportService.caseReportAppendContent(caseReport, "异常: " + e.toString());
-
-		} finally {
-			tbo.getCaseResultList().add(r);
-			tbo.getReport().getCaseReportList().add(caseReport);
-			tryQuitWebDriver(d);
-			sendAutomationTestResult(tbo);
 		}
+		
+		tbo.getCaseResultList().add(r);
+		tbo.getReport().getCaseReportList().add(caseReport);
+		tryQuitWebDriver(d);
+		sendAutomationTestResult(tbo);
 
 		return tbo;
 	}

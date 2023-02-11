@@ -135,11 +135,10 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 
 		} catch (Exception e) {
 			e.printStackTrace();
-
-		} finally {
-			tryQuitWebDriver(webDriver);
-			sendAutomationTestResult(tbo);
 		}
+
+		tryQuitWebDriver(webDriver);
+		sendAutomationTestResult(tbo);
 
 		return tbo;
 	}

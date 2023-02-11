@@ -10,7 +10,7 @@ import autoTest.testEvent.common.pojo.type.AutomationTestFlowResultType;
 import autoTest.testModule.pojo.type.TestModuleType;
 
 public class TestEventBO {
-
+	
 	private Long eventId;
 	private TestModuleType moduleType;
 	private Long flowId;

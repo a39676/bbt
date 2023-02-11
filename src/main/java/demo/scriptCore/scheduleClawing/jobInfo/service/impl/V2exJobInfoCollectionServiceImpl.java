@@ -87,11 +87,10 @@ public class V2exJobInfoCollectionServiceImpl extends JobInfoCollectionCommonSer
 
 		} catch (Exception e) {
 			e.printStackTrace();
-
-		} finally {
-			tryQuitWebDriver(webDriver);
-			sendAutomationTestResult(tbo);
 		}
+
+		tryQuitWebDriver(webDriver);
+		sendAutomationTestResult(tbo);
 
 		return tbo;
 	}
