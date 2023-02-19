@@ -63,7 +63,7 @@ public class TaskToolServiceImpl extends CommonService implements TaskToolServic
 		if(isLinux() && !testEventService.checkExistsRuningEvent()) {
 			try {
 				ProcessBuilder builder = new ProcessBuilder();
-				builder.command("sh ps -ef | grep chrome | grep -v grep | awk '{print $2}' | xargs kill -9");
+				builder.command("sh", "ps -ef | grep chrome | grep -v grep | awk '{print $2}' | xargs kill -9");
 				builder.start();
 			} catch (IOException e) {
 			}

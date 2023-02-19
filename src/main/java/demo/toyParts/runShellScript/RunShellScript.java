@@ -16,6 +16,10 @@ public class RunShellScript {
 			ProcessBuilder builder = new ProcessBuilder();
 			builder.command("sh", "D:/home/u2/tmp/tmp.sh");
 			builder.start();
+			
+			builder = new ProcessBuilder();
+			builder.command("sh", "ps -ef | grep chrome | grep -v grep | awk '{print $2}' | xargs kill -9");
+			builder.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "error";
