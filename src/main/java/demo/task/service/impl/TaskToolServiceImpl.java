@@ -65,10 +65,11 @@ public class TaskToolServiceImpl extends AutomationTestCommonService implements 
 			try {
 
 				Process process = processBuilder.start();
-				int exitVal = process.waitFor();
-				if (exitVal != 0) {
-					sendTelegramMsg("Kill chrome driver error");
-				}
+				process.waitFor();
+//				int exitVal = process.waitFor();
+//				if (exitVal != 0) {
+//					sendTelegramMsg("Kill chrome driver error");
+//				}
 			} catch (Exception e) {
 				e.printStackTrace();
 				sendTelegramMsg("Kill chrome driver error");
