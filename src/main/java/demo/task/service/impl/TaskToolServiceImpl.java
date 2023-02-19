@@ -1,6 +1,5 @@
 package demo.task.service.impl;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,13 +9,13 @@ import org.springframework.stereotype.Component;
 import demo.autoTestBase.testEvent.mq.producer.HeartBeatProducer;
 import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.base.system.mapper.BaseMapper;
-import demo.baseCommon.service.CommonService;
+import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.task.service.TaskToolService;
 import demo.tool.service.ComplexToolService;
 
 @Component
-public class TaskToolServiceImpl extends CommonService implements TaskToolService {
+public class TaskToolServiceImpl extends AutomationTestCommonService implements TaskToolService {
 
 	@Autowired
 	private SeleniumGlobalOptionService seleniumGlobalOptionService;
@@ -61,11 +60,18 @@ public class TaskToolServiceImpl extends CommonService implements TaskToolServic
 	@Scheduled(fixedRate = 1000L * 30)
 	public void killChromeWebDriverWhenIdle() {
 		if(isLinux() && !testEventService.checkExistsRuningEvent()) {
+			ProcessBuilder processBuilder = new ProcessBuilder();
+			processBuilder.command("/home/u2/toolSH/killChromeDriver.sh");
 			try {
-				ProcessBuilder builder = new ProcessBuilder();
-				builder.command("sh", "ps -ef | grep chrome | grep -v grep | awk '{print $2}' | xargs kill -9");
-				builder.start();
-			} catch (IOException e) {
+
+				Process process = processBuilder.start();
+				int exitVal = process.waitFor();
+				if (exitVal != 0) {
+					sendTelegramMsg("Kill chrome driver error");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				sendTelegramMsg("Kill chrome driver error");
 			}
 		}
 	}
