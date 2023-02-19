@@ -14,7 +14,7 @@ public class RunShellScript {
 	public String run() {
 		try {
 			ProcessBuilder builder = new ProcessBuilder();
-			builder.command(" sh /home/u2/tmp/tmp.sh");
+			builder.command("sh /home/u2/tmp/tmp.sh");
 			builder.start();
 		} catch (Exception e) {
 			e.printStackTrace();
