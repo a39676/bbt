@@ -34,6 +34,7 @@ public class V2exJobInfoCollectionServiceImpl extends JobInfoCollectionCommonSer
 
 	@Override
 	public TestEventBO clawing(TestEventBO tbo) {
+		sendTelegramMsg("Start v2ex collecting");
 		CommonResult r = new CommonResult();
 
 		deleteOldUrls(PARAM_PATH_STR);
@@ -68,6 +69,9 @@ public class V2exJobInfoCollectionServiceImpl extends JobInfoCollectionCommonSer
 					}
 				}
 			} catch (Exception e) {
+				sendTelegramMsg("Hit error when collect data" + e.getLocalizedMessage());
+				reportService.caseReportAppendContent(caseReport, "V2ex data collector error: " + e.getLocalizedMessage());
+				tbo.getReport().getCaseReportList().add(caseReport);
 			}
 
 			Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, localDateTimeAdapter)
@@ -78,7 +82,9 @@ public class V2exJobInfoCollectionServiceImpl extends JobInfoCollectionCommonSer
 			r.setIsSuccess();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			sendTelegramMsg("Hit error when collect data" + e.getLocalizedMessage());
+			reportService.caseReportAppendContent(caseReport, "V2ex data collector error: " + e.getLocalizedMessage());
+			tbo.getReport().getCaseReportList().add(caseReport);
 		}
 
 		if(!tryQuitWebDriver(webDriver)) {
