@@ -1,9 +1,9 @@
 package demo.scriptCore.localClawing.complex.service.impl;
 
 import java.io.File;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -42,7 +42,7 @@ public class TextbookDownloadServiceImpl extends AutomationTestCommonService imp
 
 	private void download() {
 		WebDriver d = webDriverService.buildChromeWebDriver();
-		d.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS);
+		d.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(10));
 
 		File savingPath = null;
 		for (TextbookDownloadSubOption subOption : optionDTO.getOptionList()) {

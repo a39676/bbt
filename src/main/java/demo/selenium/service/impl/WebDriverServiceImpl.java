@@ -1,8 +1,8 @@
 package demo.selenium.service.impl;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
@@ -15,12 +15,10 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.opera.OperaDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import at.webDriver.pojo.constant.ChromeConstant;
 import at.webDriver.pojo.constant.FireFoxConstant;
 import at.webDriver.pojo.constant.WebDriverConstant;
 import demo.base.system.service.impl.SystemOptionService;
@@ -65,7 +63,7 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 		}
 
 		FirefoxDriver driver = new FirefoxDriver(options);
-		driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS);
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
 		if ("dev".equals(envName)) {
 //			Point p = new Point(0, 0);
 //			driver.manage().window().setPosition(p);
@@ -108,7 +106,7 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 		}
 
 		FirefoxDriver driver = new FirefoxDriver(options);
-		driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS);
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
 		if ("dev".equals(envName)) {
 			Point p = new Point(0, 0);
 			driver.manage().window().setPosition(p);
@@ -208,51 +206,15 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 	}
 
 	@Override
-	public WebDriver buildChrome45WebDriver(ChromeOptions options) {
-		String envName = systemOptionService.getEnvName();
-		String path = globalOptionService.getChrome45Path();
-		String driverType = WebDriverConstant.chromeDriver;
-		System.setProperty(driverType, path);
-		WebDriver driver = null;
-		if (options == null) {
-			options = new ChromeOptions();
-			if (!"dev".equals(envName) || !isWindows()) {
-				options.addArguments(WebDriverConstant.headLess);
-			}
-			options.setExperimentalOption(ChromeConstant.downloadDir, globalOptionService.getDownloadDir())
-					.setExperimentalOption(ChromeConstant.promptForDownload, false)
-					.setExperimentalOption(ChromeConstant.directoryUpgrade, true)
-					.setExperimentalOption(ChromeConstant.safebrowsingEnabled, true);
-		}
-
-		driver = new ChromeDriver(options);
-		return driver;
-	}
-
-	@Override
-	public WebDriver buildChrome45WebDriver() {
-		return buildChrome45WebDriver(null);
-	}
-
-	@SuppressWarnings("deprecation")
-	@Override
 	public WebDriver buildIEWebDriver() {
 		String path = globalOptionService.getIePath();
 		String driverType = WebDriverConstant.ieDriver;
 		System.setProperty(driverType, path);
-		DesiredCapabilities ieCapabilities = DesiredCapabilities.internetExplorer();
-		ieCapabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
-		WebDriver driver = new InternetExplorerDriver(ieCapabilities);
+		InternetExplorerOptions ieOptions = new InternetExplorerOptions();
+		ieOptions.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
+		WebDriver driver = new InternetExplorerDriver(ieOptions);
 
 		return driver;
 	}
 
-	@Override
-	public WebDriver buildOperaWebDriver() {
-		String path = globalOptionService.getOperaPath();
-		String driverType = WebDriverConstant.operaDriver;
-		System.setProperty(driverType, path);
-		WebDriver driver = new OperaDriver();
-		return driver;
-	}
 }

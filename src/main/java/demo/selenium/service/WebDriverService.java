@@ -21,12 +21,6 @@ public interface WebDriverService {
 
 	WebDriver buildIEWebDriver();
 
-	WebDriver buildChrome45WebDriver(ChromeOptions options);
-
-	WebDriver buildChrome45WebDriver();
-
-	WebDriver buildOperaWebDriver();
-
 	WebDriver buildFireFoxWebDriverMobileEmulation(FirefoxOptions options);
 
 	WebDriver buildFireFoxWebDriverMobileEmulation();

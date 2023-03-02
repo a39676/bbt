@@ -19,16 +19,13 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 	private String linuxSeleniumWebDriverFolder = MAIN_FOLDER_PATH + "/seleniumWebDriver";
 
 	private String chromePath_win = winSeleniumWebDriverFolder + "/chromedriver.exe";
-	private String chrome45Path_win = winSeleniumWebDriverFolder + "/chrome45Driver.exe";
 	private String chromePath_linux = linuxSeleniumWebDriverFolder + "/chromeDriver";
-	private String chrome45Path_linux = linuxSeleniumWebDriverFolder + "/chrome45Driver";
 
 	private String geckoPath_win = winSeleniumWebDriverFolder + "/geckodriver.exe";
 	private String geckoPath_linux = linuxSeleniumWebDriverFolder + "/geckodriver";
 
 	private String edgePath = winSeleniumWebDriverFolder + "/MicrosoftWebDriver.exe";
 	private String iePath = winSeleniumWebDriverFolder + "/IEDriverServer.exe";
-	private String operaPath = winSeleniumWebDriverFolder + "/operadriver.exe";
 
 	@Override
 	public String getDownloadDir() {
@@ -63,17 +60,6 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 	}
 
 	@Override
-	public String getChrome45Path() {
-		String path = null;
-		if (isWindows()) {
-			path = chrome45Path_win;
-		} else {
-			path = chrome45Path_linux;
-		}
-		return pathChangeByDetectOS(path);
-	}
-
-	@Override
 	public String getGeckoPath() {
 		String path = null;
 		if (isWindows()) {
@@ -94,9 +80,5 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 		return pathChangeByDetectOS(iePath);
 	}
 
-	@Override
-	public String getOperaPath() {
-		return pathChangeByDetectOS(operaPath);
-	}
 
 }

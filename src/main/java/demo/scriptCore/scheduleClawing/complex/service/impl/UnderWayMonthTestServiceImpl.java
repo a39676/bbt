@@ -1,5 +1,6 @@
 package demo.scriptCore.scheduleClawing.complex.service.impl;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -50,7 +51,7 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 			}
 
 			d = webDriverService.buildChromeWebDriver();
-			d.manage().timeouts().pageLoadTimeout(60L, TimeUnit.SECONDS);
+			d.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(60));
 
 			login(d, dto, caseReport);
 

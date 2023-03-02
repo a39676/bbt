@@ -7,7 +7,6 @@ public interface SeleniumGlobalOptionService {
 	String getCaptchaScreenshotSavingFolder();
 
 	String getChromePath();
-	String getChrome45Path();
 
 	String getGeckoPath();
 
@@ -16,6 +15,5 @@ public interface SeleniumGlobalOptionService {
 	String getIePath();
 
 	String getTmpDir();
-	String getOperaPath();
 
 }
