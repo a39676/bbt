@@ -42,23 +42,5 @@ public class TestController extends CommonController {
 
 		return testEventService.reciveTestEventAndRun(eventDTO);
 	}
-
-//	@Autowired
-//	private TmpTaskService tmpTaskService;
-//	
-//	@GetMapping(value = "/t1")
-//	public void t1() {
-//		tmpTaskService.t1();
-//	}
-
-//	@Autowired
-//	private V2exJobInfoCollectionService s;
-//	
-//	@GetMapping(value = "/t2")
-//	@ResponseBody
-//	public String t2() {
-//		TestEventBO tbo = new TestEventBO();
-//		s.clawing(tbo);
-//		return ":";
-//	}
+	
 }

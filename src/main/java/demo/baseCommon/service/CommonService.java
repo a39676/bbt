@@ -15,7 +15,11 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.BaseResultType;
 import demo.baseCommon.pojo.param.PageParam;
 import demo.config.costomComponent.SnowFlake;
+import demo.tool.mq.producer.TelegramCalendarNoticeMessageAckProducer;
 import net.sf.json.JSONObject;
+import telegram.pojo.constant.TelegramBotType;
+import telegram.pojo.constant.TelegramStaticChatID;
+import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
 import toolPack.dateTimeHandle.DateHandler;
 import toolPack.dateTimeHandle.LocalDateTimeAdapter;
 import toolPack.dateTimeHandle.LocalDateTimeHandler;
@@ -40,6 +44,9 @@ public abstract class CommonService {
 	protected NumericUtilCustom numericUtil;
 	@Autowired
 	protected FileUtilCustom ioUtil;
+	
+	@Autowired
+	private TelegramCalendarNoticeMessageAckProducer telegramMessageAckProducer;
 
 	private static final int NORMAL_PAGE_SIZE = 10;
 	private static final int MAX_PAGE_SIZE = 300;
@@ -194,4 +201,11 @@ public abstract class CommonService {
 
 	}
 
+	protected void sendTelegramMsg(String msg) {
+		TelegramBotNoticeMessageDTO dto = new TelegramBotNoticeMessageDTO();
+		dto.setId(TelegramStaticChatID.MY_ID);
+		dto.setBotName(TelegramBotType.BBT_MESSAGE.getName());
+		dto.setMsg(msg);
+		telegramMessageAckProducer.send(dto);
+	}
 }

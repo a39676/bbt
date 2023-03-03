@@ -16,7 +16,6 @@ import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
@@ -31,12 +30,8 @@ import demo.scriptCore.scheduleClawing.common.pojo.dto.CollectUrlHistoryDTO;
 import demo.scriptCore.scheduleClawing.educationInfo.pojo.dto.EducationInfoOptionDTO;
 import demo.scriptCore.scheduleClawing.educationInfo.pojo.type.EducationInfoSourceType;
 import demo.scriptCore.scheduleClawing.educationInfo.service.EducationInfoCollectionService;
-import demo.tool.mq.producer.TelegramCalendarNoticeMessageAckProducer;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import telegram.pojo.constant.TelegramBotType;
-import telegram.pojo.constant.TelegramStaticChatID;
-import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
 import toolPack.httpHandel.HttpUtil;
 import toolPack.ioHandle.FileUtilCustom;
 
@@ -45,9 +40,6 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 		implements EducationInfoCollectionService {
 
 	private static final String PARAM_PATH_STR = MAIN_FOLDER_PATH + "/optionFile/automationTest/educationInfoOption.json";
-
-	@Autowired
-	private TelegramCalendarNoticeMessageAckProducer telegramMessageAckProducer;
 
 	@Override
 	public TestEventBO clawing(TestEventBO tbo) {
@@ -138,7 +130,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 		}
 
 		if(!tryQuitWebDriver(webDriver)) {
-			sendMsg("Web driver quit failed, " + caseType.getFlowName());
+			sendTelegramMsg("Web driver quit failed, " + caseType.getFlowName());
 		}
 		sendAutomationTestResult(tbo);
 
@@ -173,7 +165,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 					tmpDTO.setRecrodDate(LocalDateTime.now());
 					tmpDTO.setUrl(url);
 					newInfoUrlList.add(tmpDTO);
-					sendMsg("New url: " + url + " , title: " + title);
+					sendTelegramMsg("New url: " + url + " , title: " + title);
 				}
 			}
 		} catch (Exception e) {
@@ -209,7 +201,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 					tmpDTO.setRecrodDate(LocalDateTime.now());
 					tmpDTO.setUrl(url);
 					newInfoUrlList.add(tmpDTO);
-					sendMsg("New url: " + url + " , title: " + title);
+					sendTelegramMsg("New url: " + url + " , title: " + title);
 				}
 			}
 		} catch (Exception e) {
@@ -270,7 +262,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 					tmpDTO.setRecrodDate(LocalDateTime.now());
 					tmpDTO.setUrl(urlStr);
 					newInfoUrlList.add(tmpDTO);
-					sendMsg("New url: " + urlStr + " , title: " + title);
+					sendTelegramMsg("New url: " + urlStr + " , title: " + title);
 				}
 			} catch (Exception e) {
 			}
@@ -305,7 +297,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 					tmpDTO.setRecrodDate(LocalDateTime.now());
 					tmpDTO.setUrl(url);
 					newInfoUrlList.add(tmpDTO);
-					sendMsg("New url: " + url + " , title: " + title);
+					sendTelegramMsg("New url: " + url + " , title: " + title);
 				}
 			}
 		} catch (Exception e) {
@@ -315,14 +307,6 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 
 	}
 	
-	private void sendMsg(String msg) {
-		TelegramBotNoticeMessageDTO dto = new TelegramBotNoticeMessageDTO();
-		dto.setId(TelegramStaticChatID.MY_ID);
-		dto.setBotName(TelegramBotType.CX_CALENDAR_NOTICE_BOT.getName());
-		dto.setMsg(msg);
-		telegramMessageAckProducer.send(dto);
-	}
-
 	@Override
 	public void deleteOldUrls() {
 		FileUtilCustom ioUtil = new FileUtilCustom();

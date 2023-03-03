@@ -9,14 +9,12 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.Gson;
-
 import demo.baseCommon.service.CommonService;
+import net.sf.json.JSONObject;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")
@@ -43,8 +41,19 @@ public class AutomationTestConstantService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
-			AutomationTestConstantService tmp = new Gson().fromJson(jsonStr, AutomationTestConstantService.class);
-			BeanUtils.copyProperties(tmp, this);
+			/*
+			 * TODO 2023-03-03
+			 * Temporarily unsure of the cause of the Gson mapping exception, temporarily replaced it with manual construction.
+			 */
+			JSONObject json = JSONObject.fromObject(jsonStr);
+			this.breakFlag = json.getBoolean("breakFlag");
+			this.oldDataLiveLimitMonth = json.getInt("oldDataLiveLimitMonth");
+			this.eventFailLimitCounting = json.getInt("eventFailLimitCounting");
+			this.failCountLiveMinutes = json.getInt("failCountLiveMinutes");
+			this.limitOfRunningInTheSameTime = json.getInt("limitOfRunningInTheSameTime");
+//			AutomationTestConstantService tmp = buildObjFromJsonCustomization(jsonStr, AutomationTestConstantService.class);
+//			BeanUtils.copyProperties(tmp, this);
+			log.error("automation test option loaded");
 		} catch (Exception e) {
 			log.error("automation test option loading error: " + e.getLocalizedMessage());
 		}

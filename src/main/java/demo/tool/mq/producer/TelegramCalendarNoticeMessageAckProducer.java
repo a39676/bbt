@@ -4,13 +4,12 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import demo.baseCommon.service.CommonService;
 import net.sf.json.JSONObject;
 import telegram.pojo.constant.TelegramMessageMQConstant;
 import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
 
 @Component
-public class TelegramCalendarNoticeMessageAckProducer extends CommonService {
+public class TelegramCalendarNoticeMessageAckProducer {
 
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
