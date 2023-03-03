@@ -32,9 +32,10 @@ public class LinkedinServiceImpl extends AutomationTestCommonService implements 
 	@Override
 	public void buildRelationship() {
 		optionDTO = loadOption();
-		WebDriver d = webDriverService.buildChromeWebDriver();
-
+		WebDriver d = null;
+		
 		try {
+			d = webDriverService.buildChromeWebDriver();
 			d.get(optionDTO.getMainUrl());
 
 			threadSleepRandomTime();
