@@ -3,6 +3,8 @@ package demo.autoTestBase.testEvent.service.impl;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -122,13 +124,12 @@ public class TestEventServiceImpl extends TestEventCommonService implements Test
 		return new TestEventBO();
 	}
 
-
 	@Override
 	public boolean checkExistsRuningEvent() {
 		return existsRuningEvent();
 	}
 	
-
+	@PostConstruct
 	@Override
 	public void fixRuningEventStatusByManual() {
 		fixRuningEventStatus();
