@@ -154,7 +154,7 @@ public class V2exJobInfoCollectionServiceImpl extends JobInfoCollectionCommonSer
 					tmpDTO.setRecrodDate(LocalDateTime.now());
 					tmpDTO.setUrl(tmpUrl);
 					newInfoUrlList.add(tmpDTO);
-					sendTelegramMsg("New url: " + tmpUrl + " , title: " + t.text());
+					sendTelegramMsg("New url: " + mainUrlStr + tmpUrl + " , title: " + t.text());
 				}
 			}
 
