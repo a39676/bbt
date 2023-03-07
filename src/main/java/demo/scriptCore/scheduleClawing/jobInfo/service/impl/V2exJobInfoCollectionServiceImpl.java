@@ -1,5 +1,9 @@
 package demo.scriptCore.scheduleClawing.jobInfo.service.impl;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -8,6 +12,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -42,8 +49,6 @@ public class V2exJobInfoCollectionServiceImpl extends JobInfoCollectionCommonSer
 		ScheduleClawingType caseType = ScheduleClawingType.V2EX_JOB_INFO;
 		JsonReportOfCaseDTO caseReport = initCaseReportDTO(caseType.getFlowName());
 
-		WebDriver webDriver = null;
-
 		try {
 			FileUtilCustom ioUtil = new FileUtilCustom();
 			String content = ioUtil.getStringFromFile(PARAM_PATH_STR);
@@ -54,13 +59,11 @@ public class V2exJobInfoCollectionServiceImpl extends JobInfoCollectionCommonSer
 				throw new Exception();
 			}
 
-			webDriver = webDriverService.buildChromeWebDriver();
-
 			List<CollectUrlHistoryDTO> newUrlList = null;
 
 			try {
 				for (int pageNum = 1; pageNum <= dto.getMaxPageSize(); pageNum++) {
-					newUrlList = runCollector(webDriver, dto, pageNum);
+					newUrlList = runCollectorWithJavaUrl(dto, pageNum);
 					if (!newUrlList.isEmpty()) {
 						if (dto.getUrlHistory() == null) {
 							dto.setUrlHistory(new ArrayList<>());
@@ -70,7 +73,8 @@ public class V2exJobInfoCollectionServiceImpl extends JobInfoCollectionCommonSer
 				}
 			} catch (Exception e) {
 				sendTelegramMsg("Hit error when collect data" + e.getLocalizedMessage());
-				reportService.caseReportAppendContent(caseReport, "V2ex data collector error: " + e.getLocalizedMessage());
+				reportService.caseReportAppendContent(caseReport,
+						"V2ex data collector error: " + e.getLocalizedMessage());
 				tbo.getReport().getCaseReportList().add(caseReport);
 			}
 
@@ -87,15 +91,81 @@ public class V2exJobInfoCollectionServiceImpl extends JobInfoCollectionCommonSer
 			tbo.getReport().getCaseReportList().add(caseReport);
 		}
 
-		if(!tryQuitWebDriver(webDriver)) {
-			sendTelegramMsg("Web driver quit failed, " + caseType.getFlowName());
-		}
+//		if (!tryQuitWebDriver(webDriver)) {
+//			sendTelegramMsg("Web driver quit failed, " + caseType.getFlowName());
+//		}
 		sendAutomationTestResult(tbo);
 
 		return tbo;
 	}
 
-	private List<CollectUrlHistoryDTO> runCollector(WebDriver d, V2exJobInfoOptionDTO dto, int pageNum) {
+	private List<CollectUrlHistoryDTO> runCollectorWithJavaUrl(V2exJobInfoOptionDTO dto, int pageNum) {
+
+		String mainUrlStr = "https://v2ex.com/";
+		String urlStr = mainUrlStr + "/go/jobs" + "?p=" + pageNum;
+
+		URL url = null;
+		try {
+			url = new URL(urlStr);
+		} catch (MalformedURLException e) {
+		}
+
+		StringBuffer htmlStrBuffer = new StringBuffer();
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
+			for (String line; (line = reader.readLine()) != null;) {
+				htmlStrBuffer.append(line);
+			}
+		} catch (Exception e) {
+		}
+
+		String htmlStr = htmlStrBuffer.toString();
+
+		Set<String> urlStrHistorySet = new HashSet<>();
+		if (dto.getUrlHistory() != null) {
+			for (CollectUrlHistoryDTO urlDTO : dto.getUrlHistory()) {
+				urlStrHistorySet.add(urlDTO.getUrl());
+			}
+		}
+
+		Element doc = Jsoup.parse(htmlStr);
+		Elements topicList = doc.select("a.topic-link");
+
+//		逐个 url 匹配
+		CollectUrlHistoryDTO tmpDTO = null;
+		String tmpUrl = null;
+		boolean containKeyword = false;
+		List<CollectUrlHistoryDTO> newInfoUrlList = new ArrayList<>();
+
+		for (Element t : topicList) {
+			for (int i = 0; !containKeyword && i < dto.getKeywords().size(); i++) {
+				containKeyword = t.text() != null && t.text().toLowerCase().contains(dto.getKeywords().get(i));
+			}
+
+			if (!containKeyword) {
+				continue;
+			}
+
+			tmpUrl = t.attr("href");
+			if (StringUtils.isNotBlank(tmpUrl) && tmpUrl.contains("#")) {
+				tmpUrl = tmpUrl.substring(0, tmpUrl.indexOf("#"));
+				if (!urlStrHistorySet.contains(tmpUrl)) {
+					tmpDTO = new CollectUrlHistoryDTO();
+					tmpDTO.setRecrodDate(LocalDateTime.now());
+					tmpDTO.setUrl(tmpUrl);
+					newInfoUrlList.add(tmpDTO);
+					sendTelegramMsg("New url: " + tmpUrl + " , title: " + t.text());
+				}
+			}
+
+			containKeyword = false;
+		}
+
+		return newInfoUrlList;
+	}
+
+	@SuppressWarnings("unused")
+	private List<CollectUrlHistoryDTO> runCollectorInWebDriver(WebDriver d, V2exJobInfoOptionDTO dto, int pageNum) {
 		d.get(dto.getMainUrl() + "?p=" + pageNum);
 
 		try {
