@@ -62,8 +62,6 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 				throw new Exception();
 			}
 
-			webDriver = webDriverService.buildChromeWebDriver();
-
 			List<CollectUrlHistoryDTO> newUrlList = null;
 			EducationInfoSourceType sourceType = null;
 
@@ -107,6 +105,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 			}
 
 			try {
+				webDriver = webDriverService.buildChromeWebDriver();
 				sourceType = EducationInfoSourceType.GZEDUCMS_CN;
 				newUrlList = runGzEduCmsInfoCollector(webDriver, dto.getSourceUrl().get(sourceType.getName()),
 						dto.getUrlHistory().get(sourceType.getName()));
