@@ -41,18 +41,12 @@ public class AutomationTestConstantService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
-			/*
-			 * TODO 2023-03-03
-			 * Temporarily unsure of the cause of the Gson mapping exception, temporarily replaced it with manual construction.
-			 */
 			JSONObject json = JSONObject.fromObject(jsonStr);
 			this.breakFlag = json.getBoolean("breakFlag");
 			this.oldDataLiveLimitMonth = json.getInt("oldDataLiveLimitMonth");
 			this.eventFailLimitCounting = json.getInt("eventFailLimitCounting");
 			this.failCountLiveMinutes = json.getInt("failCountLiveMinutes");
 			this.limitOfRunningInTheSameTime = json.getInt("limitOfRunningInTheSameTime");
-//			AutomationTestConstantService tmp = buildObjFromJsonCustomization(jsonStr, AutomationTestConstantService.class);
-//			BeanUtils.copyProperties(tmp, this);
 			log.error("automation test option loaded");
 		} catch (Exception e) {
 			log.error("automation test option loading error: " + e.getLocalizedMessage());

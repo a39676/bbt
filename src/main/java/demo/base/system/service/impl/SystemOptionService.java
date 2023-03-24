@@ -60,16 +60,10 @@ public class SystemOptionService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
-			/*
-			 * TODO 2023-03-03
-			 * Temporarily unsure of the cause of the Gson mapping exception, temporarily replaced it with manual construction.
-			 */
 			JSONObject json = JSONObject.fromObject(jsonStr);
 			this.envName = json.getString("envName");
 			this.isDebuging = json.getBoolean("isDebuging");
 			this.shutdownKey = json.getString("shutdownKey");
-//			SystemOptionService tmp = new Gson().fromJson(jsonStr, SystemOptionService.class);
-//			BeanUtils.copyProperties(tmp, this);
 			log.error("system constant loaded");
 		} catch (Exception e) {
 			e.printStackTrace();
