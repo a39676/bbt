@@ -1,11 +1,10 @@
 package demo.tool.service.impl;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.stereotype.Service;
 
 import demo.baseCommon.service.CommonService;
 import demo.tool.service.VisitDataService;
+import jakarta.servlet.http.HttpServletRequest;
 import tool.pojo.bo.IpRecordBO;
 
 @Service
