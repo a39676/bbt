@@ -47,7 +47,7 @@ public class TaskToolServiceImpl extends AutomationTestCommonService implements 
 				LocalDateTime.now().minusMonths(1));
 	}
 	
-	@Scheduled(fixedRate = 1000L * 30)
+	@Scheduled(fixedRate = 1000L * 27)
 	public void sendHeartBeat() {
 		heartBeatProducer.send();
 	}
