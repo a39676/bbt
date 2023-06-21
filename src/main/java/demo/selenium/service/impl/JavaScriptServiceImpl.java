@@ -78,9 +78,9 @@ public class JavaScriptServiceImpl extends CommonService implements JavaScriptSe
 	}
 	
 	@Override
-	public void execute(WebDriver driver, String js) {
+	public Object execute(WebDriver driver, String js) {
 		JavascriptExecutor jse = (JavascriptExecutor) driver;
-		jse.executeScript(js);
+		return jse.executeScript(js);
 	}
 	
 }

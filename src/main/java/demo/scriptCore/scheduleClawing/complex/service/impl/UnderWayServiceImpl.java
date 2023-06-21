@@ -1,11 +1,23 @@
 package demo.scriptCore.scheduleClawing.complex.service.impl;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -16,18 +28,21 @@ import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
 import autoTest.testEvent.common.pojo.result.AutomationTestCaseResult;
 import autoTest.testEvent.common.pojo.type.AutomationTestFlowResultType;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
+import autoTest.testEvent.scheduleClawing.searchingDemo.pojo.dto.UnderWayDTO;
 import autoTest.testEvent.scheduleClawing.searchingDemo.pojo.dto.UnderWayMonthTestDTO;
+import autoTest.testEvent.scheduleClawing.searchingDemo.pojo.dto.UnderWayTrainProjectDTO;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.scriptCore.common.service.AutomationTestCommonService;
+import demo.scriptCore.scheduleClawing.complex.pojo.dto.UnderWayCoursewareDTO;
 import demo.scriptCore.scheduleClawing.complex.pojo.dto.UnderWayExamFormDTO;
 import demo.scriptCore.scheduleClawing.complex.pojo.dto.UnderWayTestQuestionAndAnswerSubDTO;
-import demo.scriptCore.scheduleClawing.complex.service.UnderWayMonthTestService;
+import demo.scriptCore.scheduleClawing.complex.service.UnderWayService;
 import net.sf.json.JSONObject;
 import toolPack.ioHandle.FileUtilCustom;
 
 @SuppressWarnings("unused")
 @Service
-public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService implements UnderWayMonthTestService {
+public class UnderWayServiceImpl extends AutomationTestCommonService implements UnderWayService {
 
 	@Autowired
 	private FileUtilCustom ioUtil;
@@ -95,7 +110,7 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 		}
 		tbo.getCaseResultList().add(r);
 		tbo.getReport().getCaseReportList().add(caseReport);
-		if(!tryQuitWebDriver(d)) {
+		if (!tryQuitWebDriver(d)) {
 			sendTelegramMsg("Web driver quit failed, " + caseType.getFlowName());
 		}
 		sendAutomationTestResult(tbo);
@@ -103,8 +118,7 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 		return tbo;
 	}
 
-	private void login(WebDriver d, UnderWayMonthTestDTO dto, JsonReportOfCaseDTO caseReport)
-			throws InterruptedException {
+	private void login(WebDriver d, UnderWayDTO dto, JsonReportOfCaseDTO caseReport) throws InterruptedException {
 		d.get(dto.getLoginUrl());
 		reportService.caseReportAppendContent(caseReport, "Login with, " + dto.getUsername());
 		auxTool.loadingCheck(d, "//input[@id='username_text']");
@@ -368,5 +382,250 @@ public class UnderWayMonthTestServiceImpl extends AutomationTestCommonService im
 
 		JSONObject json = JSONObject.fromObject(formDTO);
 		ioUtil.byteToFile(json.toString().getBytes(), (MAIN_FOLDER_PATH + "/tmp/underWayQuestionAndAnswer.json"));
+	}
+
+	@Override
+	public TestEventBO trainProject(TestEventBO tbo) {
+		WebDriver d = null;
+		ScheduleClawingType caseType = ScheduleClawingType.UNDER_WAY_TRAIN_PROJECT;
+		JsonReportOfCaseDTO caseReport = initCaseReportDTO(caseType.getFlowName());
+		AutomationTestCaseResult r = initCaseResult(caseType.getFlowName());
+
+		Map<String, List<UnderWayCoursewareDTO>> coursewareIdMap = new HashMap<>();
+
+		try {
+			UnderWayTrainProjectDTO dto = buildTestEventParamFromJsonCustomization(tbo.getParamStr(),
+					UnderWayTrainProjectDTO.class);
+
+			if (dto == null) {
+				reportService.caseReportAppendContent(caseReport, "读取参数异常");
+				return tbo;
+			}
+
+			d = webDriverService.buildChromeWebDriver();
+			d.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(60));
+
+			login(d, dto, caseReport);
+
+			threadSleepRandomTime();
+
+			String token = findGlobalToken(d);
+
+			List<String> trainProjectIdList = findTrainProject(d, dto, caseReport);
+
+			if (trainProjectIdList.isEmpty()) {
+				throw new Exception("NO train project waiting");
+			}
+
+			threadSleepRandomTime();
+
+			for (String trainProjectId : trainProjectIdList) {
+				String trainProjectUrl = dto.getHomePageUrl() + "/ocs/trainProjectDetail.html?trainProjectId="
+						+ trainProjectId;
+				List<UnderWayCoursewareDTO> coursewareDtoList = getIntoTrainProject(d, trainProjectUrl, caseReport);
+				if (!coursewareDtoList.isEmpty()) {
+					coursewareIdMap.put(trainProjectId, coursewareDtoList);
+				}
+			}
+
+			threadSleepRandomTime();
+
+			for (String trainProjectId : trainProjectIdList) {
+				String urlStr = dto.getHomePageUrl();
+				urlStr = urlStr.replaceAll("/web", "");
+				urlStr = urlStr + "/bingosoft-train-courseonline-api/pc/userLearnNew?access_token=" + token;
+				urlStr = urlStr + "&_=" + (String.valueOf(new Date().getTime()));
+				Set<Cookie> cookies = d.manage().getCookies();
+
+				List<UnderWayCoursewareDTO> coursewareDtoList = coursewareIdMap.get(trainProjectId);
+				for (UnderWayCoursewareDTO courseDto : coursewareDtoList) {
+					sendCourseDoneRequest(urlStr, cookies, trainProjectId, courseDto.getCoursewareId(),
+							courseDto.getSeconds());
+				}
+			}
+
+			reportService.caseReportAppendContent(caseReport,
+					"Done, " + localDateTimeHandler.dateToStr(LocalDateTime.now()));
+			r.setResultType(AutomationTestFlowResultType.PASS);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			reportService.caseReportAppendContent(caseReport, "异常: " + e.toString());
+		}
+		tbo.getCaseResultList().add(r);
+		tbo.getReport().getCaseReportList().add(caseReport);
+		if (!tryQuitWebDriver(d)) {
+			sendTelegramMsg("Web driver quit failed, " + caseType.getFlowName());
+		}
+		sendAutomationTestResult(tbo);
+
+		return tbo;
+	}
+
+	private String findGlobalToken(WebDriver d) throws Exception {
+		if (!auxTool.loadingCheck(d, "/html[1]/body[1]/div[5]/div[4]/div[1]/div[1]/h4[1]")) {
+			throw new Exception("Can NOT make sure login");
+		}
+
+		jsUtil.execute(d, "document.querySelector('#exam-test').setAttribute('token', Global.token);");
+
+		WebElement target = d.findElement(By.id("exam-test"));
+		return target.getAttribute("token");
+	}
+
+	private List<String> findTrainProject(WebDriver d, UnderWayTrainProjectDTO dto, JsonReportOfCaseDTO caseReport)
+			throws Exception {
+		reportService.caseReportAppendContent(caseReport, "Try to find train projects");
+		if (!d.getCurrentUrl().equals(dto.getHomePageUrl())) {
+			d.get(dto.getHomePageUrl());
+		}
+
+		jsUtil.scrollToBottom(d);
+
+		if (!auxTool.loadingCheck(d, "/html[1]/body[1]/div[5]/div[4]/div[1]/div[1]/h4[1]")) {
+			throw new Exception("Can NOT load: " + dto.getHomePageUrl());
+		} else {
+			reportService.caseReportAppendContent(caseReport, "Load train project home page");
+		}
+
+		threadSleepRandomTime();
+
+		List<String> trainProjectIdList = new ArrayList<>();
+
+		String trainProjectSpanXpathFormat = "/html[1]/body[1]/div[5]/div[4]/div[1]/div[1]/ul[1]/li[%d]/a[1]/span[1]";
+		String trainProjectLinkXpathFormat = "/html[1]/body[1]/div[5]/div[4]/div[1]/div[1]/ul[1]/li[%d]/a[1]";
+
+		try {
+			for (int i = 1;; i++) {
+				String trainProjectXpath = String.format(trainProjectSpanXpathFormat, i);
+				WebElement span = d.findElement(By.xpath(trainProjectXpath));
+				String spanClassName = span.getAttribute("class");
+				if (!"tag-nocompleted".equals(spanClassName)) {
+					continue;
+				}
+				WebElement linkElement = d.findElement(By.xpath(String.format(trainProjectLinkXpathFormat, i)));
+				String urlStr = linkElement.getAttribute("href");
+				if (!urlStr.contains("trainProjectId=")) {
+					continue;
+				}
+				int trainProjectIdIndex = urlStr.indexOf("trainProjectId=");
+				String projectId = urlStr.substring(trainProjectIdIndex + 15, urlStr.length());
+				trainProjectIdList.add(projectId);
+			}
+		} catch (Exception e) {
+			return trainProjectIdList;
+		}
+	}
+
+	private List<UnderWayCoursewareDTO> getIntoTrainProject(WebDriver d, String trainProjectUrl,
+			JsonReportOfCaseDTO caseReport) throws Exception {
+		reportService.caseReportAppendContent(caseReport, "Try to get into train project");
+		d.get(trainProjectUrl);
+
+		if (!auxTool.loadingCheck(d,
+				"/html[1]/body[1]/div[5]/div[1]/div[2]/div[2]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[1]")) {
+			throw new Exception("Can NOT load train project: " + trainProjectUrl);
+		} else {
+			reportService.caseReportAppendContent(caseReport, "Can NOT load train project: " + trainProjectUrl);
+		}
+
+		threadSleepRandomTime();
+
+		List<UnderWayCoursewareDTO> coursewareIdList = new ArrayList<>();
+
+		String coursewareLiListXpath = "/html[1]/body[1]/div[5]/div[1]/div[2]/div[2]/div[2]/div[1]/div[1]/div[1]/ul/li";
+		String coursewareSecondSpanXpath = "/html[1]/body[1]/div[5]/div[1]/div[2]/div[2]/div[2]/div[1]/div[1]/div[1]/ul/li/p[1]/span[1]/i[1]";
+
+		try {
+			List<WebElement> courseLiList = d.findElements(By.xpath(coursewareLiListXpath));
+			List<WebElement> coursewareSecondSpanList = d.findElements(By.xpath(coursewareSecondSpanXpath));
+
+			for (int i = 1; i < courseLiList.size(); i++) {
+				UnderWayCoursewareDTO coursewareDTO = new UnderWayCoursewareDTO();
+
+				WebElement courseLi = courseLiList.get(i);
+				String coursewareId = courseLi.getAttribute("_coursewareid");
+				coursewareDTO.setCoursewareId(coursewareId);
+
+				WebElement courseTimeI = coursewareSecondSpanList.get(i);
+				String timeStr = courseTimeI.getText();
+
+				int minIndex = timeStr.indexOf("分");
+				Integer minutes = Integer.parseInt(timeStr.substring(0, minIndex));
+
+				int secondIndex = timeStr.indexOf("秒");
+				Integer seconds = Integer.parseInt(timeStr.substring(minIndex + 1, secondIndex));
+
+				seconds = seconds + minutes * 60;
+				coursewareDTO.setSeconds(seconds);
+
+				coursewareIdList.add(coursewareDTO);
+			}
+		} catch (Exception e) {
+			return coursewareIdList;
+		}
+		
+		return coursewareIdList;
+	}
+
+	private void sendCourseDoneRequest(String urlStr, Set<Cookie> cookies, String trainProjectId, String courseId,
+			Integer seconds) {
+		JSONObject json = new JSONObject();
+		json.put("inputDataType", "pc");
+		json.put("inputDataDevice", "pc");
+		json.put("learnSecond", seconds);
+		json.put("coursewareId", courseId);
+		json.put("trainProjectId", trainProjectId);
+
+		Map<String, String> requestPropertyMap = new HashMap<>();
+		requestPropertyMap.put("User-Agent",
+				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36");
+		requestPropertyMap.put("Content-Type", "application/json; charset=UTF-8");
+		requestPropertyMap.put("Data-Type", "json; charset=UTF-8");
+
+		HttpURLConnection con = null;
+		StringBuilder response = new StringBuilder();
+
+		byte[] postData = json.toString().getBytes(StandardCharsets.UTF_8);
+		String cookiesStr = "";
+		for (Cookie cookie : cookies) {
+			cookiesStr = cookiesStr + cookie.getName() + "=" + cookie.getValue() + "; ";
+		}
+
+		try {
+			URL myurl = new URL(urlStr);
+			con = (HttpURLConnection) myurl.openConnection();
+
+			con.setDoOutput(true);
+			con.setRequestMethod("POST");
+			con.setRequestProperty("Cookie", cookiesStr);
+
+			for (Entry<String, String> entry : requestPropertyMap.entrySet()) {
+				con.setRequestProperty(entry.getKey(), entry.getValue());
+			}
+
+			if (postData != null) {
+				DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+				wr.write(postData);
+				wr.flush();
+			}
+
+			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			String line;
+
+			while ((line = in.readLine()) != null) {
+				response.append(line);
+				response.append(System.lineSeparator());
+			}
+
+			System.out.println(response);
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		} finally {
+			if (con != null) {
+				con.disconnect();
+			}
+		}
 	}
 }

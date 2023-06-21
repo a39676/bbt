@@ -9,7 +9,7 @@ import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.cryptoCoin.service.CryptoCoinPriceService;
 import demo.scriptCore.scheduleClawing.complex.service.HsbcService;
 import demo.scriptCore.scheduleClawing.complex.service.ScheduleClawingPrefixService;
-import demo.scriptCore.scheduleClawing.complex.service.UnderWayMonthTestService;
+import demo.scriptCore.scheduleClawing.complex.service.UnderWayService;
 import demo.scriptCore.scheduleClawing.currencyExchangeRate.service.CurrencyExchangeRateService;
 import demo.scriptCore.scheduleClawing.educationInfo.service.EducationInfoCollectionService;
 import demo.scriptCore.scheduleClawing.jobInfo.service.V2exJobInfoCollectionService;
@@ -28,7 +28,7 @@ public class ScheduleClawingPrefixServiceImpl extends AutomationTestCommonServic
 	@Autowired
 	private HsbcService hsbcService;
 	@Autowired
-	private UnderWayMonthTestService underWayMonthTestService;
+	private UnderWayService underWayMonthTestService;
 	@Autowired
 	private CryptoCoinPriceService cryptoCoinPriceService;
 	@Autowired
@@ -55,6 +55,9 @@ public class ScheduleClawingPrefixServiceImpl extends AutomationTestCommonServic
 		}
 		case UNDER_WAY_MONTH_TEST: {
 			return underWayMonthTestService.monthTest(te);
+		}
+		case UNDER_WAY_TRAIN_PROJECT: {
+			return underWayMonthTestService.trainProject(te);
 		}
 		case CRYPTO_COIN: {
 			return cryptoCoinPriceService.cryptoCoinDailyDataAPI(te);
