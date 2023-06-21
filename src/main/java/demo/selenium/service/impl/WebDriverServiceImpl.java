@@ -189,6 +189,7 @@ public class WebDriverServiceImpl extends CommonService implements WebDriverServ
 		}
 
 		options.addArguments("--lang=zh");
+		options.addArguments("--remote-allow-origins=*");
 		
 		if (!"dev".equals(envName) || !isWindows()) {
 			options.addArguments(WebDriverConstant.headLess);
