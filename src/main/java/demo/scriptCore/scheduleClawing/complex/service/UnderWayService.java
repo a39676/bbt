@@ -8,4 +8,6 @@ public interface UnderWayService {
 
 	TestEventBO trainProject(TestEventBO tbo);
 
+	void checkAndSendCourseDoneRequest();
+
 }

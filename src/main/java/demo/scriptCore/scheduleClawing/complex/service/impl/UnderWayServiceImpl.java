@@ -14,10 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Cookie;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -33,6 +31,7 @@ import autoTest.testEvent.scheduleClawing.searchingDemo.pojo.dto.UnderWayMonthTe
 import autoTest.testEvent.scheduleClawing.searchingDemo.pojo.dto.UnderWayTrainProjectDTO;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.scriptCore.common.service.AutomationTestCommonService;
+import demo.scriptCore.scheduleClawing.complex.pojo.dto.UnderWayCourseDoneRequestDTO;
 import demo.scriptCore.scheduleClawing.complex.pojo.dto.UnderWayCoursewareDTO;
 import demo.scriptCore.scheduleClawing.complex.pojo.dto.UnderWayExamFormDTO;
 import demo.scriptCore.scheduleClawing.complex.pojo.dto.UnderWayTestQuestionAndAnswerSubDTO;
@@ -46,6 +45,8 @@ public class UnderWayServiceImpl extends AutomationTestCommonService implements 
 
 	@Autowired
 	private FileUtilCustom ioUtil;
+	@Autowired
+	private UnderWayCacheService underWayCacheService;
 
 	private final String questionAndAnswerFilePathStr = MAIN_FOLDER_PATH + "/tmp/underWayQuestionAndAnswer.json";
 
@@ -435,12 +436,19 @@ public class UnderWayServiceImpl extends AutomationTestCommonService implements 
 				urlStr = urlStr.replaceAll("/web", "");
 				urlStr = urlStr + "/bingosoft-train-courseonline-api/pc/userLearnNew?access_token=" + token;
 				urlStr = urlStr + "&_=" + (String.valueOf(new Date().getTime()));
-				Set<Cookie> cookies = d.manage().getCookies();
+//				Set<Cookie> cookies = d.manage().getCookies();
 
 				List<UnderWayCoursewareDTO> coursewareDtoList = coursewareIdMap.get(trainProjectId);
-				for (UnderWayCoursewareDTO courseDto : coursewareDtoList) {
-					sendCourseDoneRequest(urlStr, cookies, trainProjectId, courseDto.getCoursewareId(),
-							courseDto.getSeconds());
+				LocalDateTime requestStartTime = LocalDateTime.now();
+				for (UnderWayCoursewareDTO courseDTO : coursewareDtoList) {
+					UnderWayCourseDoneRequestDTO requestDTO = new UnderWayCourseDoneRequestDTO();
+					requestDTO.setUrlStr(urlStr);
+					requestDTO.setTrainProjectId(trainProjectId);
+					requestDTO.setCoursewareId(courseDTO.getCoursewareId());
+					requestDTO.setSeconds(courseDTO.getSeconds());
+					requestStartTime = requestStartTime.plusSeconds(courseDTO.getSeconds());
+					requestDTO.setStartTime(requestStartTime);
+					underWayCacheService.getCacheRequestList().add(requestDTO);
 				}
 			}
 
@@ -564,12 +572,30 @@ public class UnderWayServiceImpl extends AutomationTestCommonService implements 
 		} catch (Exception e) {
 			return coursewareIdList;
 		}
-		
+
 		return coursewareIdList;
 	}
 
-	private void sendCourseDoneRequest(String urlStr, Set<Cookie> cookies, String trainProjectId, String courseId,
-			Integer seconds) {
+	@Override
+	public void checkAndSendCourseDoneRequest() {
+		if (underWayCacheService.getCacheRequestList().isEmpty()) {
+			return;
+		}
+
+		LocalDateTime now = LocalDateTime.now();
+
+		for (int i = 0; i < underWayCacheService.getCacheRequestList().size(); i++) {
+			UnderWayCourseDoneRequestDTO dto = underWayCacheService.getCacheRequestList().get(i);
+			if (dto.getStartTime().isAfter(now)) {
+				sendCourseDoneRequest(dto.getUrlStr(), dto.getTrainProjectId(), dto.getCoursewareId(),
+						dto.getSeconds());
+				underWayCacheService.getCacheRequestList().remove(i);
+				i--;
+			}
+		}
+	}
+
+	private void sendCourseDoneRequest(String urlStr, String trainProjectId, String courseId, Integer seconds) {
 		JSONObject json = new JSONObject();
 		json.put("inputDataType", "pc");
 		json.put("inputDataDevice", "pc");
@@ -587,10 +613,6 @@ public class UnderWayServiceImpl extends AutomationTestCommonService implements 
 		StringBuilder response = new StringBuilder();
 
 		byte[] postData = json.toString().getBytes(StandardCharsets.UTF_8);
-		String cookiesStr = "";
-		for (Cookie cookie : cookies) {
-			cookiesStr = cookiesStr + cookie.getName() + "=" + cookie.getValue() + "; ";
-		}
 
 		try {
 			URL myurl = new URL(urlStr);
@@ -598,7 +620,11 @@ public class UnderWayServiceImpl extends AutomationTestCommonService implements 
 
 			con.setDoOutput(true);
 			con.setRequestMethod("POST");
-			con.setRequestProperty("Cookie", cookiesStr);
+//			String cookiesStr = "";
+//			for (Cookie cookie : cookies) {
+//				cookiesStr = cookiesStr + cookie.getName() + "=" + cookie.getValue() + "; ";
+//			}
+//			con.setRequestProperty("Cookie", cookiesStr);
 
 			for (Entry<String, String> entry : requestPropertyMap.entrySet()) {
 				con.setRequestProperty(entry.getKey(), entry.getValue());
