@@ -67,7 +67,7 @@ public class UnderWayServiceImpl extends AutomationTestCommonService implements 
 			}
 
 			d = webDriverService.buildChromeWebDriver();
-			d.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(60));
+			d.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(120));
 
 			login(d, dto, caseReport);
 
@@ -404,7 +404,7 @@ public class UnderWayServiceImpl extends AutomationTestCommonService implements 
 			}
 
 			d = webDriverService.buildChromeWebDriver();
-			d.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(60));
+			d.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(120));
 
 			login(d, dto, caseReport);
 
