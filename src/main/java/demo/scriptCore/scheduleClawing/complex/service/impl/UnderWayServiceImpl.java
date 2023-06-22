@@ -471,7 +471,7 @@ public class UnderWayServiceImpl extends AutomationTestCommonService implements 
 	}
 
 	private String findGlobalToken(WebDriver d) throws Exception {
-		if (!auxTool.loadingCheck(d, "/html[1]/body[1]/div[5]/div[4]/div[1]/div[1]/h4[1]")) {
+		if (!auxTool.loadingCheck(d, "/html[1]/body[1]/div[5]/div[4]/div[1]/div[1]/h4[1]", 10000L, 10)) {
 			throw new Exception("Can NOT make sure login");
 		}
 
