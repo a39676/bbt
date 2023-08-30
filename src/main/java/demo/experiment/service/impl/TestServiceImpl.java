@@ -15,8 +15,8 @@ public class TestServiceImpl extends TestEventCommonService implements TestServi
 	@LogExecutionTime
 	@CustomBeforeAnnotation
 	@CustomAfterAnnotation
-	public String testing(String arg) throws Exception {
-		System.out.println(arg + " in test service");
+	public String testing(String arg1, String arg2) throws Exception {
+		System.out.println("arg1: " + arg1 + ", arg2: " + arg2 + " in test service");
 		try {
 			Thread.sleep(300L);
 		} catch (InterruptedException e) {
@@ -25,7 +25,7 @@ public class TestServiceImpl extends TestEventCommonService implements TestServi
 //		if(StringUtils.isNotBlank(arg)) {
 //			throw new Exception();
 //		}
-		return arg + "AfterHandle";
+		return arg1 + "AfterHandle";
 	}
 
 }

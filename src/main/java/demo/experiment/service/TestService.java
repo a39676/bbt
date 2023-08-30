@@ -2,6 +2,6 @@ package demo.experiment.service;
 
 public interface TestService {
 
-	String testing(String arg) throws Exception;
+	String testing(String arg1, String arg2) throws Exception;
 
 }
