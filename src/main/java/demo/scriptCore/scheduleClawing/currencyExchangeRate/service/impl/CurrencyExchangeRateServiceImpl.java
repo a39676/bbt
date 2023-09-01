@@ -206,7 +206,7 @@ public class CurrencyExchangeRateServiceImpl extends AutomationTestCommonService
 
 		String swapIconXpathStr = "//body/div[@id='scroll-wrap']/main[1]/div[2]/div[1]/div[1]/div[3]/div[1]/div[1]/div[1]/div[1]/div[2]/div[2]/button[1]/span[1]/*[1]";
 
-		if (!auxTool.loadingCheck(d, swapIconXpathStr)) {
+		if (!loadingCheck(d, swapIconXpathStr)) {
 			reportService.caseReportAppendContent(caseReport, "Page loading timeout");
 			return null;
 		}
@@ -236,7 +236,7 @@ public class CurrencyExchangeRateServiceImpl extends AutomationTestCommonService
 		threadSleepRandomTime(100L, 200L);
 		currencyNameInputOfTo.sendKeys(Keys.RETURN);
 
-		if (!auxTool.loadingCheck(d, swapIconXpathStr)) {
+		if (!loadingCheck(d, swapIconXpathStr)) {
 			reportService.caseReportAppendContent(caseReport, "Page loading timeout");
 			return null;
 		}

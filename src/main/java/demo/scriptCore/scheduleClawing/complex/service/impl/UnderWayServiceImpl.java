@@ -122,7 +122,7 @@ public class UnderWayServiceImpl extends AutomationTestCommonService implements 
 	private void login(WebDriver d, UnderWayDTO dto, JsonReportOfCaseDTO caseReport) throws InterruptedException {
 		d.get(dto.getLoginUrl());
 		reportService.caseReportAppendContent(caseReport, "Login with, " + dto.getUsername());
-		auxTool.loadingCheck(d, "//input[@id='username_text']");
+		loadingCheck(d, "//input[@id='username_text']");
 
 		WebElement usernameInput = d.findElement(By.xpath("//input[@id='username_text']"));
 		WebElement pwdInput = d.findElement(By.xpath("//input[@id='password_text']"));
@@ -151,7 +151,7 @@ public class UnderWayServiceImpl extends AutomationTestCommonService implements 
 			d.get(dto.getHomePageUrl());
 		}
 
-		if (!auxTool.loadingCheck(d, "/html[1]/body[1]/div[5]/div[1]/div[2]/div[2]/div[1]/h4[1]")) {
+		if (!loadingCheck(d, "/html[1]/body[1]/div[5]/div[1]/div[2]/div[2]/div[1]/h4[1]")) {
 			throw new Exception("Can NOT load: " + dto.getHomePageUrl());
 		} else {
 			reportService.caseReportAppendContent(caseReport, "Load exam home page");
@@ -225,7 +225,7 @@ public class UnderWayServiceImpl extends AutomationTestCommonService implements 
 	}
 
 	private boolean examEnterCheck(WebDriver d) throws InterruptedException {
-		return auxTool.loadingCheck(d, "//h4[contains(text(),'进入考试前请仔细阅读考试说明')]");
+		return loadingCheck(d, "//h4[contains(text(),'进入考试前请仔细阅读考试说明')]");
 	}
 
 	private void startExam(WebDriver d, UnderWayMonthTestDTO dto) {
@@ -242,7 +242,7 @@ public class UnderWayServiceImpl extends AutomationTestCommonService implements 
 		String questionAndAnswerStr = ioUtil.getStringFromFile(questionAndAnswerFilePathStr);
 		UnderWayExamFormDTO formDTO = buildObjFromJsonCustomization(questionAndAnswerStr, UnderWayExamFormDTO.class);
 
-		if (!auxTool.loadingCheck(d, "//a[contains(text(),'提交试卷')]")) {
+		if (!loadingCheck(d, "//a[contains(text(),'提交试卷')]")) {
 			return;
 		}
 
@@ -337,7 +337,7 @@ public class UnderWayServiceImpl extends AutomationTestCommonService implements 
 		d.get(dto.getAnswerFormUrl());
 
 		try {
-			auxTool.loadingCheck(d, "/html[1]/body[1]/div[2]/div[1]/div[2]/div[2]/h4[1]");
+			loadingCheck(d, "/html[1]/body[1]/div[2]/div[1]/div[2]/div[2]/h4[1]");
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -471,7 +471,7 @@ public class UnderWayServiceImpl extends AutomationTestCommonService implements 
 	}
 
 	private String findGlobalToken(WebDriver d) throws Exception {
-		if (!auxTool.loadingCheck(d, "/html[1]/body[1]/div[5]/div[4]/div[1]/div[1]/h4[1]", 10000L, 10)) {
+		if (!loadingCheck(d, "/html[1]/body[1]/div[5]/div[4]/div[1]/div[1]/h4[1]", 10000L, 10)) {
 			throw new Exception("Can NOT make sure login");
 		}
 
@@ -490,7 +490,7 @@ public class UnderWayServiceImpl extends AutomationTestCommonService implements 
 
 		jsUtil.scrollToBottom(d);
 
-		if (!auxTool.loadingCheck(d, "/html[1]/body[1]/div[5]/div[4]/div[1]/div[1]/h4[1]")) {
+		if (!loadingCheck(d, "/html[1]/body[1]/div[5]/div[4]/div[1]/div[1]/h4[1]")) {
 			throw new Exception("Can NOT load: " + dto.getHomePageUrl());
 		} else {
 			reportService.caseReportAppendContent(caseReport, "Load train project home page");
@@ -530,7 +530,7 @@ public class UnderWayServiceImpl extends AutomationTestCommonService implements 
 		reportService.caseReportAppendContent(caseReport, "Try to get into train project");
 		d.get(trainProjectUrl);
 
-		if (!auxTool.loadingCheck(d,
+		if (!loadingCheck(d,
 				"/html[1]/body[1]/div[5]/div[1]/div[2]/div[2]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[1]")) {
 			throw new Exception("Can NOT load train project: " + trainProjectUrl);
 		} else {

@@ -58,7 +58,7 @@ public class TextbookDownloadServiceImpl extends AutomationTestCommonService imp
 			}
 
 			try {
-				if (!auxTool.loadingCheck(d,
+				if (!loadingCheck(d,
 						"//body/div[@id='__nuxt']/div[@id='__layout']/div[1]/div[1]/div[2]/div[1]/div[1]/div[2]/img",
 						1000L, 15)) {
 					System.out.println("Real timeout");
@@ -79,7 +79,7 @@ public class TextbookDownloadServiceImpl extends AutomationTestCommonService imp
 				}
 
 				try {
-					if (!auxTool.loadingCheck(d,
+					if (!loadingCheck(d,
 							"//body/div[@id='__nuxt']/div[@id='__layout']/div[1]/div[1]/div[2]/div[1]/div[1]/div[2]/img")) {
 						System.out.println("Real timeout");
 					}

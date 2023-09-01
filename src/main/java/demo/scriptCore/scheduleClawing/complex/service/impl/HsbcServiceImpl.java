@@ -219,17 +219,17 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		String branchCitySelectorXpath = "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[3]/div[1]/select[1]";
 		String bankBranchSelectorXpath = "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[5]/div[1]/select[1]";
 		
-		auxTool.loadingCheck(d, branchCitySelectorXpath);
+		loadingCheck(d, branchCitySelectorXpath);
 		threadSleepRandomTime();
 		
 		if(dto.getOpenAccountInLivingCity() && dto.getCityNameOfOpeningAccountBranch() != null) {
-			auxTool.selectorSelectByKeyword(d, branchCitySelectorXpath, dto.getCityNameOfOpeningAccountBranch());
+			selectorSelectByKeyword(d, branchCitySelectorXpath, dto.getCityNameOfOpeningAccountBranch());
 		} else {
-			auxTool.selectorRandomSelect(d, branchCitySelectorXpath, 1, null);
+			selectorRandomSelect(d, branchCitySelectorXpath, 1, null);
 		}
 
 		threadSleepRandomTime();
-		auxTool.selectorRandomSelect(d, bankBranchSelectorXpath, 1, null);
+		selectorRandomSelect(d, bankBranchSelectorXpath, 1, null);
 
 		String employIdInputPath = "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[7]/div[1]/input[2]";
 		WebElement employIdInput = d.findElement(By.xpath(employIdInputPath));
@@ -249,7 +249,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 	}
 
 	private void inputPersonalInfo(WebDriver d, HsbcWechatPreregistDTO dto) throws InterruptedException {
-		auxTool.loadingCheck(d, "//input[@id='lastName']");
+		loadingCheck(d, "//input[@id='lastName']");
 		WebElement lastNameInput = d.findElement(By.xpath("//input[@id='lastName']"));
 		lastNameInput.click();
 		lastNameInput.clear();
@@ -292,22 +292,22 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		idCardNumbersInput.sendKeys(dto.getIdNumber());
 
 		// createIdCardYearSelectEle
-		auxTool.selectorRandomSelect(d, "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[29]/div[1]/span[1]/select[1]", 3, null);
+		selectorRandomSelect(d, "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[29]/div[1]/span[1]/select[1]", 3, null);
 
 		// createIdCardMonthSelectEle
-		auxTool.selectorRandomSelect(d, "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[29]/div[1]/span[2]/select[1]", 1, null);
+		selectorRandomSelect(d, "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[29]/div[1]/span[2]/select[1]", 1, null);
 
 		// createIdCardDaySelectEle
-		auxTool.selectorRandomSelect(d, "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[29]/div[1]/span[3]/select[1]", 1, null);
+		selectorRandomSelect(d, "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[29]/div[1]/span[3]/select[1]", 1, null);
 
 		// idCardValidYearSelector
-		auxTool.selectorRandomSelect(d, "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[30]/div[1]/span[1]/select[1]", 1, 5);
+		selectorRandomSelect(d, "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[30]/div[1]/span[1]/select[1]", 1, 5);
 
 		// idCardValidMonthSelector
-		auxTool.selectorRandomSelect(d, "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[30]/div[1]/span[2]/select[1]", 1, null);
+		selectorRandomSelect(d, "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[30]/div[1]/span[2]/select[1]", 1, null);
 
 		// idCardValidDaySelector
-		auxTool.selectorRandomSelect(d, "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[30]/div[1]/span[3]/select[1]", 1, null);
+		selectorRandomSelect(d, "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[30]/div[1]/span[3]/select[1]", 1, null);
 		
 		if(HsbcIdType.MAIN_LAND_ID.getId().equals(dto.getIdType())) {
 			WebElement femaleRadio = d.findElement(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[10]/div[2]/ul[1]/li[1]/label[1]"));
@@ -334,16 +334,16 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 			otherIdNumberInput.sendKeys(String.valueOf(random.nextInt(999999 - 100000) + 100000));
 			
 			// otherIdCardValidYearSelectEle			
-			auxTool.selectorRandomSelect(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[35]/div[1]/span[1]/select[1]", 1, null);			
+			selectorRandomSelect(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[35]/div[1]/span[1]/select[1]", 1, null);			
 
 			// otheridCardValidMonthSelectEle
-			auxTool.selectorRandomSelect(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[35]/div[1]/span[2]/select[1]", 1, null);
+			selectorRandomSelect(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[35]/div[1]/span[2]/select[1]", 1, null);
 
 			// otherIdCardValidDaySelectEle
-			auxTool.selectorRandomSelect(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[35]/div[1]/span[3]/select[1]", 1, null);
+			selectorRandomSelect(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[35]/div[1]/span[3]/select[1]", 1, null);
 			
 			// otherIdCardCertificateIssuingAgencySelectEle			
-			auxTool.selectorRandomSelect(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[37]/div[2]/select[1]", 1, null);			
+			selectorRandomSelect(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/div[2]/div[37]/div[2]/select[1]", 1, null);			
 			
 		}
 
@@ -356,23 +356,23 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		String citySelectorXpath = "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[3]/div[1]/div[2]/select[2]";
 		String districtSelectorXpath = "//select[@id='auto_contactDistrict']";
 		
-		auxTool.loadingCheck(d, provinceSelectorXpath);
+		loadingCheck(d, provinceSelectorXpath);
 
 		if(dto.getOpenAccountInLivingCity()) {
 			String provinceName = findProvinceNameByCityName(dto);
 			
-			auxTool.selectorSelectByKeyword(d, provinceSelectorXpath, provinceName);
+			selectorSelectByKeyword(d, provinceSelectorXpath, provinceName);
 			threadSleepRandomTime();
-			auxTool.selectorSelectByKeyword(d, citySelectorXpath, dto.getCityNameOfOpeningAccountBranch());
+			selectorSelectByKeyword(d, citySelectorXpath, dto.getCityNameOfOpeningAccountBranch());
 			threadSleepRandomTime();
-			auxTool.selectorRandomSelect(d, districtSelectorXpath, 1, null);
+			selectorRandomSelect(d, districtSelectorXpath, 1, null);
 			
 		} else {
-			auxTool.selectorRandomSelect(d, provinceSelectorXpath, 1, 10);
+			selectorRandomSelect(d, provinceSelectorXpath, 1, 10);
 			threadSleepRandomTime();
-			auxTool.selectorRandomSelect(d, citySelectorXpath, 1, null);
+			selectorRandomSelect(d, citySelectorXpath, 1, null);
 			threadSleepRandomTime();
-			auxTool.selectorRandomSelect(d, districtSelectorXpath, 1, null);
+			selectorRandomSelect(d, districtSelectorXpath, 1, null);
 		}
 		
 
@@ -392,12 +392,12 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		addressCheckbox.click();
 
 //		addressSinceYearSelectEle
-		auxTool.selectorRandomSelect(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[6]/select[1]", 5, 10);
+		selectorRandomSelect(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[6]/select[1]", 5, 10);
 //		addressSinceMonthSelectEle
-		auxTool.selectorRandomSelect(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[6]/select[2]", 5, 10);
+		selectorRandomSelect(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[6]/select[2]", 5, 10);
 		threadSleepRandomTime();
 //		addressSinceDaySelectEle
-		auxTool.selectorRandomSelect(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[6]/select[3]", 5, 10);
+		selectorRandomSelect(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[6]/select[3]", 5, 10);
 
 
 		WebElement continueButton = d.findElement(By.xpath(
@@ -422,7 +422,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 	}
 
 	private void jobInfos(WebDriver d) throws InterruptedException {
-		auxTool.loadingCheck(d, "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[2]/div[2]/select[1]");
+		loadingCheck(d, "//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[2]/div[2]/select[1]");
 		
 		WebElement jobSelectEle = d
 				.findElement(By.xpath("//body/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[2]/div[2]/select[1]"));
@@ -441,7 +441,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 	}
 
 	private void taxDeclaration(WebDriver d) throws InterruptedException {
-		auxTool.loadingCheck(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[2]/div[1]/div[4]/div[1]/div[1]/label[1]");
+		loadingCheck(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[2]/div[1]/div[4]/div[1]/div[1]/label[1]");
 		
 		WebElement declarationCheckbox = d.findElement(By.xpath(
 				"/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[2]/div[2]/div[1]/div[4]/div[1]/div[1]/label[1]"));
@@ -457,7 +457,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 	}
 
 	private void tAndC(WebDriver d) throws InterruptedException {
-		auxTool.loadingCheck(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[5]/input[1]");
+		loadingCheck(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[5]/input[1]");
 		
 		WebElement declarationCheckbox = d
 				.findElement(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[5]/input[1]"));
@@ -476,7 +476,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 
 		tryClickAlert(d);
 
-		auxTool.loadingCheck(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[3]/div[3]/div[1]/button[1]");
+		loadingCheck(d, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[3]/div[3]/div[1]/button[1]");
 		
 		WebElement confirmButton = d.findElement(By.xpath(
 				"/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[3]/div[3]/div[1]/button[1]"));

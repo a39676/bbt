@@ -58,7 +58,7 @@ public class TmpTaskServiceImpl extends BingDemoCommonService implements TmpTask
 			try {
 				wd2 = webDriverService.buildChromeWebDriver();
 				wd2.get(url);
-				if (!auxTool.loadingCheck(wd1, loadallButtonXpath)) {
+				if (!loadingCheck(wd1, loadallButtonXpath)) {
 					return;
 				} else {
 					WebElement loadallButton = wd1.findElement(By.xpath(loadallButtonXpath));
