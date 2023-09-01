@@ -2,6 +2,7 @@ package demo.selenium.service.impl;
 
 import java.io.File;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Set;
 
 import org.openqa.selenium.Keys;
@@ -14,9 +15,14 @@ import at.screenshot.pojo.constant.ScreenshotConstant;
 import at.screenshot.pojo.dto.TakeScreenshotSaveDTO;
 import at.screenshot.pojo.result.ScreenshotSaveResult;
 import at.screenshot.service.ScreenshotService;
+import at.tool.WebDriverATToolService;
 import at.xpath.pojo.bo.XpathBuilderBO;
 import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
 import autoTest.report.service.ATJsonReportService;
+import autoTest.testEvent.common.pojo.dto.AutomationTestResultDTO;
+import autoTest.testEvent.common.pojo.result.AutomationTestCaseResult;
+import demo.autoTestBase.testEvent.mq.producer.AutomationTestResultProducer;
+import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.base.system.service.impl.RedisHashConnectService;
 import demo.base.system.service.impl.RedisOriginalConnectService;
 import demo.base.system.service.impl.SystemOptionService;
@@ -32,7 +38,7 @@ import toolPack.constant.FileSuffixNameConstant;
 import toolPack.dateTimeHandle.DateTimeUtilCommon;
 import toolPack.ioHandle.FileUtilCustom;
 
-public abstract class SeleniumCommonService extends CommonService {
+public abstract class AutomationTestCommonService extends CommonService {
 
 	@Autowired
 	private FileUtilCustom ioUtil;
@@ -58,6 +64,10 @@ public abstract class SeleniumCommonService extends CommonService {
 	protected RedisHashConnectService redisHashConnectService;
 	@Autowired
 	protected SystemOptionService systemOptionService;
+	@Autowired
+	protected WebDriverATToolService webATToolService;
+	@Autowired
+	protected AutomationTestResultProducer automationTestResultProducer;
 	
 	protected UploadImageToCloudinaryResult uploadImgToCloudinary(String imgFilePath) {
 		UploadImageToCloudinaryDTO uploadImgDTO = new UploadImageToCloudinaryDTO();
@@ -202,5 +212,45 @@ public abstract class SeleniumCommonService extends CommonService {
 		}
 		d.switchTo().window(windowKeep);
 		return true;
+	}
+	
+	protected AutomationTestCaseResult initCaseResult(String casename) {
+		AutomationTestCaseResult r = new AutomationTestCaseResult();
+		r.setCaseName(casename);
+		return r;
+	}
+
+	protected JsonReportOfCaseDTO initCaseReportDTO(String casename) {
+
+		JsonReportOfCaseDTO report = new JsonReportOfCaseDTO();
+		report.setReportElementList(new ArrayList<>());
+		report.setCaseTypeName(casename);
+
+		return report;
+	}
+
+	protected JsonReportOfCaseDTO buildCaseReportDTO() {
+		JsonReportOfCaseDTO report = new JsonReportOfCaseDTO();
+		report.setReportElementList(new ArrayList<>());
+		report.setCaseTypeName("running error");
+		return report;
+	}
+
+	protected AutomationTestResultDTO buildAutomationTestResultDTO(TestEventBO bo) {
+		AutomationTestResultDTO dto = new AutomationTestResultDTO();
+
+		dto.setStartTime(bo.getStartTime());
+		dto.setEndTime(bo.getEndTime());
+		dto.setTestEventId(bo.getEventId());
+		dto.setReport(bo.getReport());
+		dto.setCaseResultList(bo.getCaseResultList());
+		dto.setRemark(bo.getRemark());
+		return dto;
+	}
+
+	protected void sendAutomationTestResult(TestEventBO bo) {
+		bo.setEndTime(LocalDateTime.now());
+		AutomationTestResultDTO dto = buildAutomationTestResultDTO(bo);
+		automationTestResultProducer.send(dto);
 	}
 }

@@ -13,10 +13,10 @@ import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 
 import demo.scriptCore.tw.service.TwCollectService;
-import demo.selenium.service.impl.SeleniumCommonService;
+import demo.selenium.service.impl.AutomationTestCommonService;
 
 @Service
-public class TwCollectServiceImpl extends SeleniumCommonService implements TwCollectService {
+public class TwCollectServiceImpl extends AutomationTestCommonService implements TwCollectService {
 
 	@Override
 	public void monsterCollecting() {

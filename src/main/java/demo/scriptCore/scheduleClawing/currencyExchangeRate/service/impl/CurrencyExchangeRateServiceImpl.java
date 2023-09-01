@@ -19,9 +19,9 @@ import autoTest.testEvent.scheduleClawing.currencyExchangeRate.pojo.dto.Currency
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import auxiliaryCommon.pojo.type.CurrencyType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
-import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.scheduleClawing.currencyExchangeRate.mq.sender.CurrencyExchangeRateDailyDataAckProducer;
 import demo.scriptCore.scheduleClawing.currencyExchangeRate.service.CurrencyExchangeRateService;
+import demo.selenium.service.impl.AutomationTestCommonService;
 import finance.currencyExchangeRate.pojo.dto.CurrencyExchageRateDataDTO;
 import finance.currencyExchangeRate.pojo.result.CurrencyExchageRateCollectResult;
 import net.sf.json.JSONObject;

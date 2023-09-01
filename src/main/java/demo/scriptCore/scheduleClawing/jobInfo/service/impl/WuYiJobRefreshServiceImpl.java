@@ -24,12 +24,12 @@ import autoTest.testEvent.scheduleClawing.pojo.bo.WuYiJobClawingBO;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
-import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.scheduleClawing.jobInfo.mapper.WuyiWatchMeMapper;
 import demo.scriptCore.scheduleClawing.jobInfo.pojo.po.WuyiWatchMe;
 import demo.scriptCore.scheduleClawing.jobInfo.pojo.po.WuyiWatchMeExample;
 import demo.scriptCore.scheduleClawing.jobInfo.pojo.vo.WuyiWatchMeVO;
 import demo.scriptCore.scheduleClawing.jobInfo.service.WuYiJobRefreshService;
+import demo.selenium.service.impl.AutomationTestCommonService;
 
 @Service
 public class WuYiJobRefreshServiceImpl extends AutomationTestCommonService implements WuYiJobRefreshService {

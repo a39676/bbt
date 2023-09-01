@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
-import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.localClawing.complex.pojo.dto.PrankOptionDTO;
 import demo.scriptCore.localClawing.complex.service.PrankService;
+import demo.selenium.service.impl.AutomationTestCommonService;
 import io.netty.util.internal.ThreadLocalRandom;
 import toolPack.ioHandle.FileUtilCustom;
 

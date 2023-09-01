@@ -20,8 +20,8 @@ import autoTest.testEvent.scheduleClawing.hsbc.pojo.dto.HsbcWechatPreregistDTO;
 import autoTest.testEvent.scheduleClawing.hsbc.pojo.type.HsbcIdType;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
-import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.scheduleClawing.complex.service.HsbcService;
+import demo.selenium.service.impl.AutomationTestCommonService;
 import tool.pojo.type.InternationalityType;
 
 @Service

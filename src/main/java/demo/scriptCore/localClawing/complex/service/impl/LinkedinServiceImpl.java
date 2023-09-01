@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
-import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.localClawing.complex.pojo.dto.LinkedinOptionDTO;
 import demo.scriptCore.localClawing.complex.service.LinkedinService;
+import demo.selenium.service.impl.AutomationTestCommonService;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service

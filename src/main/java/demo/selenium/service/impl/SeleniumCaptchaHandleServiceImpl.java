@@ -12,7 +12,7 @@ import demo.selenium.service.SeleniumCaptchaHandleService;
 import demo.tool.captcha.service.CaptchaService;
 
 @Service
-public class SeleniumCaptchaHandleServiceImpl extends SeleniumCommonService implements SeleniumCaptchaHandleService {
+public class SeleniumCaptchaHandleServiceImpl extends AutomationTestCommonService implements SeleniumCaptchaHandleService {
 	
 	@Autowired
 	private CaptchaService captchaService;

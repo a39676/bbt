@@ -30,12 +30,12 @@ import autoTest.testEvent.scheduleClawing.searchingDemo.pojo.dto.UnderWayDTO;
 import autoTest.testEvent.scheduleClawing.searchingDemo.pojo.dto.UnderWayMonthTestDTO;
 import autoTest.testEvent.scheduleClawing.searchingDemo.pojo.dto.UnderWayTrainProjectDTO;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
-import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.scheduleClawing.complex.pojo.dto.UnderWayCourseDoneRequestDTO;
 import demo.scriptCore.scheduleClawing.complex.pojo.dto.UnderWayCoursewareDTO;
 import demo.scriptCore.scheduleClawing.complex.pojo.dto.UnderWayExamFormDTO;
 import demo.scriptCore.scheduleClawing.complex.pojo.dto.UnderWayTestQuestionAndAnswerSubDTO;
 import demo.scriptCore.scheduleClawing.complex.service.UnderWayService;
+import demo.selenium.service.impl.AutomationTestCommonService;
 import net.sf.json.JSONObject;
 import toolPack.ioHandle.FileUtilCustom;
 

@@ -5,8 +5,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 
-import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.localClawing.complex.service.MathBattleService;
+import demo.selenium.service.impl.AutomationTestCommonService;
 
 @Service
 public class MathBattleServiceImpl extends AutomationTestCommonService implements MathBattleService {

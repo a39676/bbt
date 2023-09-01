@@ -8,12 +8,12 @@ import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
-import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.cryptoCoin.mq.sender.CryptoCoinDailyDataAckProducer;
 import demo.scriptCore.cryptoCoin.pojo.result.CryptoCoinDailyDataResult;
 import demo.scriptCore.cryptoCoin.service.BinanceService;
 import demo.scriptCore.cryptoCoin.service.CryptoCoinPriceService;
 import demo.scriptCore.cryptoCoin.service.CryptoCompareService;
+import demo.selenium.service.impl.AutomationTestCommonService;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDailyDataQueryDTO;
 import finance.cryptoCoin.pojo.type.CryptoCoinDataSourceType;
 

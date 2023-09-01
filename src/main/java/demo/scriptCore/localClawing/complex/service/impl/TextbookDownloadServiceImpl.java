@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
-import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.localClawing.complex.pojo.dto.TextbookDownloadOptionDTO;
 import demo.scriptCore.localClawing.complex.pojo.dto.TextbookDownloadSubOption;
 import demo.scriptCore.localClawing.complex.service.TextbookDownloadService;
+import demo.selenium.service.impl.AutomationTestCommonService;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service

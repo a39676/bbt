@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 import demo.autoTestBase.testEvent.mq.producer.HeartBeatProducer;
 import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.base.system.mapper.BaseMapper;
-import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.selenium.service.SeleniumGlobalOptionService;
+import demo.selenium.service.impl.AutomationTestCommonService;
 import demo.task.service.TaskToolService;
 import demo.tool.service.ComplexToolService;
 

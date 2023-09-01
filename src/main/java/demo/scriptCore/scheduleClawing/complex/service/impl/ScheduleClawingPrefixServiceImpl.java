@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
-import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.cryptoCoin.service.CryptoCoinPriceService;
 import demo.scriptCore.scheduleClawing.complex.service.HsbcService;
 import demo.scriptCore.scheduleClawing.complex.service.ScheduleClawingPrefixService;
@@ -14,6 +13,7 @@ import demo.scriptCore.scheduleClawing.currencyExchangeRate.service.CurrencyExch
 import demo.scriptCore.scheduleClawing.educationInfo.service.EducationInfoCollectionService;
 import demo.scriptCore.scheduleClawing.jobInfo.service.V2exJobInfoCollectionService;
 import demo.scriptCore.scheduleClawing.jobInfo.service.WuYiJobRefreshService;
+import demo.selenium.service.impl.AutomationTestCommonService;
 
 @Service
 public class ScheduleClawingPrefixServiceImpl extends AutomationTestCommonService
