@@ -21,4 +21,11 @@ public class HadesCasesController {
 		hadesCases.login();
 		return "done";
 	}
+	
+	@GetMapping(value = "/test")
+	@ResponseBody
+	public String test() {
+		hadesCases.test();
+		return "done";
+	}
 }

@@ -4,4 +4,6 @@ public interface HadesCases {
 
 	void login();
 
+	void test();
+
 }
