@@ -27,9 +27,11 @@ public class HomePage {
 	public String subTagDropListXpath = "/html[1]/body[1]/ul[1]/li";
 	// 标签列表(横, 所有)
 	public String subTagListXpath = "/html[1]/body[1]/div[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li";
-	
+
 	// 内容标签列表(内容窗口内标签warper)
 	public String contentTagListWarperXpath = "/html[1]/body[1]/div[1]/div[1]/div[2]/div[2]/div[2]/div[1]/div[1]/div[1]";
+	// 内容标签(内容窗口内标签, 所有)
+	public String contentTagXpath = "/html[1]/body[1]/div[1]/div[1]/div[2]/div[2]/div[2]/div[1]/div[1]/div[1]/ul[1]/li/div[1]";
 
 	// 左侧主菜单-供应商管理
 	public String supplierManagerIconXpath = "/html[1]/body[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[2]";
@@ -58,11 +60,11 @@ public class HomePage {
 			return false;
 		}
 	}
-	
+
 	public boolean contentLoadingCheck(WebDriver d) {
 		try {
 			JavascriptExecutor js = (JavascriptExecutor) d;
-			return js.executeScript("return document.readyState").equals("complete"); 
+			return js.executeScript("return document.readyState").equals("complete");
 		} catch (Exception e) {
 			return false;
 		}
@@ -87,11 +89,35 @@ public class HomePage {
 		certifiedButton.click();
 	}
 
+	public void clickSupplierPerformanceManager(WebDriver d) {
+		clickSupplierManager(d);
+
+		WebElement certifiedButton = d.findElement(By.xpath(supplierPerformanceManagerXpath));
+		certifiedButton.click();
+	}
+
 	public boolean tagSwitch(WebDriver d, String tagName) {
 		boolean switchFlag = false;
 		WebElement tagSwitchIcon = d.findElement(By.xpath(subTagSwitchIconXpath));
 		tagSwitchIcon.click();
 		List<WebElement> tagList = d.findElements(By.xpath(subTagDropListXpath));
+		for (int i = 0; i < tagList.size() && !switchFlag; i++) {
+			WebElement tag = tagList.get(i);
+			if (tagName.equals(tag.getText())) {
+				tag.click();
+				for (int j = 0; j < 3; j++) {
+					contentLoadingCheck(d);
+					switchFlag = tagName.equals(getActiveTagName(d));
+				}
+			}
+		}
+
+		return switchFlag;
+	}
+
+	public boolean contentTagSwitch(WebDriver d, String tagName) {
+		boolean switchFlag = false;
+		List<WebElement> tagList = d.findElements(By.xpath(contentTagXpath));
 		for (int i = 0; i < tagList.size() && !switchFlag; i++) {
 			WebElement tag = tagList.get(i);
 			if (tagName.equals(tag.getText())) {

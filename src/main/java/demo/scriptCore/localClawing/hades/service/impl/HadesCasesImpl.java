@@ -48,16 +48,33 @@ public class HadesCasesImpl extends HadesCommonService implements HadesCases {
 			homePage.loadingCheck(webDriver);
 			
 			homePage.clickSupplierInfoManager(webDriver);
+			System.out.println("click info manager");
 			homePage.contentLoadingCheck(webDriver);
 			System.out.println(homePage.getActiveTagName(webDriver));
+			System.out.println("tag switch 供应商信息管理");
+			homePage.tagSwitch(webDriver, "供应商信息管理");
+			System.out.println(homePage.getActiveTagName(webDriver));
 			
+			System.out.println("click supplier certified manager");
 			homePage.clickSupplierCertifiedManager(webDriver);
 			homePage.contentLoadingCheck(webDriver);
 			System.out.println(homePage.getActiveTagName(webDriver));
 			
+			System.out.println("tag switch 供应商信息管理");
 			homePage.tagSwitch(webDriver, "供应商信息管理");
 			homePage.contentLoadingCheck(webDriver);
 			System.out.println(homePage.getActiveTagName(webDriver));
+			
+			System.out.println("content tag switch 关联联系人列表");
+			System.out.println(homePage.contentTagSwitch(webDriver, "关联联系人列表"));
+			homePage.contentLoadingCheck(webDriver);
+			System.out.println(homePage.getActiveTagName(webDriver));
+			
+			System.out.println("content tag switch 供应商代注册");
+			System.out.println(homePage.contentTagSwitch(webDriver, "供应商代注册"));
+			homePage.contentLoadingCheck(webDriver);
+			System.out.println(homePage.getActiveTagName(webDriver));
+			
 
 		} catch (Exception e) {
 			JsonReportOfCaseDTO errorReport = buildCaseReportDTO();
