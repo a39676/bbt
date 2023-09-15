@@ -1,14 +1,14 @@
-package demo.scriptCore.localClawing.hades.service.impl;
+package demo.scriptCore.localClawing.hades.ui.service.impl;
 
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
-import demo.scriptCore.localClawing.hades.pageObject.HomePage;
-import demo.scriptCore.localClawing.hades.pageObject.LoginPage;
-import demo.scriptCore.localClawing.hades.service.HadesCases;
-import demo.scriptCore.localClawing.hades.service.HadesCommonService;
+import demo.scriptCore.localClawing.hades.common.service.HadesCommonService;
+import demo.scriptCore.localClawing.hades.ui.pageObject.HomePage;
+import demo.scriptCore.localClawing.hades.ui.pageObject.LoginPage;
+import demo.scriptCore.localClawing.hades.ui.service.HadesCases;
 
 @Service
 public class HadesCasesImpl extends HadesCommonService implements HadesCases {

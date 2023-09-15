@@ -1,4 +1,4 @@
-package demo.scriptCore.localClawing.hades.pojo.dto.parameter;
+package demo.scriptCore.localClawing.hades.api.pojo.dto.parameter;
 
 import java.util.List;
 

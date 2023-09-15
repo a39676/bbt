@@ -1,4 +1,4 @@
-package demo.scriptCore.localClawing.hades.pageObject;
+package demo.scriptCore.localClawing.hades.ui.pageObject;
 
 import java.time.Duration;
 import java.util.List;

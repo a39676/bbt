@@ -1,4 +1,4 @@
-package demo.scriptCore.localClawing.hades.pojo.dto.response;
+package demo.scriptCore.localClawing.hades.api.pojo.dto.response;
 
 public class HadeLoginResponseDataDTO {
 

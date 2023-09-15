@@ -1,4 +1,4 @@
-package demo.scriptCore.localClawing.hades.pojo.dto;
+package demo.scriptCore.localClawing.hades.api.pojo.dto;
 
 public class HadesUserDTO {
 

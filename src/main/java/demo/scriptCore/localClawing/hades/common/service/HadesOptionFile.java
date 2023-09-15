@@ -1,4 +1,4 @@
-package demo.scriptCore.localClawing.hades.service;
+package demo.scriptCore.localClawing.hades.common.service;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import demo.scriptCore.localClawing.hades.pojo.dto.HadesUserDTO;
+import demo.scriptCore.localClawing.hades.api.pojo.dto.HadesUserDTO;
 import demo.selenium.service.impl.AutomationTestCommonService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;

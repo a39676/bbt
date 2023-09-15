@@ -1,4 +1,4 @@
-package demo.scriptCore.localClawing.hades.service;
+package demo.scriptCore.localClawing.hades.common.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 

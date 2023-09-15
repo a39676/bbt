@@ -1,4 +1,4 @@
-package demo.scriptCore.localClawing.hades.service.impl;
+package demo.scriptCore.localClawing.hades.api.service.impl;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -12,15 +12,15 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 
 import demo.baseCommon.service.CommonService;
-import demo.scriptCore.localClawing.hades.pojo.dto.parameter.QueryEvaluateAchievementsEvaluatePageDTO;
-import demo.scriptCore.localClawing.hades.pojo.dto.response.HadeLoginResponseDTO;
-import demo.scriptCore.localClawing.hades.pojo.dto.response.QueryEvaluateAchievementsEvaluatePageResponDTO;
-import demo.scriptCore.localClawing.hades.service.HadesHttpRequestService;
+import demo.scriptCore.localClawing.hades.api.pojo.dto.parameter.QueryEvaluateAchievementsEvaluatePageDTO;
+import demo.scriptCore.localClawing.hades.api.pojo.dto.response.HadeLoginResponseDTO;
+import demo.scriptCore.localClawing.hades.api.pojo.dto.response.QueryEvaluateAchievementsEvaluatePageResponDTO;
+import demo.scriptCore.localClawing.hades.api.service.HadesApiService;
 import net.sf.json.JSONObject;
 import toolPack.httpHandel.HttpUtil;
 
 @Service
-public class HadesHttpRequestServiceImpl extends CommonService implements HadesHttpRequestService {
+public class HadesApiServiceImpl extends CommonService implements HadesApiService {
 
 	public HadeLoginResponseDTO login(String username, String pwd) throws IOException {
 		HttpUtil h = new HttpUtil();
@@ -58,7 +58,7 @@ public class HadesHttpRequestServiceImpl extends CommonService implements HadesH
 	}
 
 	public static void main(String[] args) throws IOException {
-		HadesHttpRequestServiceImpl t = new HadesHttpRequestServiceImpl();
+		HadesApiServiceImpl t = new HadesApiServiceImpl();
 		HadeLoginResponseDTO loginResponse = t.login("000676", "zaq12wsx@");
 
 		String accessToken = loginResponse.getData().getAccessToken();

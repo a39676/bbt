@@ -1,4 +1,4 @@
-package demo.scriptCore.localClawing.hades.service;
+package demo.scriptCore.localClawing.hades.ui.service;
 
 public interface HadesCases {
 

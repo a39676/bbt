@@ -1,11 +1,11 @@
-package demo.scriptCore.localClawing.hades.pageObject;
+package demo.scriptCore.localClawing.hades.ui.pageObject;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 
-import demo.scriptCore.localClawing.hades.service.HadesCommonService;
+import demo.scriptCore.localClawing.hades.common.service.HadesCommonService;
 
 @Service
 public class LoginPage extends HadesCommonService {
