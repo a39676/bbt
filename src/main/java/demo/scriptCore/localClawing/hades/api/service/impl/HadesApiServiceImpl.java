@@ -11,20 +11,20 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
-import demo.baseCommon.service.CommonService;
 import demo.scriptCore.localClawing.hades.api.pojo.dto.parameter.QueryEvaluateAchievementsEvaluatePageDTO;
 import demo.scriptCore.localClawing.hades.api.pojo.dto.response.HadeLoginResponseDTO;
 import demo.scriptCore.localClawing.hades.api.pojo.dto.response.QueryEvaluateAchievementsEvaluatePageResponDTO;
 import demo.scriptCore.localClawing.hades.api.service.HadesApiService;
+import demo.scriptCore.localClawing.hades.common.service.HadesCommonService;
 import net.sf.json.JSONObject;
 import toolPack.httpHandel.HttpUtil;
 
 @Service
-public class HadesApiServiceImpl extends CommonService implements HadesApiService {
+public class HadesApiServiceImpl extends HadesCommonService implements HadesApiService {
 
 	public HadeLoginResponseDTO login(String username, String pwd) throws IOException {
 		HttpUtil h = new HttpUtil();
-		String loginUrl = "https://srmdev.haid.com.cn/usercenter/login/loginByAccount";
+		String loginUrl = hadesOptionFile.getHostUrl() + "/usercenter/login/loginByAccount";
 		JSONObject parameter = new JSONObject();
 		parameter.put("account", username);
 		parameter.put("password", pwd);
@@ -38,7 +38,7 @@ public class HadesApiServiceImpl extends CommonService implements HadesApiServic
 	public QueryEvaluateAchievementsEvaluatePageResponDTO queryEvaluateAchievementsEvaluatePage(String accessToken,
 			QueryEvaluateAchievementsEvaluatePageDTO dto) {
 		HttpUtil u = new HttpUtil();
-		String queryUrl = "https://srmdev.haid.com.cn/supplier/evaluateAchievements/evaluatePage";
+		String queryUrl = hadesOptionFile.getHostUrl() + "/supplier/evaluateAchievements/evaluatePage";
 		JSONObject parameter = JSONObject.fromObject(dto);
 		parameter = removeKeyIfValueNull(parameter);
 		String responseStr = null;
@@ -53,7 +53,7 @@ public class HadesApiServiceImpl extends CommonService implements HadesApiServic
 		}
 		QueryEvaluateAchievementsEvaluatePageResponDTO response = new Gson().fromJson(responseStr,
 				QueryEvaluateAchievementsEvaluatePageResponDTO.class);
-		
+
 		return response;
 	}
 
@@ -73,7 +73,8 @@ public class HadesApiServiceImpl extends CommonService implements HadesApiServic
 //		queryEvaluateAchievementsEvaluatePageDTO.setCreateTime(new ArrayList<>());
 //		queryEvaluateAchievementsEvaluatePageDTO.getCreateTime().add(startDateStr);
 //		queryEvaluateAchievementsEvaluatePageDTO.getCreateTime().add(endDateStr);
-		QueryEvaluateAchievementsEvaluatePageResponDTO queryEvaluateAchievementEvaluatePageResponse = t.queryEvaluateAchievementsEvaluatePage(accessToken, queryEvaluateAchievementsEvaluatePageDTO);
+		QueryEvaluateAchievementsEvaluatePageResponDTO queryEvaluateAchievementEvaluatePageResponse = t
+				.queryEvaluateAchievementsEvaluatePage(accessToken, queryEvaluateAchievementsEvaluatePageDTO);
 		System.out.println(queryEvaluateAchievementEvaluatePageResponse);
 	}
 
@@ -86,8 +87,8 @@ public class HadesApiServiceImpl extends CommonService implements HadesApiServic
 				nullValueKeys.add(key);
 			}
 		}
-		
-		for(Object key : nullValueKeys) {
+
+		for (Object key : nullValueKeys) {
 			json.remove(key);
 		}
 

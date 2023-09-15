@@ -10,7 +10,7 @@ import demo.scriptCore.localClawing.hades.common.service.HadesCommonService;
 @Service
 public class LoginPage extends HadesCommonService {
 
-	private String url = "https://srmdev.haid.com.cn/#/adminLogin";
+	private String url = hadesOptionFile.getHostUrl() + "/#/adminLogin";
 
 	private String usernameInputXpath = "/html[1]/body[1]/div[1]/div[1]/div[2]/div[2]/form[1]/div[3]/div[1]/div[1]/input[1]";
 	private String pwdInputXpath = "/html[1]/body[1]/div[1]/div[1]/div[2]/div[2]/form[1]/div[4]/div[1]/div[1]/input[1]";

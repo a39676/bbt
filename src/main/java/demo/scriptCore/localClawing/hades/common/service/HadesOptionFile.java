@@ -19,7 +19,17 @@ import toolPack.ioHandle.FileUtilCustom;
 @Service
 public class HadesOptionFile extends AutomationTestCommonService {
 
+	private String hostUrl;
+
 	private List<HadesUserDTO> userList;
+
+	public String getHostUrl() {
+		return hostUrl;
+	}
+
+	public void setHostUrl(String hostUrl) {
+		this.hostUrl = hostUrl;
+	}
 
 	public List<HadesUserDTO> getUserList() {
 		return userList;
@@ -49,6 +59,7 @@ public class HadesOptionFile extends AutomationTestCommonService {
 //			HadesOptionFile tmp = new Gson().fromJson(jsonStr, HadesOptionFile.class);
 //			BeanUtils.copyProperties(tmp, this);
 
+			this.hostUrl = json.getString("hostUrl");
 			JSONArray userListArray = json.getJSONArray("userList");
 			HadesUserDTO tmpUserDTO = null;
 			for (int i = 0; i < userListArray.size(); i++) {
