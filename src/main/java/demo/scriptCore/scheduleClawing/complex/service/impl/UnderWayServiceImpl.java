@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -615,7 +616,7 @@ public class UnderWayServiceImpl extends AutomationTestCommonService implements 
 		byte[] postData = json.toString().getBytes(StandardCharsets.UTF_8);
 
 		try {
-			URL myurl = new URL(urlStr);
+			URL myurl = new URI(urlStr).toURL();
 			con = (HttpURLConnection) myurl.openConnection();
 
 			con.setDoOutput(true);

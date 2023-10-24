@@ -1,7 +1,7 @@
 package demo.scriptCore.localClawing.complex.service.impl;
 
 import java.io.File;
-import java.net.URL;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,11 +99,11 @@ public class TmpTaskServiceImpl extends BingDemoCommonService implements TmpTask
 		}
 		filename = filename.trim();
 		try {
-			FileUtils.copyURLToFile(new URL(urlStr), new File(targetFloder + "/" + filename + ".png"), 10000, 10000);
+			FileUtils.copyURLToFile(new URI(urlStr).toURL(), new File(targetFloder + "/" + filename + ".png"), 10000, 10000);
 		} catch (Exception e) {
 			e.printStackTrace();
 			try {
-				FileUtils.copyURLToFile(new URL(urlStr), new File(targetFloder + "/" + snowFlake.getNextId() + ".png"),
+				FileUtils.copyURLToFile(new URI(urlStr).toURL(), new File(targetFloder + "/" + snowFlake.getNextId() + ".png"),
 						10000, 10000);
 			} catch (Exception e1) {
 				e1.printStackTrace();
