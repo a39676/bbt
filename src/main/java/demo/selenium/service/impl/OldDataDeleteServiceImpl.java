@@ -11,7 +11,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import demo.autoTestBase.testEvent.service.impl.AutomationTestConstantService;
+import demo.autoTestBase.testEvent.service.impl.AutomationTestOptionService;
 import demo.baseCommon.service.CommonService;
 import demo.selenium.service.OldDataDeleteService;
 import demo.selenium.service.SeleniumGlobalOptionService;
@@ -25,7 +25,7 @@ public class OldDataDeleteServiceImpl extends CommonService implements OldDataDe
 	@Autowired
 	private CaptchaService captchaService;
 	@Autowired
-	private AutomationTestConstantService automationTestConstantService;
+	private AutomationTestOptionService automationTestConstantService;
 
 	@Override
 	public void deleteOldDownload() throws IOException {

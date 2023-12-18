@@ -17,7 +17,7 @@ public abstract class TestEventCommonService extends CommonService {
 	@Autowired
 	protected FileUtilCustom fileUtil;
 	@Autowired
-	protected AutomationTestConstantService constantService;
+	protected AutomationTestOptionService constantService;
 	@Autowired
 	protected RedisOriginalConnectService redisOriginalConnectService;
 	@Autowired

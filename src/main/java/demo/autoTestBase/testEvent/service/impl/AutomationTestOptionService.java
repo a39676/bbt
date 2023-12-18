@@ -9,20 +9,17 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import demo.baseCommon.service.CommonService;
+import demo.config.costomComponent.OptionFilePathConfigurer;
 import net.sf.json.JSONObject;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")
 @Service
-public class AutomationTestConstantService extends CommonService {
-
-	@Value("${optionFilePath.automationTest}")
-	private String optionFilePath;
+public class AutomationTestOptionService extends CommonService {
 
 	private Boolean breakFlag = false;
 	private Integer oldDataLiveLimitMonth = 3;
@@ -34,13 +31,13 @@ public class AutomationTestConstantService extends CommonService {
 
 	@PostConstruct
 	public void refreshConstant() {
-		File optionFile = new File(optionFilePath);
+		File optionFile = new File(OptionFilePathConfigurer.AUTOMATION_TEST);
 		if (!optionFile.exists()) {
 			return;
 		}
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
-			String jsonStr = fileUtil.getStringFromFile(optionFilePath);
+			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.AUTOMATION_TEST);
 			JSONObject json = JSONObject.fromObject(jsonStr);
 			this.breakFlag = json.getBoolean("breakFlag");
 			this.oldDataLiveLimitMonth = json.getInt("oldDataLiveLimitMonth");
@@ -100,7 +97,7 @@ public class AutomationTestConstantService extends CommonService {
 	public void setFailedTestResultMap(Map<Long, List<LocalDateTime>> failedTestResultMap) {
 		this.failedTestResultMap = failedTestResultMap;
 	}
-	
+
 	public void addFailedTestResult(Long eventId) {
 		if (failedTestResultMap.containsKey(eventId)) {
 			failedTestResultMap.get(eventId).add(LocalDateTime.now());
@@ -113,11 +110,10 @@ public class AutomationTestConstantService extends CommonService {
 
 	@Override
 	public String toString() {
-		return "AutomationTestConstantService [optionFilePath=" + optionFilePath + ", breakFlag=" + breakFlag
-				+ ", oldDataLiveLimitMonth=" + oldDataLiveLimitMonth + ", eventFailLimitCounting="
-				+ eventFailLimitCounting + ", failCountLiveMinutes=" + failCountLiveMinutes
-				+ ", limitOfRunningInTheSameTime=" + limitOfRunningInTheSameTime + ", failedTestResultMap="
-				+ failedTestResultMap + "]";
+		return "AutomationTestConstantService [breakFlag=" + breakFlag + ", oldDataLiveLimitMonth="
+				+ oldDataLiveLimitMonth + ", eventFailLimitCounting=" + eventFailLimitCounting
+				+ ", failCountLiveMinutes=" + failCountLiveMinutes + ", limitOfRunningInTheSameTime="
+				+ limitOfRunningInTheSameTime + ", failedTestResultMap=" + failedTestResultMap + "]";
 	}
 
 }
