@@ -19,7 +19,7 @@ public class SystemOptionService extends CommonService {
 	private String envName = null;
 	private Boolean isDebuging = null;
 	private String shutdownKey = null;
-	private String cxHostname = null;
+	private String cthulhuHostname = null;
 
 	public String getEnvName() {
 		return envName;
@@ -40,6 +40,10 @@ public class SystemOptionService extends CommonService {
 	public boolean isDev() {
 		return "dev".equals(getEnvName());
 	}
+	
+	public boolean isRaspberry() {
+		return "raspberry".equals(getEnvName());
+	}
 
 	public String getShutdownKey() {
 		return shutdownKey;
@@ -49,12 +53,12 @@ public class SystemOptionService extends CommonService {
 		this.shutdownKey = shutdownKey;
 	}
 
-	public String getCxHostname() {
-		return cxHostname;
+	public String getCthulhuHostname() {
+		return cthulhuHostname;
 	}
 
-	public void setCxHostname(String cxHostname) {
-		this.cxHostname = cxHostname;
+	public void setCthulhuHostname(String cthulhuHostname) {
+		this.cthulhuHostname = cthulhuHostname;
 	}
 
 	@PostConstruct
@@ -70,7 +74,7 @@ public class SystemOptionService extends CommonService {
 			this.envName = json.getString("envName");
 			this.isDebuging = json.getBoolean("isDebuging");
 			this.shutdownKey = json.getString("shutdownKey");
-			this.cxHostname = json.getString("cxHostname");
+			this.cthulhuHostname = json.getString("cxHostname");
 			log.error("system constant loaded");
 		} catch (Exception e) {
 			e.printStackTrace();

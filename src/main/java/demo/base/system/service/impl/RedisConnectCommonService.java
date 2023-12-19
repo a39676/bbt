@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import demo.baseCommon.service.CommonService;
+import tool.pojo.bo.IpRecordBO;
 
 public abstract class RedisConnectCommonService extends CommonService {
 
@@ -18,4 +19,7 @@ public abstract class RedisConnectCommonService extends CommonService {
 		return redisTemplate.hasKey(key);
 	}
 	
+	protected String buildRedisKeyPrefix(IpRecordBO record, String redisKeyPrefix) {
+		return redisKeyPrefix + "_" + record.getForwardAddr() + "_" + record.getRemoteAddr();
+	}
 }

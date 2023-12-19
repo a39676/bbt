@@ -19,7 +19,7 @@ public class HeartBeatService extends CommonService {
 
 	public void heartbeat() {
 		HttpUtil h = new HttpUtil();
-		String url = systemOptionService.getCxHostname() + AutoTestUrl.ROOT + AutoTestUrl.BBT_HEART_BEAT;
+		String url = systemOptionService.getCthulhuHostname() + AutoTestUrl.ROOT + AutoTestUrl.BBT_HEART_BEAT;
 		try {
 			h.sendGet(url);
 		} catch (IOException e) {

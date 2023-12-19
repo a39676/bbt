@@ -1,17 +1,13 @@
 package demo.base.system.service.impl;
 
 import java.io.File;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
-import demo.base.system.pojo.bo.SystemConstant;
 import net.sf.json.JSONObject;
 import toolPack.ioHandle.FileUtilCustom;
 
@@ -42,14 +38,8 @@ public class RedisOriginalConnectService extends RedisConnectCommonService {
 		redisTemplate.opsForValue().set(cosntantName, constantValue, validTime, timeUnit);
 	}
 
-	public void setValByName(SystemConstant systemConstant) {
-		redisTemplate.opsForValue().set(systemConstant.getConstantName(), systemConstant.getConstantValue());
-	}
-
-	public void setValsByName(List<SystemConstant> systemConstants) {
-		Map<String, String> values = systemConstants.stream()
-				.collect(Collectors.toMap(SystemConstant::getConstantName, SystemConstant::getConstantValue));
-		redisTemplate.opsForValue().multiSet(values);
+	public void deleteValByName(String constantName) {
+		redisTemplate.delete(constantName);
 	}
 
 	public CommonResult refreshRedisValueFromFile(String filePath) {
@@ -96,4 +86,7 @@ public class RedisOriginalConnectService extends RedisConnectCommonService {
 		}
 	}
 
+	public Set<String> findKeys(String pattern) {
+		return redisTemplate.keys(pattern);
+	}
 }

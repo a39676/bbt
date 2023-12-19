@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
-import demo.scriptCore.cryptoCoin.service.CryptoCoinPriceService;
 import demo.scriptCore.scheduleClawing.complex.service.HsbcService;
 import demo.scriptCore.scheduleClawing.complex.service.ScheduleClawingPrefixService;
 import demo.scriptCore.scheduleClawing.complex.service.UnderWayService;
@@ -29,8 +28,6 @@ public class ScheduleClawingPrefixServiceImpl extends AutomationTestCommonServic
 	private HsbcService hsbcService;
 	@Autowired
 	private UnderWayService underWayMonthTestService;
-	@Autowired
-	private CryptoCoinPriceService cryptoCoinPriceService;
 	@Autowired
 	private CurrencyExchangeRateService currencyExchangeRateService;
 
@@ -58,9 +55,6 @@ public class ScheduleClawingPrefixServiceImpl extends AutomationTestCommonServic
 		}
 		case UNDER_WAY_TRAIN_PROJECT: {
 			return underWayMonthTestService.trainProject(te);
-		}
-		case CRYPTO_COIN: {
-			return cryptoCoinPriceService.cryptoCoinDailyDataAPI(te);
 		}
 		case CURRENCY_EXCHANGE_RAGE: {
 			return currencyExchangeRateService.getDailyData(te);

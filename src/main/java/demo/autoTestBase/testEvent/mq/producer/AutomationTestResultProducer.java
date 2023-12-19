@@ -11,6 +11,7 @@ import com.google.gson.GsonBuilder;
 
 import autoTest.testEvent.common.pojo.constant.AutomationTestMQConstant;
 import autoTest.testEvent.common.pojo.dto.AutomationTestResultDTO;
+import demo.base.system.service.impl.SystemOptionService;
 import demo.baseCommon.service.CommonService;
 
 @Component
@@ -18,10 +19,15 @@ public class AutomationTestResultProducer extends CommonService {
 
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
+	@Autowired
+	private SystemOptionService systemOptionService;
 
 	public void send(AutomationTestResultDTO dto) {
 		if (dto == null) {
 			return;
+		}
+		if (systemOptionService.isRaspberry()) {
+			log.error("Automation test result: " + dto.toString());
 		}
 		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, localDateTimeAdapter).create();
 		String str = gson.toJson(dto);

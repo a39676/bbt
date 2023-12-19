@@ -1,4 +1,4 @@
-// Unuse when deploy on local service
+// 2023-12-19 NOT use when deploy on local service
 
 //package demo.autoTestBase.testEvent.mq.producer;
 //
