@@ -29,7 +29,7 @@ spring:
       password: AB4RL4zJqX00nlIM
   redis:
     database: 0
-    host: 45.32.139.9
+    host: 127.0.0.1
     port: 6381
     password: 
     pool.max-active: 8
