@@ -5,13 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import demo.baseCommon.service.CommonService;
-import finance.cryptoCoin.pojo.constant.CryptoCoinMQConstant;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataDTO;
-import net.sf.json.JSONObject;
 
 @Component
 public class CryptoCoinDailyDataAckProducer extends CommonService {
 
+	@SuppressWarnings("unused")
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
 
@@ -19,8 +18,10 @@ public class CryptoCoinDailyDataAckProducer extends CommonService {
 		if (cryptoCoinPriceDTO == null) {
 			return;
 		}
-		JSONObject json = JSONObject.fromObject(cryptoCoinPriceDTO);
-		rabbitTemplate.convertAndSend(CryptoCoinMQConstant.CRYPTO_COIN_DAILY_DATA, json.toString());
+		
+		// 2023-12-20 NOT used after deploy on local machine
+//		JSONObject json = JSONObject.fromObject(cryptoCoinPriceDTO);
+//		rabbitTemplate.convertAndSend(CryptoCoinMQConstant.CRYPTO_COIN_DAILY_DATA, json.toString());
 	}
 
 }
