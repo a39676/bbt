@@ -5,13 +5,15 @@ import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import demo.baseCommon.service.CommonService;
+import toolPack.dateTimeHandle.LocalDateTimeHandler;
 
 @Component
-public class BbtDynamicKey extends CommonService {
+public class BbtDynamicKey {
 
 	@Autowired
 	private CustomPasswordEncoder passwordEncoder;
+	@Autowired
+	private LocalDateTimeHandler localDateTimeHandler;
 
 	private static final String SALT = "BBT";
 	private static final String KEY_FORMAT = SALT + "_";
