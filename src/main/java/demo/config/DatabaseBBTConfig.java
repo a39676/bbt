@@ -22,11 +22,10 @@ import com.zaxxer.hikari.HikariDataSource;
 // multiple scan, 通配符的使用应放后边, 否则会被"覆盖?重写?"后失效
 @MapperScan(
 	basePackages = {
-		"demo.base.*.mapper", 
-		"demo.autoTestBase.*.mapper", 
-		"demo.scriptCore.scheduleClawing.*.mapper",
-		"demo.interaction.*.mapper", 
-		"demo.*.mapper"
+		"demo.*.*.*.*.mapper",
+		"demo.*.*.*.mapper",
+		"demo.*.*.mapper",
+		"demo.*.mapper",
 	},
 	sqlSessionTemplateRef = "bbtSqlSessionTemplate"
 	)
