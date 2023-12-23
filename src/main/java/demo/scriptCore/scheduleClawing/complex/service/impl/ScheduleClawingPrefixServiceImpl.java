@@ -33,10 +33,11 @@ public class ScheduleClawingPrefixServiceImpl extends AutomationTestCommonServic
 
 	@Override
 	public TestEventBO runSubEvent(TestEventBO te) {
+		log.error("run sub event");
 		Long caseId = te.getFlowId();
 		
 		ScheduleClawingType clawingType = ScheduleClawingType.getType(caseId);
-
+		log.error("Clawing type: " + clawingType.getFlowName()) ;
 		switch (clawingType) {
 		case WU_YI_JOB: {
 			return wuYiSign.clawing(te);
