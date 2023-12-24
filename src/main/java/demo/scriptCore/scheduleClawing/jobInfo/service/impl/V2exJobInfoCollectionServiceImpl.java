@@ -44,8 +44,10 @@ public class V2exJobInfoCollectionServiceImpl extends JobInfoCollectionCommonSer
 	@Override
 	public TestEventBO clawing(TestEventBO tbo) {
 		sendTelegramMsg("Start v2ex collecting");
+		log.error("Start v2ex collecting");
 		CommonResult r = new CommonResult();
 
+		log.error("Delete v2ex old urls");
 		deleteOldUrls(PARAM_PATH_STR);
 
 		ScheduleClawingType caseType = ScheduleClawingType.V2EX_JOB_INFO;
@@ -55,8 +57,10 @@ public class V2exJobInfoCollectionServiceImpl extends JobInfoCollectionCommonSer
 			FileUtilCustom ioUtil = new FileUtilCustom();
 			String content = ioUtil.getStringFromFile(PARAM_PATH_STR);
 
+			log.error("Building v2ex job info option DTO");
 			V2exJobInfoOptionDTO dto = buildObjFromJsonCustomization(content, V2exJobInfoOptionDTO.class);
 			if (dto == null) {
+				log.error("V2ex job info DTO error, content: " + content);
 				reportService.caseReportAppendContent(caseReport, "参数文件结构异常");
 				throw new Exception();
 			}

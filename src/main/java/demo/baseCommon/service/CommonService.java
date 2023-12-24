@@ -206,7 +206,7 @@ public abstract class CommonService {
 //		dto.setBotName(TelegramBotType.BBT_MESSAGE.getName());
 //		dto.setMsg(msg);
 //		telegramMessageAckProducer.send(dto);
-
+		log.error("Sending telegram message: " + msg);
 		reminderMessageService.sendReminder(msg);
 	}
 }
