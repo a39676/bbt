@@ -44,6 +44,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 	@Override
 	public TestEventBO clawing(TestEventBO tbo) {
 		log.error("Start education info collection clawing");
+		sendingMsg("In education info collection");
 		CommonResult r = new CommonResult();
 		
 		log.error("delete old urls");
@@ -137,7 +138,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 		}
 
 		if(!tryQuitWebDriver(webDriver)) {
-			sendTelegramMsg("Web driver quit failed, " + caseType.getFlowName());
+			sendingMsg("Web driver quit failed, " + caseType.getFlowName());
 		}
 		sendAutomationTestResult(tbo);
 
@@ -173,7 +174,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 					tmpDTO.setRecrodDate(LocalDateTime.now());
 					tmpDTO.setUrl(url);
 					newInfoUrlList.add(tmpDTO);
-					sendTelegramMsg("New url: " + url + " , title: " + title);
+					sendingMsg("New url: " + url + " , title: " + title);
 				}
 			}
 		} catch (Exception e) {
@@ -210,7 +211,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 					tmpDTO.setRecrodDate(LocalDateTime.now());
 					tmpDTO.setUrl(url);
 					newInfoUrlList.add(tmpDTO);
-					sendTelegramMsg("New url: " + url + " , title: " + title);
+					sendingMsg("New url: " + url + " , title: " + title);
 				}
 			}
 		} catch (Exception e) {
@@ -272,7 +273,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 					tmpDTO.setRecrodDate(LocalDateTime.now());
 					tmpDTO.setUrl(urlStr);
 					newInfoUrlList.add(tmpDTO);
-					sendTelegramMsg("New url: " + urlStr + " , title: " + title);
+					sendingMsg("New url: " + urlStr + " , title: " + title);
 				}
 			} catch (Exception e) {
 			}
@@ -308,7 +309,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 					tmpDTO.setRecrodDate(LocalDateTime.now());
 					tmpDTO.setUrl(url);
 					newInfoUrlList.add(tmpDTO);
-					sendTelegramMsg("New url: " + url + " , title: " + title);
+					sendingMsg("New url: " + url + " , title: " + title);
 				}
 			}
 		} catch (Exception e) {

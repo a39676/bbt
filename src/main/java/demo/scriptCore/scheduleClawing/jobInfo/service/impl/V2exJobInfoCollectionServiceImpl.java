@@ -43,7 +43,7 @@ public class V2exJobInfoCollectionServiceImpl extends JobInfoCollectionCommonSer
 
 	@Override
 	public TestEventBO clawing(TestEventBO tbo) {
-		sendTelegramMsg("Start v2ex collecting");
+		sendingMsg("Start v2ex collecting");
 		log.error("Start v2ex collecting");
 		CommonResult r = new CommonResult();
 
@@ -78,7 +78,7 @@ public class V2exJobInfoCollectionServiceImpl extends JobInfoCollectionCommonSer
 					}
 				}
 			} catch (Exception e) {
-				sendTelegramMsg("Hit error when collect data" + e.getLocalizedMessage());
+				sendingMsg("Hit error when collect data" + e.getLocalizedMessage());
 				reportService.caseReportAppendContent(caseReport,
 						"V2ex data collector error: " + e.getLocalizedMessage());
 				tbo.getReport().getCaseReportList().add(caseReport);
@@ -92,7 +92,7 @@ public class V2exJobInfoCollectionServiceImpl extends JobInfoCollectionCommonSer
 			r.setIsSuccess();
 
 		} catch (Exception e) {
-			sendTelegramMsg("Hit error when collect data" + e.getLocalizedMessage());
+			sendingMsg("Hit error when collect data" + e.getLocalizedMessage());
 			reportService.caseReportAppendContent(caseReport, "V2ex data collector error: " + e.getLocalizedMessage());
 			tbo.getReport().getCaseReportList().add(caseReport);
 		}
@@ -160,7 +160,7 @@ public class V2exJobInfoCollectionServiceImpl extends JobInfoCollectionCommonSer
 					tmpDTO.setRecrodDate(LocalDateTime.now());
 					tmpDTO.setUrl(tmpUrl);
 					newInfoUrlList.add(tmpDTO);
-					sendTelegramMsg("New url: " + mainUrlStr + tmpUrl + " , title: " + t.text());
+					sendingMsg("New url: " + mainUrlStr + tmpUrl + " , title: " + t.text());
 				}
 			}
 
@@ -212,7 +212,7 @@ public class V2exJobInfoCollectionServiceImpl extends JobInfoCollectionCommonSer
 					tmpDTO.setRecrodDate(LocalDateTime.now());
 					tmpDTO.setUrl(tmpUrl);
 					newInfoUrlList.add(tmpDTO);
-					sendTelegramMsg("New url: " + tmpUrl + " , title: " + ele.getText());
+					sendingMsg("New url: " + tmpUrl + " , title: " + ele.getText());
 				}
 			}
 

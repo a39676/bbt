@@ -85,7 +85,7 @@ public class CurrencyExchangeRateServiceImpl extends AutomationTestCommonService
 			JSONObject json = JSONObject.fromObject(response);
 			if (!"success".equals(json.getString("result"))
 					|| !CurrencyType.CNY.getName().equals(json.getString("base_code"))) {
-				sendTelegramMsg("Call exchangerate-api.com API error");
+				sendingMsg("Call exchangerate-api.com API error");
 				return r;
 			}
 
@@ -192,7 +192,7 @@ public class CurrencyExchangeRateServiceImpl extends AutomationTestCommonService
 			tbo.getReport().getCaseReportList().add(errorReport);
 		}
 		if (!tryQuitWebDriver(webDriver)) {
-			sendTelegramMsg("Web driver quit failed, " + tbo.getFlowName());
+			sendingMsg("Web driver quit failed, " + tbo.getFlowName());
 		}
 
 		tbo.getCaseResultList().add(r);

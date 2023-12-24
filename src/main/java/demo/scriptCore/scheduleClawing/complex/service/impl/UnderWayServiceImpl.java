@@ -113,7 +113,7 @@ public class UnderWayServiceImpl extends AutomationTestCommonService implements 
 		tbo.getCaseResultList().add(r);
 		tbo.getReport().getCaseReportList().add(caseReport);
 		if (!tryQuitWebDriver(d)) {
-			sendTelegramMsg("Web driver quit failed, " + caseType.getFlowName());
+			sendingMsg("Web driver quit failed, " + caseType.getFlowName());
 		}
 		sendAutomationTestResult(tbo);
 
@@ -464,7 +464,7 @@ public class UnderWayServiceImpl extends AutomationTestCommonService implements 
 		tbo.getCaseResultList().add(r);
 		tbo.getReport().getCaseReportList().add(caseReport);
 		if (!tryQuitWebDriver(d)) {
-			sendTelegramMsg("Web driver quit failed, " + caseType.getFlowName());
+			sendingMsg("Web driver quit failed, " + caseType.getFlowName());
 		}
 		sendAutomationTestResult(tbo);
 
