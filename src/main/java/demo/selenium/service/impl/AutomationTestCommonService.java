@@ -77,7 +77,7 @@ public abstract class AutomationTestCommonService extends CommonService {
 	protected WebDriverATToolService webATToolService;
 	@Autowired
 	protected AutomationTestResultProducer automationTestResultProducer;
-	
+
 	protected UploadImageToCloudinaryResult uploadImgToCloudinary(String imgFilePath) {
 		UploadImageToCloudinaryDTO uploadImgDTO = new UploadImageToCloudinaryDTO();
 		uploadImgDTO.setFilePath(imgFilePath);
@@ -101,6 +101,12 @@ public abstract class AutomationTestCommonService extends CommonService {
 
 	protected boolean tryQuitWebDriver(WebDriver d) {
 		if (d != null) {
+			Set<String> windowHadles = d.getWindowHandles();
+			for (String windowHandle : windowHadles) {
+				d.switchTo().window(windowHandle);
+				d.close();
+			}
+			
 			try {
 				d.quit();
 				return true;
@@ -136,7 +142,8 @@ public abstract class AutomationTestCommonService extends CommonService {
 		return dto;
 	}
 
-	protected TakeScreenshotSaveDTO buildScreenshotDTO(WebDriver d, String testEventName, int startX, int endX, int startY, int endY) {
+	protected TakeScreenshotSaveDTO buildScreenshotDTO(WebDriver d, String testEventName, int startX, int endX,
+			int startY, int endY) {
 		String screenshotPath = getScreenshotSaveingPath(testEventName);
 		TakeScreenshotSaveDTO dto = new TakeScreenshotSaveDTO();
 		dto.setDriver(d);
@@ -152,17 +159,18 @@ public abstract class AutomationTestCommonService extends CommonService {
 		TakeScreenshotSaveDTO dto = buildScreenshotDTO(d, testFlowName);
 		return screenshotService.takeScreenshotAndSaveAtLocal(dto);
 	}
-	
+
 	protected ScreenshotSaveResult screenshot(WebDriver d, String testEventName, WebElement ele) {
 		TakeScreenshotSaveDTO dto = buildScreenshotDTO(d, testEventName, ele);
 		return screenshotService.takeScreenshotAndSaveAtLocal(dto);
 	}
-	
-	protected ScreenshotSaveResult screenshot(WebDriver d, String testEventName, int startX, int endX, int startY, int endY) {
+
+	protected ScreenshotSaveResult screenshot(WebDriver d, String testEventName, int startX, int endX, int startY,
+			int endY) {
 		TakeScreenshotSaveDTO dto = buildScreenshotDTO(d, testEventName, startX, endX, startY, endY);
 		return screenshotService.takeScreenshotAndSaveAtLocal(dto);
 	}
-	
+
 	protected String takeScreenshotToBase64(WebDriver d, String testFlowName) {
 		TakeScreenshotSaveDTO dto = buildScreenshotDTO(d, testFlowName);
 		return screenshotService.takeScreenshotToBase64(dto);
@@ -171,12 +179,10 @@ public abstract class AutomationTestCommonService extends CommonService {
 	protected void addScreenshotToReport(WebDriver d, JsonReportOfCaseDTO flowReportDTO) {
 		// TODO 图片传输需重构, 非本地保存, 直接将图片依 base64 形式传送到 cx
 		String screenSaveResult = takeScreenshotToBase64(d, flowReportDTO.getCaseTypeName());
-		String targetFileName = 
-				String.format(
-						ScreenshotConstant.screenShotFilenameFormat, 
-						flowReportDTO.getCaseTypeName(), 
-						localDateTimeHandler.dateToStr(LocalDateTime.now(), DateTimeUtilCommon.dateTimeFormatNoSymbol), 
-						FileSuffixNameConstant.PNG);
+		String targetFileName = String.format(ScreenshotConstant.screenShotFilenameFormat,
+				flowReportDTO.getCaseTypeName(),
+				localDateTimeHandler.dateToStr(LocalDateTime.now(), DateTimeUtilCommon.dateTimeFormatNoSymbol),
+				FileSuffixNameConstant.PNG);
 		ImageSavingResult uploadImgResult = saveImgToCX(screenSaveResult, targetFileName);
 		reportService.caseReportAppendImage(flowReportDTO, uploadImgResult.getImgUrl());
 	}
@@ -189,7 +195,7 @@ public abstract class AutomationTestCommonService extends CommonService {
 	protected void threadSleepRandomTime() throws InterruptedException {
 		threadSleepRandomTime(1000L, 3000L);
 	}
-	
+
 	protected void threadSleepRandomTimeLong() throws InterruptedException {
 		threadSleepRandomTime(5000L, 8000L);
 	}
@@ -222,7 +228,7 @@ public abstract class AutomationTestCommonService extends CommonService {
 		d.switchTo().window(windowKeep);
 		return true;
 	}
-	
+
 	protected AutomationTestCaseResult initCaseResult(String casename) {
 		AutomationTestCaseResult r = new AutomationTestCaseResult();
 		r.setCaseName(casename);
@@ -352,7 +358,7 @@ public abstract class AutomationTestCommonService extends CommonService {
 				option = optionList.get(i);
 				value = option.getAttribute("value");
 				text = option.getText();
-				if((value != null && value.contains(keyword)) || (text != null && text.contains(keyword))) {
+				if ((value != null && value.contains(keyword)) || (text != null && text.contains(keyword))) {
 					selector.selectByIndex(i);
 					return;
 				}
