@@ -11,7 +11,7 @@ public class Config {
 	@Bean
 	public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
 		PropertySourcesPlaceholderConfigurer properties = new PropertySourcesPlaceholderConfigurer();
-		properties.setLocation(new FileSystemResource("./config.properties"));
+		properties.setLocation(new FileSystemResource("/home/u2/bbt/optionFile/config.properties"));
 		properties.setIgnoreResourceNotFound(false);
 		return properties;
 	}
