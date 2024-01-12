@@ -63,7 +63,7 @@ public class LinkedinServiceImpl extends AutomationTestCommonService implements 
 			e.printStackTrace();
 
 		} finally {
-			d.quit();
+			tryQuitWebDriver(d);
 		}
 
 	}

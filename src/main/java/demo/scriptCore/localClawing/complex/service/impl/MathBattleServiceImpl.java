@@ -85,7 +85,7 @@ public class MathBattleServiceImpl extends AutomationTestCommonService implement
 		}
 
 
-		d.quit();
+		tryQuitWebDriver(d);
 	}
 
 }
