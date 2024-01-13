@@ -2,6 +2,7 @@ package demo.scriptCore.localClawing.complex.service.impl;
 
 import java.io.File;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -60,20 +61,21 @@ public class StoryBerriesDownloadServiceImpl extends AutomationTestCommonService
 				}
 			}
 
-			loadingCheck(d,
-					"/html[1]/body[1]/div[1]/div[1]/div[2]/main[1]/div[1]/div[1]/article[1]/header[1]/div[1]/div[4]/figure[1]/img[1]");
+			WebElement bottomSpan = d
+					.findElement(By.xpath("/html[1]/body[1]/div[1]/footer[1]/div[1]/div[1]/div[1]/span[1]"));
 
-			for (int i = 0; i < 5; i++) {
+			while (!jsUtil.isVisibleInViewport(bottomSpan)) {
 				d.findElement(By.xpath("//body")).sendKeys(Keys.PAGE_DOWN);
 				d.findElement(By.xpath("//body")).sendKeys(Keys.PAGE_DOWN);
-				Thread.sleep(2000L);
+				d.findElement(By.xpath("//body")).sendKeys(Keys.PAGE_DOWN);
+				Thread.sleep(800L);
 			}
 
 			int pageIndex = 0;
 			try {
 				WebElement headerImg1 = d.findElement(By.xpath(
 						"/html[1]/body[1]/div[1]/div[1]/div[2]/main[1]/div[1]/div[1]/article[1]/header[1]/div[1]/div[4]/figure[1]/img[1]"));
-				webATToolService.saveImg(headerImg1, (pageIndex + ".jpg"), savingFolderPath);
+				webATToolService.saveImg(headerImg1, String.valueOf(pageIndex), savingFolderPath);
 				pageIndex++;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -82,25 +84,25 @@ public class StoryBerriesDownloadServiceImpl extends AutomationTestCommonService
 			try {
 				WebElement headerImg2 = d.findElement(By.xpath(
 						"/html[1]/body[1]/div[1]/div[1]/div[2]/main[1]/div[1]/div[1]/article[1]/div[1]/div[1]/div[3]/figure[1]/div[1]"));
-				webATToolService.saveImg(headerImg2, (pageIndex + ".jpg"), savingFolderPath);
+				webATToolService.saveImg(headerImg2, String.valueOf(pageIndex), savingFolderPath);
 				pageIndex++;
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
-			List<WebElement> imgList = d.findElements(By.xpath(
-					"/html[1]/body[1]/div[1]/div[1]/div[2]/main[1]/div[1]/div[1]/article[1]/div[1]/div[1]/p/img[1]"));
+			List<WebElement> imgList = new ArrayList<>();
+			try {
+				imgList.addAll(d.findElements(By.xpath(
+						"/html[1]/body[1]/div[1]/div[1]/div[2]/main[1]/div[1]/div[1]/article[1]/div[1]/div[1]/p/img")));
+			} catch (Exception e) {
+			}
 
-			String urlModel = findUrlModel(imgList);
-
-			WebElement tmpImg = imgList.get(0);
-			webATToolService.saveImg(tmpImg, (pageIndex + ".jpg"), savingFolderPath);
-			pageIndex++;
-
+			WebElement tmpImg = null;
 			for (int i = 0; i < imgList.size(); i++) {
-				String src = String.format(urlModel, i);
+				tmpImg = imgList.get(i);
 				try {
-					webATToolService.saveImg(src, (pageIndex + ".jpg"), savingFolderPath);
+					System.out.println(tmpImg.getAttribute("src"));
+					webATToolService.saveImg(tmpImg, String.valueOf(pageIndex), savingFolderPath);
 					pageIndex++;
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -112,25 +114,6 @@ public class StoryBerriesDownloadServiceImpl extends AutomationTestCommonService
 		}
 
 		tryQuitWebDriver(d);
-	}
-
-	private String findUrlModel(List<WebElement> imgList) {
-		WebElement tmpImg1 = imgList.get(1);
-		WebElement tmpImg2 = imgList.get(2);
-
-		String src1 = tmpImg1.getAttribute("src");
-		String src2 = tmpImg2.getAttribute("src");
-
-		int targetIndex = 0;
-		for (int i = src1.length(); i > 0 && targetIndex == 0; i--) {
-			if (!String.valueOf(src1.charAt(i - 1)).equals(String.valueOf(src2.charAt(i - 1)))) {
-				targetIndex = i;
-			}
-		}
-
-		src1 = src1.substring(0, targetIndex - 1) + "%d" + src1.substring(targetIndex, src1.length());
-
-		return src1;
 	}
 
 }
