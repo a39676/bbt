@@ -2,7 +2,9 @@ package demo.scriptCore.scheduleClawing.currencyExchangeRate.service.impl;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.TimeoutException;
@@ -12,11 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
+import autoTest.testEvent.common.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testEvent.common.pojo.result.AutomationTestCaseResult;
 import autoTest.testEvent.common.pojo.type.AutomationTestFlowResultType;
 import autoTest.testEvent.scheduleClawing.currencyExchangeRate.pojo.dto.CurrencyExchangeRateCollectDTO;
 import autoTest.testEvent.scheduleClawing.currencyExchangeRate.pojo.dto.CurrencyExchangeRatePairDTO;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
+import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.type.CurrencyType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.scriptCore.scheduleClawing.currencyExchangeRate.mq.sender.CurrencyExchangeRateDailyDataAckProducer;
@@ -31,6 +35,9 @@ import toolPack.httpHandel.HttpUtil;
 public class CurrencyExchangeRateServiceImpl extends AutomationTestCommonService
 		implements CurrencyExchangeRateService {
 
+	@Autowired
+	private CurrencyExchangeRateOptionService optionService;
+	
 	@Autowired
 	private CurrencyExchangeRateDailyDataAckProducer currencyExchangeRateDailyDataAckProducer;
 
@@ -325,4 +332,56 @@ public class CurrencyExchangeRateServiceImpl extends AutomationTestCommonService
 		return dto;
 	}
 
+	@Override
+	public AutomationTestInsertEventDTO sendDailyDataQuery() {
+		return sendDataQuery(true);
+	}
+
+	@Override
+	public AutomationTestInsertEventDTO sendDataQuery(Boolean isDailyQuery) {
+		AutomationTestInsertEventDTO eventDTO = new AutomationTestInsertEventDTO();
+		eventDTO.setTestEventId(0L);
+		eventDTO.setTestModuleType(TestModuleType.SCHEDULE_CLAWING.getId());
+		eventDTO.setFlowType(ScheduleClawingType.CURRENCY_EXCHANGE_RAGE.getId());
+		eventDTO.setTestEventId(snowFlake.getNextId());
+
+		CurrencyExchangeRateCollectDTO paramDTO = new CurrencyExchangeRateCollectDTO();
+		paramDTO.setIsDailyQuery(isDailyQuery);
+
+		paramDTO.setExchangerateApiApiKey(optionService.getExchangerateApiApiKey());
+		List<CurrencyExchangeRatePairDTO> currencyPairList = optionService.getPairList();
+
+		CurrencyExchangeRatePairDTO dataPair = null;
+
+		for (CurrencyExchangeRatePairDTO cp : currencyPairList) {
+			dataPair = new CurrencyExchangeRatePairDTO();
+			dataPair.setCurrencyFromCode(cp.getCurrencyFromCode());
+			dataPair.setCurrencyToCode(cp.getCurrencyToCode());
+			paramDTO.addDataPair(dataPair);
+		}
+
+		eventDTO = automationTestInsertEventDtoAddParamStr(eventDTO, paramDTO);
+		return eventDTO;
+	}
+	
+	/** 2023-01-19 Copy from CX, for deploy on raspberry */
+	private AutomationTestInsertEventDTO automationTestInsertEventDtoAddParamStr(AutomationTestInsertEventDTO dto,
+			Object obj) {
+		JSONObject json = null;
+		if (StringUtils.isBlank(dto.getParamStr())) {
+			json = new JSONObject();
+		} else {
+			try {
+				json = JSONObject.fromObject(dto.getParamStr());
+			} catch (Exception e) {
+				json = new JSONObject();
+			}
+		}
+
+		json.put(obj.getClass().getSimpleName(), obj);
+
+		dto.setParamStr(json.toString());
+
+		return dto;
+	}
 }

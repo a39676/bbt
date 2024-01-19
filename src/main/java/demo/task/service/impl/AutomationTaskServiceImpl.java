@@ -1,5 +1,7 @@
 package demo.task.service.impl;
 
+import java.time.LocalTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -8,6 +10,7 @@ import autoTest.testEvent.common.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import demo.baseCommon.service.CommonService;
+import demo.scriptCore.scheduleClawing.currencyExchangeRate.service.CurrencyExchangeRateService;
 import demo.task.service.impl.mq.producer.TestEventInsertAckProducer;
 
 @Service
@@ -41,4 +44,22 @@ public class AutomationTaskServiceImpl extends CommonService {
 		dto.setTestEventId(snowFlake.getNextId());
 		testEventInsertAckProducer.send(dto);
 	}
+
+	@Autowired
+	private CurrencyExchangeRateService currencyExchangeRateService;
+
+	@Scheduled(cron = "40 05 22 * * *")
+	@Scheduled(cron = "40 05 10 * * *")
+	public void sendDataQuery() {
+		LocalTime now = LocalTime.now();
+		int hour = now.getHour();
+		AutomationTestInsertEventDTO dto = null;
+		if (hour >= 0 && hour <= 3) {
+			dto = currencyExchangeRateService.sendDailyDataQuery();
+		} else {
+			dto = currencyExchangeRateService.sendDataQuery(false);
+		}
+		testEventInsertAckProducer.send(dto);
+	}
+
 }

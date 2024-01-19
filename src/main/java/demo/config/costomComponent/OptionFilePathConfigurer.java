@@ -6,4 +6,6 @@ public class OptionFilePathConfigurer {
 
 	public static final String SYSTEM = ROOT + "/system/option.json";
 	public static final String AUTOMATION_TEST = ROOT + "/automationTest/option.json";
+	
+	public static final String CURRENCY_EXCHANGE_RATE = ROOT + "/currencyExchangeRate/option.json";
 }
