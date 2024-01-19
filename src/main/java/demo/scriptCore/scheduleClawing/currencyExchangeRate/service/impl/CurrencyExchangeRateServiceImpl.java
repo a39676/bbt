@@ -135,7 +135,7 @@ public class CurrencyExchangeRateServiceImpl extends AutomationTestCommonService
 			}
 
 			currencyExchangeRateDailyDataAckProducer.sendCurrencyExchangeRateData(collectResult);
-			log.error("collect resuolt: " + collectResult);
+			log.error("collect result: " + collectResult);
 			r.setResultType(AutomationTestFlowResultType.PASS);
 
 		} catch (Exception e) {
