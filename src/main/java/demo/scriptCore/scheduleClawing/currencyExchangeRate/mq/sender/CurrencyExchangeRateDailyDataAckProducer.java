@@ -28,6 +28,7 @@ public class CurrencyExchangeRateDailyDataAckProducer extends CommonService {
 		JSONObject json = JSONObject.fromObject(exchangeRateDataDTO);
 
 		log.error("Going to send exchange rate data: " + exchangeRateDataDTO);
+		log.error("Env: " + systemOptionService.getEnvName());
 		if (systemOptionService.isRaspberry()) {
 			HttpUtil h = new HttpUtil();
 
