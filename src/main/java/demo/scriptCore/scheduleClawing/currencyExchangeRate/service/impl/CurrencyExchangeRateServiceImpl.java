@@ -23,6 +23,7 @@ import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.type.CurrencyType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
+import demo.config.costomComponent.BbtDynamicKey;
 import demo.scriptCore.scheduleClawing.currencyExchangeRate.mq.sender.CurrencyExchangeRateDailyDataAckProducer;
 import demo.scriptCore.scheduleClawing.currencyExchangeRate.service.CurrencyExchangeRateService;
 import demo.selenium.service.impl.AutomationTestCommonService;
@@ -37,9 +38,10 @@ public class CurrencyExchangeRateServiceImpl extends AutomationTestCommonService
 
 	@Autowired
 	private CurrencyExchangeRateOptionService optionService;
-	
 	@Autowired
 	private CurrencyExchangeRateDailyDataAckProducer currencyExchangeRateDailyDataAckProducer;
+	@Autowired
+	private BbtDynamicKey bbtDynamicKey;
 
 	@Override
 	public TestEventBO getDailyData(TestEventBO tbo) {
@@ -108,6 +110,7 @@ public class CurrencyExchangeRateServiceImpl extends AutomationTestCommonService
 			Double amountOfOtherCurrencyToCny = null;
 			BigDecimal correctAmountOfToCurrency = null;
 			CurrencyExchageRateCollectResult collectResult = new CurrencyExchageRateCollectResult();
+			collectResult.setKey(bbtDynamicKey.createKey());
 			collectResult.setIsDailyQuery(paramDTO.getIsDailyQuery());
 			for (CurrencyExchangeRatePairDTO currencyPairDTO : paramDTO.getPairList()) {
 				dataDTO = new CurrencyExchageRateDataDTO();
