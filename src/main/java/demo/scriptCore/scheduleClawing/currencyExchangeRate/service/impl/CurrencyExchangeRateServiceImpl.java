@@ -81,23 +81,23 @@ public class CurrencyExchangeRateServiceImpl extends AutomationTestCommonService
 		HttpUtil http = new HttpUtil();
 		String response = null;
 		try {
-			response = http.sendGet(url);
-			/*
-			 * response example: { "result": "success", "documentation":
-			 * "https://www.exchangerate-api.com/docs", "terms_of_use":
-			 * "https://www.exchangerate-api.com/terms", "time_last_update_unix":
-			 * 1677801602, "time_last_update_utc": "Fri, 03 Mar 2023 00:00:02 +0000",
-			 * "time_next_update_unix": 1677888002, "time_next_update_utc":
-			 * "Sat, 04 Mar 2023 00:00:02 +0000", "base_code": "CNY", "conversion_rates": {
-			 * "CNY": 1, "AED": 0.5313, "ZWL": 130.1587 } }
-			 */
-			JSONObject json = JSONObject.fromObject(response);
-			if (!"success".equals(json.getString("result"))
-					|| !CurrencyType.CNY.getName().equals(json.getString("base_code"))) {
-				sendingMsg("Call exchangerate-api.com API error");
-				return r;
-			}
-
+//			response = http.sendGet(url);
+//			/*
+//			 * response example: { "result": "success", "documentation":
+//			 * "https://www.exchangerate-api.com/docs", "terms_of_use":
+//			 * "https://www.exchangerate-api.com/terms", "time_last_update_unix":
+//			 * 1677801602, "time_last_update_utc": "Fri, 03 Mar 2023 00:00:02 +0000",
+//			 * "time_next_update_unix": 1677888002, "time_next_update_utc":
+//			 * "Sat, 04 Mar 2023 00:00:02 +0000", "base_code": "CNY", "conversion_rates": {
+//			 * "CNY": 1, "AED": 0.5313, "ZWL": 130.1587 } }
+//			 */
+//			JSONObject json = JSONObject.fromObject(response);
+//			if (!"success".equals(json.getString("result"))
+//					|| !CurrencyType.CNY.getName().equals(json.getString("base_code"))) {
+//				sendingMsg("Call exchangerate-api.com API error");
+//				return r;
+//			}
+//
 //			Long dateMillSecond = json.getInt("time_last_update_unix") * 1000L;
 //			Date lastUpdateDate = new Date(dateMillSecond);
 //			LocalDateTime lastUpdateLocalDateTime = localDateTimeHandler.dateToLocalDateTime(lastUpdateDate);
