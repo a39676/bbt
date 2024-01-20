@@ -23,9 +23,6 @@ public class HeartBeatService extends CommonService {
 	private BbtDynamicKey bbtDynamicKey;
 
 	public void heartbeat() {
-		if (systemOptionService.isDev()) {
-			return;
-		}
 		HttpUtil h = new HttpUtil();
 		String url = systemOptionService.getCthulhuHostname() + BbtInteractionUrl.ROOT
 				+ BbtInteractionUrl.BBT_HEART_BEAT;
