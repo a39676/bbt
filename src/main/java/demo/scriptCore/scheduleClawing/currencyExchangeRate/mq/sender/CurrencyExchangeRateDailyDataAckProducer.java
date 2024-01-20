@@ -30,7 +30,7 @@ public class CurrencyExchangeRateDailyDataAckProducer extends CommonService {
 		log.error("sendCurrencyExchangeRateData, env: " + systemOptionService.getEnvName());
 		if (systemOptionService.isRaspberry()) {
 			HttpUtil h = new HttpUtil();
-
+			json.remove("fail");
 			try {
 				h.sendPostRestful(systemOptionService.getCthulhuHostname() + BbtInteractionUrl.ROOT
 						+ BbtInteractionUrl.RECEIVE_CURRENCY_EXCHANGE_RATE_DAILY_DATA, json.toString());
