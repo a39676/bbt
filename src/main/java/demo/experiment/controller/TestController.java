@@ -7,13 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import autoTest.testEvent.common.pojo.dto.AutomationTestInsertEventDTO;
 import demo.baseCommon.controller.CommonController;
 import demo.experiment.pojo.constant.TestUrl;
 import demo.experiment.service.TestService;
-import demo.scriptCore.scheduleClawing.currencyExchangeRate.service.CurrencyExchangeRateService;
 import demo.task.service.impl.AutomationTaskServiceImpl;
-import demo.task.service.impl.mq.producer.TestEventInsertAckProducer;
 
 @Controller
 @RequestMapping(value = { TestUrl.testRoot })
@@ -44,17 +41,5 @@ public class TestController extends CommonController {
 		testService.sendMsg(msg);
 		return "Done";
 	}
-	
-	@Autowired
-	private CurrencyExchangeRateService currencyExchangeRateService;
-	@Autowired
-	private TestEventInsertAckProducer testEventInsertAckProducer;
-	
-	@GetMapping(value = "/test4")
-	@ResponseBody
-	public String test4() {
-		AutomationTestInsertEventDTO dto = currencyExchangeRateService.sendDailyDataQuery();
-		testEventInsertAckProducer.send(dto);
-		return "Done";
-	}
+
 }
