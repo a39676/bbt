@@ -32,7 +32,7 @@ public class CurrencyExchangeRateDailyDataAckProducer extends CommonService {
 			HttpUtil h = new HttpUtil();
 
 			try {
-				h.sendPost(systemOptionService.getCthulhuHostname() + BbtInteractionUrl.ROOT
+				h.sendPostRestful(systemOptionService.getCthulhuHostname() + BbtInteractionUrl.ROOT
 						+ BbtInteractionUrl.RECEIVE_CURRENCY_EXCHANGE_RATE_DAILY_DATA, json.toString());
 			} catch (Exception e) {
 				e.printStackTrace();

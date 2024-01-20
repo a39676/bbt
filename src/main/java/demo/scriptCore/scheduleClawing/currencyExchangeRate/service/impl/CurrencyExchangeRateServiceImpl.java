@@ -81,60 +81,59 @@ public class CurrencyExchangeRateServiceImpl extends AutomationTestCommonService
 		HttpUtil http = new HttpUtil();
 		String response = null;
 		try {
-//			response = http.sendGet(url);
-//			/*
-//			 * response example: { "result": "success", "documentation":
-//			 * "https://www.exchangerate-api.com/docs", "terms_of_use":
-//			 * "https://www.exchangerate-api.com/terms", "time_last_update_unix":
-//			 * 1677801602, "time_last_update_utc": "Fri, 03 Mar 2023 00:00:02 +0000",
-//			 * "time_next_update_unix": 1677888002, "time_next_update_utc":
-//			 * "Sat, 04 Mar 2023 00:00:02 +0000", "base_code": "CNY", "conversion_rates": {
-//			 * "CNY": 1, "AED": 0.5313, "ZWL": 130.1587 } }
-//			 */
-//			JSONObject json = JSONObject.fromObject(response);
-//			if (!"success".equals(json.getString("result"))
-//					|| !CurrencyType.CNY.getName().equals(json.getString("base_code"))) {
-//				sendingMsg("Call exchangerate-api.com API error");
-//				return r;
-//			}
-//
+			response = http.sendGet(url);
+			/*
+			 * response example: { "result": "success", "documentation":
+			 * "https://www.exchangerate-api.com/docs", "terms_of_use":
+			 * "https://www.exchangerate-api.com/terms", "time_last_update_unix":
+			 * 1677801602, "time_last_update_utc": "Fri, 03 Mar 2023 00:00:02 +0000",
+			 * "time_next_update_unix": 1677888002, "time_next_update_utc":
+			 * "Sat, 04 Mar 2023 00:00:02 +0000", "base_code": "CNY", "conversion_rates": {
+			 * "CNY": 1, "AED": 0.5313, "ZWL": 130.1587 } }
+			 */
+			JSONObject json = JSONObject.fromObject(response);
+			if (!"success".equals(json.getString("result"))
+					|| !CurrencyType.CNY.getName().equals(json.getString("base_code"))) {
+				sendingMsg("Call exchangerate-api.com API error");
+				return r;
+			}
+
 //			Long dateMillSecond = json.getInt("time_last_update_unix") * 1000L;
 //			Date lastUpdateDate = new Date(dateMillSecond);
 //			LocalDateTime lastUpdateLocalDateTime = localDateTimeHandler.dateToLocalDateTime(lastUpdateDate);
 //			LocalDateTime startTime = lastUpdateLocalDateTime.with(LocalTime.MIN);
 
-//			JSONObject rateJson = json.getJSONObject("conversion_rates");
-//
-//			CurrencyExchageRateDataDTO dataDTO = null;
-//			CurrencyType fromCurrency = null;
-//			Double amountOfOtherCurrencyToCny = null;
-//			BigDecimal correctAmountOfToCurrency = null;
-//			CurrencyExchageRateCollectResult collectResult = new CurrencyExchageRateCollectResult();
-//			collectResult.setKey(bbtDynamicKey.createKey());
-//			collectResult.setIsDailyQuery(paramDTO.getIsDailyQuery());
-//			for (CurrencyExchangeRatePairDTO currencyPairDTO : paramDTO.getPairList()) {
-//				dataDTO = new CurrencyExchageRateDataDTO();
-//				fromCurrency = CurrencyType.getType(currencyPairDTO.getCurrencyFromCode());
-//				dataDTO.setCurrencyCodeFrom(currencyPairDTO.getCurrencyFromCode());
-//				dataDTO.setCurrencyCodeTo(currencyPairDTO.getCurrencyToCode());
-//				dataDTO.setCurrencyAmountFrom(BigDecimal.ONE);
-//				amountOfOtherCurrencyToCny = rateJson.getDouble(fromCurrency.getName());
-//				correctAmountOfToCurrency = BigDecimal.ONE.divide(new BigDecimal(amountOfOtherCurrencyToCny), 4,
-//						RoundingMode.HALF_UP);
-//				dataDTO.setCurrencyAmountTo(correctAmountOfToCurrency);
-//
-//				/* Database NOT null field */
-//				dataDTO.setYesterdayBuyHigh(correctAmountOfToCurrency);
-//				dataDTO.setYesterdaySellHigh(correctAmountOfToCurrency);
-//				dataDTO.setYesterdayBuyLow(correctAmountOfToCurrency);
-//				dataDTO.setYesterdaySellLow(correctAmountOfToCurrency);
-//				dataDTO.setYesterdayBuyAvg(correctAmountOfToCurrency);
-//				dataDTO.setYesterdaySellAvg(correctAmountOfToCurrency);
-//
-//				collectResult.addData(dataDTO);
-//			}
-			
+			JSONObject rateJson = json.getJSONObject("conversion_rates");
+
+			CurrencyExchageRateDataDTO dataDTO = null;
+			CurrencyType fromCurrency = null;
+			Double amountOfOtherCurrencyToCny = null;
+			BigDecimal correctAmountOfToCurrency = null;
 			CurrencyExchageRateCollectResult collectResult = new CurrencyExchageRateCollectResult();
+			collectResult.setKey(bbtDynamicKey.createKey());
+			collectResult.setIsDailyQuery(paramDTO.getIsDailyQuery());
+			for (CurrencyExchangeRatePairDTO currencyPairDTO : paramDTO.getPairList()) {
+				dataDTO = new CurrencyExchageRateDataDTO();
+				fromCurrency = CurrencyType.getType(currencyPairDTO.getCurrencyFromCode());
+				dataDTO.setCurrencyCodeFrom(currencyPairDTO.getCurrencyFromCode());
+				dataDTO.setCurrencyCodeTo(currencyPairDTO.getCurrencyToCode());
+				dataDTO.setCurrencyAmountFrom(BigDecimal.ONE);
+				amountOfOtherCurrencyToCny = rateJson.getDouble(fromCurrency.getName());
+				correctAmountOfToCurrency = BigDecimal.ONE.divide(new BigDecimal(amountOfOtherCurrencyToCny), 4,
+						RoundingMode.HALF_UP);
+				dataDTO.setCurrencyAmountTo(correctAmountOfToCurrency);
+
+				/* Database NOT null field */
+				dataDTO.setYesterdayBuyHigh(correctAmountOfToCurrency);
+				dataDTO.setYesterdaySellHigh(correctAmountOfToCurrency);
+				dataDTO.setYesterdayBuyLow(correctAmountOfToCurrency);
+				dataDTO.setYesterdaySellLow(correctAmountOfToCurrency);
+				dataDTO.setYesterdayBuyAvg(correctAmountOfToCurrency);
+				dataDTO.setYesterdaySellAvg(correctAmountOfToCurrency);
+
+				collectResult.addData(dataDTO);
+			}
+			
 			collectResult.setKey(bbtDynamicKey.createKey());
 			caseReport.setCaseTypeName(casename);
 
@@ -197,6 +196,7 @@ public class CurrencyExchangeRateServiceImpl extends AutomationTestCommonService
 				}
 			}
 
+			collectResult.setKey(bbtDynamicKey.createKey());
 			currencyExchangeRateDailyDataAckProducer.sendCurrencyExchangeRateData(collectResult);
 			r.setResultType(AutomationTestFlowResultType.PASS);
 
