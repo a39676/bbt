@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import demo.baseCommon.controller.CommonController;
 import demo.experiment.pojo.constant.TestUrl;
 import demo.experiment.service.TestService;
+import demo.scriptCore.scheduleClawing.currencyExchangeRate.service.CurrencyExchangeRateService;
 import demo.task.service.impl.AutomationTaskServiceImpl;
 
 @Controller
@@ -42,4 +43,13 @@ public class TestController extends CommonController {
 		return "Done";
 	}
 
+	@Autowired
+	private CurrencyExchangeRateService currencyExchangeRateService;
+	
+	@GetMapping(value = "/test4")
+	@ResponseBody
+	public String test4() {
+		currencyExchangeRateService.sendDailyDataQuery();
+		return "Done";
+	}
 }
