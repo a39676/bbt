@@ -32,6 +32,9 @@ public class CnStockMarketDataServiceImpl extends AutomationTestCommonService im
 	private BbtDynamicKey bbtDynamicKey;
 
 	private static final int END_OF_HOUR = 15;
+	
+//	tencent day kline
+//	https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh000001,day,2023-1-1,2024-1-1,500,q
 
 	@Override
 	public void collectDatasAndSend() {
