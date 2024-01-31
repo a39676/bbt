@@ -66,9 +66,9 @@ public class AutomationTaskServiceImpl extends CommonService {
 	@Autowired
 	private CnStockMarketDataService cnStockMarketDataService;
 
-	@Scheduled(cron = "* */5 9-15 * 1-5 *")
+	@Scheduled(cron = "* */10 9-15 * 1-5 *")
 	public void collectDatasOf5MinAndSend() {
-		cnStockMarketDataService.collectDatasOf5MinAndSend();
+		cnStockMarketDataService.collectDatasAndSend();
 	}
 	
 }

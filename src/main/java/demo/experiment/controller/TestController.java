@@ -60,7 +60,7 @@ public class TestController extends CommonController {
 	@GetMapping(value = "/t5")
 	@ResponseBody
 	public String test5() {
-		cnStockMarketDataService.collectDatasOf5MinAndSend();
+		cnStockMarketDataService.collectDatasAndSend();
 		return "Done";
 	}
 }

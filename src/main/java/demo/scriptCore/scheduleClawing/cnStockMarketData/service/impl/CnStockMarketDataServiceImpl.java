@@ -2,6 +2,7 @@ package demo.scriptCore.scheduleClawing.cnStockMarketData.service.impl;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +31,20 @@ public class CnStockMarketDataServiceImpl extends AutomationTestCommonService im
 	@Autowired
 	private BbtDynamicKey bbtDynamicKey;
 
+	private static final int END_OF_HOUR = 15;
+
 	@Override
-	public void collectDatasOf5MinAndSend() {
+	public void collectDatasAndSend() {
+		LocalTime now = LocalTime.now();
+		if (now.getHour() > END_OF_HOUR || (now.getHour() == END_OF_HOUR && now.getMinute() > 0)) {
+			return;
+		}
+
+		collectDatasOf5MinAndSend();
+		collectDatasOf1MinAndSend();
+	}
+
+	private void collectDatasOf5MinAndSend() {
 		cnStockMarkctOptionComponent = getOption();
 		CnStockMarketDataDTO result = null;
 
@@ -45,12 +58,33 @@ public class CnStockMarketDataServiceImpl extends AutomationTestCommonService im
 			List<CnStockMarketDataBO> dataList = sinaApiOf5Min(stockCode);
 			result.setData(dataList);
 			result.setKey(bbtDynamicKey.createKey());
-			
+
+			sendDataToCthulhu(result);
+		}
+	}
+
+	private void collectDatasOf1MinAndSend() {
+		cnStockMarkctOptionComponent = getOption();
+		CnStockMarketDataDTO result = null;
+
+		for (int watchCodeIndex = 0; watchCodeIndex < cnStockMarkctOptionComponent.getWatchingCode()
+				.size(); watchCodeIndex++) {
+			result = new CnStockMarketDataDTO();
+			result.setTimeUtilOfDataFormat(TimeUnitType.MINUTE);
+			result.setTimeCountingOfDataFormat(1);
+			String stockCode = cnStockMarkctOptionComponent.getWatchingCode().get(watchCodeIndex);
+			result.setStockCode(stockCode);
+			List<CnStockMarketDataBO> dataList = tencentApiOfMin(stockCode);
+			result.setData(dataList);
+			result.setKey(bbtDynamicKey.createKey());
+
 			sendDataToCthulhu(result);
 		}
 	}
 
 	private List<CnStockMarketDataBO> sinaApiOf5Min(String stockCode) {
+		List<CnStockMarketDataBO> result = new ArrayList<>();
+
 //		http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol=sh000001&scale=5&ma=5&datalen=10
 		String urlModel = "http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol=%s&scale=5&ma=5&datalen=%d";
 		String url = null;
@@ -58,7 +92,7 @@ public class CnStockMarketDataServiceImpl extends AutomationTestCommonService im
 		String response = null;
 		SinaStockMarketDataDTO dto = null;
 		CnStockMarketDataBO dataBO = null;
-		List<CnStockMarketDataBO> result = new ArrayList<>();
+
 		url = String.format(urlModel, stockCode, dataLen);
 		try {
 			response = http.sendGet(url);
@@ -67,6 +101,48 @@ public class CnStockMarketDataServiceImpl extends AutomationTestCommonService im
 				dto = jsonToDto(jsonArray.getJSONObject(dataIndex));
 				dataBO = sinaDataToCommonDataBO(dto);
 				dataBO.setStockCode(stockCode);
+				result.add(dataBO);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+	private List<CnStockMarketDataBO> tencentApiOfMin(String stockCode) {
+		List<CnStockMarketDataBO> result = new ArrayList<>();
+
+//		https://web.ifzq.gtimg.cn/appstock/app/minute/query?code=sh000001
+		String urlModel = "https://web.ifzq.gtimg.cn/appstock/app/minute/query?code=%s";
+		String url = null;
+		String response = null;
+		CnStockMarketDataBO dataBO = null;
+
+		url = String.format(urlModel, stockCode);
+		try {
+			response = http.sendGet(url);
+			JSONObject json = JSONObject.fromObject(response);
+			JSONArray dataArray = json.getJSONObject("data").getJSONObject(stockCode).getJSONObject("data")
+					.getJSONArray("data");
+
+			for (int dataIndex = 0; dataIndex < dataArray.size(); dataIndex++) {
+				String dataStr = dataArray.getString(dataIndex);
+				BigDecimal price = new BigDecimal(dataStr.split(" ")[1]);
+				String timeStrInData = dataStr.split(" ")[0];
+				LocalDateTime now = LocalDateTime.now();
+				dataBO = new CnStockMarketDataBO();
+				dataBO.setEndPrice(price);
+				dataBO.setStartPrice(price);
+				dataBO.setHighPrice(price);
+				dataBO.setLowPrice(price);
+				dataBO.setStockCode(stockCode);
+				dataBO.setCreateTime(now);
+				dataBO.setStartTime(now.withHour(Integer.parseInt(String.valueOf(timeStrInData.subSequence(0, 2))))
+						.withMinute(Integer.parseInt(String.valueOf(timeStrInData.subSequence(2, 4)))).withSecond(0)
+						.withNano(0));
+				dataBO.setEndTime(dataBO.getStartTime());
 				result.add(dataBO);
 			}
 
