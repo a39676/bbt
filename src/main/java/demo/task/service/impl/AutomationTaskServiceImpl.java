@@ -10,6 +10,7 @@ import autoTest.testEvent.common.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import demo.baseCommon.service.CommonService;
+import demo.scriptCore.scheduleClawing.cnStockMarketData.service.CnStockMarketDataService;
 import demo.scriptCore.scheduleClawing.currencyExchangeRate.service.CurrencyExchangeRateService;
 import demo.task.service.impl.mq.producer.TestEventInsertAckProducer;
 
@@ -61,5 +62,13 @@ public class AutomationTaskServiceImpl extends CommonService {
 		}
 		testEventInsertAckProducer.send(dto);
 	}
+	
+	@Autowired
+	private CnStockMarketDataService cnStockMarketDataService;
 
+	@Scheduled(cron = "* */5 9-15 * 1-5 *")
+	public void collectDatasOf5MinAndSend() {
+		cnStockMarketDataService.collectDatasOf5MinAndSend();
+	}
+	
 }
