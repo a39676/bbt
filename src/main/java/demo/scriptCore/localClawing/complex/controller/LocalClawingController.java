@@ -1,4 +1,4 @@
-package demo.scriptCore.localClawing.common.controller;
+package demo.scriptCore.localClawing.complex.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
