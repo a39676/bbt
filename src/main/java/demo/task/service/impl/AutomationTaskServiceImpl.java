@@ -10,6 +10,7 @@ import autoTest.testEvent.common.pojo.dto.AutomationTestInsertEventDTO;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import demo.baseCommon.service.CommonService;
+import demo.scriptCore.cryptoCoin.service.OtherInformationCollectorService;
 import demo.scriptCore.scheduleClawing.currencyExchangeRate.service.CurrencyExchangeRateService;
 import demo.task.service.impl.mq.producer.TestEventInsertAckProducer;
 
@@ -18,6 +19,9 @@ public class AutomationTaskServiceImpl extends CommonService {
 
 	@Autowired
 	private TestEventInsertAckProducer testEventInsertAckProducer;
+
+	@Autowired
+	private OtherInformationCollectorService otherInformationCollectorService;
 
 	@Scheduled(cron = "20 19 09 * * *")
 	@Scheduled(cron = "20 19 12 * * *")
@@ -62,4 +66,8 @@ public class AutomationTaskServiceImpl extends CommonService {
 		testEventInsertAckProducer.send(dto);
 	}
 
+	@Scheduled(cron = "00 05 08 * * *")
+	public void getFearAndGreedIndexAndSend() {
+		otherInformationCollectorService.getFearAndGreedIndexAndSend();
+	}
 }
