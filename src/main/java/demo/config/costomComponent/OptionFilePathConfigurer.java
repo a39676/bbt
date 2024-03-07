@@ -9,4 +9,6 @@ public class OptionFilePathConfigurer {
 	
 	public static final String CURRENCY_EXCHANGE_RATE = ROOT + "/currencyExchangeRate/option.json";
 	public static final String CN_STOCK_MARKET = ROOT + "/cnStockMarket/option.json";
+	
+	public static final String CRYPTO_COIN = ROOT + "/cryptoCoin/option.json";
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.baseCommon.controller.CommonController;
+import demo.cryptoCoin.binance.BinanceWSClient2;
 import demo.experiment.pojo.constant.TestUrl;
 import demo.experiment.service.TestService;
 import demo.scriptCore.scheduleClawing.cnStockMarketData.service.CnStockMarketDataService;
@@ -61,6 +62,30 @@ public class TestController extends CommonController {
 	@ResponseBody
 	public String test5() {
 		cnStockMarketDataService.collectDatasAndSend();
+		return "Done";
+	}
+
+	@Autowired
+	private BinanceWSClient2 binanceWSClient;
+
+	@GetMapping(value = "/t6")
+	@ResponseBody
+	public String test6(@RequestParam(value = "symbol") String symbol) {
+		binanceWSClient.addNewDepthSubcript(symbol);
+		return "Done";
+	}
+
+	@GetMapping(value = "/t7")
+	@ResponseBody
+	public String test7(@RequestParam(value = "symbol") String symbol) {
+		binanceWSClient.closeDepthConnection(symbol);
+		return "Done";
+	}
+
+	@GetMapping(value = "/killAll")
+	@ResponseBody
+	public String killAll() {
+		binanceWSClient.killStream();
 		return "Done";
 	}
 }
