@@ -37,7 +37,7 @@ public class OtherInformationCollectorServiceImpl extends AutomationTestCommonSe
 		Element tmpEle = null;
 		for (int i = 0; i < newsListDiv.size(); i++) {
 			tmpEle = newsListDiv.get(i);
-			text += tmpEle.text() + "/n/r";
+			text += tmpEle.text() + "\n";
 		}
 		if (StringUtils.isBlank(text)) {
 			text = "Can NOT get fear and greed index";
