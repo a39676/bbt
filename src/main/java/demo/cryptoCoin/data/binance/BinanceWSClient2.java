@@ -1,9 +1,10 @@
-package demo.cryptoCoin.binance;
+package demo.cryptoCoin.data.binance;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -22,12 +23,13 @@ import com.binance.connector.client.impl.WebSocketStreamClientImpl;
 import com.binance.connector.client.utils.websocketcallback.WebSocketMessageCallback;
 
 import demo.baseCommon.service.CommonService;
-import demo.cryptoCoin.common.service.CryptoCoinCacheDataService;
 import demo.cryptoCoin.common.service.CryptoCoinConstantService;
 import demo.cryptoCoin.common.service.CryptoCoinOptionService;
+import demo.cryptoCoin.data.service.impl.CryptoCoinCacheDataService;
 import finance.common.pojo.type.IntervalType;
 import finance.cryptoCoin.binance.pojo.dto.DepthCompleteDTO;
 import finance.cryptoCoin.binance.pojo.dto.DepthLevelDTO;
+import finance.cryptoCoin.binance.pojo.dto.KLineKeyBO;
 import finance.cryptoCoin.pojo.bo.BinanceWebScoketConnetionKeyBO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinWebSocketConstant;
@@ -91,15 +93,20 @@ public class BinanceWSClient2 extends CommonService {
 		}
 	}
 
-	public void addNewKLineSubcript(String symbol, String interval) {
+	public void addNewKLineSubcript(String symbol, String intervalStr) {
+		IntervalType intervalType = IntervalType.getType(intervalStr);
+		if (intervalType == null) {
+			return;
+		}
+
 		getWebSorkcetStreamClient();
-		closeKLineConnection(symbol, interval);
+		closeKLineConnection(symbol, intervalStr);
 
 		BinanceWebScoketConnetionKeyBO keyBO = new BinanceWebScoketConnetionKeyBO();
-		keyBO.setInterval(interval);
+		keyBO.setInterval(intervalStr);
 		keyBO.setSymbol(symbol);
-		Integer connectionId = wsStreamClient.klineStream(symbol, interval, buildKLineDataCallback());
-		log.error("Binance web socket add kline connection, symbol: " + symbol + ", interval: " + interval + ", ID: "
+		Integer connectionId = wsStreamClient.klineStream(symbol, intervalStr, buildKLineDataCallback(intervalType));
+		log.error("Binance web socket add kline connection, symbol: " + symbol + ", interval: " + intervalStr + ", ID: "
 				+ connectionId);
 		kLineConnectionIdMap.put(keyBO, connectionId);
 	}
@@ -152,7 +159,7 @@ public class BinanceWSClient2 extends CommonService {
 		bookTickerConnectionIdMap.put(keyBO, connectionId);
 	}
 
-	private WebSocketMessageCallback buildKLineDataCallback() {
+	private WebSocketMessageCallback buildKLineDataCallback(IntervalType interval) {
 		WebSocketMessageCallback kLineDataCallback = new WebSocketMessageCallback() {
 
 			@Override
@@ -161,8 +168,28 @@ public class BinanceWSClient2 extends CommonService {
 
 				CryptoCoinPriceCommonDataBO dataBO = buildCommonDataFromMsg(message);
 				if (dataBO != null) {
-//					TODO
-//					cacheService.reciveData(dataBO);
+					dataBO.setInterval(interval);
+					dataBO.setStartTime(dataBO.getStartTime().withSecond(0).withNano(0));
+					KLineKeyBO key = new KLineKeyBO();
+					key.setSymbol(dataBO.getCoinType());
+					key.setInterval(interval.getName());
+					List<CryptoCoinPriceCommonDataBO> cacheDataList = null;
+					if (cacheDataService.getBinanceKLineCacheMap().containsKey(key)) {
+						cacheDataList = cacheDataService.getBinanceKLineCacheMap().get(key);
+					} else {
+						cacheDataList = Collections.synchronizedList(new ArrayList<>());
+						cacheDataService.getBinanceKLineCacheMap().put(key, cacheDataList);
+					}
+					if (cacheDataList.isEmpty()) {
+						cacheDataList.add(dataBO);
+					} else {
+						CryptoCoinPriceCommonDataBO oldData = cacheDataList.get(cacheDataList.size() - 1);
+						if (oldData.getStartTime().isEqual(dataBO.getStartTime())) {
+							cacheDataList.set(cacheDataList.size() - 1, dataBO);
+						} else {
+							cacheDataList.add(dataBO);
+						}
+					}
 				}
 			}
 		};

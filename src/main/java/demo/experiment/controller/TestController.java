@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.baseCommon.controller.CommonController;
-import demo.cryptoCoin.binance.BinanceWSClient2;
+import demo.cryptoCoin.data.binance.BinanceWSClient2;
+import demo.cryptoCoin.data.service.impl.CryptoCoinCacheDataService;
 import demo.experiment.pojo.constant.TestUrl;
 import demo.experiment.service.TestService;
 import demo.scriptCore.scheduleClawing.cnStockMarketData.service.CnStockMarketDataService;
@@ -71,14 +72,14 @@ public class TestController extends CommonController {
 	@GetMapping(value = "/t6")
 	@ResponseBody
 	public String test6(@RequestParam(value = "symbol") String symbol) {
-		binanceWSClient.addNewDepthSubcript(symbol);
+		binanceWSClient.addNewKLineSubcript(symbol, "1m");
 		return "Done";
 	}
 
 	@GetMapping(value = "/t7")
 	@ResponseBody
 	public String test7(@RequestParam(value = "symbol") String symbol) {
-		binanceWSClient.closeDepthConnection(symbol);
+		binanceWSClient.closeKLineConnection(symbol, "1m");
 		return "Done";
 	}
 
@@ -88,4 +89,14 @@ public class TestController extends CommonController {
 		binanceWSClient.killStream();
 		return "Done";
 	}
+
+	@Autowired
+	private CryptoCoinCacheDataService cryptoCoinCacheDataService;
+
+	@GetMapping(value = "/t8")
+	@ResponseBody
+	public String t8() {
+		return String.valueOf(cryptoCoinCacheDataService.getBinanceKLineCacheMap());
+	}
+
 }
