@@ -16,4 +16,9 @@ public class CryptoTaskService {
 	public void deleteOldData() {
 		cryptoCoinComplexService.deleteOldKLineDatas();
 	}
+
+	@Scheduled(cron="59 * * * * *") 
+	public void checkBigMoveInMinutes() {
+		cryptoCoinComplexService.checkBigMoveInMinutes();
+	}
 }

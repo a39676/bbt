@@ -4,4 +4,6 @@ public interface CryptoCoinComplexService {
 
 	void deleteOldKLineDatas();
 
+	void checkBigMoveInMinutes();
+
 }

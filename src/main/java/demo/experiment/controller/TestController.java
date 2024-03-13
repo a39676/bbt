@@ -76,6 +76,15 @@ public class TestController extends CommonController {
 		return "Done";
 	}
 
+	@GetMapping(value = "/t6_")
+	@ResponseBody
+	public String test6_() {
+		binanceWSClient.addNewKLineSubcript("BTCUSDT", "1m");
+		binanceWSClient.addNewKLineSubcript("ETHUSDT", "1m");
+		binanceWSClient.addNewKLineSubcript("DOGEUSDT", "1m");
+		return "Done";
+	}
+
 	@GetMapping(value = "/t7")
 	@ResponseBody
 	public String test7(@RequestParam(value = "symbol") String symbol) {
