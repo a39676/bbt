@@ -1,7 +1,7 @@
 package demo.scriptCore.tw.service.impl;
 
 import java.io.File;
-import java.net.URL;
+import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,10 +13,10 @@ import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 
 import demo.scriptCore.tw.service.TwCollectService;
-import demo.selenium.service.impl.SeleniumCommonService;
+import demo.selenium.service.impl.AutomationTestCommonService;
 
 @Service
-public class TwCollectServiceImpl extends SeleniumCommonService implements TwCollectService {
+public class TwCollectServiceImpl extends AutomationTestCommonService implements TwCollectService {
 
 	@Override
 	public void monsterCollecting() {
@@ -36,8 +36,9 @@ public class TwCollectServiceImpl extends SeleniumCommonService implements TwCol
 
 	private void monsterCollectHandle(WebDriver d, String url) {
 		d.get(url);
-		xPathBuilder.start("table").addAttribute("width", "675").addAttribute("border", "1").addAttribute("align", "center")
-				.addAttribute("cellspacing", "0").addAttribute("bordercolor", "#cc9966").findChild("tbody");
+		xPathBuilder.start("table").addAttribute("width", "675").addAttribute("border", "1")
+				.addAttribute("align", "center").addAttribute("cellspacing", "0").addAttribute("bordercolor", "#cc9966")
+				.findChild("tbody");
 		String targetTbodyPath = xPathBuilder.getXpath();
 
 		int trIndex = 1;
@@ -77,19 +78,19 @@ public class TwCollectServiceImpl extends SeleniumCommonService implements TwCol
 		}
 	}
 
-	private void download(String urlStr, String filename){
+	private void download(String urlStr, String filename) {
 		System.out.println("download: " + urlStr + " filename: " + filename);
 		if (StringUtils.isBlank(filename)) {
 			filename = String.valueOf(snowFlake.getNextId());
 		}
 		filename = filename.trim();
 		try {
-			FileUtils.copyURLToFile(new URL(urlStr), new File("D:/gameElement/待处理/tw" + "/" + filename + ".gif"), 10000,
-					10000);
+			FileUtils.copyURLToFile(new URI(urlStr).toURL(),
+					new File("D:/gameElement/待处理/tw" + "/" + filename + ".gif"), 10000, 10000);
 		} catch (Exception e) {
 			e.printStackTrace();
 			try {
-				FileUtils.copyURLToFile(new URL(urlStr),
+				FileUtils.copyURLToFile(new URI(urlStr).toURL(),
 						new File("D:/gameElement/待处理/tw" + "/" + snowFlake.getNextId() + ".gif"), 10000, 10000);
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -249,7 +250,8 @@ public class TwCollectServiceImpl extends SeleniumCommonService implements TwCol
 						download(tmpImageUrl, tmpName);
 						tmpName = null;
 					} catch (Exception e) {
-						xPathBuilder.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 1).findChild("div").findChild("img");
+						xPathBuilder.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 1)
+								.findChild("div").findChild("img");
 						try {
 							tmpImg = d.findElement(By.xpath(xPathBuilder.getXpath()));
 							tmpImageUrl = tmpImg.getAttribute("src");
@@ -354,7 +356,7 @@ public class TwCollectServiceImpl extends SeleniumCommonService implements TwCol
 
 		String tmpImageUrl = null;
 		String tmpName = null;
-		
+
 		Set<String> itemNameSet = new HashSet<String>();
 
 		boolean exceptionFlag = false;
@@ -373,9 +375,10 @@ public class TwCollectServiceImpl extends SeleniumCommonService implements TwCol
 					xPathBuilder.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 1).findChild("img");
 					tmpImg = d.findElement(By.xpath(xPathBuilder.getXpath()));
 					tmpImageUrl = tmpImg.getAttribute("src");
-					
+
 				} catch (Exception e) {
-					xPathBuilder.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 1).findChild().findChild("img");
+					xPathBuilder.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 1).findChild()
+							.findChild("img");
 					try {
 						tmpImg = d.findElement(By.xpath(xPathBuilder.getXpath()));
 						tmpImageUrl = tmpImg.getAttribute("src");
@@ -383,35 +386,35 @@ public class TwCollectServiceImpl extends SeleniumCommonService implements TwCol
 						continue;
 					}
 				}
-				
+
 				try {
 					xPathBuilder.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 1);
 					tmpNameElement = d.findElement(By.xpath(xPathBuilder.getXpath()));
 					tmpName = tmpNameElement.getText();
-					if(itemNameSet.contains(tmpName)) {
+					if (itemNameSet.contains(tmpName)) {
 						tmpName = String.valueOf(snowFlake.getNextId());
 					} else {
 						itemNameSet.add(tmpName);
 					}
 				} catch (Exception e) {
 				}
-				
+
 				download(tmpImageUrl, tmpName);
-				
+
 			} else {
 				xPathBuilder.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 2).findChild("img");
 				try {
 					tmpImg = d.findElement(By.xpath(xPathBuilder.getXpath()));
 					tmpImageUrl = tmpImg.getAttribute("src");
 					System.out.println("get: " + tmpImageUrl);
-					
+
 					xPathBuilder.setXpath(targetTbodyPath).findChild("tr", trIndex).findChild("td", 1);
 					tmpNameElement = d.findElement(By.xpath(xPathBuilder.getXpath()));
 					tmpName = tmpNameElement.getText();
-					
+
 					download(tmpImageUrl, tmpName);
 				} catch (Exception e) {
-					
+
 				}
 			}
 		}

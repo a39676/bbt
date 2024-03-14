@@ -9,6 +9,7 @@ import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -18,14 +19,27 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
-// multiple scan, 通配符的使用应放后边, 否则会被"覆盖?重写?"后失效
 @MapperScan(basePackages = { "demo.toyParts.multipleDB.mapper" }, sqlSessionTemplateRef = "cxSqlSessionTemplate")
 public class DatabaseCXConfig {
+	
+	@Value("${databaseCX.driverClassName}")
+  	private String driverClassName;
+  	@Value("${databaseCX.url}")
+  	private String url;
+  	@Value("${databaseCX.username}")
+  	private String username;
+  	@Value("${databaseCX.password}")
+  	private String password;
 
 	@Bean(name = "cxDataSourceProperties")
 	@ConfigurationProperties(prefix = "spring.datasource.cx")
 	public DataSourceProperties cxDataSourceProperties() {
-		return new DataSourceProperties();
+		DataSourceProperties d = new DataSourceProperties();
+		d.setDriverClassName(driverClassName);
+		d.setUrl(url);
+		d.setUsername(username);
+		d.setPassword(password);
+		return d;
 	}
 
 	@Bean(name = "cxDataSource")

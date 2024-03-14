@@ -1,4 +1,4 @@
-package demo.scriptCore.localClawing.common.controller;
+package demo.scriptCore.localClawing.complex.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +10,7 @@ import demo.baseCommon.controller.CommonController;
 import demo.scriptCore.localClawing.complex.service.LinkedinService;
 import demo.scriptCore.localClawing.complex.service.MathBattleService;
 import demo.scriptCore.localClawing.complex.service.PrankService;
+import demo.scriptCore.localClawing.complex.service.StoryBerriesDownloadService;
 import demo.scriptCore.localClawing.complex.service.TextbookDownloadService;
 
 @Controller
@@ -24,32 +25,41 @@ public class LocalClawingController extends CommonController {
 	private MathBattleService mathBattleService;
 	@Autowired
 	private TextbookDownloadService textbookDownloadService;
-	
+	@Autowired
+	private StoryBerriesDownloadService storyBerriesDownloadService;
+
 	@GetMapping(value = "/l2")
 	@ResponseBody
-	public String l2() throws InterruptedException {
+	public String l2() {
 		linkedinService.buildRelationship();
 		return "done";
 	}
-	
+
 	@GetMapping(value = "/l3")
 	@ResponseBody
-	public String l3() throws InterruptedException {
+	public String l3() {
 		prankService.prankBatch();
 		return "done";
 	}
-	
+
 	@GetMapping(value = "/l4")
 	@ResponseBody
-	public String l4() throws Exception {
+	public String l4() {
 		mathBattleService.start();
 		return "done";
 	}
-	
+
 	@GetMapping(value = "/l5")
 	@ResponseBody
-	public String l5() throws Exception {
+	public String l5() {
 		textbookDownloadService.downloading();
+		return "done";
+	}
+
+	@GetMapping(value = "/l6")
+	@ResponseBody
+	public String l6() {
+		storyBerriesDownloadService.downloading();
 		return "done";
 	}
 }

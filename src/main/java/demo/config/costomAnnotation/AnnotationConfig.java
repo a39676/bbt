@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class AnnotationConfig {
-	
 
 	@Around("@annotation(LogExecutionTime)")
 	public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -29,10 +28,14 @@ public class AnnotationConfig {
 	}
 
 	@Before("@annotation(CustomBeforeAnnotation)")
-	public void customAnnotation(JoinPoint joinPoint) throws Throwable {
+	public void beforeAnnotation(JoinPoint joinPoint) throws Throwable {
 		String methodName = joinPoint.getSignature().getName();
 		List<Object> args = Arrays.asList(joinPoint.getArgs());
-		System.out.println(this.getClass().getSimpleName() + " before execute:" + methodName + " begin with " + args);
+		System.out.print(this.getClass().getSimpleName() + " before execute:" + methodName + " begin with ");
+		for (Object arg : args) {
+			System.out.print(arg);
+		}
+		System.out.println("");
 	}
 
 	@After("@annotation(CustomAfterAnnotation)")

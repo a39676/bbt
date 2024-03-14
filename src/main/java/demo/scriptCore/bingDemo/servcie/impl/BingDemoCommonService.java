@@ -1,6 +1,6 @@
 package demo.scriptCore.bingDemo.servcie.impl;
 
-import demo.scriptCore.common.service.AutomationTestCommonService;
+import demo.selenium.service.impl.AutomationTestCommonService;
 
 public class BingDemoCommonService extends AutomationTestCommonService {
 

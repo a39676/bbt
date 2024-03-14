@@ -6,12 +6,11 @@ import org.springframework.stereotype.Component;
 
 import demo.baseCommon.service.CommonService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
-import finance.cryptoCoin.pojo.constant.CryptoCoinMQConstant;
-import net.sf.json.JSONObject;
 
 @Component
 public class CryptoCoinPriceCacheDataAckProducer extends CommonService {
 
+	@SuppressWarnings("unused")
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
 
@@ -19,8 +18,10 @@ public class CryptoCoinPriceCacheDataAckProducer extends CommonService {
 		if (bo == null) {
 			return;
 		}
-		JSONObject json = JSONObject.fromObject(bo);
-		rabbitTemplate.convertAndSend(CryptoCoinMQConstant.CRYPTO_COIN_PRICE_CACHE_QUEUE, json.toString());
+		
+//		2023-12-20 NOT used after deploy on local machine
+//		JSONObject json = JSONObject.fromObject(bo);
+//		rabbitTemplate.convertAndSend(CryptoCoinMQConstant.CRYPTO_COIN_PRICE_CACHE_QUEUE, json.toString());
 	}
 
 }

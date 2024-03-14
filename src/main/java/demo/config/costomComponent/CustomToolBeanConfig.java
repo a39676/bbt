@@ -12,4 +12,9 @@ public class CustomToolBeanConfig {
 	public LocalDateTimeAdapter getLocalDateTimeAdapter() {
 		return new LocalDateTimeAdapter();
 	}
+	
+	@Bean
+	public CustomPasswordEncoder getCustomPasswordEncoder() {
+		return new CustomPasswordEncoder();
+	}
 }

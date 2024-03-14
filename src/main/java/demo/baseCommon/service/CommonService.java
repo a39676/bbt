@@ -15,11 +15,8 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.BaseResultType;
 import demo.baseCommon.pojo.param.PageParam;
 import demo.config.costomComponent.SnowFlake;
-import demo.tool.mq.producer.TelegramCalendarNoticeMessageAckProducer;
+import demo.tool.service.ReminderMessageService;
 import net.sf.json.JSONObject;
-import telegram.pojo.constant.TelegramStaticChatID;
-import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
-import telegram.pojo.type.TelegramBotType;
 import toolPack.dateTimeHandle.DateHandler;
 import toolPack.dateTimeHandle.LocalDateTimeAdapter;
 import toolPack.dateTimeHandle.LocalDateTimeHandler;
@@ -27,26 +24,28 @@ import toolPack.ioHandle.FileUtilCustom;
 import toolPack.numericHandel.NumericUtilCustom;
 
 public abstract class CommonService {
-	
+
 	@Autowired
 	protected LocalDateTimeHandler localDateTimeHandler;
 	@Autowired
 	protected DateHandler dateHandler;
 	@Autowired
 	protected LocalDateTimeAdapter localDateTimeAdapter;
-	
+
 	protected final Logger log = LoggerFactory.getLogger(getClass());
-	
+
 	@Autowired
 	protected SnowFlake snowFlake;
-	
+
 	@Autowired
 	protected NumericUtilCustom numericUtil;
 	@Autowired
 	protected FileUtilCustom ioUtil;
-	
+
+//	@Autowired
+//	private TelegramCalendarNoticeMessageAckProducer telegramMessageAckProducer;
 	@Autowired
-	private TelegramCalendarNoticeMessageAckProducer telegramMessageAckProducer;
+	private ReminderMessageService reminderMessageService;
 
 	private static final int NORMAL_PAGE_SIZE = 10;
 	private static final int MAX_PAGE_SIZE = 300;
@@ -109,45 +108,45 @@ public abstract class CommonService {
 		result.fillWithResult(BaseResultType.NULL_PARAM);
 		return result;
 	}
-	
+
 	protected CommonResult errorParam() {
 		CommonResult result = new CommonResult();
 		result.fillWithResult(BaseResultType.ERROR_PARAM);
 		return result;
 	}
-	
+
 	protected CommonResult serviceError() {
 		CommonResult result = new CommonResult();
 		result.fillWithResult(BaseResultType.SERVICE_ERROR);
 		return result;
 	}
-	
+
 	protected CommonResult normalSuccess() {
 		CommonResult result = new CommonResult();
 		result.normalSuccess();
 		return result;
 	}
-	
+
 	protected CommonResult notLogin() {
 		CommonResult result = new CommonResult();
 		result.failWithMessage("请登录后操作");
 		return result;
 	}
-	
+
 	protected boolean isWindows() {
 		String os = System.getProperty("os.name");
-		if(os != null) {
-			if(os.toLowerCase().contains("windows")) {
+		if (os != null) {
+			if (os.toLowerCase().contains("windows")) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	protected boolean isLinux() {
 		String os = System.getProperty("os.name");
-		if(os != null) {
-			if(os.toLowerCase().contains("linux")) {
+		if (os != null) {
+			if (os.toLowerCase().contains("linux")) {
 				return true;
 			}
 		}
@@ -155,20 +154,20 @@ public abstract class CommonService {
 	}
 
 	protected String getSuffixName(String str) {
-		if(StringUtils.isBlank(str)) {
+		if (StringUtils.isBlank(str)) {
 			return "";
 		}
 		return str.substring(str.lastIndexOf(".") + 1);
 	}
 
 	protected String pathChangeByDetectOS(String oldPath) {
-		if(isWindows()) {
+		if (isWindows()) {
 			return oldPath.replaceAll("/", "\\\\");
 		} else {
 			return oldPath.replaceAll("\\\\", "/");
 		}
 	}
-	
+
 	protected <T> T buildTestEventParamFromJsonCustomization(String jsonStr, Class<T> clazz) {
 		String className = clazz.getSimpleName();
 
@@ -184,7 +183,7 @@ public abstract class CommonService {
 		return null;
 
 	}
-	
+
 	protected <T> T buildObjFromJsonCustomization(String jsonStr, Class<T> clazz) {
 		String className = clazz.getSimpleName();
 
@@ -201,11 +200,13 @@ public abstract class CommonService {
 
 	}
 
-	protected void sendTelegramMsg(String msg) {
-		TelegramBotNoticeMessageDTO dto = new TelegramBotNoticeMessageDTO();
-		dto.setId(TelegramStaticChatID.MY_ID);
-		dto.setBotName(TelegramBotType.BBT_MESSAGE.getName());
-		dto.setMsg(msg);
-		telegramMessageAckProducer.send(dto);
+	protected void sendingMsg(String msg) {
+//		TelegramBotNoticeMessageDTO dto = new TelegramBotNoticeMessageDTO();
+//		dto.setId(TelegramStaticChatID.MY_ID);
+//		dto.setBotName(TelegramBotType.BBT_MESSAGE.getName());
+//		dto.setMsg(msg);
+//		telegramMessageAckProducer.send(dto);
+		log.error("Sending telegram message: " + msg);
+		reminderMessageService.sendReminder(msg);
 	}
 }

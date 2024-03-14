@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
-import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.localClawing.complex.pojo.dto.LinkedinOptionDTO;
 import demo.scriptCore.localClawing.complex.service.LinkedinService;
+import demo.selenium.service.impl.AutomationTestCommonService;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -63,7 +63,7 @@ public class LinkedinServiceImpl extends AutomationTestCommonService implements 
 			e.printStackTrace();
 
 		} finally {
-			d.quit();
+			tryQuitWebDriver(d);
 		}
 
 	}
@@ -74,7 +74,7 @@ public class LinkedinServiceImpl extends AutomationTestCommonService implements 
 		
 		try {
 			threadSleepRandomTime();
-			System.out.println(auxTool.loadingCheck(d, "/html[1]/body[1]/div[1]/main[1]/div[2]/div[1]/form[1]/div[1]/input[1]"));
+			System.out.println(loadingCheck(d, "/html[1]/body[1]/div[1]/main[1]/div[2]/div[1]/form[1]/div[1]/input[1]"));
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -96,7 +96,7 @@ public class LinkedinServiceImpl extends AutomationTestCommonService implements 
 
 	private boolean loginCheck(WebDriver d) {
 		try {
-			return auxTool.loadingCheck(d,
+			return loadingCheck(d,
 					"/html[1]/body[1]/div[6]/div[3]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/a[1]/div[2]");
 		} catch (InterruptedException e) {
 //			e.printStackTrace();
@@ -153,7 +153,7 @@ public class LinkedinServiceImpl extends AutomationTestCommonService implements 
 
 	private boolean relationshipPageLoadingCheck(WebDriver d) {
 		try {
-			return auxTool.loadingCheck(d,
+			return loadingCheck(d,
 					"/html[1]/body[1]/div[6]/div[3]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/section[1]/div[1]/h2[1]");
 		} catch (InterruptedException e) {
 //			e.printStackTrace();

@@ -25,11 +25,11 @@ import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
-import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.scheduleClawing.common.pojo.dto.CollectUrlHistoryDTO;
 import demo.scriptCore.scheduleClawing.educationInfo.pojo.dto.EducationInfoOptionDTO;
 import demo.scriptCore.scheduleClawing.educationInfo.pojo.type.EducationInfoSourceType;
 import demo.scriptCore.scheduleClawing.educationInfo.service.EducationInfoCollectionService;
+import demo.selenium.service.impl.AutomationTestCommonService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import toolPack.httpHandel.HttpUtil;
@@ -43,8 +43,11 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 
 	@Override
 	public TestEventBO clawing(TestEventBO tbo) {
+		log.error("Start education info collection clawing");
+		sendingMsg("In education info collection");
 		CommonResult r = new CommonResult();
 		
+		log.error("delete old urls");
 		deleteOldUrls();
 
 		ScheduleClawingType caseType = ScheduleClawingType.EDUCATION_INFO;
@@ -56,8 +59,10 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 			FileUtilCustom ioUtil = new FileUtilCustom();
 			String content = ioUtil.getStringFromFile(PARAM_PATH_STR);
 
+			log.error("load education info option");
 			EducationInfoOptionDTO dto = buildObjFromJsonCustomization(content, EducationInfoOptionDTO.class);
 			if (dto == null) {
+				log.error("education info DTO error, content: " + content);
 				reportService.caseReportAppendContent(caseReport, "参数文件结构异常");
 				throw new Exception();
 			}
@@ -70,6 +75,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 				newUrlList = runHaizhuGovInfoCollector(dto.getSourceUrl().get(sourceType.getName()),
 						dto.getUrlHistory().get(sourceType.getName()));
 				if (!newUrlList.isEmpty()) {
+					log.error("found new url, from runHaizhuGovInfoCollector.");
 					if (!dto.getUrlHistory().containsKey(sourceType.getName())) {
 						dto.getUrlHistory().put(sourceType.getName(), new ArrayList<>());
 					}
@@ -83,6 +89,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 				newUrlList = runGzJyjInfoCollector(dto.getSourceUrl().get(sourceType.getName()),
 						dto.getUrlHistory().get(sourceType.getName()));
 				if (!newUrlList.isEmpty()) {
+					log.error("found new url, from runGzJyjInfoCollector.");
 					if (!dto.getUrlHistory().containsKey(sourceType.getName())) {
 						dto.getUrlHistory().put(sourceType.getName(), new ArrayList<>());
 					}
@@ -96,6 +103,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 				newUrlList = runGZZK_1Collector(dto.getSourceUrl().get(sourceType.getName()),
 						dto.getUrlHistory().get(sourceType.getName()));
 				if (!newUrlList.isEmpty()) {
+					log.error("found new url, from runGZZK_1Collector.");
 					if (!dto.getUrlHistory().containsKey(sourceType.getName())) {
 						dto.getUrlHistory().put(sourceType.getName(), new ArrayList<>());
 					}
@@ -110,6 +118,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 				newUrlList = runGzEduCmsInfoCollector(webDriver, dto.getSourceUrl().get(sourceType.getName()),
 						dto.getUrlHistory().get(sourceType.getName()));
 				if (!newUrlList.isEmpty()) {
+					log.error("found new url, from runGzEduCmsInfoCollector.");
 					if (!dto.getUrlHistory().containsKey(sourceType.getName())) {
 						dto.getUrlHistory().put(sourceType.getName(), new ArrayList<>());
 					}
@@ -129,7 +138,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 		}
 
 		if(!tryQuitWebDriver(webDriver)) {
-			sendTelegramMsg("Web driver quit failed, " + caseType.getFlowName());
+			sendingMsg("Web driver quit failed, " + caseType.getFlowName());
 		}
 		sendAutomationTestResult(tbo);
 
@@ -137,6 +146,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 	}
 
 	private List<CollectUrlHistoryDTO> runHaizhuGovInfoCollector(String mainUrl, List<CollectUrlHistoryDTO> urlHistoryList) {
+		log.error("start runHaizhuGovInfoCollector");
 //		text 参数可配置搜索关键字
 		HttpUtil h = new HttpUtil();
 
@@ -164,7 +174,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 					tmpDTO.setRecrodDate(LocalDateTime.now());
 					tmpDTO.setUrl(url);
 					newInfoUrlList.add(tmpDTO);
-					sendTelegramMsg("New url: " + url + " , title: " + title);
+					sendingMsg("New url: " + url + " , title: " + title);
 				}
 			}
 		} catch (Exception e) {
@@ -174,6 +184,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 	}
 
 	private List<CollectUrlHistoryDTO> runGzJyjInfoCollector(String mainUrl, List<CollectUrlHistoryDTO> urlHistoryList) {
+		log.error("start runGzJyjInfoCollector");
 		HttpUtil h = new HttpUtil();
 		List<CollectUrlHistoryDTO> newInfoUrlList = new ArrayList<>();
 
@@ -200,7 +211,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 					tmpDTO.setRecrodDate(LocalDateTime.now());
 					tmpDTO.setUrl(url);
 					newInfoUrlList.add(tmpDTO);
-					sendTelegramMsg("New url: " + url + " , title: " + title);
+					sendingMsg("New url: " + url + " , title: " + title);
 				}
 			}
 		} catch (Exception e) {
@@ -212,6 +223,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 
 	private List<CollectUrlHistoryDTO> runGzEduCmsInfoCollector(WebDriver d, String mainUrl,
 			List<CollectUrlHistoryDTO> urlHistoryList) {
+		log.error("start runGzEduCmsInfoCollector");
 		d.get(mainUrl);
 
 		try {
@@ -261,7 +273,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 					tmpDTO.setRecrodDate(LocalDateTime.now());
 					tmpDTO.setUrl(urlStr);
 					newInfoUrlList.add(tmpDTO);
-					sendTelegramMsg("New url: " + urlStr + " , title: " + title);
+					sendingMsg("New url: " + urlStr + " , title: " + title);
 				}
 			} catch (Exception e) {
 			}
@@ -271,6 +283,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 	}
 	
 	private List<CollectUrlHistoryDTO> runGZZK_1Collector(String mainUrl, List<CollectUrlHistoryDTO> urlHistoryList) {
+		log.error("start runGZZK_1Collector");
 		HttpUtil h = new HttpUtil();
 		List<CollectUrlHistoryDTO> newInfoUrlList = new ArrayList<>();
 
@@ -296,7 +309,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 					tmpDTO.setRecrodDate(LocalDateTime.now());
 					tmpDTO.setUrl(url);
 					newInfoUrlList.add(tmpDTO);
-					sendTelegramMsg("New url: " + url + " , title: " + title);
+					sendingMsg("New url: " + url + " , title: " + title);
 				}
 			}
 		} catch (Exception e) {

@@ -8,9 +8,9 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.scheduleClawing.common.pojo.dto.CollectUrlHistoryDTO;
 import demo.scriptCore.scheduleClawing.jobInfo.pojo.dto.V2exJobInfoOptionDTO;
+import demo.selenium.service.impl.AutomationTestCommonService;
 import toolPack.ioHandle.FileUtilCustom;
 
 public abstract class JobInfoCollectionCommonService extends AutomationTestCommonService {

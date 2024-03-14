@@ -2,6 +2,8 @@ package demo.scriptCore.common.service;
 
 import java.util.List;
 
+import demo.selenium.service.impl.AutomationTestCommonService;
+
 public abstract class JobClawingCommonService extends AutomationTestCommonService {
 
 	/* 不察看的公司名(contain?) */

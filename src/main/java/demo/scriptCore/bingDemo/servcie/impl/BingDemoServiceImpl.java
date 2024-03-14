@@ -41,7 +41,7 @@ public class BingDemoServiceImpl extends BingDemoCommonService implements BingDe
 			tbo.getReport().getCaseReportList().add(errorReport);
 		}
 		if(!tryQuitWebDriver(webDriver)) {
-			sendTelegramMsg("Web driver quit failed, " + flowType.getFlowName());
+			sendingMsg("Web driver quit failed, " + flowType.getFlowName());
 		}
 		sendAutomationTestResult(tbo);
 

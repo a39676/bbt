@@ -6,11 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import demo.autoTestBase.testEvent.mq.producer.HeartBeatProducer;
 import demo.autoTestBase.testEvent.service.TestEventService;
+import demo.autoTestBase.testEvent.service.impl.HeartBeatService;
 import demo.base.system.mapper.BaseMapper;
-import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.selenium.service.SeleniumGlobalOptionService;
+import demo.selenium.service.impl.AutomationTestCommonService;
 import demo.task.service.TaskToolService;
 import demo.tool.service.ComplexToolService;
 
@@ -23,8 +23,10 @@ public class TaskToolServiceImpl extends AutomationTestCommonService implements 
 	@Autowired
 	private ComplexToolService complexToolService;
 
+//	@Autowired
+//	private HeartBeatProducer heartBeatProducer;
 	@Autowired
-	private HeartBeatProducer heartBeatProducer;
+	private HeartBeatService heartBeatService;
 
 	@Autowired
 	private BaseMapper baseMapper;
@@ -49,7 +51,7 @@ public class TaskToolServiceImpl extends AutomationTestCommonService implements 
 	
 	@Scheduled(fixedRate = 1000L * 27)
 	public void sendHeartBeat() {
-		heartBeatProducer.send();
+		heartBeatService.heartbeat();
 	}
 	
 	@Scheduled(fixedRate = 1000L * 60 * 10)
@@ -72,7 +74,7 @@ public class TaskToolServiceImpl extends AutomationTestCommonService implements 
 //				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				sendTelegramMsg("Kill chrome driver error");
+				sendingMsg("Kill chrome driver error");
 			}
 		}
 	}

@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
-import demo.scriptCore.common.service.AutomationTestCommonService;
 import demo.scriptCore.localClawing.complex.pojo.dto.TextbookDownloadOptionDTO;
 import demo.scriptCore.localClawing.complex.pojo.dto.TextbookDownloadSubOption;
 import demo.scriptCore.localClawing.complex.service.TextbookDownloadService;
+import demo.selenium.service.impl.AutomationTestCommonService;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service
@@ -58,7 +58,7 @@ public class TextbookDownloadServiceImpl extends AutomationTestCommonService imp
 			}
 
 			try {
-				if (!auxTool.loadingCheck(d,
+				if (!loadingCheck(d,
 						"//body/div[@id='__nuxt']/div[@id='__layout']/div[1]/div[1]/div[2]/div[1]/div[1]/div[2]/img",
 						1000L, 15)) {
 					System.out.println("Real timeout");
@@ -79,7 +79,7 @@ public class TextbookDownloadServiceImpl extends AutomationTestCommonService imp
 				}
 
 				try {
-					if (!auxTool.loadingCheck(d,
+					if (!loadingCheck(d,
 							"//body/div[@id='__nuxt']/div[@id='__layout']/div[1]/div[1]/div[2]/div[1]/div[1]/div[2]/img")) {
 						System.out.println("Real timeout");
 					}
@@ -109,7 +109,7 @@ public class TextbookDownloadServiceImpl extends AutomationTestCommonService imp
 			}
 		}
 
-		d.quit();
+		tryQuitWebDriver(d);
 	}
 
 	private List<String> findAllUrl(WebDriver d) {

@@ -7,7 +7,7 @@ import autoTest.testEvent.scheduleClawing.searchingDemo.pojo.type.BingDemoSearch
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.scriptCore.bingDemo.servcie.BingDemoPrefixService;
 import demo.scriptCore.bingDemo.servcie.BingDemoService;
-import demo.scriptCore.common.service.AutomationTestCommonService;
+import demo.selenium.service.impl.AutomationTestCommonService;
 
 @Service
 public class BingDemoPrefixServiceImpl extends AutomationTestCommonService

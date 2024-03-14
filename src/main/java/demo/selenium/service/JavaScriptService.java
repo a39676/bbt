@@ -26,4 +26,6 @@ public interface JavaScriptService {
 	 */
 	void scroll(WebDriver driver, int pix);
 
+	Boolean isVisibleInViewport(WebElement element);
+
 }

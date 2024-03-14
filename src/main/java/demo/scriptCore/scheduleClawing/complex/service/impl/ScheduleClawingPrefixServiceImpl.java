@@ -5,8 +5,6 @@ import org.springframework.stereotype.Service;
 
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
-import demo.scriptCore.common.service.AutomationTestCommonService;
-import demo.scriptCore.cryptoCoin.service.CryptoCoinPriceService;
 import demo.scriptCore.scheduleClawing.complex.service.HsbcService;
 import demo.scriptCore.scheduleClawing.complex.service.ScheduleClawingPrefixService;
 import demo.scriptCore.scheduleClawing.complex.service.UnderWayService;
@@ -14,6 +12,7 @@ import demo.scriptCore.scheduleClawing.currencyExchangeRate.service.CurrencyExch
 import demo.scriptCore.scheduleClawing.educationInfo.service.EducationInfoCollectionService;
 import demo.scriptCore.scheduleClawing.jobInfo.service.V2exJobInfoCollectionService;
 import demo.scriptCore.scheduleClawing.jobInfo.service.WuYiJobRefreshService;
+import demo.selenium.service.impl.AutomationTestCommonService;
 
 @Service
 public class ScheduleClawingPrefixServiceImpl extends AutomationTestCommonService
@@ -30,16 +29,15 @@ public class ScheduleClawingPrefixServiceImpl extends AutomationTestCommonServic
 	@Autowired
 	private UnderWayService underWayMonthTestService;
 	@Autowired
-	private CryptoCoinPriceService cryptoCoinPriceService;
-	@Autowired
 	private CurrencyExchangeRateService currencyExchangeRateService;
 
 	@Override
 	public TestEventBO runSubEvent(TestEventBO te) {
+		log.error("run sub event");
 		Long caseId = te.getFlowId();
 		
 		ScheduleClawingType clawingType = ScheduleClawingType.getType(caseId);
-
+		log.error("Clawing type: " + clawingType.getFlowName()) ;
 		switch (clawingType) {
 		case WU_YI_JOB: {
 			return wuYiSign.clawing(te);
@@ -58,9 +56,6 @@ public class ScheduleClawingPrefixServiceImpl extends AutomationTestCommonServic
 		}
 		case UNDER_WAY_TRAIN_PROJECT: {
 			return underWayMonthTestService.trainProject(te);
-		}
-		case CRYPTO_COIN: {
-			return cryptoCoinPriceService.cryptoCoinDailyDataAPI(te);
 		}
 		case CURRENCY_EXCHANGE_RAGE: {
 			return currencyExchangeRateService.getDailyData(te);
