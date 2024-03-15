@@ -1,4 +1,4 @@
-package demo.cryptoCoin.data.service;
+package demo.finance.cryptoCoin.data.service;
 
 public interface CryptoCoinComplexService {
 

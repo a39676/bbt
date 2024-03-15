@@ -1,4 +1,4 @@
-package demo.cryptoCoin.common.service;
+package demo.finance.cryptoCoin.common.service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

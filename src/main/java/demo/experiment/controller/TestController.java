@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.baseCommon.controller.CommonController;
-import demo.cryptoCoin.data.binance.BinanceWSClient2;
-import demo.cryptoCoin.data.service.impl.CryptoCoinCacheDataService;
 import demo.experiment.pojo.constant.TestUrl;
 import demo.experiment.service.TestService;
+import demo.finance.cryptoCoin.data.binance.BinanceWSClient2;
+import demo.finance.cryptoCoin.data.service.impl.CryptoCoinCacheDataService;
 import demo.scriptCore.scheduleClawing.cnStockMarketData.service.CnStockMarketDataService;
 import demo.scriptCore.scheduleClawing.currencyExchangeRate.service.CurrencyExchangeRateService;
 import demo.task.service.impl.AutomationTaskServiceImpl;
