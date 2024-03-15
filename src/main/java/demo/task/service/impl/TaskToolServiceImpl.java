@@ -74,7 +74,7 @@ public class TaskToolServiceImpl extends AutomationTestCommonService implements 
 //				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				sendTelegramMsg("Kill chrome driver error");
+				sendingMsg("Kill chrome driver error");
 			}
 		}
 	}

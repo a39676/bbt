@@ -31,7 +31,7 @@ public class ReminderMessageServiceImpl implements ReminderMessageService {
 		dto.setMsg(msg);
 		JSONObject json = JSONObject.fromObject(dto);
 		try {
-			h.sendPost(systemOptionService.getCthulhuHostname() + BbtInteractionUrl.ROOT
+			h.sendPostRestful(systemOptionService.getCthulhuHostname() + BbtInteractionUrl.ROOT
 					+ BbtInteractionUrl.TEXT_MESSAGE_FORWARD, json.toString());
 		} catch (Exception e) {
 			log.error("Send reminder error, msg: " + msg);

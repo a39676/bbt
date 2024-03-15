@@ -200,13 +200,13 @@ public abstract class CommonService {
 
 	}
 
-	protected void sendTelegramMsg(String msg) {
+	protected void sendingMsg(String msg) {
 //		TelegramBotNoticeMessageDTO dto = new TelegramBotNoticeMessageDTO();
 //		dto.setId(TelegramStaticChatID.MY_ID);
 //		dto.setBotName(TelegramBotType.BBT_MESSAGE.getName());
 //		dto.setMsg(msg);
 //		telegramMessageAckProducer.send(dto);
-
+		log.error("Sending telegram message: " + msg);
 		reminderMessageService.sendReminder(msg);
 	}
 }

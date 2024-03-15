@@ -109,7 +109,7 @@ public class TextbookDownloadServiceImpl extends AutomationTestCommonService imp
 			}
 		}
 
-		d.quit();
+		tryQuitWebDriver(d);
 	}
 
 	private List<String> findAllUrl(WebDriver d) {

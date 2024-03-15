@@ -113,7 +113,7 @@ public class HsbcServiceImpl extends AutomationTestCommonService implements Hsbc
 		tbo.getCaseResultList().add(r);
 		tbo.getReport().getCaseReportList().add(caseReport);
 		if(!tryQuitWebDriver(d)) {
-			sendTelegramMsg("Web driver quit failed, " + caseType.getFlowName());
+			sendingMsg("Web driver quit failed, " + caseType.getFlowName());
 		}
 		sendAutomationTestResult(tbo);
 

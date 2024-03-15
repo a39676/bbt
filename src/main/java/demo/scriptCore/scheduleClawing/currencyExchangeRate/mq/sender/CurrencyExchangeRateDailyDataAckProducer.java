@@ -27,11 +27,12 @@ public class CurrencyExchangeRateDailyDataAckProducer extends CommonService {
 
 		JSONObject json = JSONObject.fromObject(exchangeRateDataDTO);
 
+		log.error("sendCurrencyExchangeRateData, env: " + systemOptionService.getEnvName());
 		if (systemOptionService.isRaspberry()) {
 			HttpUtil h = new HttpUtil();
-
+			json.remove("fail");
 			try {
-				h.sendPost(systemOptionService.getCthulhuHostname() + BbtInteractionUrl.ROOT
+				h.sendPostRestful(systemOptionService.getCthulhuHostname() + BbtInteractionUrl.ROOT
 						+ BbtInteractionUrl.RECEIVE_CURRENCY_EXCHANGE_RATE_DAILY_DATA, json.toString());
 			} catch (Exception e) {
 				e.printStackTrace();

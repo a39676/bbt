@@ -9,8 +9,8 @@ import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -19,24 +19,35 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
-// multiple scan, 通配符的使用应放后边, 否则会被"覆盖?重写?"后失效
 @MapperScan(
 	basePackages = {
-		"demo.base.*.mapper", 
-		"demo.autoTestBase.*.mapper", 
-		"demo.scriptCore.scheduleClawing.*.mapper",
-		"demo.interaction.*.mapper", 
-		"demo.*.mapper"
+		"demo.*.*.*.*.mapper",
+		"demo.*.*.*.mapper",
+		"demo.*.*.mapper",
+		"demo.*.mapper",
 	},
 	sqlSessionTemplateRef = "bbtSqlSessionTemplate"
 	)
 public class DatabaseBBTConfig {
 	
+	@Value("${databaseBBT.driverClassName}")
+  	private String driverClassName;
+  	@Value("${databaseBBT.url}")
+  	private String url;
+  	@Value("${databaseBBT.username}")
+  	private String username;
+  	@Value("${databaseBBT.password}")
+  	private String password;
+	
 	@Bean(name="bbtDataSourceProperties")
-	@ConfigurationProperties(prefix = "spring.datasource.bbt")
 	@Primary
     public DataSourceProperties bbtDataSourceProperties() {
-		return new DataSourceProperties();
+		DataSourceProperties d = new DataSourceProperties();
+		d.setDriverClassName(driverClassName);
+		d.setUrl(url);
+		d.setUsername(username);
+		d.setPassword(password);
+		return d;
     }
 
     @Bean(name="bbtDataSource")
@@ -62,9 +73,6 @@ public class DatabaseBBTConfig {
 		mybatisProperties.setProperty("cacheEnabled", "true");
 		sqlSessionFactoryBean.setConfigurationProperties(mybatisProperties);
 		sqlSessionFactoryBean.setDataSource(dataSource);
-		sqlSessionFactoryBean.setTypeAliasesPackage(""
-				+ "demo.interaction.movieInteraction.pojo, "
-				);
 		
 		return sqlSessionFactoryBean;
 	}

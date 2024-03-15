@@ -28,4 +28,8 @@ public class TestServiceImpl extends TestEventCommonService implements TestServi
 		return arg1 + "AfterHandle";
 	}
 
+	@Override
+	public void sendMsg(String msg) {
+		sendingMsg(msg);
+	}
 }

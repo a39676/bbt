@@ -79,7 +79,7 @@ public class PrankServiceImpl extends AutomationTestCommonService implements Pra
 			e.printStackTrace();
 		}
 
-		d.quit();
+		tryQuitWebDriver(d);
 	}
 
 	private String createRandomName() {

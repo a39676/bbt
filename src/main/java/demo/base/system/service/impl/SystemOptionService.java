@@ -4,22 +4,25 @@ import java.io.File;
 
 import javax.annotation.PostConstruct;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import demo.baseCommon.service.CommonService;
 import demo.config.costomComponent.OptionFilePathConfigurer;
 import net.sf.json.JSONObject;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")
 @Service
-public class SystemOptionService extends CommonService {
+public class SystemOptionService {
 
 	private String envName = null;
 	private Boolean isDebuging = null;
 	private String shutdownKey = null;
 	private String cthulhuHostname = null;
+
+	private final Logger log = LoggerFactory.getLogger(getClass());
 
 	public String getEnvName() {
 		return envName;
@@ -40,7 +43,7 @@ public class SystemOptionService extends CommonService {
 	public boolean isDev() {
 		return "dev".equals(getEnvName());
 	}
-	
+
 	public boolean isRaspberry() {
 		return "raspberry".equals(getEnvName());
 	}
@@ -74,7 +77,7 @@ public class SystemOptionService extends CommonService {
 			this.envName = json.getString("envName");
 			this.isDebuging = json.getBoolean("isDebuging");
 			this.shutdownKey = json.getString("shutdownKey");
-			this.cthulhuHostname = json.getString("cxHostname");
+			this.cthulhuHostname = json.getString("cthulhuHostname");
 			log.error("system constant loaded");
 		} catch (Exception e) {
 			e.printStackTrace();
