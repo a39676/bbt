@@ -46,9 +46,10 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 
 	@Override
 	public void checkBigMoveInMinutes() {
-		double maxPercentFor1Min = 1;
+		double maxPercentFor1Min = 0.1;
 		double maxPercentFor5Min = 3D;
 		double maxPercentFor10Min = 5D;
+		int scale = 4;
 		Map<KLineKeyBO, List<CryptoCoinPriceCommonDataBO>> map = cacheDataServcie.getBinanceKLineCacheMap();
 		List<CryptoCoinPriceCommonDataBO> list = null;
 		FilterPriceResult filterData = null;
@@ -63,7 +64,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 				continue;
 			}
 			filterData = filterData(list.subList(list.size() - 2, list.size() - 1));
-			rate = filterData.getMaxPrice().divide(filterData.getMinPrice(), 2, RoundingMode.HALF_UP)
+			rate = filterData.getMaxPrice().divide(filterData.getMinPrice(), scale, RoundingMode.HALF_UP)
 					.subtract(BigDecimal.ONE).multiply(new BigDecimal(100));
 			oneMinTag: if (rate.doubleValue() > maxPercentFor1Min) {
 				redisKey = BIG_MOVE_REDIS_KEY_PERFIX;
@@ -83,11 +84,12 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 				sendingMsg(msg);
 			}
 
-			if (list.size() < 5) {
+			int dataSize = 5;
+			if (list.size() < dataSize) {
 				continue;
 			}
-			filterData = filterData(list.subList(list.size() - 5, list.size() - 1));
-			rate = filterData.getMaxPrice().divide(filterData.getMinPrice(), 2, RoundingMode.HALF_UP)
+			filterData = filterData(list.subList(list.size() - dataSize, list.size() - 1));
+			rate = filterData.getMaxPrice().divide(filterData.getMinPrice(), scale, RoundingMode.HALF_UP)
 					.subtract(BigDecimal.ONE).multiply(new BigDecimal(100));
 			fiveMinTag: if (rate.doubleValue() > maxPercentFor5Min) {
 				redisKey = BIG_MOVE_REDIS_KEY_PERFIX;
@@ -107,11 +109,12 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 				sendingMsg(msg);
 			}
 
-			if (list.size() < 10) {
+			dataSize = 10;
+			if (list.size() < dataSize) {
 				continue;
 			}
-			filterData = filterData(list.subList(list.size() - 10, list.size() - 1));
-			rate = filterData.getMaxPrice().divide(filterData.getMinPrice(), 2, RoundingMode.HALF_UP)
+			filterData = filterData(list.subList(list.size() - dataSize, list.size() - 1));
+			rate = filterData.getMaxPrice().divide(filterData.getMinPrice(), scale, RoundingMode.HALF_UP)
 					.subtract(BigDecimal.ONE).multiply(new BigDecimal(100));
 			fiveMinTag: if (rate.doubleValue() > maxPercentFor10Min) {
 				redisKey = BIG_MOVE_REDIS_KEY_PERFIX;
