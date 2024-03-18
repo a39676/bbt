@@ -15,6 +15,7 @@ import demo.finance.cryptoCoin.data.service.impl.CryptoCoinCacheDataService;
 import demo.scriptCore.scheduleClawing.cnStockMarketData.service.CnStockMarketDataService;
 import demo.scriptCore.scheduleClawing.currencyExchangeRate.service.CurrencyExchangeRateService;
 import demo.task.service.impl.AutomationTaskServiceImpl;
+import finance.common.pojo.type.IntervalType;
 
 @Controller
 @RequestMapping(value = { TestUrl.testRoot })
@@ -79,9 +80,9 @@ public class TestController extends CommonController {
 	@GetMapping(value = "/t6_")
 	@ResponseBody
 	public String test6_() {
-		binanceWSClient.addNewKLineSubcript("BTCUSDT", "1m");
-		binanceWSClient.addNewKLineSubcript("ETHUSDT", "1m");
-		binanceWSClient.addNewKLineSubcript("DOGEUSDT", "1m");
+		binanceWSClient.addNewKLineSubcript("BTCUSDT", IntervalType.MINUTE_1.getName());
+		binanceWSClient.addNewKLineSubcript("ETHUSDT", IntervalType.MINUTE_1.getName());
+		binanceWSClient.addNewKLineSubcript("DOGEUSDT", IntervalType.MINUTE_1.getName());
 		return "Done";
 	}
 

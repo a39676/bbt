@@ -35,7 +35,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 		int oneMinDataListMaxSize = 30;
 		Map<KLineKeyBO, List<CryptoCoinPriceCommonDataBO>> map = cacheDataServcie.getBinanceKLineCacheMap();
 		for (KLineKeyBO key : map.keySet()) {
-			if (IntervalType.MINUTE_1.name().equals(key.getInterval())) {
+			if (IntervalType.MINUTE_1.getName().equals(key.getInterval())) {
 				List<CryptoCoinPriceCommonDataBO> list = map.get(key);
 				while (list != null && list.size() > oneMinDataListMaxSize) {
 					list.remove(0);
