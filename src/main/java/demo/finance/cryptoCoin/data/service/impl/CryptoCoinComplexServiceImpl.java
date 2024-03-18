@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
+import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
+import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalogExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoinComplexService;
 import finance.common.pojo.bo.FilterPriceResult;
 import finance.common.pojo.type.IntervalType;
@@ -134,5 +136,17 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 				sendingMsg(msg);
 			}
 		}
+	}
+
+	public void checkBinanceKLineStreamAlive() {
+		// TODO check all catalog
+		CryptoCoinCatalogExample example = new CryptoCoinCatalogExample();
+		example.createCriteria().andIsDeleteEqualTo(false);
+		List<CryptoCoinCatalog> list = cryptoCoinCatalogMapper.selectByExample(example);
+		if (list == null || list.isEmpty()) {
+			return;
+		}
+		
+		
 	}
 }

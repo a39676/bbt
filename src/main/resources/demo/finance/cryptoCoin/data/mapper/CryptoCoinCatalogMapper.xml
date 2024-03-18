@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.finance.cryptoCoin.data.mapper.CryptoCoinCatalogMapper">
+  <resultMap id="BaseResultMap" type="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="coin_name_en_short" jdbcType="CHAR" property="coinNameEnShort" />
+    <result column="coin_name_en" jdbcType="CHAR" property="coinNameEn" />
+    <result column="coin_name_cn" jdbcType="CHAR" property="coinNameCn" />
+    <result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, coin_name_en_short, coin_name_en, coin_name_cn, createTime, is_delete
+  </sql>
+  <select id="selectByExample" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalogExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from crypto_coin_catalog
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from crypto_coin_catalog
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from crypto_coin_catalog
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalogExample">
+    delete from crypto_coin_catalog
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog">
+    insert into crypto_coin_catalog (id, coin_name_en_short, coin_name_en, 
+      coin_name_cn, createTime, is_delete
+      )
+    values (#{id,jdbcType=BIGINT}, #{coinNameEnShort,jdbcType=CHAR}, #{coinNameEn,jdbcType=CHAR}, 
+      #{coinNameCn,jdbcType=CHAR}, #{createtime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog">
+    insert into crypto_coin_catalog
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="coinNameEnShort != null">
+        coin_name_en_short,
+      </if>
+      <if test="coinNameEn != null">
+        coin_name_en,
+      </if>
+      <if test="coinNameCn != null">
+        coin_name_cn,
+      </if>
+      <if test="createtime != null">
+        createTime,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="coinNameEnShort != null">
+        #{coinNameEnShort,jdbcType=CHAR},
+      </if>
+      <if test="coinNameEn != null">
+        #{coinNameEn,jdbcType=CHAR},
+      </if>
+      <if test="coinNameCn != null">
+        #{coinNameCn,jdbcType=CHAR},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalogExample" resultType="java.lang.Long">
+    select count(*) from crypto_coin_catalog
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update crypto_coin_catalog
+    <set>
+      <if test="row.id != null">
+        id = #{row.id,jdbcType=BIGINT},
+      </if>
+      <if test="row.coinNameEnShort != null">
+        coin_name_en_short = #{row.coinNameEnShort,jdbcType=CHAR},
+      </if>
+      <if test="row.coinNameEn != null">
+        coin_name_en = #{row.coinNameEn,jdbcType=CHAR},
+      </if>
+      <if test="row.coinNameCn != null">
+        coin_name_cn = #{row.coinNameCn,jdbcType=CHAR},
+      </if>
+      <if test="row.createtime != null">
+        createTime = #{row.createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.isDelete != null">
+        is_delete = #{row.isDelete,jdbcType=BIT},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update crypto_coin_catalog
+    set id = #{row.id,jdbcType=BIGINT},
+      coin_name_en_short = #{row.coinNameEnShort,jdbcType=CHAR},
+      coin_name_en = #{row.coinNameEn,jdbcType=CHAR},
+      coin_name_cn = #{row.coinNameCn,jdbcType=CHAR},
+      createTime = #{row.createtime,jdbcType=TIMESTAMP},
+      is_delete = #{row.isDelete,jdbcType=BIT}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog">
+    update crypto_coin_catalog
+    <set>
+      <if test="coinNameEnShort != null">
+        coin_name_en_short = #{coinNameEnShort,jdbcType=CHAR},
+      </if>
+      <if test="coinNameEn != null">
+        coin_name_en = #{coinNameEn,jdbcType=CHAR},
+      </if>
+      <if test="coinNameCn != null">
+        coin_name_cn = #{coinNameCn,jdbcType=CHAR},
+      </if>
+      <if test="createtime != null">
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog">
+    update crypto_coin_catalog
+    set coin_name_en_short = #{coinNameEnShort,jdbcType=CHAR},
+      coin_name_en = #{coinNameEn,jdbcType=CHAR},
+      coin_name_cn = #{coinNameCn,jdbcType=CHAR},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      is_delete = #{isDelete,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByExampleWithRowbounds" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalogExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from crypto_coin_catalog
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>

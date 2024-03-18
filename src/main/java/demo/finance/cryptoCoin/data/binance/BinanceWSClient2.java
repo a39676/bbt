@@ -22,9 +22,7 @@ import com.binance.connector.client.impl.SpotClientImpl;
 import com.binance.connector.client.impl.WebSocketStreamClientImpl;
 import com.binance.connector.client.utils.websocketcallback.WebSocketMessageCallback;
 
-import demo.baseCommon.service.CommonService;
-import demo.finance.cryptoCoin.common.service.CryptoCoinConstantService;
-import demo.finance.cryptoCoin.common.service.CryptoCoinOptionService;
+import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.service.impl.CryptoCoinCacheDataService;
 import finance.common.pojo.type.IntervalType;
 import finance.cryptoCoin.binance.pojo.dto.DepthCompleteDTO;
@@ -39,12 +37,8 @@ import net.sf.json.JSONObject;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class BinanceWSClient2 extends CommonService {
+public class BinanceWSClient2 extends CryptoCoinCommonService {
 
-	@Autowired
-	private CryptoCoinConstantService constantService;
-	@Autowired
-	private CryptoCoinOptionService optionService;
 	@Autowired
 	private CryptoCoinCacheDataService cacheDataService;
 
@@ -52,7 +46,6 @@ public class BinanceWSClient2 extends CommonService {
 	private Map<BinanceWebScoketConnetionKeyBO, Integer> kLineConnectionIdMap = new HashMap<>();
 	private Map<BinanceWebScoketConnetionKeyBO, Integer> bookTickerConnectionIdMap = new HashMap<>();
 	private Map<BinanceWebScoketConnetionKeyBO, Integer> depthConnectionIdMap = new HashMap<>();
-	private String defaultInterval = IntervalType.MINUTE_1.getName();
 	private Integer defaultDepthSpeed = 100; // ms
 
 	public void restartWebSocket() {
@@ -64,7 +57,7 @@ public class BinanceWSClient2 extends CommonService {
 		getWebSorkcetStreamClient();
 		for (String symbol : optionService.getSubscriptionSet()) {
 			if (StringUtils.isNotBlank(symbol)) {
-				addNewKLineSubcript(symbol + CurrencyTypeForCryptoCoin.USDT.getName(), defaultInterval);
+				addNewKLineSubcript(symbol + CurrencyTypeForCryptoCoin.USDT.getName(), kLineDefaultInterval);
 			}
 		}
 	}

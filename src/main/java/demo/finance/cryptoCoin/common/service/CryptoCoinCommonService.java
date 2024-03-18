@@ -13,6 +13,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.common.service.FinanceCommonService;
+import demo.finance.cryptoCoin.data.mapper.CryptoCoinCatalogMapper;
+import finance.common.pojo.type.IntervalType;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
 import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
@@ -20,11 +22,15 @@ import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
 public abstract class CryptoCoinCommonService extends FinanceCommonService {
 
 	@Autowired
+	protected CryptoCoinCatalogMapper cryptoCoinCatalogMapper;
+	@Autowired
 	protected RedisTemplate<String, Object> redisTemplate;
 	@Autowired
 	protected CryptoCoinConstantService constantService;
 	@Autowired
 	protected CryptoCoinOptionService optionService;
+
+	protected String kLineDefaultInterval = IntervalType.MINUTE_1.getName();
 
 	protected CryptoCoinPriceCommonDataBO mergerData(CryptoCoinPriceCommonDataBO resultTarget,
 			CryptoCoinPriceCommonDataBO otherData) {

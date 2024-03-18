@@ -22,8 +22,8 @@
         <jdbcConnection  
         	driverClass="com.mysql.cj.jdbc.Driver" 
         	connectionURL="jdbc:mysql://localhost:3306/bbt?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC" 
-        	userId="root"
-        	password="test">    
+        	userId="bbt"
+        	password="StrongPwd2*_">    
         </jdbcConnection> 
            
         <javaTypeResolver>    
@@ -34,7 +34,7 @@
         </javaTypeResolver>  
           
         <!-- 生成模型的包名和位置-->    
-        <javaModelGenerator targetPackage="demo.autoTestBase.testEvent.pojo.po" targetProject="bbt">
+        <javaModelGenerator targetPackage="demo.finance.cryptoCoin.data.pojo.po" targetProject="bbt">
             <property name="enableSubPackages" value="true"/>    
             <property name="trimStrings" value="true"/> 
             <!-- for MyBatis3 / MyBatis3Simple
@@ -45,18 +45,18 @@
         </javaModelGenerator>    
         
         <!-- 生成映射文件的包名和位置-->    
-        <sqlMapGenerator targetPackage="demo.autoTestBase.testEvent.mapper" targetProject="bbt">
+        <sqlMapGenerator targetPackage="demo.finance.cryptoCoin.data.mapper" targetProject="bbt">
             <property name="enableSubPackages" value="true"/>    
         </sqlMapGenerator>    
         
         <!-- 生成DAO的包名和位置-->    
-        <javaClientGenerator type="XMLMAPPER" targetPackage="demo.autoTestBase.testEvent.mapper" targetProject="bbt">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="demo.finance.cryptoCoin.data.mapper" targetProject="bbt">
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="test_event">
-        	<property name="tableName" value="test_event"></property>
-        	<property name="domainObjectName" value="test_event" ></property>
+        <table tableName="crypto_coin_catalog">
+        	<property name="tableName" value="crypto_coin_catalog"></property>
+        	<property name="domainObjectName" value="crypto_coin_catalog" ></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>
