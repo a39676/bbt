@@ -1,17 +1,11 @@
 ﻿Update before deploy
 	crypto coin option file
 
-task
-	定期向 cthulhu 查询 crypto coin option 是否需要更新
-		cthulhu 直接返回完整 option 
-
 crypto monitor
 	binance
 	全币种异动监听
 		启动时 全订阅
-		另设定时任务 扫描 k line cache, 监视异动
-		需redis 配合, 统计最近异动数量
-			N分钟内, >x 个上升异动, >y 个下跌异动
+			同时大量订阅, 会有大量 stream 订阅失败, 需要分批监听
 	币种上线 下线监听
 
 工作需要, 项目内需要增加类似 fake ftp 的"本地目录"式搜查报告
