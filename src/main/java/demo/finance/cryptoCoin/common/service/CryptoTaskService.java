@@ -21,4 +21,19 @@ public class CryptoTaskService {
 	public void checkBigMoveInMinutes() {
 		cryptoCoinComplexService.checkBigMoveInMinutes();
 	}
+	
+	@Scheduled(fixedDelay = 1000L * 60)
+	public void checkBinanceKLineStreamAliveAndReconnect() {
+		cryptoCoinComplexService.checkBinanceKLineStreamAliveAndReconnect();
+	}
+	
+	@Scheduled(fixedDelay = 1000L * 60)
+	public void getRecentBigMoveCounter() {
+		cryptoCoinComplexService.getRecentBigMoveCounter();
+	}
+	
+	@Scheduled(fixedDelay = 1000L * 60 * 10)
+	public void getCryptoCoinOptionFromCthulhu() {
+		cryptoCoinComplexService.getCryptoCoinOptionFromCthulhu();
+	}
 }

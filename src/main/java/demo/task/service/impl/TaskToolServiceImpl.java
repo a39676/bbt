@@ -30,7 +30,7 @@ public class TaskToolServiceImpl extends AutomationTestCommonService implements 
 
 	@Autowired
 	private BaseMapper baseMapper;
-	
+
 	@Autowired
 	protected TestEventService testEventService;
 
@@ -48,20 +48,20 @@ public class TaskToolServiceImpl extends AutomationTestCommonService implements 
 		complexToolService.cleanTmpFiles(seleniumGlobalOptionService.getDownloadDir(), null,
 				LocalDateTime.now().minusMonths(1));
 	}
-	
+
 	@Scheduled(fixedRate = 1000L * 27)
 	public void sendHeartBeat() {
 		heartBeatService.heartbeat();
 	}
-	
+
 	@Scheduled(fixedRate = 1000L * 60 * 10)
 	public void cleanExpiredFailEventCounting() {
 		testEventService.cleanExpiredFailEventCounting();
 	}
-	
+
 	@Scheduled(fixedRate = 1000L * 30)
 	public void killChromeWebDriverWhenIdle() {
-		if(isLinux() && !testEventService.checkExistsRuningEvent()) {
+		if (isLinux() && !testEventService.checkExistsRuningEvent()) {
 			ProcessBuilder processBuilder = new ProcessBuilder();
 			processBuilder.command("/home/u2/toolSH/killChromeDriver.sh");
 			try {

@@ -1,7 +1,11 @@
-﻿crypto monitor
-	监视 判定是否断连, 断连则需要重新连接
-		以BTC 作为判断标准?
-			是否需要更改 Binance SDK? 抛出断连异常
+﻿Update before deploy
+	crypto coin option file
+
+task
+	定期向 cthulhu 查询 crypto coin option 是否需要更新
+		cthulhu 直接返回完整 option 
+
+crypto monitor
 	binance
 	全币种异动监听
 		启动时 全订阅

@@ -6,4 +6,10 @@ public interface CryptoCoinComplexService {
 
 	void checkBigMoveInMinutes();
 
+	void checkBinanceKLineStreamAliveAndReconnect();
+
+	void getRecentBigMoveCounter();
+
+	void getCryptoCoinOptionFromCthulhu();
+
 }

@@ -2,35 +2,45 @@ package demo.finance.cryptoCoin.data.service.impl;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import auxiliaryCommon.pojo.dto.BaseStrDTO;
+import demo.config.costomComponent.BbtDynamicKey;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
-import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
-import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalogExample;
+import demo.finance.cryptoCoin.data.binance.BinanceDataWSClient;
 import demo.finance.cryptoCoin.data.service.CryptoCoinComplexService;
 import finance.common.pojo.bo.FilterPriceResult;
 import finance.common.pojo.type.IntervalType;
 import finance.cryptoCoin.binance.pojo.dto.KLineKeyBO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
+import net.sf.json.JSONObject;
+import tool.pojo.constant.BbtInteractionUrl;
+import toolPack.httpHandel.HttpUtil;
 
 @Service
 public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implements CryptoCoinComplexService {
 
 	@Autowired
 	private CryptoCoinCacheDataService cacheDataServcie;
+	@Autowired
+	private BinanceDataWSClient binanceDataWSClient;
+	@Autowired
+	private BbtDynamicKey bbtDynamicKey;
 
 	private static final String BIG_MOVE_REDIS_KEY_PERFIX = "cryptoCoinBigMove";
 	private static final String BIG_RISE_REDIS_KEY_PERFIX = "Rise";
 	private static final String BIG_FALL_REDIS_KEY_PERFIX = "Fall";
-	private static final String BIG_MOVE_IN_1MIN_REDIS_KEY_PERFIX = "1Min";
-	private static final String BIG_MOVE_IN_5MIN_REDIS_KEY_PERFIX = "5Min";
-	private static final String BIG_MOVE_IN_10MIN_REDIS_KEY_PERFIX = "10Min";
-	private static final Integer BIG_MOVES_MAX_LIVING_SECONDS = 620;
+	private static final String BIG_MOVE_IN_1MIN_REDIS_KEY_PERFIX = "1Min_";
+	private static final String BIG_MOVE_IN_5MIN_REDIS_KEY_PERFIX = "5Min_";
+	private static final String BIG_MOVE_IN_10MIN_REDIS_KEY_PERFIX = "10Min_";
+	private static final Integer BIG_MOVES_MAX_LIVING_SECONDS = 600;
 
 	@Override
 	public void deleteOldKLineDatas() {
@@ -48,9 +58,6 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 
 	@Override
 	public void checkBigMoveInMinutes() {
-		double maxPercentFor1Min = 0.1;
-		double maxPercentFor5Min = 3D;
-		double maxPercentFor10Min = 5D;
 		int scale = 4;
 		Map<KLineKeyBO, List<CryptoCoinPriceCommonDataBO>> map = cacheDataServcie.getBinanceKLineCacheMap();
 		List<CryptoCoinPriceCommonDataBO> list = null;
@@ -65,10 +72,10 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 			if (list.isEmpty()) {
 				continue;
 			}
-			filterData = filterData(list.subList(list.size() - 2, list.size() - 1));
+			filterData = filterData(List.of(list.get(list.size() - 1)));
 			rate = filterData.getMaxPrice().divide(filterData.getMinPrice(), scale, RoundingMode.HALF_UP)
 					.subtract(BigDecimal.ONE).multiply(new BigDecimal(100));
-			oneMinTag: if (rate.doubleValue() > maxPercentFor1Min) {
+			oneMinTag: if (rate.doubleValue() > optionService.getBigMoveIn1min()) {
 				redisKey = BIG_MOVE_REDIS_KEY_PERFIX;
 				timingKey = BIG_MOVE_IN_1MIN_REDIS_KEY_PERFIX;
 				if (filterData.getMaxPriceDateTime().isAfter(filterData.getMinPriceDateTime())) {
@@ -93,7 +100,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 			filterData = filterData(list.subList(list.size() - dataSize, list.size() - 1));
 			rate = filterData.getMaxPrice().divide(filterData.getMinPrice(), scale, RoundingMode.HALF_UP)
 					.subtract(BigDecimal.ONE).multiply(new BigDecimal(100));
-			fiveMinTag: if (rate.doubleValue() > maxPercentFor5Min) {
+			fiveMinTag: if (rate.doubleValue() > optionService.getBigMoveIn5min()) {
 				redisKey = BIG_MOVE_REDIS_KEY_PERFIX;
 				timingKey = BIG_MOVE_IN_5MIN_REDIS_KEY_PERFIX;
 				if (filterData.getMaxPriceDateTime().isAfter(filterData.getMinPriceDateTime())) {
@@ -118,7 +125,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 			filterData = filterData(list.subList(list.size() - dataSize, list.size() - 1));
 			rate = filterData.getMaxPrice().divide(filterData.getMinPrice(), scale, RoundingMode.HALF_UP)
 					.subtract(BigDecimal.ONE).multiply(new BigDecimal(100));
-			fiveMinTag: if (rate.doubleValue() > maxPercentFor10Min) {
+			fiveMinTag: if (rate.doubleValue() > optionService.getBigMoveIn10min()) {
 				redisKey = BIG_MOVE_REDIS_KEY_PERFIX;
 				timingKey = BIG_MOVE_IN_10MIN_REDIS_KEY_PERFIX;
 				if (filterData.getMaxPriceDateTime().isAfter(filterData.getMinPriceDateTime())) {
@@ -138,15 +145,72 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 		}
 	}
 
-	public void checkBinanceKLineStreamAlive() {
-		// TODO check all catalog
-		CryptoCoinCatalogExample example = new CryptoCoinCatalogExample();
-		example.createCriteria().andIsDeleteEqualTo(false);
-		List<CryptoCoinCatalog> list = cryptoCoinCatalogMapper.selectByExample(example);
-		if (list == null || list.isEmpty()) {
-			return;
+	@Override
+	public void checkBinanceKLineStreamAliveAndReconnect() {
+		Set<String> subscriptionSymbolSet = optionService.getBinanceKLineSubscriptionSymbolSet();
+		KLineKeyBO tmpKey = null;
+		List<CryptoCoinPriceCommonDataBO> dataList = null;
+		LocalDateTime now = null;
+		CryptoCoinPriceCommonDataBO lastData = null;
+		for (String symbol : subscriptionSymbolSet) {
+			tmpKey = new KLineKeyBO();
+			tmpKey.setSymbol(symbol);
+			tmpKey.setInterval(kLineDefaultInterval);
+			dataList = cacheDataServcie.getBinanceKLineCacheMap().get(tmpKey);
+			if (dataList == null || dataList.isEmpty()) {
+				binanceDataWSClient.addNewKLineSubcript(symbol, kLineDefaultInterval);
+				continue;
+			}
+			now = LocalDateTime.now().withSecond(0).withNano(0).minusMinutes(1);
+			lastData = dataList.get(dataList.size() - 1);
+			if (lastData.getStartTime().isBefore(now)) {
+				binanceDataWSClient.addNewKLineSubcript(symbol, kLineDefaultInterval);
+			}
 		}
-		
-		
+
+	}
+
+	@Override
+	public void getRecentBigMoveCounter() {
+		Set<String> keySet = redisTemplate.keys(BIG_MOVE_REDIS_KEY_PERFIX + "*");
+		int riseCount = 0;
+		int fallCount = 0;
+		for (String key : keySet) {
+			if (key.contains(BIG_RISE_REDIS_KEY_PERFIX)) {
+				riseCount++;
+			} else if (key.contains(BIG_FALL_REDIS_KEY_PERFIX)) {
+				fallCount++;
+			}
+		}
+		String msg = "";
+		if (riseCount > 0) {
+			msg += "Big rise: " + riseCount + " in last " + BIG_MOVES_MAX_LIVING_SECONDS + " seconds; ";
+		}
+		if (fallCount > 0) {
+			msg += "Big fall: " + fallCount + " in last " + BIG_MOVES_MAX_LIVING_SECONDS + " seconds; ";
+		}
+
+		if (msg.length() > 0) {
+			if (redisTemplate.hasKey(msg)) {
+				return;
+			}
+			sendingMsg(msg);
+			redisTemplate.opsForValue().set(msg, "", BIG_MOVES_MAX_LIVING_SECONDS, TimeUnit.SECONDS);
+		}
+	}
+
+	@Override
+	public void getCryptoCoinOptionFromCthulhu() {
+		HttpUtil h = new HttpUtil();
+		BaseStrDTO dto = new BaseStrDTO();
+		dto.setStr(bbtDynamicKey.createKey());
+		JSONObject json = JSONObject.fromObject(dto);
+		try {
+			String responseStr = h.sendPostRestful(systemOptionService.getCthulhuHostname() + BbtInteractionUrl.ROOT
+					+ BbtInteractionUrl.GET_CRYPTO_COIN_OPTION, json.toString());
+			optionService.refreshOption(responseStr);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

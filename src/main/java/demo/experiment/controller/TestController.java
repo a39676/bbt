@@ -1,6 +1,7 @@
 package demo.experiment.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,7 +11,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import demo.baseCommon.controller.CommonController;
 import demo.experiment.pojo.constant.TestUrl;
 import demo.experiment.service.TestService;
-import demo.finance.cryptoCoin.data.binance.BinanceWSClient2;
+import demo.finance.cryptoCoin.data.binance.BinanceDataWSClient;
+import demo.finance.cryptoCoin.data.service.CryptoCoinComplexService;
 import demo.finance.cryptoCoin.data.service.impl.CryptoCoinCacheDataService;
 import demo.scriptCore.scheduleClawing.cnStockMarketData.service.CnStockMarketDataService;
 import demo.scriptCore.scheduleClawing.currencyExchangeRate.service.CurrencyExchangeRateService;
@@ -68,7 +70,7 @@ public class TestController extends CommonController {
 	}
 
 	@Autowired
-	private BinanceWSClient2 binanceWSClient;
+	private BinanceDataWSClient binanceWSClient;
 
 	@GetMapping(value = "/t6")
 	@ResponseBody
@@ -109,4 +111,29 @@ public class TestController extends CommonController {
 		return String.valueOf(cryptoCoinCacheDataService.getBinanceKLineCacheMap());
 	}
 
+	@Autowired
+	private CryptoCoinComplexService cryptoCoinComplexService;
+
+	@GetMapping(value = "/t9")
+	@ResponseBody
+	public String t9() {
+		cryptoCoinComplexService.getRecentBigMoveCounter();
+		return "Done";
+	}
+
+	@GetMapping(value = "/t10")
+	@ResponseBody
+	public String t1() {
+		cryptoCoinComplexService.getCryptoCoinOptionFromCthulhu();
+		return "Done";
+	}
+
+	@Autowired
+	protected RedisTemplate<String, Object> redisTemplate;
+
+	@GetMapping(value = "/t11")
+	@ResponseBody
+	public String t11(@RequestParam(value = "pattern") String pattern) {
+		return String.valueOf(redisTemplate.keys(pattern));
+	}
 }

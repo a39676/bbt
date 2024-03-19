@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
@@ -15,13 +16,17 @@ import demo.baseCommon.service.CommonService;
 import demo.config.costomComponent.OptionFilePathConfigurer;
 import toolPack.ioHandle.FileUtilCustom;
 
+@Scope("singleton")
 @Service
 public class CryptoCoinOptionService extends CommonService {
 
 	private String defaultCurrency = "USDT";
 	private String binanceApiKey;
 	private String binanceSecretKey;
-	private Set<String> subscriptionSet = new HashSet<>();
+	private Set<String> binanceKLineSubscriptionSymbolSet = new HashSet<>();
+	private Double bigMoveIn1min = 1D;
+	private Double bigMoveIn5min = 3D;
+	private Double bigMoveIn10min = 5D;
 
 	@PostConstruct
 	public void refreshOption() {
@@ -29,9 +34,13 @@ public class CryptoCoinOptionService extends CommonService {
 		if (!optionFile.exists()) {
 			return;
 		}
+		FileUtilCustom fileUtil = new FileUtilCustom();
+		String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.CRYPTO_COIN);
+		refreshOption(jsonStr);
+	}
+
+	public void refreshOption(String jsonStr) {
 		try {
-			FileUtilCustom fileUtil = new FileUtilCustom();
-			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.CRYPTO_COIN);
 			CryptoCoinOptionService tmp = new Gson().fromJson(jsonStr, CryptoCoinOptionService.class);
 			BeanUtils.copyProperties(tmp, this);
 			log.error("crypto coin option loaded");
@@ -65,18 +74,44 @@ public class CryptoCoinOptionService extends CommonService {
 		this.binanceSecretKey = binanceSecretKey;
 	}
 
-	public Set<String> getSubscriptionSet() {
-		return subscriptionSet;
+	public Set<String> getBinanceKLineSubscriptionSymbolSet() {
+		return binanceKLineSubscriptionSymbolSet;
 	}
 
-	public void setSubscriptionSet(Set<String> subscriptionSet) {
-		this.subscriptionSet = subscriptionSet;
+	public void setBinanceKLineSubscriptionSymbolSet(Set<String> binanceKLineSubscriptionSymbolSet) {
+		this.binanceKLineSubscriptionSymbolSet = binanceKLineSubscriptionSymbolSet;
+	}
+
+	public Double getBigMoveIn1min() {
+		return bigMoveIn1min;
+	}
+
+	public void setBigMoveIn1min(Double bigMoveIn1min) {
+		this.bigMoveIn1min = bigMoveIn1min;
+	}
+
+	public Double getBigMoveIn5min() {
+		return bigMoveIn5min;
+	}
+
+	public void setBigMoveIn5min(Double bigMoveIn5min) {
+		this.bigMoveIn5min = bigMoveIn5min;
+	}
+
+	public Double getBigMoveIn10min() {
+		return bigMoveIn10min;
+	}
+
+	public void setBigMoveIn10min(Double bigMoveIn10min) {
+		this.bigMoveIn10min = bigMoveIn10min;
 	}
 
 	@Override
 	public String toString() {
 		return "CryptoCoinOptionService [defaultCurrency=" + defaultCurrency + ", binanceApiKey=" + binanceApiKey
-				+ ", binanceSecretKey=" + binanceSecretKey + ", subscriptionSet=" + subscriptionSet + "]";
+				+ ", binanceSecretKey=" + binanceSecretKey + ", binanceKLineSubscriptionSymbolSet="
+				+ binanceKLineSubscriptionSymbolSet + ", bigMoveIn1min=" + bigMoveIn1min + ", bigMoveIn5min="
+				+ bigMoveIn5min + ", bigMoveIn10min=" + bigMoveIn10min + "]";
 	}
 
 }

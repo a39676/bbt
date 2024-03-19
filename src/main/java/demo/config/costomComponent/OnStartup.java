@@ -6,9 +6,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import demo.baseCommon.service.CommonService;
-import demo.finance.cryptoCoin.data.binance.BinanceWSClient2;
 import demo.selenium.service.SeleniumGlobalOptionService;
-import finance.common.pojo.type.IntervalType;
 
 @Component
 public class OnStartup extends CommonService implements ApplicationListener<ApplicationReadyEvent> {
@@ -34,16 +32,6 @@ public class OnStartup extends CommonService implements ApplicationListener<Appl
 
 			log.error("Had set proxy");
 		}
-	}
-	
-	// TODO for test
-	@Autowired
-	private BinanceWSClient2 binanceWSClient;
-	
-	public void forTest() {
-		binanceWSClient.addNewKLineSubcript("BTCUSDT", IntervalType.MINUTE_1.getName());
-		binanceWSClient.addNewKLineSubcript("ETHUSDT", IntervalType.MINUTE_1.getName());
-		binanceWSClient.addNewKLineSubcript("DOGEUSDT", IntervalType.MINUTE_1.getName());
 	}
 
 }

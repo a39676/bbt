@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -37,7 +36,7 @@ import net.sf.json.JSONObject;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class BinanceWSClient2 extends CryptoCoinCommonService {
+public class BinanceDataWSClient extends CryptoCoinCommonService {
 
 	@Autowired
 	private CryptoCoinCacheDataService cacheDataService;
@@ -55,11 +54,6 @@ public class BinanceWSClient2 extends CryptoCoinCommonService {
 
 	public void createWebSocket() {
 		getWebSorkcetStreamClient();
-		for (String symbol : optionService.getSubscriptionSet()) {
-			if (StringUtils.isNotBlank(symbol)) {
-				addNewKLineSubcript(symbol + CurrencyTypeForCryptoCoin.USDT.getName(), kLineDefaultInterval);
-			}
-		}
 	}
 
 	private WebSocketStreamClient getWebSorkcetStreamClient() {
@@ -164,7 +158,7 @@ public class BinanceWSClient2 extends CryptoCoinCommonService {
 					dataBO.setInterval(interval);
 					dataBO.setStartTime(dataBO.getStartTime().withSecond(0).withNano(0));
 					KLineKeyBO key = new KLineKeyBO();
-					key.setSymbol(dataBO.getCoinType());
+					key.setSymbol(dataBO.getSymbol());
 					key.setInterval(interval.getName());
 					List<CryptoCoinPriceCommonDataBO> cacheDataList = null;
 					if (cacheDataService.getBinanceKLineCacheMap().containsKey(key)) {
@@ -268,7 +262,8 @@ public class BinanceWSClient2 extends CryptoCoinCommonService {
 
 			JSONObject kDataJson = sourceMsgJson.getJSONObject("k");
 			String symbol = sourceMsgJson.getString("s").toLowerCase();
-
+			bo.setSymbol(symbol);
+			
 			if (symbol.contains("usdt")) {
 				bo.setCurrencyType(CurrencyTypeForCryptoCoin.USD.getCode());
 				bo.setCoinType(symbol.replaceAll("usdt", ""));
@@ -387,7 +382,7 @@ public class BinanceWSClient2 extends CryptoCoinCommonService {
 		System.setProperty("https.proxyHost", proxyHost);
 		System.setProperty("https.proxyPort", proxyPort);
 
-		BinanceWSClient2 t = new BinanceWSClient2();
+		BinanceDataWSClient t = new BinanceDataWSClient();
 		t.getKLineDataDemo();
 	}
 }
