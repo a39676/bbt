@@ -147,24 +147,28 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 
 	@Override
 	public void checkBinanceKLineStreamAliveAndReconnect() {
-		Set<String> subscriptionSymbolSet = optionService.getBinanceKLineSubscriptionSymbolSet();
+		List<String> subscriptionSymbolList = optionService.getBinanceKLineSubscriptionSymbolSet();
 		KLineKeyBO tmpKey = null;
 		List<CryptoCoinPriceCommonDataBO> dataList = null;
 		LocalDateTime now = null;
 		CryptoCoinPriceCommonDataBO lastData = null;
-		for (String symbol : subscriptionSymbolSet) {
+		int maxReconnectCounter = 10;
+		String symbol = null;
+		for (int i = 0; i < subscriptionSymbolList.size() && maxReconnectCounter > 0; i++) {
 			tmpKey = new KLineKeyBO();
 			tmpKey.setSymbol(symbol);
 			tmpKey.setInterval(kLineDefaultInterval);
 			dataList = cacheDataServcie.getBinanceKLineCacheMap().get(tmpKey);
 			if (dataList == null || dataList.isEmpty()) {
 				binanceDataWSClient.addNewKLineSubcript(symbol, kLineDefaultInterval);
+				maxReconnectCounter++;
 				continue;
 			}
 			now = LocalDateTime.now().withSecond(0).withNano(0).minusMinutes(1);
 			lastData = dataList.get(dataList.size() - 1);
 			if (lastData.getStartTime().isBefore(now)) {
 				binanceDataWSClient.addNewKLineSubcript(symbol, kLineDefaultInterval);
+				maxReconnectCounter++;
 			}
 		}
 
