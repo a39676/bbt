@@ -1,8 +1,8 @@
 package demo.finance.cryptoCoin.common.service;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 
@@ -23,7 +23,7 @@ public class CryptoCoinOptionService extends CommonService {
 	private String defaultCurrency = "USDT";
 	private String binanceApiKey;
 	private String binanceSecretKey;
-	private Set<String> binanceKLineSubscriptionSymbolSet = new HashSet<>();
+	private List<String> binanceKLineSubscriptionSymbolSet = new ArrayList<>();
 	private Double bigMoveIn1min = 1D;
 	private Double bigMoveIn5min = 3D;
 	private Double bigMoveIn10min = 5D;
@@ -74,11 +74,11 @@ public class CryptoCoinOptionService extends CommonService {
 		this.binanceSecretKey = binanceSecretKey;
 	}
 
-	public Set<String> getBinanceKLineSubscriptionSymbolSet() {
+	public List<String> getBinanceKLineSubscriptionSymbolSet() {
 		return binanceKLineSubscriptionSymbolSet;
 	}
 
-	public void setBinanceKLineSubscriptionSymbolSet(Set<String> binanceKLineSubscriptionSymbolSet) {
+	public void setBinanceKLineSubscriptionSymbolSet(List<String> binanceKLineSubscriptionSymbolSet) {
 		this.binanceKLineSubscriptionSymbolSet = binanceKLineSubscriptionSymbolSet;
 	}
 

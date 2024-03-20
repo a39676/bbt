@@ -68,6 +68,9 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 		String msg = null;
 		BigDecimal rate = null;
 		CryptoCoinPriceCommonDataBO lastData = null;
+		if (map.isEmpty()) {
+			return;
+		}
 		for (KLineKeyBO key : map.keySet()) {
 			list = map.get(key);
 			if (list.isEmpty()) {
@@ -149,24 +152,29 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 
 	@Override
 	public void checkBinanceKLineStreamAliveAndReconnect() {
-		Set<String> subscriptionSymbolSet = optionService.getBinanceKLineSubscriptionSymbolSet();
+		List<String> subscriptionSymbolList = optionService.getBinanceKLineSubscriptionSymbolSet();
 		KLineKeyBO tmpKey = null;
 		List<CryptoCoinPriceCommonDataBO> dataList = null;
 		LocalDateTime now = null;
 		CryptoCoinPriceCommonDataBO lastData = null;
-		for (String symbol : subscriptionSymbolSet) {
+		int maxReconnectCounter = 10;
+		String symbol = null;
+		for (int i = 0; i < subscriptionSymbolList.size() && maxReconnectCounter > 0; i++) {
+			symbol = subscriptionSymbolList.get(i);
 			tmpKey = new KLineKeyBO();
 			tmpKey.setSymbol(symbol);
 			tmpKey.setInterval(kLineDefaultInterval);
 			dataList = cacheDataServcie.getBinanceKLineCacheMap().get(tmpKey);
 			if (dataList == null || dataList.isEmpty()) {
 				binanceDataWSClient.addNewKLineSubcript(symbol, kLineDefaultInterval);
+				maxReconnectCounter--;
 				continue;
 			}
 			now = LocalDateTime.now().withSecond(0).withNano(0).minusMinutes(1);
 			lastData = dataList.get(dataList.size() - 1);
 			if (lastData.getStartTime().isBefore(now)) {
 				binanceDataWSClient.addNewKLineSubcript(symbol, kLineDefaultInterval);
+				maxReconnectCounter--;
 			}
 		}
 
@@ -192,7 +200,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 			msg += "Big fall: " + fallCount + " in last " + BIG_MOVES_MAX_LIVING_SECONDS + " seconds; ";
 		}
 
-		if (msg.length() > 0) {
+		if (msg.length() > 0 && ((riseCount + fallCount) > 5)) {
 			if (redisTemplate.hasKey(msg)) {
 				return;
 			}
