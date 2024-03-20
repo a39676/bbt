@@ -17,6 +17,7 @@ import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.binance.BinanceDataWSClient;
 import demo.finance.cryptoCoin.data.service.CryptoCoinComplexService;
 import finance.common.pojo.bo.FilterPriceResult;
+import finance.common.pojo.bo.KLineCommonDataBO;
 import finance.common.pojo.type.IntervalType;
 import finance.cryptoCoin.binance.pojo.dto.KLineKeyBO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
@@ -58,15 +59,13 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 
 	@Override
 	public void checkBigMoveInMinutes() {
-		int scale = 4;
+		int scaleForCalculate = 4;
 		Map<KLineKeyBO, List<CryptoCoinPriceCommonDataBO>> map = cacheDataServcie.getBinanceKLineCacheMap();
 		List<CryptoCoinPriceCommonDataBO> list = null;
 		FilterPriceResult filterData = null;
-		String redisKey = null;
-		String directKey = null;
 		String timingKey = null;
-		String msg = null;
 		BigDecimal rate = null;
+		boolean sendMsgFlag = false;
 		CryptoCoinPriceCommonDataBO lastData = null;
 		if (map.isEmpty()) {
 			return;
@@ -78,24 +77,14 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 			}
 			filterData = filterData(List.of(list.get(list.size() - 1)));
 			lastData = list.get(list.size() - 1);
-			rate = filterData.getMaxPrice().divide(filterData.getMinPrice(), scale, RoundingMode.HALF_UP)
+			rate = filterData.getMaxPrice().divide(filterData.getMinPrice(), scaleForCalculate, RoundingMode.HALF_UP)
 					.subtract(BigDecimal.ONE).multiply(new BigDecimal(100));
 			oneMinTag: if (rate.doubleValue() > optionService.getBigMoveIn1min()) {
-				redisKey = BIG_MOVE_REDIS_KEY_PERFIX;
 				timingKey = BIG_MOVE_IN_1MIN_REDIS_KEY_PERFIX;
-				if (filterData.getMaxPriceDateTime().isAfter(filterData.getMinPriceDateTime())) {
-					directKey = BIG_RISE_REDIS_KEY_PERFIX;
-				} else {
-					directKey = BIG_FALL_REDIS_KEY_PERFIX;
-				}
-				redisKey = redisKey + directKey + timingKey + key.getSymbol();
-				if (redisTemplate.hasKey(redisKey)) {
+				sendMsgFlag = sendNoticeMsgIfNecessary(timingKey, filterData, key, rate, lastData);
+				if (sendMsgFlag) {
 					break oneMinTag;
 				}
-				redisTemplate.opsForValue().set(redisKey, key.getSymbol(), BIG_MOVES_MAX_LIVING_SECONDS,
-						TimeUnit.SECONDS);
-				msg = key.getSymbol() + " " + directKey + ", " + rate + "% in " + timingKey + ", now: " + lastData.getEndPrice();
-				sendingMsg(msg);
 			}
 
 			int dataSize = 5;
@@ -103,24 +92,14 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 				continue;
 			}
 			filterData = filterData(list.subList(list.size() - dataSize, list.size() - 1));
-			rate = filterData.getMaxPrice().divide(filterData.getMinPrice(), scale, RoundingMode.HALF_UP)
+			rate = filterData.getMaxPrice().divide(filterData.getMinPrice(), scaleForCalculate, RoundingMode.HALF_UP)
 					.subtract(BigDecimal.ONE).multiply(new BigDecimal(100));
 			fiveMinTag: if (rate.doubleValue() > optionService.getBigMoveIn5min()) {
-				redisKey = BIG_MOVE_REDIS_KEY_PERFIX;
 				timingKey = BIG_MOVE_IN_5MIN_REDIS_KEY_PERFIX;
-				if (filterData.getMaxPriceDateTime().isAfter(filterData.getMinPriceDateTime())) {
-					directKey = BIG_RISE_REDIS_KEY_PERFIX;
-				} else {
-					directKey = BIG_FALL_REDIS_KEY_PERFIX;
-				}
-				redisKey = redisKey + directKey + timingKey + key.getSymbol();
-				if (redisTemplate.hasKey(redisKey)) {
+				sendMsgFlag = sendNoticeMsgIfNecessary(timingKey, filterData, key, rate, lastData);
+				if (sendMsgFlag) {
 					break fiveMinTag;
 				}
-				redisTemplate.opsForValue().set(redisKey, key.getSymbol(), BIG_MOVES_MAX_LIVING_SECONDS,
-						TimeUnit.SECONDS);
-				msg = key.getSymbol() + " " + directKey + ", " + rate + "% in " + timingKey + ", now: " + lastData.getEndPrice();
-				sendingMsg(msg);
 			}
 
 			dataSize = 10;
@@ -128,26 +107,37 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 				continue;
 			}
 			filterData = filterData(list.subList(list.size() - dataSize, list.size() - 1));
-			rate = filterData.getMaxPrice().divide(filterData.getMinPrice(), scale, RoundingMode.HALF_UP)
+			rate = filterData.getMaxPrice().divide(filterData.getMinPrice(), scaleForCalculate, RoundingMode.HALF_UP)
 					.subtract(BigDecimal.ONE).multiply(new BigDecimal(100));
-			fiveMinTag: if (rate.doubleValue() > optionService.getBigMoveIn10min()) {
-				redisKey = BIG_MOVE_REDIS_KEY_PERFIX;
+			fiveTenMinTag: if (rate.doubleValue() > optionService.getBigMoveIn10min()) {
 				timingKey = BIG_MOVE_IN_10MIN_REDIS_KEY_PERFIX;
-				if (filterData.getMaxPriceDateTime().isAfter(filterData.getMinPriceDateTime())) {
-					directKey = BIG_RISE_REDIS_KEY_PERFIX;
-				} else {
-					directKey = BIG_FALL_REDIS_KEY_PERFIX;
+				sendMsgFlag = sendNoticeMsgIfNecessary(timingKey, filterData, key, rate, lastData);
+				if (sendMsgFlag) {
+					break fiveTenMinTag;
 				}
-				redisKey = redisKey + directKey + timingKey + key.getSymbol();
-				if (redisTemplate.hasKey(redisKey)) {
-					break fiveMinTag;
-				}
-				redisTemplate.opsForValue().set(redisKey, key.getSymbol(), BIG_MOVES_MAX_LIVING_SECONDS,
-						TimeUnit.SECONDS);
-				msg = key.getSymbol() + " " + directKey + ", " + rate + "% in " + timingKey + ", now: " + lastData.getEndPrice();
-				sendingMsg(msg);
 			}
 		}
+	}
+
+	private boolean sendNoticeMsgIfNecessary(String timingKey, FilterPriceResult filterData, KLineKeyBO key,
+			BigDecimal rate, KLineCommonDataBO lastData) {
+		int scaleForPriceDisplay = 8;
+		String redisKey = BIG_MOVE_REDIS_KEY_PERFIX;
+		String directKey = null;
+		if (filterData.getMaxPriceDateTime().isAfter(filterData.getMinPriceDateTime())) {
+			directKey = BIG_RISE_REDIS_KEY_PERFIX;
+		} else {
+			directKey = BIG_FALL_REDIS_KEY_PERFIX;
+		}
+		redisKey = redisKey + directKey + timingKey + key.getSymbol();
+		if (redisTemplate.hasKey(redisKey)) {
+			return false;
+		}
+		redisTemplate.opsForValue().set(redisKey, key.getSymbol(), BIG_MOVES_MAX_LIVING_SECONDS, TimeUnit.SECONDS);
+		String msg = key.getSymbol() + " " + directKey + ", " + rate + "% in " + timingKey + ", now: "
+				+ lastData.getEndPrice().setScale(scaleForPriceDisplay, RoundingMode.HALF_UP);
+		sendingMsg(msg);
+		return true;
 	}
 
 	@Override
