@@ -67,6 +67,9 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 		String timingKey = null;
 		String msg = null;
 		BigDecimal rate = null;
+		if (map.isEmpty()) {
+			return;
+		}
 		for (KLineKeyBO key : map.keySet()) {
 			list = map.get(key);
 			if (list.isEmpty()) {
