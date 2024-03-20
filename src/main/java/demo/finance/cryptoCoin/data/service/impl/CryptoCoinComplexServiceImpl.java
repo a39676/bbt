@@ -155,20 +155,21 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 		int maxReconnectCounter = 10;
 		String symbol = null;
 		for (int i = 0; i < subscriptionSymbolList.size() && maxReconnectCounter > 0; i++) {
+			symbol = subscriptionSymbolList.get(i);
 			tmpKey = new KLineKeyBO();
 			tmpKey.setSymbol(symbol);
 			tmpKey.setInterval(kLineDefaultInterval);
 			dataList = cacheDataServcie.getBinanceKLineCacheMap().get(tmpKey);
 			if (dataList == null || dataList.isEmpty()) {
 				binanceDataWSClient.addNewKLineSubcript(symbol, kLineDefaultInterval);
-				maxReconnectCounter++;
+				maxReconnectCounter--;
 				continue;
 			}
 			now = LocalDateTime.now().withSecond(0).withNano(0).minusMinutes(1);
 			lastData = dataList.get(dataList.size() - 1);
 			if (lastData.getStartTime().isBefore(now)) {
 				binanceDataWSClient.addNewKLineSubcript(symbol, kLineDefaultInterval);
-				maxReconnectCounter++;
+				maxReconnectCounter--;
 			}
 		}
 
