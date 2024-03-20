@@ -67,12 +67,14 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 		String timingKey = null;
 		String msg = null;
 		BigDecimal rate = null;
+		CryptoCoinPriceCommonDataBO lastData = null;
 		for (KLineKeyBO key : map.keySet()) {
 			list = map.get(key);
 			if (list.isEmpty()) {
 				continue;
 			}
 			filterData = filterData(List.of(list.get(list.size() - 1)));
+			lastData = list.get(list.size() - 1);
 			rate = filterData.getMaxPrice().divide(filterData.getMinPrice(), scale, RoundingMode.HALF_UP)
 					.subtract(BigDecimal.ONE).multiply(new BigDecimal(100));
 			oneMinTag: if (rate.doubleValue() > optionService.getBigMoveIn1min()) {
@@ -89,7 +91,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 				}
 				redisTemplate.opsForValue().set(redisKey, key.getSymbol(), BIG_MOVES_MAX_LIVING_SECONDS,
 						TimeUnit.SECONDS);
-				msg = key.getSymbol() + " " + directKey + ", " + rate + "% in " + timingKey;
+				msg = key.getSymbol() + " " + directKey + ", " + rate + "% in " + timingKey + ", now: " + lastData.getEndPrice();
 				sendingMsg(msg);
 			}
 
@@ -114,7 +116,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 				}
 				redisTemplate.opsForValue().set(redisKey, key.getSymbol(), BIG_MOVES_MAX_LIVING_SECONDS,
 						TimeUnit.SECONDS);
-				msg = key.getSymbol() + " " + directKey + ", " + rate + "% in " + timingKey;
+				msg = key.getSymbol() + " " + directKey + ", " + rate + "% in " + timingKey + ", now: " + lastData.getEndPrice();
 				sendingMsg(msg);
 			}
 
@@ -139,7 +141,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 				}
 				redisTemplate.opsForValue().set(redisKey, key.getSymbol(), BIG_MOVES_MAX_LIVING_SECONDS,
 						TimeUnit.SECONDS);
-				msg = key.getSymbol() + " " + directKey + ", " + rate + "% in " + timingKey;
+				msg = key.getSymbol() + " " + directKey + ", " + rate + "% in " + timingKey + ", now: " + lastData.getEndPrice();
 				sendingMsg(msg);
 			}
 		}
