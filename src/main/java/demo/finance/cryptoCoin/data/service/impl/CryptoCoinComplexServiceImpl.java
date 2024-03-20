@@ -194,7 +194,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 			msg += "Big fall: " + fallCount + " in last " + BIG_MOVES_MAX_LIVING_SECONDS + " seconds; ";
 		}
 
-		if (msg.length() > 0) {
+		if (msg.length() > 0 && ((riseCount + fallCount) > 5)) {
 			if (redisTemplate.hasKey(msg)) {
 				return;
 			}
