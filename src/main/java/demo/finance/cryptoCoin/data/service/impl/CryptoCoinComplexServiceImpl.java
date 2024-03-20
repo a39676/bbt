@@ -72,10 +72,10 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 		}
 		for (KLineKeyBO key : map.keySet()) {
 			list = map.get(key);
-			if (list.isEmpty()) {
+			if (list.isEmpty() || list.size() < 2) {
 				continue;
 			}
-			filterData = filterData(List.of(list.get(list.size() - 1)));
+			filterData = filterData(list.subList(list.size() - 2, list.size() - 1));
 			lastData = list.get(list.size() - 1);
 			rate = filterData.getMaxPrice().divide(filterData.getMinPrice(), scaleForCalculate, RoundingMode.HALF_UP)
 					.subtract(BigDecimal.ONE).multiply(new BigDecimal(100));
