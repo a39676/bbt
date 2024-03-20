@@ -27,6 +27,7 @@ public class CryptoCoinOptionService extends CommonService {
 	private Double bigMoveIn1min = 1D;
 	private Double bigMoveIn5min = 3D;
 	private Double bigMoveIn10min = 5D;
+	private Integer maxReconnectCounterInOneTime = 10;
 
 	@PostConstruct
 	public void refreshOption() {
@@ -106,12 +107,21 @@ public class CryptoCoinOptionService extends CommonService {
 		this.bigMoveIn10min = bigMoveIn10min;
 	}
 
+	public Integer getMaxReconnectCounterInOneTime() {
+		return maxReconnectCounterInOneTime;
+	}
+
+	public void setMaxReconnectCounterInOneTime(Integer maxReconnectCounterInOneTime) {
+		this.maxReconnectCounterInOneTime = maxReconnectCounterInOneTime;
+	}
+
 	@Override
 	public String toString() {
 		return "CryptoCoinOptionService [defaultCurrency=" + defaultCurrency + ", binanceApiKey=" + binanceApiKey
 				+ ", binanceSecretKey=" + binanceSecretKey + ", binanceKLineSubscriptionSymbolSet="
 				+ binanceKLineSubscriptionSymbolSet + ", bigMoveIn1min=" + bigMoveIn1min + ", bigMoveIn5min="
-				+ bigMoveIn5min + ", bigMoveIn10min=" + bigMoveIn10min + "]";
+				+ bigMoveIn5min + ", bigMoveIn10min=" + bigMoveIn10min + ", maxReconnectCounterInOneTime="
+				+ maxReconnectCounterInOneTime + "]";
 	}
 
 }

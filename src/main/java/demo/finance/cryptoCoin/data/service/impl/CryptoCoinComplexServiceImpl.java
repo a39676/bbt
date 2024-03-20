@@ -147,7 +147,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 		List<CryptoCoinPriceCommonDataBO> dataList = null;
 		LocalDateTime now = null;
 		CryptoCoinPriceCommonDataBO lastData = null;
-		int maxReconnectCounter = 10;
+		int maxReconnectCounter = optionService.getMaxReconnectCounterInOneTime();
 		String symbol = null;
 		for (int i = 0; i < subscriptionSymbolList.size() && maxReconnectCounter > 0; i++) {
 			symbol = subscriptionSymbolList.get(i);

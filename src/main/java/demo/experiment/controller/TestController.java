@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import demo.baseCommon.controller.CommonController;
 import demo.experiment.pojo.constant.TestUrl;
 import demo.experiment.service.TestService;
+import demo.finance.cryptoCoin.common.service.CryptoCoinOptionService;
 import demo.finance.cryptoCoin.data.binance.BinanceDataWSClient;
 import demo.finance.cryptoCoin.data.service.CryptoCoinComplexService;
 import demo.finance.cryptoCoin.data.service.impl.CryptoCoinCacheDataService;
@@ -129,11 +130,22 @@ public class TestController extends CommonController {
 	}
 
 	@Autowired
-	protected RedisTemplate<String, Object> redisTemplate;
+	private RedisTemplate<String, Object> redisTemplate;
 
 	@GetMapping(value = "/t11")
 	@ResponseBody
 	public String t11(@RequestParam(value = "pattern") String pattern) {
 		return String.valueOf(redisTemplate.keys(pattern));
+	}
+
+	@Autowired
+	private CryptoCoinOptionService optionService;
+
+	@GetMapping(value = "/t12")
+	@ResponseBody
+	public String t12() {
+		int maxReconnectCounter = optionService.getMaxReconnectCounterInOneTime();
+		maxReconnectCounter--;
+		return "Option: " + optionService.getMaxReconnectCounterInOneTime() + ", param: " + maxReconnectCounter;
 	}
 }

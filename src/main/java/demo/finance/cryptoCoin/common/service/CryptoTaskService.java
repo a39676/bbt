@@ -22,7 +22,7 @@ public class CryptoTaskService {
 		cryptoCoinComplexService.checkBigMoveInMinutes();
 	}
 	
-	@Scheduled(fixedDelay = 1000L * 60)
+	@Scheduled(fixedDelay = 1000L * 30)
 	public void checkBinanceKLineStreamAliveAndReconnect() {
 		cryptoCoinComplexService.checkBinanceKLineStreamAliveAndReconnect();
 	}
