@@ -13,6 +13,7 @@ import com.google.gson.GsonBuilder;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.BaseResultType;
+import demo.baseCommon.pojo.constant.SystemConstant;
 import demo.baseCommon.pojo.param.PageParam;
 import demo.config.costomComponent.SnowFlake;
 import demo.tool.service.ReminderMessageService;
@@ -50,7 +51,7 @@ public abstract class CommonService {
 	private static final int NORMAL_PAGE_SIZE = 10;
 	private static final int MAX_PAGE_SIZE = 300;
 	protected static final long THE_START_TIME = 946656000000L;
-	protected static final String MAIN_FOLDER_PATH = "/home/u2/bbt";
+	protected static final String MAIN_FOLDER_PATH = SystemConstant.ROOT_PATH;
 
 	protected PageParam setPageFromPageNo(Integer pageNo) {
 		return setPageFromPageNo(pageNo, NORMAL_PAGE_SIZE);

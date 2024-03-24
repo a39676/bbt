@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.autoTestBase.testEvent.service.impl.HeartBeatService;
 import demo.base.system.mapper.BaseMapper;
+import demo.baseCommon.pojo.constant.SystemConstant;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.impl.AutomationTestCommonService;
 import demo.task.service.TaskToolService;
@@ -63,7 +64,7 @@ public class TaskToolServiceImpl extends AutomationTestCommonService implements 
 	public void killChromeWebDriverWhenIdle() {
 		if (isLinux() && !testEventService.checkExistsRuningEvent()) {
 			ProcessBuilder processBuilder = new ProcessBuilder();
-			processBuilder.command("/home/u2/toolSH/killChromeDriver.sh");
+			processBuilder.command(SystemConstant.ROOT_PATH + "/toolSH/killChromeDriver.sh");
 			try {
 
 				Process process = processBuilder.start();
