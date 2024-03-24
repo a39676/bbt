@@ -1,12 +1,6 @@
-﻿Update before deploy
-	crypto coin option file
-
-crypto monitor
+﻿crypto monitor
 	binance
-	全币种异动监听
-		启动时 全订阅
-			同时大量订阅, 会有大量 stream 订阅失败, 需要分批监听
-	币种上线 下线监听
+		币种上线 下线监听
 
 工作需要, 项目内需要增加类似 fake ftp 的"本地目录"式搜查报告
 	搜索栏应配备
