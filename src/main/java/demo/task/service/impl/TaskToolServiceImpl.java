@@ -64,7 +64,7 @@ public class TaskToolServiceImpl extends AutomationTestCommonService implements 
 	public void killChromeWebDriverWhenIdle() {
 		if (isLinux() && !testEventService.checkExistsRuningEvent()) {
 			ProcessBuilder processBuilder = new ProcessBuilder();
-			processBuilder.command(SystemConstant.ROOT_PATH + "/toolSH/killChromeDriver.sh");
+			processBuilder.command(SystemConstant.ROOT_USER_PATH + "/toolSH/killChromeDriver.sh");
 			try {
 
 				Process process = processBuilder.start();
