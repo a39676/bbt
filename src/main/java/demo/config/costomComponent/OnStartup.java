@@ -19,6 +19,8 @@ public class OnStartup extends CommonService implements ApplicationListener<Appl
 		globalOptionService.getDownloadDir();
 		globalOptionService.getScreenshotSavingFolder();
 
+		String os = System.getProperty("os.name");
+		log.error("OS name: " + os);
 		if (isWindows()) {
 			log.error("OS: Windows, will set proxy");
 			String proxyHost = "127.0.0.1";
