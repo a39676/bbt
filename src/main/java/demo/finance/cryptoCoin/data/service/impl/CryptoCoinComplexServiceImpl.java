@@ -208,6 +208,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 		try {
 			String responseStr = h.sendPostRestful(systemOptionService.getCthulhuHostname() + BbtInteractionUrl.ROOT
 					+ BbtInteractionUrl.GET_CRYPTO_COIN_OPTION, json.toString());
+			log.error("configFromCthuhu: " + responseStr);
 			optionService.refreshOption(responseStr);
 		} catch (Exception e) {
 			e.printStackTrace();
