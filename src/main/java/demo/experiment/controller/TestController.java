@@ -148,4 +148,12 @@ public class TestController extends CommonController {
 		maxReconnectCounter--;
 		return "Option: " + optionService.getMaxReconnectCounterInOneTime() + ", param: " + maxReconnectCounter;
 	}
+
+	@GetMapping(value = "/t13")
+	@ResponseBody
+	public String t13() {
+		cryptoCoinComplexService.getCryptoCoinOptionFromCthulhu();
+		return String.valueOf(optionService);
+	}
+
 }
