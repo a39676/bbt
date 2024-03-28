@@ -3,6 +3,7 @@ package demo.finance.cryptoCoin.data.service.impl;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -70,12 +71,14 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 		if (map.isEmpty()) {
 			return;
 		}
+		int dataSize = 0;
 		for (KLineKeyBO key : map.keySet()) {
 			list = map.get(key);
-			if (list.isEmpty() || list.size() < 2) {
+			dataSize = 1;
+			if (list.isEmpty() || list.size() < dataSize + 1) {
 				continue;
 			}
-			filterData = filterData(list.subList(list.size() - 2, list.size() - 1));
+			filterData = kLineToolUnit.filterData(list.subList(list.size() - 2, list.size() - 1));
 			lastData = list.get(list.size() - 1);
 			rate = filterData.getMaxPrice().divide(filterData.getMinPrice(), scaleForCalculate, RoundingMode.HALF_UP)
 					.subtract(BigDecimal.ONE).multiply(new BigDecimal(100));
@@ -87,11 +90,11 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 				}
 			}
 
-			int dataSize = 5;
+			dataSize = 5;
 			if (list.size() < dataSize) {
 				continue;
 			}
-			filterData = filterData(list.subList(list.size() - dataSize, list.size() - 1));
+			filterData = kLineToolUnit.filterData(list.subList(list.size() - dataSize, list.size() - 1));
 			rate = filterData.getMaxPrice().divide(filterData.getMinPrice(), scaleForCalculate, RoundingMode.HALF_UP)
 					.subtract(BigDecimal.ONE).multiply(new BigDecimal(100));
 			fiveMinTag: if (rate.doubleValue() > optionService.getBigMoveIn5min()) {
@@ -106,7 +109,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 			if (list.size() < dataSize) {
 				continue;
 			}
-			filterData = filterData(list.subList(list.size() - dataSize, list.size() - 1));
+			filterData = kLineToolUnit.filterData(list.subList(list.size() - dataSize, list.size() - 1));
 			rate = filterData.getMaxPrice().divide(filterData.getMinPrice(), scaleForCalculate, RoundingMode.HALF_UP)
 					.subtract(BigDecimal.ONE).multiply(new BigDecimal(100));
 			fiveTenMinTag: if (rate.doubleValue() > optionService.getBigMoveIn10min()) {
@@ -125,9 +128,9 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 		String redisKey = BIG_MOVE_REDIS_KEY_PERFIX;
 		String directKey = null;
 		if (filterData.getMaxPriceDateTime().isAfter(filterData.getMinPriceDateTime())) {
-			directKey = BIG_RISE_REDIS_KEY_PERFIX;
+			directKey = BIG_RISE_REDIS_KEY_PERFIX + "↗↗";
 		} else {
-			directKey = BIG_FALL_REDIS_KEY_PERFIX;
+			directKey = BIG_FALL_REDIS_KEY_PERFIX + "↘↘";
 		}
 		redisKey = redisKey + directKey + timingKey + key.getSymbol();
 		if (redisTemplate.hasKey(redisKey)) {
@@ -171,11 +174,19 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 	}
 
 	@Override
-	public void getRecentBigMoveCounter() {
-		Set<String> keySet = redisTemplate.keys(BIG_MOVE_REDIS_KEY_PERFIX + "*");
+	public void getRecentBigMoveCounterBySymbol() {
+		Set<String> sourceKeySet = redisTemplate.keys(BIG_MOVE_REDIS_KEY_PERFIX + "*");
+
+		Set<String> targetKeySet = new HashSet<>();
+		for (String key : sourceKeySet) {
+			targetKeySet.add(key.replaceAll(BIG_MOVE_IN_1MIN_REDIS_KEY_PERFIX, "")
+					.replaceAll(BIG_MOVE_IN_5MIN_REDIS_KEY_PERFIX, "")
+					.replaceAll(BIG_MOVE_IN_10MIN_REDIS_KEY_PERFIX, ""));
+		}
+
 		int riseCount = 0;
 		int fallCount = 0;
-		for (String key : keySet) {
+		for (String key : targetKeySet) {
 			if (key.contains(BIG_RISE_REDIS_KEY_PERFIX)) {
 				riseCount++;
 			} else if (key.contains(BIG_FALL_REDIS_KEY_PERFIX)) {

@@ -29,7 +29,7 @@ public class CryptoTaskService {
 	
 	@Scheduled(fixedDelay = 1000L * 60)
 	public void getRecentBigMoveCounter() {
-		cryptoCoinComplexService.getRecentBigMoveCounter();
+		cryptoCoinComplexService.getRecentBigMoveCounterBySymbol();
 	}
 	
 	@Scheduled(fixedDelay = 1000L * 60 * 10)

@@ -8,7 +8,7 @@ public interface CryptoCoinComplexService {
 
 	void checkBinanceKLineStreamAliveAndReconnect();
 
-	void getRecentBigMoveCounter();
+	void getRecentBigMoveCounterBySymbol();
 
 	void getCryptoCoinOptionFromCthulhu();
 

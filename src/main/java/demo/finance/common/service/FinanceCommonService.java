@@ -1,20 +1,19 @@
 package demo.finance.common.service;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import demo.base.system.service.impl.SystemOptionService;
 import demo.baseCommon.service.CommonService;
-import finance.common.pojo.bo.FilterPriceResult;
-import finance.common.pojo.bo.KLineCommonDataBO;
+import finance.common.tool.KLineToolUnit;
 
 public abstract class FinanceCommonService extends CommonService {
 
 	@Autowired
 	protected SystemOptionService systemOptionService;
+	@Autowired
+	protected KLineToolUnit kLineToolUnit;
 
 	/**
 	 * example: time = 14:03:05, minuteStepLong = 5, return 14:05:00 time =
@@ -38,49 +37,4 @@ public abstract class FinanceCommonService extends CommonService {
 		return time.plusMinutes(addMinute).withSecond(0).withNano(0);
 	}
 
-	protected <E extends KLineCommonDataBO> FilterPriceResult filterData(List<E> list) {
-		FilterPriceResult r = new FilterPriceResult();
-
-		if (list == null || list.isEmpty()) {
-			r.setMessage("empty history data");
-			return r;
-		}
-
-		BigDecimal maxPrice = new BigDecimal(Double.MIN_VALUE);
-		BigDecimal minPrice = new BigDecimal(Double.MAX_VALUE);
-		LocalDateTime maxPriceDateTime = null;
-		LocalDateTime minPriceDateTime = null;
-		LocalDateTime startTime = null;
-		LocalDateTime endTime = null;
-		for (KLineCommonDataBO bo : list) {
-			if (bo.getHighPrice() != null && bo.getHighPrice().compareTo(maxPrice) > 0) {
-				maxPrice = bo.getHighPrice();
-				maxPriceDateTime = bo.getStartTime();
-			}
-
-			if (bo.getLowPrice() != null && bo.getLowPrice().compareTo(minPrice) < 0) {
-				minPrice = bo.getLowPrice();
-				minPriceDateTime = bo.getStartTime();
-			}
-
-			if (bo.getStartTime() != null) {
-				if (startTime == null || startTime.isAfter(bo.getStartTime())) {
-					startTime = bo.getStartTime();
-				}
-			}
-			if (bo.getEndTime() != null) {
-				if (endTime == null || endTime.isBefore(bo.getEndTime())) {
-					endTime = bo.getEndTime();
-				}
-			}
-
-		}
-
-		r.setMaxPrice(maxPrice);
-		r.setMinPrice(minPrice);
-		r.setMaxPriceDateTime(maxPriceDateTime);
-		r.setMinPriceDateTime(minPriceDateTime);
-		r.setIsSuccess();
-		return r;
-	}
 }

@@ -118,7 +118,7 @@ public class TestController extends CommonController {
 	@GetMapping(value = "/t9")
 	@ResponseBody
 	public String t9() {
-		cryptoCoinComplexService.getRecentBigMoveCounter();
+		cryptoCoinComplexService.getRecentBigMoveCounterBySymbol();
 		return "Done";
 	}
 
