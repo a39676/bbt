@@ -101,6 +101,7 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 			String responseStr = h.sendPostRestful(systemOptionService.getCthulhuHostname() + CxBbtInteractionUrl.ROOT
 					+ CxBbtInteractionUrl.MAKR_SURE_ALIVE_WITH_CTHULHU, json.toString());
 			CommonResult result = buildObjFromJsonCustomization(responseStr, CommonResult.class);
+			log.error("Debug, Alive result: " + result.toString());
 			if (result.isSuccess()) {
 				return;
 			}
