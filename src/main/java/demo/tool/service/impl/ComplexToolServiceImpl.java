@@ -219,8 +219,9 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 	}
 
 	private String getTargetDnsRecordIdFromDnsList() {
-		String url = "https://" + cloudFlareOptionService.getHost() + cloudFlareOptionService.getZonesApiRoot()
+		String url = "https://" + cloudFlareOptionService.getHost() + cloudFlareOptionService.getZonesApiRoot() + "/"
 				+ cloudFlareOptionService.getZoneId() + cloudFlareOptionService.getDnsApiUrl();
+		log.error("Debug, url for get dns list: " + url);
 		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 		String responseStr = null;
 		try {
