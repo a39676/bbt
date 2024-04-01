@@ -124,8 +124,8 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 			return;
 		}
 		String ipLocalSavePath = OptionFilePathConfigurer.SYSTEM.replaceAll("option.json", "ip.txt");
-		File f = new File(ipLocalSavePath);
-		f.deleteOnExit();
+		FileUtilCustom f = new FileUtilCustom();
+		f.byteToFile("", ipLocalSavePath);
 
 		ProcessBuilder processBuilder = new ProcessBuilder();
 		processBuilder.command(SystemConstant.ROOT_USER_PATH + "/toolSH/getIp.sh");
@@ -150,8 +150,6 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		paramJson.put("content", targetIp);
 		paramJson.put("ttl", "120");
 		paramJson.put("proxied", false);
-		
-		log.error("Debug, param json: " + paramJson.toString());
 
 		String url = "https://" + cloudFlareOptionService.getHost() + cloudFlareOptionService.getZonesApiRoot()
 				+ cloudFlareOptionService.getZoneId() + cloudFlareOptionService.getDnsApiUrl();
@@ -194,7 +192,7 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		paramJson.put("type", "A");
 		paramJson.put("name", cloudFlareOptionService.getTargetHost());
 		paramJson.put("content", targetIp);
-		paramJson.put("ttl", "3600");
+		paramJson.put("ttl", "120");
 		paramJson.put("proxied", false);
 
 		String url = "https://" + cloudFlareOptionService.getHost() + cloudFlareOptionService.getZonesApiRoot()
