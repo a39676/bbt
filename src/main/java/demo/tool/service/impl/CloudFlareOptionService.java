@@ -32,7 +32,7 @@ public class CloudFlareOptionService extends CommonService {
 		}
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
-			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.AUTOMATION_TEST);
+			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.CLOUD_FLARE);
 			CloudFlareOptionService tmp = buildObjFromJsonCustomization(jsonStr, this.getClass());
 			BeanUtils.copyProperties(tmp, this);
 			log.error("Cloud flare option loaded");
