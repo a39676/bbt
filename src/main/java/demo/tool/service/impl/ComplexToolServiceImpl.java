@@ -164,11 +164,22 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 			request.setEntity(params);
 			HttpResponse response = httpClient.execute(request);
 			String responseStr = new String(response.getEntity().getContent().readAllBytes(), StandardCharsets.UTF_8);
-			String msg = "Work DNS update response: " + responseStr;
+			JSONObject responseJson = JSONObject.fromObject(responseStr);
+
+			if (responseJson.containsKey("success") && responseJson.getBoolean("success")) {
+				JSONObject resultDetail = responseJson.getJSONObject("result");
+				resultDetail.remove("id");
+				resultDetail.remove("zone_id");
+				resultDetail.remove("zone_name");
+				resultDetail.remove("name");
+				resultDetail.remove("content");
+				responseJson.put("result", resultDetail);
+			}
+			String msg = "Work DNS update response: " + responseJson.toString();
 			sendingMsg(msg);
 
-			JSONObject responseJson = JSONObject.fromObject(responseStr);
 			String recordId = responseJson.getJSONObject("result").getString("id");
+
 			return recordId;
 		} catch (Exception ex) {
 			ex.printStackTrace();
