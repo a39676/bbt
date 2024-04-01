@@ -18,7 +18,7 @@ import finance.cnStockMarket.pojo.bo.CnStockMarketDataBO;
 import finance.cnStockMarket.pojo.dto.CnStockMarketDataDTO;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import tool.pojo.constant.BbtInteractionUrl;
+import tool.pojo.constant.CxBbtInteractionUrl;
 import toolPack.httpHandel.HttpUtil;
 
 @Service
@@ -202,8 +202,8 @@ public class CnStockMarketDataServiceImpl extends AutomationTestCommonService im
 		HttpUtil h = new HttpUtil();
 		JSONObject json = JSONObject.fromObject(data);
 		try {
-			h.sendPostRestful(systemOptionService.getCthulhuHostname() + BbtInteractionUrl.ROOT
-					+ BbtInteractionUrl.CN_STOCK_MARKET_DATA, json.toString());
+			h.sendPostRestful(systemOptionService.getCthulhuHostname() + CxBbtInteractionUrl.ROOT
+					+ CxBbtInteractionUrl.CN_STOCK_MARKET_DATA, json.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

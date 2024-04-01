@@ -7,6 +7,7 @@ public class OptionFilePathConfigurer {
 	private static final String ROOT = SystemConstant.ROOT_PATH + "/optionFile";
 
 	public static final String SYSTEM = ROOT + "/system/option.json";
+	public static final String CLOUD_FLARE = ROOT + "/cloudflare/option.json";
 	public static final String AUTOMATION_TEST = ROOT + "/automationTest/option.json";
 
 	public static final String CURRENCY_EXCHANGE_RATE = ROOT + "/currencyExchangeRate/option.json";

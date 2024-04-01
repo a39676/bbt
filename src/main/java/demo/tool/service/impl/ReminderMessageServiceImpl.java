@@ -10,7 +10,7 @@ import demo.base.system.service.impl.SystemOptionService;
 import demo.config.costomComponent.BbtDynamicKey;
 import demo.tool.service.ReminderMessageService;
 import net.sf.json.JSONObject;
-import tool.pojo.constant.BbtInteractionUrl;
+import tool.pojo.constant.CxBbtInteractionUrl;
 import toolPack.httpHandel.HttpUtil;
 
 @Service
@@ -31,8 +31,8 @@ public class ReminderMessageServiceImpl implements ReminderMessageService {
 		dto.setMsg(msg);
 		JSONObject json = JSONObject.fromObject(dto);
 		try {
-			h.sendPostRestful(systemOptionService.getCthulhuHostname() + BbtInteractionUrl.ROOT
-					+ BbtInteractionUrl.TEXT_MESSAGE_FORWARD, json.toString());
+			h.sendPostRestful(systemOptionService.getCthulhuHostname() + CxBbtInteractionUrl.ROOT
+					+ CxBbtInteractionUrl.TEXT_MESSAGE_FORWARD, json.toString());
 		} catch (Exception e) {
 			log.error("Send reminder error, msg: " + msg);
 			log.error(e.getLocalizedMessage());

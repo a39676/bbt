@@ -23,7 +23,7 @@ import finance.common.pojo.type.IntervalType;
 import finance.cryptoCoin.binance.pojo.dto.KLineKeyBO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import net.sf.json.JSONObject;
-import tool.pojo.constant.BbtInteractionUrl;
+import tool.pojo.constant.CxBbtInteractionUrl;
 import toolPack.httpHandel.HttpUtil;
 
 @Service
@@ -217,8 +217,8 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 		dto.setStr(bbtDynamicKey.createKey());
 		JSONObject json = JSONObject.fromObject(dto);
 		try {
-			String responseStr = h.sendPostRestful(systemOptionService.getCthulhuHostname() + BbtInteractionUrl.ROOT
-					+ BbtInteractionUrl.GET_CRYPTO_COIN_OPTION, json.toString());
+			String responseStr = h.sendPostRestful(systemOptionService.getCthulhuHostname() + CxBbtInteractionUrl.ROOT
+					+ CxBbtInteractionUrl.GET_CRYPTO_COIN_OPTION, json.toString());
 			optionService.refreshOption(responseStr);
 		} catch (Exception e) {
 			e.printStackTrace();

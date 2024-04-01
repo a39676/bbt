@@ -11,7 +11,7 @@ import demo.base.system.service.impl.SystemOptionService;
 import demo.baseCommon.service.CommonService;
 import demo.config.costomComponent.BbtDynamicKey;
 import net.sf.json.JSONObject;
-import tool.pojo.constant.BbtInteractionUrl;
+import tool.pojo.constant.CxBbtInteractionUrl;
 import toolPack.httpHandel.HttpUtil;
 
 @Service
@@ -27,8 +27,8 @@ public class HeartBeatService extends CommonService {
 			return;
 		}
 		HttpUtil h = new HttpUtil();
-		String url = systemOptionService.getCthulhuHostname() + BbtInteractionUrl.ROOT
-				+ BbtInteractionUrl.BBT_HEART_BEAT;
+		String url = systemOptionService.getCthulhuHostname() + CxBbtInteractionUrl.ROOT
+				+ CxBbtInteractionUrl.BBT_HEART_BEAT;
 		String key = bbtDynamicKey.createKey();
 		BaseStrDTO dto = new BaseStrDTO();
 		dto.setStr(key);

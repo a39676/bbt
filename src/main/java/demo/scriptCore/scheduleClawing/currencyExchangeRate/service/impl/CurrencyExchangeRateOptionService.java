@@ -30,8 +30,7 @@ public class CurrencyExchangeRateOptionService extends CommonService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.CURRENCY_EXCHANGE_RATE);
-			CurrencyExchangeRateOptionService tmp = new Gson().fromJson(jsonStr,
-					CurrencyExchangeRateOptionService.class);
+			CurrencyExchangeRateOptionService tmp = new Gson().fromJson(jsonStr, this.getClass());
 			BeanUtils.copyProperties(tmp, this);
 			log.error("crypto coin option loaded");
 		} catch (Exception e) {

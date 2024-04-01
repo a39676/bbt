@@ -42,7 +42,7 @@ public class CryptoCoinOptionService extends CommonService {
 
 	public void refreshOption(String jsonStr) {
 		try {
-			CryptoCoinOptionService tmp = new Gson().fromJson(jsonStr, CryptoCoinOptionService.class);
+			CryptoCoinOptionService tmp = new Gson().fromJson(jsonStr, this.getClass());
 			BeanUtils.copyProperties(tmp, this);
 			log.error("crypto coin option loaded");
 		} catch (Exception e) {

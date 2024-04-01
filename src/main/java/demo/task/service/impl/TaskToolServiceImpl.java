@@ -60,23 +60,29 @@ public class TaskToolServiceImpl extends AutomationTestCommonService implements 
 		testEventService.cleanExpiredFailEventCounting();
 	}
 
+	@Scheduled(fixedRate = 1000L * 60 * 30)
+	public void amIAlive() {
+		complexToolService.amIAlive();
+	}
+
 	@Scheduled(fixedRate = 1000L * 30)
 	public void killChromeWebDriverWhenIdle() {
-		if (isLinux() && !testEventService.checkExistsRuningEvent()) {
-			ProcessBuilder processBuilder = new ProcessBuilder();
-			processBuilder.command(SystemConstant.ROOT_USER_PATH + "/toolSH/killChromeDriver.sh");
-			try {
+		if (!isLinux() || testEventService.checkExistsRuningEvent()) {
+			return;
+		}
+		ProcessBuilder processBuilder = new ProcessBuilder();
+		processBuilder.command(SystemConstant.ROOT_USER_PATH + "/toolSH/killChromeDriver.sh");
+		try {
 
-				Process process = processBuilder.start();
-				process.waitFor();
+			Process process = processBuilder.start();
+			process.waitFor();
 //				int exitVal = process.waitFor();
 //				if (exitVal != 0) {
 //					sendTelegramMsg("Kill chrome driver error");
 //				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				sendingMsg("Kill chrome driver error");
-			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			sendingMsg("Kill chrome driver error");
 		}
 	}
 

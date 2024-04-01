@@ -8,4 +8,8 @@ public interface ComplexToolService {
 
 	CommonResult cleanTmpFiles(String targetFolder, String extensionName, LocalDateTime oldestCreateTime);
 
+	String ping();
+
+	void amIAlive();
+
 }
