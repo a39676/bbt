@@ -60,7 +60,7 @@ public class TaskToolServiceImpl extends AutomationTestCommonService implements 
 		testEventService.cleanExpiredFailEventCounting();
 	}
 
-	@Scheduled(fixedRate = 1000L * 60 * 30)
+	@Scheduled(fixedDelay = 1000L * 60 * 30)
 	public void amIAlive() {
 		complexToolService.amIAlive();
 	}

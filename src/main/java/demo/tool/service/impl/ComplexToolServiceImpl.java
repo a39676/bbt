@@ -26,6 +26,7 @@ import demo.base.system.service.impl.SystemOptionService;
 import demo.baseCommon.pojo.constant.SystemConstant;
 import demo.baseCommon.service.CommonService;
 import demo.config.costomComponent.BbtDynamicKey;
+import demo.config.costomComponent.OptionFilePathConfigurer;
 import demo.tool.service.ComplexToolService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -105,7 +106,15 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 			}
 			executeShellScriptForGetIp();
 			FileUtilCustom f = new FileUtilCustom();
-			String ipStr = f.getStringFromFile(MAIN_FOLDER_PATH + "/optionFile/system/ip.txt");
+			String ipLocalSavePath = OptionFilePathConfigurer.SYSTEM.replaceAll("option.json", "ip.txt");
+			String ipStr = f.getStringFromFile(ipLocalSavePath);
+			if(StringUtils.isEmpty(ipStr)) {
+				log.error("Can NOT find IP record from local file");
+				return;
+			}
+			String[] ipStrArr = ipStr.split(".");
+			String ipStrForLog = ipStrArr[0] + ".*.*." + ipStrArr[3];
+			log.error("Get IP from local file, ip: " + ipStrForLog);
 			updateWork1DnsRecord(ipStr);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -116,6 +125,10 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		if (!isLinux()) {
 			return;
 		}
+		String ipLocalSavePath = OptionFilePathConfigurer.SYSTEM.replaceAll("option.json", "ip.txt");
+		File f = new File(ipLocalSavePath);
+		f.deleteOnExit();
+
 		ProcessBuilder processBuilder = new ProcessBuilder();
 		processBuilder.command(SystemConstant.ROOT_USER_PATH + "/toolSH/getIp.sh");
 		try {
@@ -253,6 +266,7 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 	private void updateWork1DnsRecord(String targetIp) {
 		String recordId = getTargetDnsRecordIdFromDnsList();
 		if (recordId == null) {
+			log.error("Can NOT find exists DNS records, will create new one");
 			recordId = createDNS(targetIp);
 			if (recordId == null) {
 				sendingMsg("Can NOT create Worker 1 DNS record");
