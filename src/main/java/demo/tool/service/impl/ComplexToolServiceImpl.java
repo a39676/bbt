@@ -108,13 +108,11 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 			FileUtilCustom f = new FileUtilCustom();
 			String ipLocalSavePath = OptionFilePathConfigurer.SYSTEM.replaceAll("option.json", "ip.txt");
 			String ipStr = f.getStringFromFile(ipLocalSavePath);
-			if(StringUtils.isEmpty(ipStr)) {
+			if (StringUtils.isEmpty(ipStr)) {
 				log.error("Can NOT find IP record from local file");
 				return;
 			}
-			String[] ipStrArr = ipStr.split(".");
-			String ipStrForLog = ipStrArr[0] + ".*.*." + ipStrArr[3];
-			log.error("Get IP from local file, ip: " + ipStrForLog);
+			log.error("Get IP from local file, ip: " + ipStr);
 			updateWork1DnsRecord(ipStr);
 		} catch (Exception e) {
 			e.printStackTrace();
