@@ -102,7 +102,7 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 					+ CxBbtInteractionUrl.MAKR_SURE_ALIVE_WITH_CTHULHU, json.toString());
 			CommonResult result = buildObjFromJsonCustomization(responseStr, CommonResult.class);
 			log.error("Debug, Alive result: " + result.toString());
-			if (result.isSuccess()) {
+			if (result.isSuccess() && StringUtils.isBlank(result.getMessage())) {
 				return;
 			}
 			executeShellScriptForGetIp();
@@ -113,7 +113,6 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 				log.error("Can NOT find IP record from local file");
 				return;
 			}
-			log.error("Get IP from local file, ip: " + ipStr);
 			updateWork1DnsRecord(ipStr);
 		} catch (Exception e) {
 			e.printStackTrace();
