@@ -123,9 +123,6 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		if (!isLinux()) {
 			return;
 		}
-		String ipLocalSavePath = OptionFilePathConfigurer.SYSTEM.replaceAll("option.json", "ip.txt");
-		FileUtilCustom f = new FileUtilCustom();
-		f.byteToFile("", ipLocalSavePath);
 
 		ProcessBuilder processBuilder = new ProcessBuilder();
 		processBuilder.command(SystemConstant.ROOT_USER_PATH + "/toolSH/getIp.sh");
