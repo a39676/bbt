@@ -148,8 +148,10 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		paramJson.put("type", "A");
 		paramJson.put("name", cloudFlareOptionService.getTargetHost());
 		paramJson.put("content", targetIp);
-		paramJson.put("ttl", "3600");
+		paramJson.put("ttl", "120");
 		paramJson.put("proxied", false);
+		
+		log.error("Debug, param json: " + paramJson.toString());
 
 		String url = "https://" + cloudFlareOptionService.getHost() + cloudFlareOptionService.getZonesApiRoot()
 				+ cloudFlareOptionService.getZoneId() + cloudFlareOptionService.getDnsApiUrl();
@@ -221,7 +223,6 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 	private String getTargetDnsRecordIdFromDnsList() {
 		String url = "https://" + cloudFlareOptionService.getHost() + cloudFlareOptionService.getZonesApiRoot() + "/"
 				+ cloudFlareOptionService.getZoneId() + cloudFlareOptionService.getDnsApiUrl();
-		log.error("Debug, url for get dns list: " + url);
 		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 		String responseStr = null;
 		try {
@@ -270,7 +271,8 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 			if (recordId == null) {
 				sendingMsg("Can NOT create Worker 1 DNS record");
 			}
+		} else {
+			editDNS(recordId, targetIp);
 		}
-		editDNS(recordId, targetIp);
 	}
 }
