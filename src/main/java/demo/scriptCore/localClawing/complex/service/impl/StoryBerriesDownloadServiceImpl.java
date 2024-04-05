@@ -11,34 +11,27 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.Gson;
-
 import demo.scriptCore.localClawing.complex.pojo.dto.StoryBerriesOptionDTO;
 import demo.scriptCore.localClawing.complex.service.StoryBerriesDownloadService;
 import demo.selenium.service.impl.AutomationTestCommonService;
-import toolPack.ioHandle.FileUtilCustom;
 
 @Service
 public class StoryBerriesDownloadServiceImpl extends AutomationTestCommonService
 		implements StoryBerriesDownloadService {
 
-	private static String optionFilePath = "d:/home/u2/bbt/optionFile/tmp/storyBerries.json";
 	private static String mainSavingFolderPath = "d:/tmp/englishBook";
 	private static StoryBerriesOptionDTO optionDTO = null;
 
 	@Override
-	public void downloading() {
-		loadOption();
+	public void downloading(String url) {
+		loadOption(url);
 
 		download();
 	}
 
-	private StoryBerriesOptionDTO loadOption() {
-		FileUtilCustom ioUtil = new FileUtilCustom();
-		String optionJsonStr = ioUtil.getStringFromFile(optionFilePath);
-
-		optionDTO = new Gson().fromJson(optionJsonStr, StoryBerriesOptionDTO.class);
-
+	private StoryBerriesOptionDTO loadOption(String url) {
+		optionDTO = new StoryBerriesOptionDTO();
+		optionDTO.setTargetUrl(url);
 		return optionDTO;
 	}
 

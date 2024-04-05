@@ -145,6 +145,9 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 
 	@Override
 	public void checkBinanceKLineStreamAliveAndReconnect() {
+		if (systemOptionService.isDev()) {
+			return;
+		}
 		List<String> subscriptionSymbolList = optionService.getBinanceKLineSubscriptionSymbolSet();
 		KLineKeyBO tmpKey = null;
 		List<CryptoCoinPriceCommonDataBO> dataList = null;
