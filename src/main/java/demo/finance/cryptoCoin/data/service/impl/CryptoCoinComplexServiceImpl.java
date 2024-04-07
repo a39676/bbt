@@ -156,9 +156,13 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 			}
 			commonDataList = binanceDataConvertToCommonData(binanceDatalist, key.getSymbol(), IntervalType.HOUR_1);
 			cacheDataList = map.get(key);
-			if(cacheDataList != null && !cacheDataList.isEmpty()) {
-				filterDataFromCacheData = kLineToolUnit
-						.filterData(commonDataList.subList(cacheDataList.size() - 60, cacheDataList.size()));
+			if (cacheDataList != null && !cacheDataList.isEmpty()) {
+				int cacheDataListMaxSize = 60;
+				if (cacheDataList.size() < cacheDataListMaxSize) {
+					cacheDataListMaxSize = cacheDataList.size();
+				}
+				filterDataFromCacheData = kLineToolUnit.filterData(
+						commonDataList.subList(cacheDataList.size() - cacheDataListMaxSize, cacheDataList.size()));
 				lastData = new CryptoCoinPriceCommonDataBO();
 				lastData.setStartPrice(filterDataFromCacheData.getStartPrice());
 				lastData.setEndPrice(filterDataFromCacheData.getEndPrice());
@@ -166,7 +170,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 				lastData.setLowPrice(filterDataFromCacheData.getMinPrice());
 				lastData.setInterval(IntervalType.HOUR_1);
 				lastData.setSymbol(key.getSymbol());
-				
+
 				commonDataList.set(commonDataList.size() - 1, lastData);
 			}
 
