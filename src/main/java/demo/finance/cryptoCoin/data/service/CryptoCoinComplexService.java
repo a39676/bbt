@@ -2,7 +2,7 @@ package demo.finance.cryptoCoin.data.service;
 
 public interface CryptoCoinComplexService {
 
-	void deleteOldKLineDatas();
+	void deleteOld1MinKLineDatas();
 
 	void checkBigMoveInMinutes();
 

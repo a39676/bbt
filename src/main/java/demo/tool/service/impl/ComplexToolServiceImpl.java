@@ -101,20 +101,24 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 			String responseStr = h.sendPostRestful(systemOptionService.getCthulhuHostname() + CxBbtInteractionUrl.ROOT
 					+ CxBbtInteractionUrl.MAKR_SURE_ALIVE_WITH_CTHULHU, json.toString());
 			CommonResult result = buildObjFromJsonCustomization(responseStr, CommonResult.class);
-			log.error("Debug, Alive result: " + result.toString());
-			if (result.isSuccess()) {
+			if (result.isSuccess() && StringUtils.isBlank(result.getMessage())) {
 				return;
 			}
-			executeShellScriptForGetIp();
+
 			FileUtilCustom f = new FileUtilCustom();
 			String ipLocalSavePath = OptionFilePathConfigurer.SYSTEM.replaceAll("option.json", "ip.txt");
-			String ipStr = f.getStringFromFile(ipLocalSavePath);
-			if (StringUtils.isEmpty(ipStr)) {
+			String oldIpStr = f.getStringFromFile(ipLocalSavePath);
+
+			executeShellScriptForGetIp();
+			String newIpStr = f.getStringFromFile(ipLocalSavePath);
+			if (StringUtils.isEmpty(newIpStr)) {
 				log.error("Can NOT find IP record from local file");
 				return;
+			} else if (newIpStr.equals(oldIpStr)) {
+				log.error("IP did NOT change, skip DNS update");
+				return;
 			}
-			log.error("Get IP from local file, ip: " + ipStr);
-			updateWork1DnsRecord(ipStr);
+			updateWork1DnsRecord(newIpStr);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -14,7 +14,7 @@ public class CryptoTaskService {
 
 	@Scheduled(fixedDelay = 1000L * 30)
 	public void deleteOldData() {
-		cryptoCoinComplexService.deleteOldKLineDatas();
+		cryptoCoinComplexService.deleteOld1MinKLineDatas();
 	}
 
 	@Scheduled(cron="59 * * * * *") 
