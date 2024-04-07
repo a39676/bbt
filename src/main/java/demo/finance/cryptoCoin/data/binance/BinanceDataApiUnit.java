@@ -30,7 +30,7 @@ public class BinanceDataApiUnit extends CryptoCoinCommonService {
 
 	public List<BinanceKLineBO> getKLineHourDataFromApi(String symbol) {
 		String url = "https://api.binance.com/api/v3/klines?symbol=%s&interval=1h";
-		url = String.format(url, symbol);
+		url = String.format(url, symbol.toUpperCase());
 
 		HttpUtil h = new HttpUtil();
 		String response = null;
