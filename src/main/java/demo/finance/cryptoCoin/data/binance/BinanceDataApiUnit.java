@@ -105,6 +105,10 @@ public class BinanceDataApiUnit extends CryptoCoinCommonService {
 	public List<BinanceKLineBO> getKLineHourDataFromLocal(String symbol) {
 		FileUtilCustom fu = new FileUtilCustom();
 		String savingPath = String.format(HOURLY_DATA_SAVING_PATH_MOUDLE, symbol);
+		File file = new File(savingPath);
+		if (!file.exists()) {
+			return new ArrayList<>();
+		}
 		String content = fu.getStringFromFile(savingPath);
 		List<BinanceKLineBO> oldDataList = buildDataListDTO(content);
 
