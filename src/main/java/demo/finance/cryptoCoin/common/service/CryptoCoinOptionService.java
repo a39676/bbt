@@ -27,6 +27,7 @@ public class CryptoCoinOptionService extends CommonService {
 	private Double bigMoveIn1min = 1D;
 	private Double bigMoveIn5min = 3D;
 	private Double bigMoveIn10min = 5D;
+	private Double bigMoveIn24hour = 5D;
 	private Integer maxReconnectCounterInOneTime = 10;
 
 	@PostConstruct
@@ -107,6 +108,14 @@ public class CryptoCoinOptionService extends CommonService {
 		this.bigMoveIn10min = bigMoveIn10min;
 	}
 
+	public Double getBigMoveIn24hour() {
+		return bigMoveIn24hour;
+	}
+
+	public void setBigMoveIn24hour(Double bigMoveIn24hour) {
+		this.bigMoveIn24hour = bigMoveIn24hour;
+	}
+
 	public Integer getMaxReconnectCounterInOneTime() {
 		return maxReconnectCounterInOneTime;
 	}
@@ -120,8 +129,8 @@ public class CryptoCoinOptionService extends CommonService {
 		return "CryptoCoinOptionService [defaultCurrency=" + defaultCurrency + ", binanceApiKey=" + binanceApiKey
 				+ ", binanceSecretKey=" + binanceSecretKey + ", binanceKLineSubscriptionSymbolSet="
 				+ binanceKLineSubscriptionSymbolSet + ", bigMoveIn1min=" + bigMoveIn1min + ", bigMoveIn5min="
-				+ bigMoveIn5min + ", bigMoveIn10min=" + bigMoveIn10min + ", maxReconnectCounterInOneTime="
-				+ maxReconnectCounterInOneTime + "]";
+				+ bigMoveIn5min + ", bigMoveIn10min=" + bigMoveIn10min + ", bigMoveIn24hour=" + bigMoveIn24hour
+				+ ", maxReconnectCounterInOneTime=" + maxReconnectCounterInOneTime + "]";
 	}
 
 }

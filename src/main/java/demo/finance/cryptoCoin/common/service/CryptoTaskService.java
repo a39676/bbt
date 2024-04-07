@@ -17,21 +17,26 @@ public class CryptoTaskService {
 		cryptoCoinComplexService.deleteOld1MinKLineDatas();
 	}
 
-	@Scheduled(cron="59 * * * * *") 
+	@Scheduled(cron = "* */10 * * * *")
 	public void checkBigMoveInMinutes() {
 		cryptoCoinComplexService.checkBigMoveInMinutes();
 	}
-	
+
+	@Scheduled(cron = "* */5 * * * *")
+	public void checkBigMoveInHours() {
+		cryptoCoinComplexService.checkBigMoveInHours();
+	}
+
 	@Scheduled(fixedDelay = 1000L * 30)
 	public void checkBinanceKLineStreamAliveAndReconnect() {
 		cryptoCoinComplexService.checkBinanceKLineStreamAliveAndReconnect();
 	}
-	
+
 	@Scheduled(fixedDelay = 1000L * 60)
 	public void getRecentBigMoveCounter() {
 		cryptoCoinComplexService.getRecentBigMoveCounterBySymbol();
 	}
-	
+
 	@Scheduled(fixedDelay = 1000L * 60 * 10)
 	public void getCryptoCoinOptionFromCthulhu() {
 		cryptoCoinComplexService.getCryptoCoinOptionFromCthulhu();

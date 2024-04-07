@@ -12,4 +12,6 @@ public interface CryptoCoinComplexService {
 
 	void getCryptoCoinOptionFromCthulhu();
 
+	void checkBigMoveInHours();
+
 }
