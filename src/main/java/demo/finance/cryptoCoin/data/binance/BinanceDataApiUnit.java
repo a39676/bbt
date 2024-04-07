@@ -112,11 +112,7 @@ public class BinanceDataApiUnit extends CryptoCoinCommonService {
 		String content = fu.getStringFromFile(savingPath);
 		List<BinanceKLineBO> oldDataList = buildDataListDTO(content);
 
-		if (!needUpdateDataList(oldDataList)) {
-			return oldDataList;
-		}
-
-		return getKLineHourDataFromApi(symbol);
+		return oldDataList;
 	}
 
 	public boolean needUpdateDataList(List<BinanceKLineBO> dataList) {
@@ -127,5 +123,14 @@ public class BinanceDataApiUnit extends CryptoCoinCommonService {
 		BinanceKLineBO lastData = dataList.get(dataList.size() - 1);
 		long minutes = ChronoUnit.MINUTES.between(lastData.getOpenTime(), now);
 		return (minutes > DEFAULT_DATA_GAP_MINUTE);
+	}
+
+	public List<BinanceKLineBO> getKLineHourData(String symbol) {
+		List<BinanceKLineBO> oldDataList = getKLineHourDataFromLocal(symbol);
+		if (!needUpdateDataList(oldDataList)) {
+			return oldDataList;
+		}
+
+		return getKLineHourDataFromApi(symbol);
 	}
 }

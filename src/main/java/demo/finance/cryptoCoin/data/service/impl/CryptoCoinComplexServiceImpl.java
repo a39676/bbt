@@ -139,7 +139,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 		Map<KLineKeyBO, List<CryptoCoinPriceCommonDataBO>> map = cacheDataServcie.getBinanceKLineCacheMap();
 		List<CryptoCoinPriceCommonDataBO> commonDataList = null;
 		List<BinanceKLineBO> binanceDatalist = null;
-		List<CryptoCoinPriceCommonDataBO> cacheDatalist = null;
+		List<CryptoCoinPriceCommonDataBO> cacheDataList = null;
 		FilterPriceResult filterDataFromHourData = null;
 		FilterPriceResult filterDataFromCacheData = null;
 		String timingKey = null;
@@ -150,23 +150,25 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 			return;
 		}
 		for (KLineKeyBO key : map.keySet()) {
-			binanceDatalist = binanceDataApiUnit.getKLineHourDataFromLocal(key.getSymbol());
+			binanceDatalist = binanceDataApiUnit.getKLineHourData(key.getSymbol());
 			if (binanceDatalist.isEmpty() || binanceDatalist.isEmpty()) {
 				continue;
 			}
 			commonDataList = binanceDataConvertToCommonData(binanceDatalist, key.getSymbol(), IntervalType.HOUR_1);
-			cacheDatalist = map.get(key);
-			filterDataFromCacheData = kLineToolUnit
-					.filterData(commonDataList.subList(cacheDatalist.size() - 60, cacheDatalist.size()));
-			lastData = new CryptoCoinPriceCommonDataBO();
-			lastData.setStartPrice(filterDataFromCacheData.getStartPrice());
-			lastData.setEndPrice(filterDataFromCacheData.getEndPrice());
-			lastData.setHighPrice(filterDataFromCacheData.getMaxPrice());
-			lastData.setLowPrice(filterDataFromCacheData.getMinPrice());
-			lastData.setInterval(IntervalType.HOUR_1);
-			lastData.setSymbol(key.getSymbol());
-
-			commonDataList.set(commonDataList.size() - 1, lastData);
+			cacheDataList = map.get(key);
+			if(cacheDataList != null && !cacheDataList.isEmpty()) {
+				filterDataFromCacheData = kLineToolUnit
+						.filterData(commonDataList.subList(cacheDataList.size() - 60, cacheDataList.size()));
+				lastData = new CryptoCoinPriceCommonDataBO();
+				lastData.setStartPrice(filterDataFromCacheData.getStartPrice());
+				lastData.setEndPrice(filterDataFromCacheData.getEndPrice());
+				lastData.setHighPrice(filterDataFromCacheData.getMaxPrice());
+				lastData.setLowPrice(filterDataFromCacheData.getMinPrice());
+				lastData.setInterval(IntervalType.HOUR_1);
+				lastData.setSymbol(key.getSymbol());
+				
+				commonDataList.set(commonDataList.size() - 1, lastData);
+			}
 
 			filterDataFromHourData = kLineToolUnit
 					.filterData(commonDataList.subList(commonDataList.size() - 24, commonDataList.size()));

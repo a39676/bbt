@@ -1,5 +1,7 @@
 package demo.experiment.controller;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,7 @@ import demo.scriptCore.scheduleClawing.cnStockMarketData.service.CnStockMarketDa
 import demo.scriptCore.scheduleClawing.currencyExchangeRate.service.CurrencyExchangeRateService;
 import demo.task.service.impl.AutomationTaskServiceImpl;
 import finance.common.pojo.type.IntervalType;
+import finance.cryptoCoin.binance.pojo.dto.KLineKeyBO;
 
 @Controller
 @RequestMapping(value = { TestUrl.testRoot })
@@ -26,15 +29,28 @@ public class TestController extends CommonController {
 
 	@Autowired
 	private TestService testService;
+	@Autowired
+	private AutomationTaskServiceImpl automationTaskServiceImpl;
+	@Autowired
+	private CurrencyExchangeRateService currencyExchangeRateService;
+	@Autowired
+	private CnStockMarketDataService cnStockMarketDataService;
+	@Autowired
+	private BinanceDataWSClient binanceWSClient;
+	@Autowired
+	private CryptoCoinCacheDataService cryptoCoinCacheDataService;
+	@Autowired
+	private CryptoCoinOptionService optionService;
+	@Autowired
+	private CryptoCoinComplexService cryptoCoinComplexService;
+	@Autowired
+	private RedisTemplate<String, Object> redisTemplate;
 
 	@GetMapping(value = "/test")
 	@ResponseBody
 	public String test() throws Exception {
 		return testService.testing("something", "other");
 	}
-
-	@Autowired
-	private AutomationTaskServiceImpl automationTaskServiceImpl;
 
 	@GetMapping(value = "/test2")
 	@ResponseBody
@@ -50,9 +66,6 @@ public class TestController extends CommonController {
 		return "Done";
 	}
 
-	@Autowired
-	private CurrencyExchangeRateService currencyExchangeRateService;
-
 	@GetMapping(value = "/test4")
 	@ResponseBody
 	public String test4() {
@@ -60,18 +73,12 @@ public class TestController extends CommonController {
 		return "Done";
 	}
 
-	@Autowired
-	private CnStockMarketDataService cnStockMarketDataService;
-
 	@GetMapping(value = "/t5")
 	@ResponseBody
 	public String test5() {
 		cnStockMarketDataService.collectDatasAndSend();
 		return "Done";
 	}
-
-	@Autowired
-	private BinanceDataWSClient binanceWSClient;
 
 	@GetMapping(value = "/t6")
 	@ResponseBody
@@ -103,17 +110,11 @@ public class TestController extends CommonController {
 		return "Done";
 	}
 
-	@Autowired
-	private CryptoCoinCacheDataService cryptoCoinCacheDataService;
-
 	@GetMapping(value = "/t8")
 	@ResponseBody
 	public String t8() {
 		return String.valueOf(cryptoCoinCacheDataService.getBinanceKLineCacheMap());
 	}
-
-	@Autowired
-	private CryptoCoinComplexService cryptoCoinComplexService;
 
 	@GetMapping(value = "/t9")
 	@ResponseBody
@@ -129,17 +130,11 @@ public class TestController extends CommonController {
 		return "Done";
 	}
 
-	@Autowired
-	private RedisTemplate<String, Object> redisTemplate;
-
 	@GetMapping(value = "/t11")
 	@ResponseBody
 	public String t11(@RequestParam(value = "pattern") String pattern) {
 		return String.valueOf(redisTemplate.keys(pattern));
 	}
-
-	@Autowired
-	private CryptoCoinOptionService optionService;
 
 	@GetMapping(value = "/t12")
 	@ResponseBody
@@ -154,6 +149,17 @@ public class TestController extends CommonController {
 	public String t13() {
 		cryptoCoinComplexService.getCryptoCoinOptionFromCthulhu();
 		return String.valueOf(optionService);
+	}
+
+	@GetMapping(value = "/t14")
+	@ResponseBody
+	public String t14() {
+		KLineKeyBO key = new KLineKeyBO();
+		key.setSymbol("BTCUSDT");
+		key.setInterval(IntervalType.MINUTE_1.getName());
+		cryptoCoinCacheDataService.getBinanceKLineCacheMap().put(key , new ArrayList<>());
+		cryptoCoinComplexService.checkBigMoveInHours();
+		return "Done";
 	}
 
 }
