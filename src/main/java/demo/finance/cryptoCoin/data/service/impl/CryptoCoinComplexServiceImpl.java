@@ -45,7 +45,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 	private static final Integer BIG_MOVES_MAX_LIVING_SECONDS = 600;
 
 	@Override
-	public void deleteOldKLineDatas() {
+	public void deleteOld1MinKLineDatas() {
 		int oneMinDataListMaxSize = 30;
 		Map<KLineKeyBO, List<CryptoCoinPriceCommonDataBO>> map = cacheDataServcie.getBinanceKLineCacheMap();
 		for (KLineKeyBO key : map.keySet()) {
@@ -128,9 +128,9 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 		String redisKey = BIG_MOVE_REDIS_KEY_PERFIX;
 		String directKey = null;
 		if (filterData.getMaxPriceDateTime().isAfter(filterData.getMinPriceDateTime())) {
-			directKey = BIG_RISE_REDIS_KEY_PERFIX + "↗↗";
+			directKey = BIG_RISE_REDIS_KEY_PERFIX + "↗↗ 🟢";
 		} else {
-			directKey = BIG_FALL_REDIS_KEY_PERFIX + "↘↘";
+			directKey = BIG_FALL_REDIS_KEY_PERFIX + "↘↘ 🔴";
 		}
 		redisKey = redisKey + directKey + timingKey + key.getSymbol();
 		if (redisTemplate.hasKey(redisKey)) {
