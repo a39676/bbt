@@ -50,7 +50,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 	private static final String BIG_MOVE_IN_24HOUR_REDIS_KEY_PERFIX = "24Hour_";
 	private static final Integer BIG_MOVES_IN_MINUTES_MAX_LIVING_SECONDS = 600;
 	private static final Integer BIG_MOVES_IN_HOURS_MAX_LIVING_HOURS = 1;
-	private static final Integer BIG_MOVES_IN_DAYS_MAX_LIVING_DAYS = 1;
+//	private static final Integer BIG_MOVES_IN_DAYS_MAX_LIVING_DAYS = 1;
 
 	@Override
 	public void deleteOld1MinKLineDatas() {
