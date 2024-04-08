@@ -137,7 +137,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 	public void checkBigMoveInHours() {
 		int scaleForCalculate = 4;
 		Map<KLineKeyBO, List<CryptoCoinPriceCommonDataBO>> map = cacheDataServcie.getBinanceKLineCacheMap();
-		List<CryptoCoinPriceCommonDataBO> commonDataList = null;
+		List<CryptoCoinPriceCommonDataBO> hourCommonDataList = null;
 		List<BinanceKLineBO> binanceDatalist = null;
 		List<CryptoCoinPriceCommonDataBO> cacheDataList = null;
 		FilterPriceResult filterDataFromHourData = null;
@@ -153,23 +153,32 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 			if (binanceDatalist.isEmpty() || binanceDatalist.isEmpty()) {
 				continue;
 			}
-			commonDataList = binanceDataConvertToCommonData(binanceDatalist, key.getSymbol(), IntervalType.HOUR_1);
+			
+			LocalDateTime now = LocalDateTime.now();
+			LocalDateTime twentyFourHourAgo = now.minusHours(24).withSecond(0).withNano(0);
+			for (int i = 0; i < hourCommonDataList.size(); i++) {
+				if (hourCommonDataList.get(i).getStartTime().isBefore(twentyFourHourAgo)) {
+					hourCommonDataList.remove(i);
+					i--;
+				}
+			}
+			
+			hourCommonDataList = binanceDataConvertToCommonData(binanceDatalist, key.getSymbol(), IntervalType.HOUR_1);
 			cacheDataList = map.get(key);
 			if (cacheDataList != null && !cacheDataList.isEmpty()) {
 				lastData = cacheDataList.get(cacheDataList.size() - 1);
 				int cacheDataListMaxSize = 60;
 				if (cacheDataList.size() < cacheDataListMaxSize) {
-					commonDataList.addAll(cacheDataList);
+					hourCommonDataList.addAll(cacheDataList);
 				} else {
-					commonDataList.addAll(
+					hourCommonDataList.addAll(
 							cacheDataList.subList(cacheDataList.size() - cacheDataListMaxSize, cacheDataList.size()));
 				}
 			} else {
-				lastData = commonDataList.get(commonDataList.size() - 1);
+				lastData = hourCommonDataList.get(hourCommonDataList.size() - 1);
 			}
 
-			filterDataFromHourData = kLineToolUnit
-					.filterData(commonDataList.subList(commonDataList.size() - 24, commonDataList.size()));
+			filterDataFromHourData = kLineToolUnit.filterData(hourCommonDataList);
 
 			rate = filterDataFromHourData.getMaxPrice()
 					.divide(filterDataFromHourData.getMinPrice(), scaleForCalculate, RoundingMode.HALF_UP)

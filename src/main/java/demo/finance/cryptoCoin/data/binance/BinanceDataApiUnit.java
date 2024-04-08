@@ -29,8 +29,12 @@ public class BinanceDataApiUnit extends CryptoCoinCommonService {
 	private static final int BINANCE_DATA_FIELD_COUNT = 12;
 
 	public List<BinanceKLineBO> getKLineHourDataFromApi(String symbol) {
-		String url = "https://api.binance.com/api/v3/klines?symbol=%s&interval=1h";
-		url = String.format(url, symbol.toUpperCase());
+		String url = "https://api.binance.com/api/v3/klines?symbol=%s&interval=1h&startTime=%d&endTime=%d";
+		Date now = new Date();
+		long nowMillionSecond = now.getTime();
+		long threeDayTimeGap = 1000L * 60 * 60 * 24 * 3;
+		long startTime = nowMillionSecond - threeDayTimeGap;
+		url = String.format(url, symbol.toUpperCase(), startTime, nowMillionSecond);
 
 		HttpUtil h = new HttpUtil();
 		String response = null;
