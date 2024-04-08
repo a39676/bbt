@@ -14,6 +14,7 @@ import demo.baseCommon.controller.CommonController;
 import demo.experiment.pojo.constant.TestUrl;
 import demo.experiment.service.TestService;
 import demo.finance.cryptoCoin.common.service.CryptoCoinOptionService;
+import demo.finance.cryptoCoin.data.binance.BinanceDataApiUnit;
 import demo.finance.cryptoCoin.data.binance.BinanceDataWSClient;
 import demo.finance.cryptoCoin.data.service.CryptoCoinComplexService;
 import demo.finance.cryptoCoin.data.service.impl.CryptoCoinCacheDataService;
@@ -37,6 +38,8 @@ public class TestController extends CommonController {
 	private CryptoCoinOptionService optionService;
 	@Autowired
 	private CryptoCoinComplexService cryptoCoinComplexService;
+	@Autowired
+	private BinanceDataApiUnit binanceDataApiUnit;
 
 	@GetMapping(value = "/test")
 	@ResponseBody
@@ -93,6 +96,12 @@ public class TestController extends CommonController {
 		cryptoCoinCacheDataService.getBinanceKLineCacheMap().put(key, new ArrayList<>());
 		cryptoCoinComplexService.checkBigMoveInHours();
 		return "Done";
+	}
+
+	@GetMapping(value = "/t15")
+	@ResponseBody
+	public String t15(@RequestParam(value = "symbol", defaultValue = "", required = false) String symbol) {
+		return String.valueOf(binanceDataApiUnit.getKLineHourData(symbol));
 	}
 
 }

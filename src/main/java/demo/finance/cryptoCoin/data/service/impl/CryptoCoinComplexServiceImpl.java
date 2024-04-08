@@ -44,10 +44,10 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 	private static final String BIG_MOVE_REDIS_KEY_PERFIX = "cryptoCoinBigMove";
 	private static final String BIG_RISE_REDIS_KEY_PERFIX = "Rise";
 	private static final String BIG_FALL_REDIS_KEY_PERFIX = "Fall";
-	private static final String BIG_MOVE_IN_1MIN_REDIS_KEY_PERFIX = "1Min_";
-	private static final String BIG_MOVE_IN_5MIN_REDIS_KEY_PERFIX = "5Min_";
-	private static final String BIG_MOVE_IN_10MIN_REDIS_KEY_PERFIX = "10Min_";
-	private static final String BIG_MOVE_IN_24HOUR_REDIS_KEY_PERFIX = "24Hour_";
+	private static final String BIG_MOVE_IN_1MIN_REDIS_KEY_PERFIX = "_1Min_";
+	private static final String BIG_MOVE_IN_5MIN_REDIS_KEY_PERFIX = "_5Min_";
+	private static final String BIG_MOVE_IN_10MIN_REDIS_KEY_PERFIX = "_10Min_";
+	private static final String BIG_MOVE_IN_24HOUR_REDIS_KEY_PERFIX = "_24Hour_";
 	private static final Integer BIG_MOVES_IN_MINUTES_MAX_LIVING_SECONDS = 600;
 	private static final Integer BIG_MOVES_IN_HOURS_MAX_LIVING_HOURS = 1;
 //	private static final Integer BIG_MOVES_IN_DAYS_MAX_LIVING_DAYS = 1;
@@ -245,13 +245,11 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 
 	@Override
 	public void getRecentBigMoveCounterBySymbol() {
-		Set<String> sourceKeySet = redisTemplate.keys(BIG_MOVE_REDIS_KEY_PERFIX + "*");
+		Set<String> sourceKeySet = redisTemplate.keys(BIG_MOVE_REDIS_KEY_PERFIX + "*Min*");
 
 		Set<String> targetKeySet = new HashSet<>();
 		for (String key : sourceKeySet) {
-			targetKeySet.add(key.replaceAll(BIG_MOVE_IN_1MIN_REDIS_KEY_PERFIX, "")
-					.replaceAll(BIG_MOVE_IN_5MIN_REDIS_KEY_PERFIX, "")
-					.replaceAll(BIG_MOVE_IN_10MIN_REDIS_KEY_PERFIX, ""));
+			targetKeySet.add(key.replaceAll("_.*_", ""));
 		}
 
 		int riseCount = 0;
