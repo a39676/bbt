@@ -141,11 +141,10 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 		List<BinanceKLineBO> binanceDatalist = null;
 		List<CryptoCoinPriceCommonDataBO> cacheDataList = null;
 		FilterPriceResult filterDataFromHourData = null;
-		FilterPriceResult filterDataFromCacheData = null;
 		String timingKey = null;
 		BigDecimal rate = null;
+		KLineCommonDataBO lastData;
 		boolean sendMsgFlag = false;
-		CryptoCoinPriceCommonDataBO lastData = null;
 		if (map.isEmpty()) {
 			return;
 		}
@@ -157,21 +156,16 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 			commonDataList = binanceDataConvertToCommonData(binanceDatalist, key.getSymbol(), IntervalType.HOUR_1);
 			cacheDataList = map.get(key);
 			if (cacheDataList != null && !cacheDataList.isEmpty()) {
+				lastData = cacheDataList.get(cacheDataList.size() - 1);
 				int cacheDataListMaxSize = 60;
 				if (cacheDataList.size() < cacheDataListMaxSize) {
-					cacheDataListMaxSize = cacheDataList.size();
+					commonDataList.addAll(cacheDataList);
+				} else {
+					commonDataList.addAll(
+							cacheDataList.subList(cacheDataList.size() - cacheDataListMaxSize, cacheDataList.size()));
 				}
-				filterDataFromCacheData = kLineToolUnit.filterData(
-						commonDataList.subList(cacheDataList.size() - cacheDataListMaxSize, cacheDataList.size()));
-				lastData = new CryptoCoinPriceCommonDataBO();
-				lastData.setStartPrice(filterDataFromCacheData.getStartPrice());
-				lastData.setEndPrice(filterDataFromCacheData.getEndPrice());
-				lastData.setHighPrice(filterDataFromCacheData.getMaxPrice());
-				lastData.setLowPrice(filterDataFromCacheData.getMinPrice());
-				lastData.setInterval(IntervalType.HOUR_1);
-				lastData.setSymbol(key.getSymbol());
-
-				commonDataList.set(commonDataList.size() - 1, lastData);
+			} else {
+				lastData = commonDataList.get(commonDataList.size() - 1);
 			}
 
 			filterDataFromHourData = kLineToolUnit
@@ -182,6 +176,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 					.subtract(BigDecimal.ONE).multiply(new BigDecimal(100));
 			if (rate.doubleValue() > optionService.getBigMoveIn24hour()) {
 				timingKey = BIG_MOVE_IN_24HOUR_REDIS_KEY_PERFIX;
+
 				sendMsgFlag = sendNoticeMsgIfNecessary(timingKey, filterDataFromHourData, key.getSymbol(), rate,
 						lastData, BIG_MOVES_IN_HOURS_MAX_LIVING_HOURS, TimeUnit.HOURS);
 				if (sendMsgFlag) {
