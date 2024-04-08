@@ -125,8 +125,11 @@ public class BinanceDataApiUnit extends CryptoCoinCommonService {
 		}
 		LocalDateTime now = LocalDateTime.now();
 		BinanceKLineBO lastData = dataList.get(dataList.size() - 1);
-		long minutes = ChronoUnit.MINUTES.between(lastData.getOpenTime(), now);
-		return (minutes > DEFAULT_DATA_GAP_MINUTE);
+		long gapInMinutes = ChronoUnit.MINUTES.between(lastData.getOpenTime(), now);
+		if (gapInMinutes > DEFAULT_DATA_GAP_MINUTE) {
+			return true;
+		}
+		return (now.getHour() != lastData.getOpenTime().getHour());
 	}
 
 	public List<BinanceKLineBO> getKLineHourData(String symbol) {
