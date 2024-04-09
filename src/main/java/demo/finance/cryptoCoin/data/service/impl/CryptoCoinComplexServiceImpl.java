@@ -153,10 +153,10 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 			if (binanceDatalist.isEmpty() || binanceDatalist.isEmpty()) {
 				continue;
 			}
-			
+
 			LocalDateTime now = LocalDateTime.now();
 			LocalDateTime twentyFourHourAgo = now.minusHours(24).withSecond(0).withNano(0);
-			
+
 			hourCommonDataList = binanceDataConvertToCommonData(binanceDatalist, key.getSymbol(), IntervalType.HOUR_1);
 			for (int i = 0; i < hourCommonDataList.size(); i++) {
 				if (hourCommonDataList.get(i).getStartTime().isBefore(twentyFourHourAgo)) {
@@ -164,7 +164,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 					i--;
 				}
 			}
-			
+
 			cacheDataList = map.get(key);
 			if (cacheDataList != null && !cacheDataList.isEmpty()) {
 				lastData = cacheDataList.get(cacheDataList.size() - 1);
@@ -255,7 +255,13 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 
 	@Override
 	public void getRecentBigMoveCounterBySymbol() {
-		Set<String> sourceKeySet = redisTemplate.keys(BIG_MOVE_REDIS_KEY_PERFIX + "*Min*");
+		getRecentBigMoveCounterWithPatternBySymbol(BIG_MOVE_REDIS_KEY_PERFIX + "*Min*");
+		getRecentBigMoveCounterWithPatternBySymbol(
+				BIG_MOVE_REDIS_KEY_PERFIX + "*" + BIG_MOVE_IN_24HOUR_REDIS_KEY_PERFIX + "*");
+	}
+
+	private void getRecentBigMoveCounterWithPatternBySymbol(String keyPattern) {
+		Set<String> sourceKeySet = redisTemplate.keys(keyPattern);
 
 		Set<String> targetKeySet = new HashSet<>();
 		for (String key : sourceKeySet) {
