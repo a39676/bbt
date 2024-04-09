@@ -156,6 +156,8 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 			
 			LocalDateTime now = LocalDateTime.now();
 			LocalDateTime twentyFourHourAgo = now.minusHours(24).withSecond(0).withNano(0);
+			
+			hourCommonDataList = binanceDataConvertToCommonData(binanceDatalist, key.getSymbol(), IntervalType.HOUR_1);
 			for (int i = 0; i < hourCommonDataList.size(); i++) {
 				if (hourCommonDataList.get(i).getStartTime().isBefore(twentyFourHourAgo)) {
 					hourCommonDataList.remove(i);
@@ -163,7 +165,6 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 				}
 			}
 			
-			hourCommonDataList = binanceDataConvertToCommonData(binanceDatalist, key.getSymbol(), IntervalType.HOUR_1);
 			cacheDataList = map.get(key);
 			if (cacheDataList != null && !cacheDataList.isEmpty()) {
 				lastData = cacheDataList.get(cacheDataList.size() - 1);
