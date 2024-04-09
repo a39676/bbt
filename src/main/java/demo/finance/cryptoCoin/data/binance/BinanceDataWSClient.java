@@ -261,12 +261,12 @@ public class BinanceDataWSClient extends CryptoCoinCommonService {
 			bo = new CryptoCoinPriceCommonDataBO();
 
 			JSONObject kDataJson = sourceMsgJson.getJSONObject("k");
-			String symbol = sourceMsgJson.getString("s").toLowerCase();
+			String symbol = sourceMsgJson.getString("s").toUpperCase();
 			bo.setSymbol(symbol);
 			
-			if (symbol.contains("usdt")) {
+			if (symbol.contains("USDT")) {
 				bo.setCurrencyType(CurrencyTypeForCryptoCoin.USD.getCode());
-				bo.setCoinType(symbol.replaceAll("usdt", ""));
+				bo.setCoinType(symbol.replaceAll("USDT", ""));
 			} else {
 				return null;
 			}
