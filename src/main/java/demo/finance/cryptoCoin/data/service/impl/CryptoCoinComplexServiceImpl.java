@@ -19,6 +19,7 @@ import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.binance.BinanceDataApiUnit;
 import demo.finance.cryptoCoin.data.binance.BinanceDataWSClient;
 import demo.finance.cryptoCoin.data.pojo.bo.BinanceKLineBO;
+import demo.finance.cryptoCoin.data.pojo.type.CryptoBigMoveCounterType;
 import demo.finance.cryptoCoin.data.service.CryptoCoinComplexService;
 import finance.common.pojo.bo.FilterPriceResult;
 import finance.common.pojo.bo.KLineCommonDataBO;
@@ -44,13 +45,14 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 	private static final String BIG_MOVE_REDIS_KEY_PERFIX = "cryptoCoinBigMove";
 	private static final String BIG_RISE_REDIS_KEY_PERFIX = "Rise";
 	private static final String BIG_FALL_REDIS_KEY_PERFIX = "Fall";
-	private static final String BIG_MOVE_IN_1MIN_REDIS_KEY_PERFIX = "_1Min_";
-	private static final String BIG_MOVE_IN_5MIN_REDIS_KEY_PERFIX = "_5Min_";
-	private static final String BIG_MOVE_IN_10MIN_REDIS_KEY_PERFIX = "_10Min_";
-	private static final String BIG_MOVE_IN_24HOUR_REDIS_KEY_PERFIX = "_24Hour_";
-	private static final Integer BIG_MOVES_IN_MINUTES_MAX_LIVING_SECONDS = 600;
-	private static final Integer BIG_MOVES_IN_HOURS_MAX_LIVING_HOURS = 1;
-//	private static final Integer BIG_MOVES_IN_DAYS_MAX_LIVING_DAYS = 1;
+	private static final String BIG_MOVE_IN_1MIN_REDIS_KEY_PERFIX = "_1"
+			+ CryptoBigMoveCounterType.IN_MINUTE.getRedisKeyTemplateKeyWord() + "_";
+	private static final String BIG_MOVE_IN_5MIN_REDIS_KEY_PERFIX = "_5"
+			+ CryptoBigMoveCounterType.IN_MINUTE.getRedisKeyTemplateKeyWord() + "_";
+	private static final String BIG_MOVE_IN_10MIN_REDIS_KEY_PERFIX = "_10"
+			+ CryptoBigMoveCounterType.IN_MINUTE.getRedisKeyTemplateKeyWord() + "_";
+	private static final String BIG_MOVE_IN_24HOUR_REDIS_KEY_PERFIX = "_24"
+			+ CryptoBigMoveCounterType.IN_HOUR.getRedisKeyTemplateKeyWord() + "_";
 
 	@Override
 	public void deleteOld1MinKLineDatas() {
@@ -93,7 +95,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 			oneMinTag: if (rate.doubleValue() > optionService.getBigMoveIn1min()) {
 				timingKey = BIG_MOVE_IN_1MIN_REDIS_KEY_PERFIX;
 				sendMsgFlag = sendNoticeMsgIfNecessary(timingKey, filterData, key.getSymbol(), rate, lastData,
-						BIG_MOVES_IN_MINUTES_MAX_LIVING_SECONDS, TimeUnit.SECONDS);
+						CryptoBigMoveCounterType.IN_MINUTE.getNoticeCacheLivingSeconds(), TimeUnit.SECONDS);
 				if (sendMsgFlag) {
 					break oneMinTag;
 				}
@@ -109,7 +111,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 			fiveMinTag: if (rate.doubleValue() > optionService.getBigMoveIn5min()) {
 				timingKey = BIG_MOVE_IN_5MIN_REDIS_KEY_PERFIX;
 				sendMsgFlag = sendNoticeMsgIfNecessary(timingKey, filterData, key.getSymbol(), rate, lastData,
-						BIG_MOVES_IN_MINUTES_MAX_LIVING_SECONDS, TimeUnit.SECONDS);
+						CryptoBigMoveCounterType.IN_MINUTE.getNoticeCacheLivingSeconds(), TimeUnit.SECONDS);
 				if (sendMsgFlag) {
 					break fiveMinTag;
 				}
@@ -125,7 +127,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 			tenMinTag: if (rate.doubleValue() > optionService.getBigMoveIn10min()) {
 				timingKey = BIG_MOVE_IN_10MIN_REDIS_KEY_PERFIX;
 				sendMsgFlag = sendNoticeMsgIfNecessary(timingKey, filterData, key.getSymbol(), rate, lastData,
-						BIG_MOVES_IN_MINUTES_MAX_LIVING_SECONDS, TimeUnit.SECONDS);
+						CryptoBigMoveCounterType.IN_MINUTE.getNoticeCacheLivingSeconds(), TimeUnit.SECONDS);
 				if (sendMsgFlag) {
 					break tenMinTag;
 				}
@@ -188,7 +190,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 				timingKey = BIG_MOVE_IN_24HOUR_REDIS_KEY_PERFIX;
 
 				sendMsgFlag = sendNoticeMsgIfNecessary(timingKey, filterDataFromHourData, key.getSymbol(), rate,
-						lastData, BIG_MOVES_IN_HOURS_MAX_LIVING_HOURS, TimeUnit.HOURS);
+						lastData, CryptoBigMoveCounterType.IN_HOUR.getNoticeCacheLivingSeconds(), TimeUnit.HOURS);
 				if (sendMsgFlag) {
 					continue;
 				}
@@ -255,12 +257,12 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 
 	@Override
 	public void getRecentBigMoveCounterBySymbol() {
-		getRecentBigMoveCounterWithPatternBySymbol(BIG_MOVE_REDIS_KEY_PERFIX + "*Min*");
-		getRecentBigMoveCounterWithPatternBySymbol(
-				BIG_MOVE_REDIS_KEY_PERFIX + "*" + BIG_MOVE_IN_24HOUR_REDIS_KEY_PERFIX + "*");
+		getRecentBigMoveCounterWithPatternBySymbol(CryptoBigMoveCounterType.IN_MINUTE);
+		getRecentBigMoveCounterWithPatternBySymbol(CryptoBigMoveCounterType.IN_HOUR);
 	}
 
-	private void getRecentBigMoveCounterWithPatternBySymbol(String keyPattern) {
+	private void getRecentBigMoveCounterWithPatternBySymbol(CryptoBigMoveCounterType bingMoveCounterType) {
+		String keyPattern = BIG_MOVE_REDIS_KEY_PERFIX + "*" + bingMoveCounterType.getRedisKeyTemplateKeyWord() + "*";
 		Set<String> sourceKeySet = redisTemplate.keys(keyPattern);
 
 		Set<String> targetKeySet = new HashSet<>();
@@ -279,10 +281,12 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 		}
 		String msg = "";
 		if (riseCount > 0) {
-			msg += "Big rise: " + riseCount + " in last " + BIG_MOVES_IN_MINUTES_MAX_LIVING_SECONDS + " seconds; ";
+			msg += "Big " + BIG_RISE_REDIS_KEY_PERFIX + " " + bingMoveCounterType.getName() + ": " + riseCount
+					+ " in last " + bingMoveCounterType.getNoticeCacheLivingSeconds() + " seconds; ";
 		}
 		if (fallCount > 0) {
-			msg += "Big fall: " + fallCount + " in last " + BIG_MOVES_IN_MINUTES_MAX_LIVING_SECONDS + " seconds; ";
+			msg += "Big " + BIG_FALL_REDIS_KEY_PERFIX + " " + bingMoveCounterType.getName() + ": " + fallCount
+					+ " in last " + bingMoveCounterType.getNoticeCacheLivingSeconds() + " seconds; ";
 		}
 
 		if (msg.length() > 0 && ((riseCount + fallCount) > 5)) {
@@ -290,7 +294,8 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 				return;
 			}
 			sendingMsg(msg);
-			redisTemplate.opsForValue().set(msg, "", BIG_MOVES_IN_MINUTES_MAX_LIVING_SECONDS, TimeUnit.SECONDS);
+			redisTemplate.opsForValue().set(msg, "", bingMoveCounterType.getNoticeCacheLivingSeconds(),
+					TimeUnit.SECONDS);
 		}
 	}
 
