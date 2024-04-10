@@ -33,18 +33,6 @@ public class OnStartup extends CommonService implements ApplicationListener<Appl
 			System.setProperty("https.proxyPort", proxyPort);
 
 			log.error("Had set proxy");
-		} else if ("Linux".equals(os)) {
-			log.error("OS: Linux, will set proxy");
-			String proxyHost = "127.0.0.1";
-			String proxyPort = "2081";
-
-			System.setProperty("http.proxyHost", proxyHost);
-			System.setProperty("http.proxyPort", proxyPort);
-
-			System.setProperty("https.proxyHost", proxyHost);
-			System.setProperty("https.proxyPort", proxyPort);
-
-			log.error("Had set proxy");
 		}
 	}
 
