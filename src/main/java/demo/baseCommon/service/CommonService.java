@@ -43,8 +43,6 @@ public abstract class CommonService {
 	@Autowired
 	protected FileUtilCustom ioUtil;
 
-//	@Autowired
-//	private TelegramCalendarNoticeMessageAckProducer telegramMessageAckProducer;
 	@Autowired
 	private ReminderMessageService reminderMessageService;
 
