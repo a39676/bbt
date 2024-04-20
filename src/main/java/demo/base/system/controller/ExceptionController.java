@@ -3,9 +3,6 @@ package demo.base.system.controller;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +14,12 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import demo.base.system.service.impl.SystemOptionService;
 import demo.baseCommon.controller.CommonController;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @ControllerAdvice
 public class ExceptionController extends CommonController implements HandlerExceptionResolver {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(ExceptionController.class);
 
 	@Autowired
@@ -30,7 +29,7 @@ public class ExceptionController extends CommonController implements HandlerExce
 	public ModelAndView handleException(HttpServletRequest request, Exception e, String message) {
 		ModelAndView view = new ModelAndView("baseJSP/errorCustom");
 		log.error(e.toString());
-		if(systemConstantService.getIsDebuging()) {
+		if (systemConstantService.getIsDebuging()) {
 			view.addObject("message", e.toString());
 		} else {
 			view.addObject("message", "很抱歉,居然出现了异常");
@@ -45,7 +44,7 @@ public class ExceptionController extends CommonController implements HandlerExce
 	public ModelAndView handleIOException(HttpServletRequest request, Exception e) {
 		log.error(e.toString());
 		ModelAndView view = new ModelAndView("baseJSP/errorCustom");
-		if(systemConstantService.getIsDebuging()) {
+		if (systemConstantService.getIsDebuging()) {
 			view.addObject("message", e.toString());
 		} else {
 			view.addObject("message", "IOException");
@@ -59,7 +58,7 @@ public class ExceptionController extends CommonController implements HandlerExce
 	public ModelAndView handleNoHandlerFoundException(HttpServletRequest request, Exception e) {
 		log.error(e.toString());
 		ModelAndView view = new ModelAndView("baseJSP/errorCustom");
-		if(systemConstantService.getIsDebuging()) {
+		if (systemConstantService.getIsDebuging()) {
 			view.addObject("message", e.toString());
 		} else {
 			view.addObject("message", "NoHandlerFoundException");
@@ -74,7 +73,7 @@ public class ExceptionController extends CommonController implements HandlerExce
 	public ModelAndView handleSQLException(HttpServletRequest request, Exception e) {
 		log.error(e.toString());
 		ModelAndView view = new ModelAndView("baseJSP/errorCustom");
-		if(systemConstantService.getIsDebuging()) {
+		if (systemConstantService.getIsDebuging()) {
 			view.addObject("message", e.toString());
 		} else {
 			view.addObject("message", "SQLException");
@@ -88,7 +87,7 @@ public class ExceptionController extends CommonController implements HandlerExce
 	public ModelAndView hanedleRuntimeException(HttpServletRequest request, Exception e) {
 		log.error(e.toString());
 		ModelAndView view = new ModelAndView("baseJSP/errorCustom");
-		if(systemConstantService.getIsDebuging()) {
+		if (systemConstantService.getIsDebuging()) {
 			view.addObject("message", e.toString());
 		} else {
 			view.addObject("message", "RuntimeException");
@@ -97,7 +96,6 @@ public class ExceptionController extends CommonController implements HandlerExce
 		e.printStackTrace();
 		return view;
 	}
-	
 
 	@Override
 	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler,
@@ -111,7 +109,7 @@ public class ExceptionController extends CommonController implements HandlerExce
 				return handleException(request, ex, "???");
 			}
 		} catch (Exception handlerException) {
-			
+
 		}
 		return null;
 	}

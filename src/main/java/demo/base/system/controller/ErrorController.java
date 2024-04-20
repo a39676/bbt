@@ -2,13 +2,12 @@ package demo.base.system.controller;
 
 
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import demo.base.system.pojo.constant.BaseUrl;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class ErrorController extends ExceptionController {
