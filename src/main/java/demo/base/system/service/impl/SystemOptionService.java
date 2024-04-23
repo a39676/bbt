@@ -2,14 +2,13 @@ package demo.base.system.service.impl;
 
 import java.io.File;
 
-import javax.annotation.PostConstruct;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import demo.config.costomComponent.OptionFilePathConfigurer;
+import jakarta.annotation.PostConstruct;
 import net.sf.json.JSONObject;
 import toolPack.ioHandle.FileUtilCustom;
 

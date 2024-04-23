@@ -3,8 +3,6 @@ package demo.autoTestBase.testEvent.service.impl;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +17,7 @@ import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.scriptCore.bingDemo.servcie.BingDemoPrefixService;
 import demo.scriptCore.scheduleClawing.complex.service.ScheduleClawingPrefixService;
+import jakarta.annotation.PostConstruct;
 
 @Service
 public class TestEventServiceImpl extends TestEventCommonService implements TestEventService {

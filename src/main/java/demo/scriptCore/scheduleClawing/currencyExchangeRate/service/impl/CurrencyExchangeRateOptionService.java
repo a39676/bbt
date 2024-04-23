@@ -3,8 +3,6 @@ package demo.scriptCore.scheduleClawing.currencyExchangeRate.service.impl;
 import java.io.File;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +11,7 @@ import com.google.gson.Gson;
 import autoTest.testEvent.scheduleClawing.currencyExchangeRate.pojo.dto.CurrencyExchangeRatePairDTO;
 import demo.baseCommon.service.CommonService;
 import demo.config.costomComponent.OptionFilePathConfigurer;
+import jakarta.annotation.PostConstruct;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Service

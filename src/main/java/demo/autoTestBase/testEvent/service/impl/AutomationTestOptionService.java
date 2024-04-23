@@ -7,13 +7,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import demo.baseCommon.service.CommonService;
 import demo.config.costomComponent.OptionFilePathConfigurer;
+import jakarta.annotation.PostConstruct;
 import net.sf.json.JSONObject;
 import toolPack.ioHandle.FileUtilCustom;
 

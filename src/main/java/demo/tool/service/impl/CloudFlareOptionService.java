@@ -2,14 +2,13 @@ package demo.tool.service.impl;
 
 import java.io.File;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import demo.baseCommon.service.CommonService;
 import demo.config.costomComponent.OptionFilePathConfigurer;
+import jakarta.annotation.PostConstruct;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")
