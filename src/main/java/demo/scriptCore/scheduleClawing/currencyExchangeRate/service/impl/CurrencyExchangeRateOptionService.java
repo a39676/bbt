@@ -10,7 +10,7 @@ import com.google.gson.Gson;
 
 import autoTest.testEvent.scheduleClawing.currencyExchangeRate.pojo.dto.CurrencyExchangeRatePairDTO;
 import demo.baseCommon.service.CommonService;
-import demo.config.costomComponent.OptionFilePathConfigurer;
+import demo.config.customComponent.OptionFilePathConfigurer;
 import jakarta.annotation.PostConstruct;
 import toolPack.ioHandle.FileUtilCustom;
 

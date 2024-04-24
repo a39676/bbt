@@ -1,4 +1,4 @@
-package demo.config.costomComponent;
+package demo.config.customComponent;
 
 import java.time.LocalDateTime;
 

@@ -26,6 +26,7 @@ import finance.cryptoCoin.binance.pojo.dto.KLineKeyBO;
 @RequestMapping(value = { TestUrl.testRoot })
 public class TestController extends CommonController {
 
+	@SuppressWarnings("unused")
 	@Autowired
 	private TestService testService;
 	@Autowired
@@ -44,7 +45,7 @@ public class TestController extends CommonController {
 	@GetMapping(value = "/test")
 	@ResponseBody
 	public String test() throws Exception {
-		return testService.testing("something", "other");
+		return "Done";
 	}
 
 	@GetMapping(value = "/t5")

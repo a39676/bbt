@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import demo.base.system.service.impl.SystemOptionService;
 import demo.baseCommon.service.CommonService;
-import demo.config.costomComponent.BbtDynamicKey;
+import demo.config.customComponent.BbtDynamicKey;
 import net.sf.json.JSONObject;
 import tool.pojo.constant.CxBbtInteractionUrl;
 import toolPack.httpHandel.HttpUtil;

@@ -1,5 +1,6 @@
 package demo.scriptCore.cryptoCoin.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,9 +13,9 @@ import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
 import demo.scriptCore.cryptoCoin.pojo.result.CryptoCoinDailyDataResult;
 import demo.scriptCore.cryptoCoin.service.BinanceService;
 import demo.selenium.service.impl.AutomationTestCommonService;
+import finance.common.pojo.bo.KLineCommonDataBO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDailyDataQueryDTO;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataDTO;
-import finance.cryptoCoin.pojo.dto.CryptoCoinDataSubDTO;
 import finance.cryptoCoin.pojo.type.CryptoCoinDataSourceType;
 import net.sf.json.JSONArray;
 import toolPack.httpHandel.HttpUtil;
@@ -37,17 +38,16 @@ public class BinanceServiceImpl extends AutomationTestCommonService implements B
 		try {
 			String httpResponse = null;
 			CryptoCoinDataDTO mainDTO = new CryptoCoinDataDTO();
-			List<CryptoCoinDataSubDTO> subDataList = null;
 
 			httpResponse = h.sendGet(String.format(cryptoCoinApiUrlModel, paramDTO.getCoinName().toUpperCase(),
 					paramDTO.getCurrencyName().toUpperCase(), paramDTO.getCounting()));
 			reportService.caseReportAppendContent(caseReport, httpResponse);
 
-			subDataList = handleCryptoCoinDataResponse(httpResponse, paramDTO.getCoinName(),
-					paramDTO.getCurrencyName());
-			mainDTO.setPriceHistoryData(subDataList);
-			mainDTO.setCryptoCoinTypeName(paramDTO.getCoinName());
-			mainDTO.setCurrencyName(paramDTO.getCurrencyName());
+			// 2024-04-23 准备转移相关功能到 crypto coin monitor 项目
+//			List<KLineCommonDataBO> subDataList = handleCryptoCoinDataResponse(httpResponse, paramDTO.getCoinName(),
+//					paramDTO.getCurrencyName());
+//			mainDTO.setPriceHistoryData(subDataList);
+			mainDTO.setSymbol(paramDTO.getCoinName() + paramDTO.getCurrencyName());
 			mainDTO.setDataSourceCode(CryptoCoinDataSourceType.BINANCE.getCode());
 
 			r.setData(mainDTO);
@@ -68,26 +68,25 @@ public class BinanceServiceImpl extends AutomationTestCommonService implements B
 		return r;
 	}
 
-	private List<CryptoCoinDataSubDTO> handleCryptoCoinDataResponse(String response, String coinName,
+	@SuppressWarnings("unused")
+	private List<KLineCommonDataBO> handleCryptoCoinDataResponse(String response, String coinName,
 			String currencyName) {
-		List<CryptoCoinDataSubDTO> resultList = new ArrayList<>();
+		List<KLineCommonDataBO> resultList = new ArrayList<>();
 		JSONArray dataArray = JSONArray.fromObject(response);
 		JSONArray subJson = null;
-		CryptoCoinDataSubDTO priceDataDTO = null;
+		KLineCommonDataBO priceDataDTO = null;
 
 		Date tmpDate = null;
 		for (int i = 0; i < dataArray.size(); i++) {
 			subJson = dataArray.getJSONArray(i);
-			priceDataDTO = new CryptoCoinDataSubDTO();
+			priceDataDTO = new KLineCommonDataBO();
 			tmpDate = new Date(subJson.getInt(0));
-			priceDataDTO.setTime(localDateTimeHandler.dateToStr(localDateTimeHandler.dateToLocalDateTime(tmpDate)));
-			priceDataDTO.setStart(subJson.getDouble(1));
-			priceDataDTO.setHigh(subJson.getDouble(2));
-			priceDataDTO.setLow(subJson.getDouble(3));
-			priceDataDTO.setEnd(subJson.getDouble(4));
-			priceDataDTO.setVolume(subJson.getDouble(5));
-			priceDataDTO.setCoinType(coinName);
-			priceDataDTO.setCurrencyType(currencyName);
+			priceDataDTO.setStartTime(localDateTimeHandler.dateToLocalDateTime(tmpDate));
+			priceDataDTO.setStartPrice(new BigDecimal(subJson.getDouble(1)));
+			priceDataDTO.setHighPrice(new BigDecimal(subJson.getDouble(2)));
+			priceDataDTO.setLowPrice(new BigDecimal(subJson.getDouble(3)));
+			priceDataDTO.setEndPrice(new BigDecimal(subJson.getDouble(4)));
+			priceDataDTO.setVolume(new BigDecimal(subJson.getDouble(5)));
 			resultList.add(priceDataDTO);
 		}
 

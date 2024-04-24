@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import demo.config.costomComponent.OptionFilePathConfigurer;
+import demo.config.customComponent.OptionFilePathConfigurer;
 import jakarta.annotation.PostConstruct;
 import net.sf.json.JSONObject;
 import toolPack.ioHandle.FileUtilCustom;

@@ -1,4 +1,4 @@
-package demo.config.costomComponent;
+package demo.config.customComponent;
 
 public class BaseUtilCustom {
 	

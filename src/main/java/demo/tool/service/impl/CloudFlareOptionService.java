@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import demo.baseCommon.service.CommonService;
-import demo.config.costomComponent.OptionFilePathConfigurer;
+import demo.config.customComponent.OptionFilePathConfigurer;
 import jakarta.annotation.PostConstruct;
 import toolPack.ioHandle.FileUtilCustom;
 

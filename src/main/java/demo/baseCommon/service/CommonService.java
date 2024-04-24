@@ -15,7 +15,7 @@ import auxiliaryCommon.pojo.result.CommonResult;
 import auxiliaryCommon.pojo.type.BaseResultType;
 import demo.baseCommon.pojo.constant.SystemConstant;
 import demo.baseCommon.pojo.param.PageParam;
-import demo.config.costomComponent.SnowFlake;
+import demo.config.customComponent.SnowFlake;
 import demo.tool.service.ReminderMessageService;
 import net.sf.json.JSONObject;
 import toolPack.dateTimeHandle.DateHandler;

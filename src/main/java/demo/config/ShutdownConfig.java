@@ -3,7 +3,7 @@ package demo.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import demo.config.costomComponent.TerminateBean;
+import demo.config.customComponent.TerminateBean;
 
 @Configuration
 public class ShutdownConfig {

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.dto.ServiceMsgDTO;
 import demo.base.system.service.impl.SystemOptionService;
-import demo.config.costomComponent.BbtDynamicKey;
+import demo.config.customComponent.BbtDynamicKey;
 import demo.tool.service.ReminderMessageService;
 import net.sf.json.JSONObject;
 import tool.pojo.constant.CxBbtInteractionUrl;

@@ -23,7 +23,7 @@ import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import autoTest.testModule.pojo.type.TestModuleType;
 import auxiliaryCommon.pojo.type.CurrencyType;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
-import demo.config.costomComponent.BbtDynamicKey;
+import demo.config.customComponent.BbtDynamicKey;
 import demo.scriptCore.scheduleClawing.currencyExchangeRate.mq.sender.CurrencyExchangeRateDailyDataAckProducer;
 import demo.scriptCore.scheduleClawing.currencyExchangeRate.service.CurrencyExchangeRateService;
 import demo.selenium.service.impl.AutomationTestCommonService;

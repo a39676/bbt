@@ -1,4 +1,4 @@
-package demo.config.costomComponent;
+package demo.config.customComponent;
 
 import demo.baseCommon.pojo.constant.SystemConstant;
 

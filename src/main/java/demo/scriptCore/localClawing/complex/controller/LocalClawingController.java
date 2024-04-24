@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.baseCommon.controller.CommonController;
+import demo.scriptCore.localClawing.complex.service.BinanceSymbolCollectService;
 import demo.scriptCore.localClawing.complex.service.LinkedinService;
 import demo.scriptCore.localClawing.complex.service.MathBattleService;
 import demo.scriptCore.localClawing.complex.service.PrankService;
@@ -28,6 +29,8 @@ public class LocalClawingController extends CommonController {
 	private TextbookDownloadService textbookDownloadService;
 	@Autowired
 	private StoryBerriesDownloadService storyBerriesDownloadService;
+	@Autowired
+	private BinanceSymbolCollectService binanceSymbolCollectService;
 
 	@GetMapping(value = "/l2")
 	@ResponseBody
@@ -63,4 +66,13 @@ public class LocalClawingController extends CommonController {
 		storyBerriesDownloadService.downloading(url);
 		return "done";
 	}
+	
+	@GetMapping(value = "/l7")
+	@ResponseBody
+	public String l7() {
+		binanceSymbolCollectService.collect();
+		return "done";
+	}
+	
+	
 }

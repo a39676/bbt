@@ -1,4 +1,4 @@
-package demo.config.costomComponent;
+package demo.config.customComponent;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;

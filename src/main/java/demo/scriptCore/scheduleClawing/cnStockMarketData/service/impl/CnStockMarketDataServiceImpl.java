@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.type.TimeUnitType;
-import demo.config.costomComponent.BbtDynamicKey;
+import demo.config.customComponent.BbtDynamicKey;
 import demo.scriptCore.scheduleClawing.cnStockMarketData.pojo.dto.SinaStockMarketDataDTO;
 import demo.scriptCore.scheduleClawing.cnStockMarketData.service.CnStockMarketDataService;
 import demo.selenium.service.impl.AutomationTestCommonService;

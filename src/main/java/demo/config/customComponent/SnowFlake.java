@@ -1,4 +1,4 @@
-package demo.config.costomComponent;
+package demo.config.customComponent;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;

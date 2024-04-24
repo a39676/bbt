@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.dto.BaseStrDTO;
-import demo.config.costomComponent.BbtDynamicKey;
+import demo.config.customComponent.BbtDynamicKey;
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.binance.BinanceDataApiUnit;
 import demo.finance.cryptoCoin.data.binance.BinanceDataWSClient;
