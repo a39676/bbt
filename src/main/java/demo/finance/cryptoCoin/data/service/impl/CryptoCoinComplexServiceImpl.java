@@ -76,6 +76,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 		CryptoCoinPrice1dayExample dataExample = new CryptoCoinPrice1dayExample();
 		dataExample.createCriteria().andCoinTypeEqualTo(catalog.getId())
 				.andCurrencyTypeEqualTo(CurrencyTypeForCryptoCoin.USDT.getCode());
-		return cryptoCoinPrice1dayMapper.selectLastDataByCoinTypeAndCurrencyType(dataExample);
+		CryptoCoinPrice1day lastData = cryptoCoinPrice1dayMapper.selectLastDataByCoinTypeAndCurrencyType(dataExample);
+		return lastData;
 	}
 }
