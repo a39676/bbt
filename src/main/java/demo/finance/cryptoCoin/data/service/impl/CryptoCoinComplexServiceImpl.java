@@ -31,25 +31,30 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 	private CryptoCoinDailyDataQueryAckProducer cryptoCoinDailyDataQueryAckProducer;
 
 	@Override
+	public void sendDailyDataQuery(String symbol) {
+		CryptoCoinPrice1day lastData = findLastData(symbol);
+		Long defaultStartTime = null;
+		if (lastData == null) {
+			defaultStartTime = localDateTimeHandler
+					.localDateTimeToDate(LocalDateTime.now().minusYears(3).with(LocalTime.MIN)).getTime();
+		} else {
+			defaultStartTime = localDateTimeHandler.localDateTimeToDate(lastData.getStartTime().with(LocalTime.MIN))
+					.getTime();
+		}
+		CryptoCoinDailyDataQueryDTO dto = new CryptoCoinDailyDataQueryDTO();
+		dto.setDataSourceCode(CryptoCoinDataSourceType.BINANCE.getCode());
+		dto.setCurrencyName(optionService.getDefaultCurrency());
+		dto.setCoinName(symbol.replaceAll(optionService.getDefaultCurrency(), ""));
+		dto.setStartTime(defaultStartTime);
+		dto.setEndTime(new Date().getTime());
+		cryptoCoinDailyDataQueryAckProducer.send(dto);
+	}
+
+	@Override
 	public void sendAllDailyDataQuery() {
 		List<String> symbolList = getSymbolListFromOptionFile();
 		for (String symbol : symbolList) {
-			CryptoCoinPrice1day lastData = findLastData(symbol);
-			Long defaultStartTime = null;
-			if (lastData == null) {
-				defaultStartTime = localDateTimeHandler
-						.localDateTimeToDate(LocalDateTime.now().minusYears(3).with(LocalTime.MIN)).getTime();
-			} else {
-				defaultStartTime = localDateTimeHandler.localDateTimeToDate(lastData.getStartTime().with(LocalTime.MIN))
-						.getTime();
-			}
-			CryptoCoinDailyDataQueryDTO dto = new CryptoCoinDailyDataQueryDTO();
-			dto.setDataSourceCode(CryptoCoinDataSourceType.BINANCE.getCode());
-			dto.setCurrencyName(optionService.getDefaultCurrency());
-			dto.setCoinName(symbol.replaceAll(optionService.getDefaultCurrency(), ""));
-			dto.setStartTime(defaultStartTime);
-			dto.setEndTime(new Date().getTime());
-			cryptoCoinDailyDataQueryAckProducer.send(dto);
+			sendDailyDataQuery(symbol);
 		}
 	}
 
@@ -76,4 +81,6 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 				catalog.getId(), CurrencyTypeForCryptoCoin.USDT.getCode().longValue());
 		return lastData;
 	}
+
+	
 }

@@ -4,4 +4,6 @@ public interface CryptoCoinComplexService {
 
 	void sendAllDailyDataQuery();
 
+	void sendDailyDataQuery(String symbol);
+
 }
