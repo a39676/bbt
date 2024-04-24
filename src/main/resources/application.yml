@@ -11,12 +11,6 @@ spring:
       charset: UTF-8
       enabled: true
       force: true
-  rabbitmq:
-    host: 127.0.0.1
-    port: 5672
-    virtualHost: /
-    username: u1
-    password: something
     
 endpoints:
   shutdown:
