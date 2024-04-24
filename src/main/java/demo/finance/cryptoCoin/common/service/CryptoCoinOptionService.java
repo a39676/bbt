@@ -8,10 +8,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.Gson;
-
 import demo.baseCommon.service.CommonService;
 import demo.config.customComponent.OptionFilePathConfigurer;
+import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
 import jakarta.annotation.PostConstruct;
 import toolPack.ioHandle.FileUtilCustom;
 
@@ -19,15 +18,29 @@ import toolPack.ioHandle.FileUtilCustom;
 @Service
 public class CryptoCoinOptionService extends CommonService {
 
-	private String defaultCurrency = "USDT";
-	private String binanceApiKey;
-	private String binanceSecretKey;
-	private List<String> binanceKLineSubscriptionSymbolSet = new ArrayList<>();
-	private Double bigMoveIn1min = 1D;
-	private Double bigMoveIn5min = 3D;
-	private Double bigMoveIn10min = 5D;
-	private Double bigMoveIn24hour = 5D;
-	private Integer maxReconnectCounterInOneTime = 10;
+	private String defaultCurrency = CurrencyTypeForCryptoCoin.USDT.getName();
+	private List<String> symbolList = new ArrayList<>();
+
+	public String getDefaultCurrency() {
+		return defaultCurrency;
+	}
+
+	public void setDefaultCurrency(String defaultCurrency) {
+		this.defaultCurrency = defaultCurrency;
+	}
+
+	public List<String> getSymbolList() {
+		return symbolList;
+	}
+
+	public void setSymbolList(List<String> symbolList) {
+		this.symbolList = symbolList;
+	}
+
+	@Override
+	public String toString() {
+		return "CryptoCoinOptionService [defaultCurrency=" + defaultCurrency + ", symbolList=" + symbolList + "]";
+	}
 
 	@PostConstruct
 	public void refreshOption() {
@@ -40,96 +53,15 @@ public class CryptoCoinOptionService extends CommonService {
 		refreshOption(jsonStr);
 	}
 
-	public void refreshOption(String jsonStr) {
+	private void refreshOption(String jsonStr) {
 		try {
-			CryptoCoinOptionService tmp = new Gson().fromJson(jsonStr, this.getClass());
+			CryptoCoinOptionService tmp = buildObjFromJsonCustomization(jsonStr, this.getClass());
 			BeanUtils.copyProperties(tmp, this);
 			log.error("crypto coin option loaded");
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("crypto coin option loading error: " + e.getLocalizedMessage());
 		}
-	}
-
-	public String getDefaultCurrency() {
-		return defaultCurrency;
-	}
-
-	public void setDefaultCurrency(String defaultCurrency) {
-		this.defaultCurrency = defaultCurrency;
-	}
-
-	public String getBinanceApiKey() {
-		return binanceApiKey;
-	}
-
-	public void setBinanceApiKey(String binanceApiKey) {
-		this.binanceApiKey = binanceApiKey;
-	}
-
-	public String getBinanceSecretKey() {
-		return binanceSecretKey;
-	}
-
-	public void setBinanceSecretKey(String binanceSecretKey) {
-		this.binanceSecretKey = binanceSecretKey;
-	}
-
-	public List<String> getBinanceKLineSubscriptionSymbolSet() {
-		return binanceKLineSubscriptionSymbolSet;
-	}
-
-	public void setBinanceKLineSubscriptionSymbolSet(List<String> binanceKLineSubscriptionSymbolSet) {
-		this.binanceKLineSubscriptionSymbolSet = binanceKLineSubscriptionSymbolSet;
-	}
-
-	public Double getBigMoveIn1min() {
-		return bigMoveIn1min;
-	}
-
-	public void setBigMoveIn1min(Double bigMoveIn1min) {
-		this.bigMoveIn1min = bigMoveIn1min;
-	}
-
-	public Double getBigMoveIn5min() {
-		return bigMoveIn5min;
-	}
-
-	public void setBigMoveIn5min(Double bigMoveIn5min) {
-		this.bigMoveIn5min = bigMoveIn5min;
-	}
-
-	public Double getBigMoveIn10min() {
-		return bigMoveIn10min;
-	}
-
-	public void setBigMoveIn10min(Double bigMoveIn10min) {
-		this.bigMoveIn10min = bigMoveIn10min;
-	}
-
-	public Double getBigMoveIn24hour() {
-		return bigMoveIn24hour;
-	}
-
-	public void setBigMoveIn24hour(Double bigMoveIn24hour) {
-		this.bigMoveIn24hour = bigMoveIn24hour;
-	}
-
-	public Integer getMaxReconnectCounterInOneTime() {
-		return maxReconnectCounterInOneTime;
-	}
-
-	public void setMaxReconnectCounterInOneTime(Integer maxReconnectCounterInOneTime) {
-		this.maxReconnectCounterInOneTime = maxReconnectCounterInOneTime;
-	}
-
-	@Override
-	public String toString() {
-		return "CryptoCoinOptionService [defaultCurrency=" + defaultCurrency + ", binanceApiKey=" + binanceApiKey
-				+ ", binanceSecretKey=" + binanceSecretKey + ", binanceKLineSubscriptionSymbolSet="
-				+ binanceKLineSubscriptionSymbolSet + ", bigMoveIn1min=" + bigMoveIn1min + ", bigMoveIn5min="
-				+ bigMoveIn5min + ", bigMoveIn10min=" + bigMoveIn10min + ", bigMoveIn24hour=" + bigMoveIn24hour
-				+ ", maxReconnectCounterInOneTime=" + maxReconnectCounterInOneTime + "]";
 	}
 
 }

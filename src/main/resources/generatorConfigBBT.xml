@@ -54,9 +54,9 @@
             <property name="enableSubPackages" value="true"/>    
         </javaClientGenerator>
           
-        <table tableName="crypto_coin_price_60minute">
-        	<property name="tableName" value="crypto_coin_price_60minute"></property>
-        	<property name="domainObjectName" value="crypto_coin_price_60minute" ></property>
+        <table tableName="crypto_coin_catalog">
+        	<property name="tableName" value="crypto_coin_catalog"></property>
+        	<property name="domainObjectName" value="crypto_coin_catalog" ></property>
             <property name="generatedKey" value="false"></property>
             <property name="enableSelectByPrimaryKey" value="true"></property>
             <property name="enableUpdateByPrimaryKey" value="true"></property>
