@@ -41,7 +41,8 @@
 									and ${criterion.condition} #{criterion.value}
 								</when>
 								<when test="criterion.betweenValue">
-									and ${criterion.condition} #{criterion.value} and
+									and ${criterion.condition} #{criterion.value}
+									and
 									#{criterion.secondValue}
 								</when>
 								<when test="criterion.listValue">
@@ -73,7 +74,8 @@
 									and ${criterion.condition} #{criterion.value}
 								</when>
 								<when test="criterion.betweenValue">
-									and ${criterion.condition} #{criterion.value} and
+									and ${criterion.condition} #{criterion.value}
+									and
 									#{criterion.secondValue}
 								</when>
 								<when test="criterion.listValue">
@@ -91,9 +93,11 @@
 		</where>
 	</sql>
 	<sql id="Base_Column_List">
-		id, coin_type, currency_type, start_price, end_price, high_price,
+		id, coin_type, currency_type, start_price, end_price,
+		high_price,
 		low_price, volume,
-		start_time, end_time, create_time, is_delete
+		start_time, end_time, create_time,
+		is_delete
 	</sql>
 	<select id="selectByExample"
 		parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1dayExample"
@@ -119,7 +123,8 @@
 		where id = #{id,jdbcType=BIGINT}
 	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-		delete from crypto_coin_price_1day
+		delete from
+		crypto_coin_price_1day
 		where id = #{id,jdbcType=BIGINT}
 	</delete>
 	<delete id="deleteByExample"
@@ -131,17 +136,22 @@
 	</delete>
 	<insert id="insert"
 		parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1day">
-		insert into crypto_coin_price_1day (id, coin_type, currency_type,
+		insert into crypto_coin_price_1day (id, coin_type,
+		currency_type,
 		start_price, end_price, high_price,
-		low_price, volume, start_time,
+		low_price, volume,
+		start_time,
 		end_time, create_time, is_delete
 		)
-		values (#{id,jdbcType=BIGINT}, #{coinType,jdbcType=BIGINT},
+		values
+		(#{id,jdbcType=BIGINT}, #{coinType,jdbcType=BIGINT},
 		#{currencyType,jdbcType=INTEGER},
-		#{startPrice,jdbcType=DECIMAL}, #{endPrice,jdbcType=DECIMAL}, #{highPrice,jdbcType=DECIMAL},
+		#{startPrice,jdbcType=DECIMAL},
+		#{endPrice,jdbcType=DECIMAL}, #{highPrice,jdbcType=DECIMAL},
 		#{lowPrice,jdbcType=DECIMAL}, #{volume,jdbcType=DECIMAL},
 		#{startTime,jdbcType=TIMESTAMP},
-		#{endTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}
+		#{endTime,jdbcType=TIMESTAMP},
+		#{createTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}
 		)
 	</insert>
 	<insert id="insertSelective"
@@ -280,16 +290,26 @@
 		update crypto_coin_price_1day
 		set id = #{row.id,jdbcType=BIGINT},
 		coin_type = #{row.coinType,jdbcType=BIGINT},
-		currency_type = #{row.currencyType,jdbcType=INTEGER},
-		start_price = #{row.startPrice,jdbcType=DECIMAL},
-		end_price = #{row.endPrice,jdbcType=DECIMAL},
-		high_price = #{row.highPrice,jdbcType=DECIMAL},
-		low_price = #{row.lowPrice,jdbcType=DECIMAL},
-		volume = #{row.volume,jdbcType=DECIMAL},
-		start_time = #{row.startTime,jdbcType=TIMESTAMP},
-		end_time = #{row.endTime,jdbcType=TIMESTAMP},
-		create_time = #{row.createTime,jdbcType=TIMESTAMP},
-		is_delete = #{row.isDelete,jdbcType=BIT}
+		currency_type =
+		#{row.currencyType,jdbcType=INTEGER},
+		start_price =
+		#{row.startPrice,jdbcType=DECIMAL},
+		end_price =
+		#{row.endPrice,jdbcType=DECIMAL},
+		high_price =
+		#{row.highPrice,jdbcType=DECIMAL},
+		low_price =
+		#{row.lowPrice,jdbcType=DECIMAL},
+		volume =
+		#{row.volume,jdbcType=DECIMAL},
+		start_time =
+		#{row.startTime,jdbcType=TIMESTAMP},
+		end_time =
+		#{row.endTime,jdbcType=TIMESTAMP},
+		create_time =
+		#{row.createTime,jdbcType=TIMESTAMP},
+		is_delete =
+		#{row.isDelete,jdbcType=BIT}
 		<if test="example != null">
 			<include refid="Update_By_Example_Where_Clause" />
 		</if>
@@ -337,16 +357,24 @@
 	<update id="updateByPrimaryKey"
 		parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1day">
 		update crypto_coin_price_1day
-		set coin_type = #{coinType,jdbcType=BIGINT},
-		currency_type = #{currencyType,jdbcType=INTEGER},
-		start_price = #{startPrice,jdbcType=DECIMAL},
-		end_price = #{endPrice,jdbcType=DECIMAL},
-		high_price = #{highPrice,jdbcType=DECIMAL},
-		low_price = #{lowPrice,jdbcType=DECIMAL},
+		set coin_type =
+		#{coinType,jdbcType=BIGINT},
+		currency_type =
+		#{currencyType,jdbcType=INTEGER},
+		start_price =
+		#{startPrice,jdbcType=DECIMAL},
+		end_price =
+		#{endPrice,jdbcType=DECIMAL},
+		high_price =
+		#{highPrice,jdbcType=DECIMAL},
+		low_price =
+		#{lowPrice,jdbcType=DECIMAL},
 		volume = #{volume,jdbcType=DECIMAL},
 		start_time = #{startTime,jdbcType=TIMESTAMP},
-		end_time = #{endTime,jdbcType=TIMESTAMP},
-		create_time = #{createTime,jdbcType=TIMESTAMP},
+		end_time =
+		#{endTime,jdbcType=TIMESTAMP},
+		create_time =
+		#{createTime,jdbcType=TIMESTAMP},
 		is_delete = #{isDelete,jdbcType=BIT}
 		where id = #{id,jdbcType=BIGINT}
 	</update>
@@ -368,14 +396,15 @@
 	</select>
 
 	<select id="selectLastDataByCoinTypeAndCurrencyType"
-		parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1dayExample"
 		resultMap="BaseResultMap">
 		select
-		*
-		from crypto_coin_price_1day
-		<if test="_parameter != null">
-			<include refid="Example_Where_Clause" />
-		</if>
+		  *
+		from 
+		  crypto_coin_price_1day
+		where
+          1=1
+          and coin_type = #{coinType}
+          and currency_type = #{currencyType}
 		order by start_time desc
 		limit 1
 	</select>

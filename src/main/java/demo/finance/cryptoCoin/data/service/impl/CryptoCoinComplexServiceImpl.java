@@ -15,7 +15,6 @@ import demo.finance.cryptoCoin.data.mq.producer.CryptoCoinDailyDataQueryAckProdu
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalogExample;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1day;
-import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1dayExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoinComplexService;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDailyDataQueryDTO;
 import finance.cryptoCoin.pojo.type.CryptoCoinDataSourceType;
@@ -73,10 +72,8 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 		}
 		CryptoCoinCatalog catalog = catalogList.get(0);
 
-		CryptoCoinPrice1dayExample dataExample = new CryptoCoinPrice1dayExample();
-		dataExample.createCriteria().andCoinTypeEqualTo(catalog.getId())
-				.andCurrencyTypeEqualTo(CurrencyTypeForCryptoCoin.USDT.getCode());
-		CryptoCoinPrice1day lastData = cryptoCoinPrice1dayMapper.selectLastDataByCoinTypeAndCurrencyType(dataExample);
+		CryptoCoinPrice1day lastData = cryptoCoinPrice1dayMapper.selectLastDataByCoinTypeAndCurrencyType(
+				catalog.getId(), CurrencyTypeForCryptoCoin.USDT.getCode().longValue());
 		return lastData;
 	}
 }
