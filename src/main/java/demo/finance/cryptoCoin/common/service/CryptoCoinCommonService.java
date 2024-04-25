@@ -24,7 +24,7 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 	@Autowired
 	protected CryptoCoinOptionService optionService;
 
-	protected static final int SCALE_FOR_CALCULATE = 4;
+	protected static final int SCALE_FOR_CALCULATE = 12;
 	protected static final CurrencyTypeForCryptoCoin defaultCyrrencyTypeForCryptoCoin = CurrencyTypeForCryptoCoin.USDT;
 
 	protected CryptoCoinPriceCommonDataBO mergerData(CryptoCoinPriceCommonDataBO resultTarget,
