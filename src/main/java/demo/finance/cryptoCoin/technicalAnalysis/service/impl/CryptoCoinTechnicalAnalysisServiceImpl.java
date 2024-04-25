@@ -16,6 +16,7 @@ import demo.finance.cryptoCoin.data.mapper.CryptoCoinCatalogMapper;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalogExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
+import demo.finance.cryptoCoin.technicalAnalysis.pojo.bo.BollBO;
 import demo.finance.cryptoCoin.technicalAnalysis.pojo.bo.KdjBO;
 import demo.finance.cryptoCoin.technicalAnalysis.service.CryptoCoinTechnicalAnalysisService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
@@ -48,15 +49,34 @@ public class CryptoCoinTechnicalAnalysisServiceImpl extends CryptoCoinCommonServ
 				continue;
 			}
 			List<KdjBO> kdjBoList = getKdjDataList(commonDataList);
-			if (kdjBoList.isEmpty()) {
+			if (!filterByKDJ(kdjBoList)) {
+				log.error(catalog.getCoinNameEnShort() + ", fail with KDJ");
 				continue;
 			}
-			KdjBO lastKDJ = kdjBoList.get(kdjBoList.size() - 1);
-			if (lastKDJ.getJ().compareTo(lastKDJ.getD()) > 0) {
-				coinNameList.add(catalog.getCoinNameEnShort());
+
+			List<BollBO> bollBoList = getBollDataList(commonDataList);
+			if (!filterByBoll(bollBoList)) {
+				log.error(catalog.getCoinNameEnShort() + ", fail with BOLL");
+				continue;
 			}
+
+			coinNameList.add(catalog.getCoinNameEnShort());
+
 		}
+		
+		if(coinNameList.isEmpty()) {
+			coinNameList.add("Can NOT found any symbol match this condition");
+		}
+		
 		return coinNameList;
+	}
+
+	private boolean filterByKDJ(List<KdjBO> kdjBoList) {
+		if (kdjBoList.isEmpty()) {
+			return false;
+		}
+		KdjBO lastKDJ = kdjBoList.get(kdjBoList.size() - 1);
+		return lastKDJ.getJ().compareTo(lastKDJ.getD()) > 0;
 	}
 
 	@Override
@@ -90,5 +110,86 @@ public class CryptoCoinTechnicalAnalysisServiceImpl extends CryptoCoinCommonServ
 		}
 
 		return resultList;
+	}
+
+	private boolean filterByBoll(List<BollBO> bollBoList) {
+		int bollMinSize = 5;
+		if (bollBoList.size() < bollMinSize) {
+			return false;
+		}
+		List<BollBO> subBoList = bollBoList.subList(bollBoList.size() - 4, bollBoList.size() - 1);
+		boolean bollGettingWildAndRising = true;
+		BollBO tmpBO = null;
+		BigDecimal lastGap = BigDecimal.ZERO;
+		BigDecimal lastMA = BigDecimal.ZERO;
+		BigDecimal newGap = null;
+		BigDecimal newMA = null;
+		for (int i = 0; i < subBoList.size() && bollGettingWildAndRising; i++) {
+			tmpBO = subBoList.get(i);
+			newGap = tmpBO.getUpper().subtract(tmpBO.getLower());
+			newMA = tmpBO.getMa();
+			bollGettingWildAndRising = (lastGap.compareTo(newGap) < 0) && (lastMA.compareTo(newMA) < 0);
+			if (bollGettingWildAndRising) {
+				lastGap = newGap;
+				lastMA = newMA;
+			} else {
+				continue;
+			}
+		}
+		return bollGettingWildAndRising;
+	}
+
+	@Override
+	public List<BollBO> getBollDataList(List<CryptoCoinPriceCommonDataBO> priceDataList) {
+		int defaultMaSize = 20;
+		BigDecimal defaultK = new BigDecimal(2);
+		List<BollBO> bollDataList = new ArrayList<>();
+		if (priceDataList == null || priceDataList.size() < defaultMaSize) {
+			return bollDataList;
+		}
+		BollBO bollData = null;
+
+		for (int i = 0; i < priceDataList.size() - defaultMaSize; i++) {
+			List<CryptoCoinPriceCommonDataBO> subDataList = priceDataList.subList(i, i + defaultMaSize);
+			List<BigDecimal> closePriceList = getClosePriceList(subDataList);
+			BigDecimal avgClose = getAveOfClosePrice(closePriceList);
+			BigDecimal variance = getVarianceOfClosePrice(closePriceList, avgClose);
+			BigDecimal standardDeviation = new BigDecimal(Math.sqrt(variance.doubleValue()));
+
+			bollData = new BollBO();
+			bollData.setMa(avgClose);
+			bollData.setUpper(avgClose.add(standardDeviation.multiply(defaultK)));
+			bollData.setLower(avgClose.subtract(standardDeviation.multiply(defaultK)));
+			bollDataList.add(bollData);
+		}
+
+		return bollDataList;
+	}
+
+	private List<BigDecimal> getClosePriceList(List<CryptoCoinPriceCommonDataBO> dataList) {
+		List<BigDecimal> closePriceList = new ArrayList<>();
+		for (CryptoCoinPriceCommonDataBO data : dataList) {
+			closePriceList.add(data.getEndPrice());
+		}
+		return closePriceList;
+	}
+
+	private BigDecimal getAveOfClosePrice(List<BigDecimal> dataList) {
+		BigDecimal total = BigDecimal.ZERO;
+		for (BigDecimal data : dataList) {
+			total = total.add(data);
+		}
+		BigDecimal avg = total.divide(new BigDecimal(dataList.size()), SCALE_FOR_CALCULATE, RoundingMode.HALF_UP);
+		return avg;
+	}
+
+	private BigDecimal getVarianceOfClosePrice(List<BigDecimal> dataList, BigDecimal avg) {
+		BigDecimal variance = BigDecimal.ZERO;
+		for (int i = 0; i < dataList.size(); i++) {
+			variance = variance.add(new BigDecimal(Math.pow(dataList.get(i).subtract(avg).doubleValue(), 2)));
+		}
+		variance = variance.divide(new BigDecimal(dataList.size()), SCALE_FOR_CALCULATE, RoundingMode.HALF_UP);
+
+		return variance;
 	}
 }
