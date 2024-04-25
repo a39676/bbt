@@ -35,8 +35,14 @@ public class TestController extends CommonController {
 
 	@GetMapping(value = "/test")
 	@ResponseBody
-	public String test() throws Exception {
+	public String test() {
 		return "Done";
+	}
+
+	@GetMapping(value = "/ex")
+	@ResponseBody
+	public String exception() throws Exception {
+		throw new Exception("test excepiton");
 	}
 
 	@GetMapping(value = "/t5")
