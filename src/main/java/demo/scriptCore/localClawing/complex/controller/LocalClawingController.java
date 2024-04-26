@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.baseCommon.controller.CommonController;
 import demo.scriptCore.localClawing.complex.service.BinanceSymbolCollectService;
+import demo.scriptCore.localClawing.complex.service.GateIoSymbolCollectService;
 import demo.scriptCore.localClawing.complex.service.LinkedinService;
 import demo.scriptCore.localClawing.complex.service.MathBattleService;
 import demo.scriptCore.localClawing.complex.service.PrankService;
@@ -31,6 +32,8 @@ public class LocalClawingController extends CommonController {
 	private StoryBerriesDownloadService storyBerriesDownloadService;
 	@Autowired
 	private BinanceSymbolCollectService binanceSymbolCollectService;
+	@Autowired
+	private GateIoSymbolCollectService gateIoSymbolCollectService;
 
 	@GetMapping(value = "/l2")
 	@ResponseBody
@@ -74,5 +77,11 @@ public class LocalClawingController extends CommonController {
 		return "done";
 	}
 	
+	@GetMapping(value = "/l8")
+	@ResponseBody
+	public String l8() {
+		gateIoSymbolCollectService.collect();
+		return "done";
+	}
 	
 }

@@ -8,26 +8,25 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 
-import demo.scriptCore.localClawing.complex.service.BinanceSymbolCollectService;
+import demo.scriptCore.localClawing.complex.service.GateIoSymbolCollectService;
 import demo.selenium.service.impl.AutomationTestCommonService;
 
 @Service
-public class BinanceSymbolCollectServiceImpl extends AutomationTestCommonService
-		implements BinanceSymbolCollectService {
+public class GateIoSymbolCollectServiceImpl extends AutomationTestCommonService implements GateIoSymbolCollectService {
 
-	private int maxSymbolPage = 13;
+	private int maxSymbolPage = 70;
 	private int defaultSymbolPageSize = 30;
-	private String symbolXpathModule = "/html[1]/body[1]/div[3]/div[1]/div[1]/div[1]/main[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[2]/div[3]/div[1]/div[1]/div[2]/div[%d]/div[1]/a[1]/div[1]/div[1]/div[2]/div[1]";
-	private String symbolPageButtonXpathModule = "//button[@id='page-%d']";
+	private int maxWaitingPageRefresh = 10;
+	private String symbolXpathModule = "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[3]/div[2]/div[1]/table[1]/tbody[1]/tr[%d]/td[1]/div[1]/div[1]/a[1]/div[1]/div[1]/span[1]";
+	private String symbolPageButtonXpathModule = "//button[contains(text(),'%d')]";
 	private List<String> resultSymbolList = new ArrayList<>();
 
 	@Override
 	public void collect() {
 		WebDriver d = webDriverService.buildChromeWebDriver();
-		String mainUrl = "https://www.binance.com/en/markets/overview";
 
 		try {
-			d.get(mainUrl);
+			prefix(d);
 			String tmpSymbolXpath = String.format(symbolXpathModule, 1);
 			if (!loadingCheck(d, tmpSymbolXpath)) {
 				return;
@@ -39,8 +38,9 @@ public class BinanceSymbolCollectServiceImpl extends AutomationTestCommonService
 
 		List<String> symbolListInPage = collectSymbol(d);
 		resultSymbolList.addAll(symbolListInPage);
+		boolean refreshFlag = false;
 
-		for (int pageNum = 2; pageNum <= maxSymbolPage; pageNum++) {
+		for (int pageNum = 2; pageNum <= maxSymbolPage; pageNum++, refreshFlag = false) {
 			System.out.println("Checking page: " + pageNum);
 			String tmpButtonXpath = String.format(symbolPageButtonXpathModule, pageNum);
 			try {
@@ -57,18 +57,16 @@ public class BinanceSymbolCollectServiceImpl extends AutomationTestCommonService
 				e.printStackTrace();
 			}
 
-			if (!pageHadRefresh(d)) {
-				System.out.println("Page button of: " + pageNum + " NOT refresh yet, waiting.");
-				pageNum--;
+			for (int waitingCounter = 0; waitingCounter < maxWaitingPageRefresh && !refreshFlag; waitingCounter++) {
+				refreshFlag = pageHadRefresh(d);
+				if (!refreshFlag) {
+					System.out.println("Page button of: " + pageNum + " NOT refresh yet, waiting.");
+				}
+			}
+			if (!refreshFlag) {
+				System.out.println("Page button of: " + pageNum + " Failed, skip.");
 				continue;
 			}
-
-			String tmpSymbolXpath = String.format(symbolXpathModule, 1);
-			WebElement symbolEle = d.findElement(By.xpath(tmpSymbolXpath));
-			if (resultSymbolList.contains(symbolEle.getText())) {
-				continue;
-			}
-
 			symbolListInPage = collectSymbol(d);
 			if (symbolListInPage.isEmpty()) {
 				System.out.println("Page: " + pageNum + ", collect failed");
@@ -103,16 +101,36 @@ public class BinanceSymbolCollectServiceImpl extends AutomationTestCommonService
 	}
 
 	private boolean pageHadRefresh(WebDriver d) {
-		String tmpSymbolXpath = String.format(symbolXpathModule, 1);
+		String tmpSymbolXpath = String.format(symbolXpathModule, defaultSymbolPageSize);
 		try {
 			if (!loadingCheck(d, tmpSymbolXpath)) {
 				return false;
-			} else {
-				return true;
 			}
+			WebElement symbolEle = d.findElement(By.xpath(tmpSymbolXpath));
+			if (resultSymbolList.get(resultSymbolList.size() - 1).equals(symbolEle.getText())) {
+				return false;
+			}
+			return true;
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	private void prefix(WebDriver d) {
+		d.get("https://www.gate.io/");
+//		try {
+//			Thread.sleep(3000L);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
+//		d.findElement(By.xpath("//span[contains(text(),'I Got it')]")).click();
+		try {
+			Thread.sleep(3000L);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		d.findElement(By.xpath("//body/div[@id='__next']/div[1]/div[1]/div[2]/div[8]/a[1]/div[1]/div[1]")).click();
+
 	}
 }

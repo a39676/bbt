@@ -93,6 +93,9 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 
 	@Override
 	public void amIAlive() {
+		if (systemOptionService.isDev()) {
+			return;
+		}
 		HttpUtil h = new HttpUtil();
 		BaseStrDTO dto = new BaseStrDTO();
 		dto.setStr(bbtDynamicKey.createKey());
