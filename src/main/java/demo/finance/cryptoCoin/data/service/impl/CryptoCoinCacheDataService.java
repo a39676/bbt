@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 
 import demo.baseCommon.service.CommonService;
 import finance.cryptoCoin.binance.pojo.dto.DepthCompleteDTO;
-import finance.cryptoCoin.binance.pojo.dto.KLineKeyBO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
+import finance.cryptoCoin.pojo.bo.KLineKeyBO;
 
 @Scope("singleton")
 @Service
