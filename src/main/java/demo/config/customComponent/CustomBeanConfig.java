@@ -3,6 +3,7 @@ package demo.config.customComponent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+import finance.technicalAnalysis.service.TechnicalAnalysisUnit;
 import mail.service.MailToolService;
 import toolPack.dateTimeHandle.DateHandler;
 import toolPack.dateTimeHandle.LocalDateTimeHandler;
@@ -57,5 +58,10 @@ public class CustomBeanConfig {
 	@Bean
 	public MailToolService mailToolService() {
 		return new MailToolService();
+	}
+	
+	@Bean
+	public TechnicalAnalysisUnit getTechnicalAnalysisUnit() {
+		return new TechnicalAnalysisUnit();
 	}
 }

@@ -1,7 +1,6 @@
 package demo.finance.cryptoCoin.technicalAnalysis.service.impl;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -16,15 +15,18 @@ import demo.finance.cryptoCoin.data.mapper.CryptoCoinCatalogMapper;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalogExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoin1DayDataSummaryService;
-import demo.finance.cryptoCoin.technicalAnalysis.pojo.bo.BollBO;
-import demo.finance.cryptoCoin.technicalAnalysis.pojo.bo.KdjBO;
 import demo.finance.cryptoCoin.technicalAnalysis.service.CryptoCoinTechnicalAnalysisService;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
+import finance.technicalAnalysis.pojo.bo.BollBO;
+import finance.technicalAnalysis.pojo.bo.KdjBO;
+import finance.technicalAnalysis.service.TechnicalAnalysisUnit;
 
 @Service
 public class CryptoCoinTechnicalAnalysisServiceImpl extends CryptoCoinCommonService
 		implements CryptoCoinTechnicalAnalysisService {
 
+	@Autowired
+	private TechnicalAnalysisUnit technicalAnanlysisUnit;
 	@SuppressWarnings("unused")
 	@Autowired
 	private CryptoCoinOptionService optionService;
@@ -48,13 +50,13 @@ public class CryptoCoinTechnicalAnalysisServiceImpl extends CryptoCoinCommonServ
 			if (commonDataList == null || commonDataList.isEmpty()) {
 				continue;
 			}
-			List<KdjBO> kdjBoList = getKdjDataList(commonDataList);
+			List<KdjBO> kdjBoList = technicalAnanlysisUnit.getKdjDataList(commonDataList);
 			if (!filterByKDJ(kdjBoList)) {
 				log.error(catalog.getCoinNameEnShort() + ", fail with KDJ");
 				continue;
 			}
 
-			List<BollBO> bollBoList = getBollDataList(commonDataList);
+			List<BollBO> bollBoList = technicalAnanlysisUnit.getBollDataList(commonDataList);
 			if (!filterByBoll(bollBoList)) {
 				log.error(catalog.getCoinNameEnShort() + ", fail with BOLL");
 				continue;
@@ -63,11 +65,11 @@ public class CryptoCoinTechnicalAnalysisServiceImpl extends CryptoCoinCommonServ
 			coinNameList.add(catalog.getCoinNameEnShort());
 
 		}
-		
-		if(coinNameList.isEmpty()) {
+
+		if (coinNameList.isEmpty()) {
 			coinNameList.add("Can NOT found any symbol match this condition");
 		}
-		
+
 		return coinNameList;
 	}
 
@@ -77,39 +79,6 @@ public class CryptoCoinTechnicalAnalysisServiceImpl extends CryptoCoinCommonServ
 		}
 		KdjBO lastKDJ = kdjBoList.get(kdjBoList.size() - 1);
 		return lastKDJ.getJ().compareTo(lastKDJ.getD()) > 0;
-	}
-
-	@Override
-	public List<KdjBO> getKdjDataList(List<CryptoCoinPriceCommonDataBO> priceDataList) {
-		List<KdjBO> resultList = new ArrayList<>();
-		if (priceDataList.isEmpty()) {
-			return resultList;
-		}
-		BigDecimal rsv = null;
-		BigDecimal rsvDividend = null;
-		BigDecimal rsvDivisor = null;
-		BigDecimal k = new BigDecimal(50);
-		BigDecimal d = new BigDecimal(50);
-		BigDecimal j = k.multiply(new BigDecimal(3)).subtract(d.multiply(new BigDecimal(2)));
-		for (int i = 0; i < priceDataList.size(); i++) {
-			CryptoCoinPriceCommonDataBO data = priceDataList.get(i);
-			KdjBO bo = new KdjBO();
-			rsvDividend = data.getEndPrice().subtract(data.getLowPrice());
-			rsvDivisor = data.getHighPrice().subtract(data.getLowPrice());
-			rsv = rsvDividend.divide(rsvDivisor, SCALE_FOR_CALCULATE, RoundingMode.HALF_UP);
-			k = k.multiply(new BigDecimal(2)).divide(new BigDecimal(3), SCALE_FOR_CALCULATE, RoundingMode.HALF_UP)
-					.add(rsv.divide(new BigDecimal(3), SCALE_FOR_CALCULATE, RoundingMode.HALF_UP));
-			d = d.multiply(new BigDecimal(2)).divide(new BigDecimal(3), SCALE_FOR_CALCULATE, RoundingMode.HALF_UP)
-					.add(k.divide(new BigDecimal(3), SCALE_FOR_CALCULATE, RoundingMode.HALF_UP));
-			j = k.multiply(new BigDecimal(3)).add(d.multiply(new BigDecimal(2)));
-			bo.setRsv(rsv);
-			bo.setK(k);
-			bo.setD(d);
-			bo.setJ(j);
-			resultList.add(bo);
-		}
-
-		return resultList;
 	}
 
 	private boolean filterByBoll(List<BollBO> bollBoList) {
@@ -137,59 +106,5 @@ public class CryptoCoinTechnicalAnalysisServiceImpl extends CryptoCoinCommonServ
 			}
 		}
 		return bollGettingWildAndRising;
-	}
-
-	@Override
-	public List<BollBO> getBollDataList(List<CryptoCoinPriceCommonDataBO> priceDataList) {
-		int defaultMaSize = 20;
-		BigDecimal defaultK = new BigDecimal(2);
-		List<BollBO> bollDataList = new ArrayList<>();
-		if (priceDataList == null || priceDataList.size() < defaultMaSize) {
-			return bollDataList;
-		}
-		BollBO bollData = null;
-
-		for (int i = 0; i < priceDataList.size() - defaultMaSize; i++) {
-			List<CryptoCoinPriceCommonDataBO> subDataList = priceDataList.subList(i, i + defaultMaSize);
-			List<BigDecimal> closePriceList = getClosePriceList(subDataList);
-			BigDecimal avgClose = getAveOfClosePrice(closePriceList);
-			BigDecimal variance = getVarianceOfClosePrice(closePriceList, avgClose);
-			BigDecimal standardDeviation = new BigDecimal(Math.sqrt(variance.doubleValue()));
-
-			bollData = new BollBO();
-			bollData.setMa(avgClose);
-			bollData.setUpper(avgClose.add(standardDeviation.multiply(defaultK)));
-			bollData.setLower(avgClose.subtract(standardDeviation.multiply(defaultK)));
-			bollDataList.add(bollData);
-		}
-
-		return bollDataList;
-	}
-
-	private List<BigDecimal> getClosePriceList(List<CryptoCoinPriceCommonDataBO> dataList) {
-		List<BigDecimal> closePriceList = new ArrayList<>();
-		for (CryptoCoinPriceCommonDataBO data : dataList) {
-			closePriceList.add(data.getEndPrice());
-		}
-		return closePriceList;
-	}
-
-	private BigDecimal getAveOfClosePrice(List<BigDecimal> dataList) {
-		BigDecimal total = BigDecimal.ZERO;
-		for (BigDecimal data : dataList) {
-			total = total.add(data);
-		}
-		BigDecimal avg = total.divide(new BigDecimal(dataList.size()), SCALE_FOR_CALCULATE, RoundingMode.HALF_UP);
-		return avg;
-	}
-
-	private BigDecimal getVarianceOfClosePrice(List<BigDecimal> dataList, BigDecimal avg) {
-		BigDecimal variance = BigDecimal.ZERO;
-		for (int i = 0; i < dataList.size(); i++) {
-			variance = variance.add(new BigDecimal(Math.pow(dataList.get(i).subtract(avg).doubleValue(), 2)));
-		}
-		variance = variance.divide(new BigDecimal(dataList.size()), SCALE_FOR_CALCULATE, RoundingMode.HALF_UP);
-
-		return variance;
 	}
 }
