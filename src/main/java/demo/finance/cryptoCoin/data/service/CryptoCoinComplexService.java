@@ -2,7 +2,7 @@ package demo.finance.cryptoCoin.data.service;
 
 public interface CryptoCoinComplexService {
 
-	void sendAllDailyDataQuery();
+	void sendDailyDataQueryInSteps();
 
 	void sendDailyDataQuery(String symbol);
 

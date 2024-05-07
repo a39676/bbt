@@ -2,8 +2,11 @@ package demo.finance.cryptoCoin.data.service.impl;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +33,8 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 	@Autowired
 	private CryptoCoinDailyDataQueryAckProducer cryptoCoinDailyDataQueryAckProducer;
 
+	private static final String DAILY_DATA_QUERY_SYMBOL_KEY_PREFIX = "dailyDataQuerying";
+
 	@Override
 	public void sendDailyDataQuery(String symbol) {
 		CryptoCoinPrice1day lastData = findLastData(symbol);
@@ -51,11 +56,53 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 	}
 
 	@Override
-	public void sendAllDailyDataQuery() {
+	public void sendDailyDataQueryInSteps() {
 		List<String> symbolList = getSymbolListFromOptionFile();
-		for (String symbol : symbolList) {
+		String symbol = null;
+		CryptoCoinCatalogExample catalogExample = null;
+		List<CryptoCoinCatalog> catalogList = null;
+		CryptoCoinCatalog catalog = null;
+		CryptoCoinPrice1day lastData = null;
+		LocalDateTime todayStart = LocalDateTime.now().with(LocalTime.MIN);
+		String coinName = null;
+
+		Set<String> keys = redisTemplate.keys(DAILY_DATA_QUERY_SYMBOL_KEY_PREFIX + "_*");
+
+		int counting = 0;
+		int symbolIndex = 0;
+
+		for (; symbolIndex < symbolList.size()
+				&& counting < optionService.getDailyDataQueryInOneTime(); symbolIndex++, counting++) {
+			symbol = symbolList.get(symbolIndex);
+			coinName = symbol.replaceAll(defaultCyrrencyTypeForCryptoCoin.getName(), "");
+			if (keys.contains(DAILY_DATA_QUERY_SYMBOL_KEY_PREFIX + "_" + symbol)) {
+				counting--;
+				continue;
+			}
+			catalogExample = new CryptoCoinCatalogExample();
+			catalogExample.createCriteria().andCoinNameEnShortEqualTo(coinName);
+			catalogList = cryptoCoinCatalogMapper.selectByExample(catalogExample);
+			if (catalogList == null || catalogList.isEmpty()) {
+				counting--;
+				continue;
+			}
+			catalog = catalogList.get(0);
+			lastData = cryptoCoinPrice1dayMapper.selectLastDataByCoinTypeAndCurrencyType(catalog.getId(),
+					defaultCyrrencyTypeForCryptoCoin.getCode().longValue());
+
+			if (lastData != null && !lastData.getStartTime().isBefore(todayStart)) {
+				counting--;
+				continue;
+			}
 			sendDailyDataQuery(symbol);
+			setDailyDataQuerySymbolKey(symbol);
 		}
+	}
+
+	private void setDailyDataQuerySymbolKey(String symbol) {
+		long seconds = ChronoUnit.SECONDS.between(LocalDateTime.now(), LocalDateTime.now().with(LocalTime.MAX));
+		redisTemplate.opsForValue().set(DAILY_DATA_QUERY_SYMBOL_KEY_PREFIX + "_" + symbol, "", seconds,
+				TimeUnit.SECONDS);
 	}
 
 	private List<String> getSymbolListFromOptionFile() {
@@ -82,5 +129,4 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 		return lastData;
 	}
 
-	
 }
