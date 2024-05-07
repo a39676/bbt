@@ -18,14 +18,13 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import auxiliaryCommon.pojo.dto.BaseStrDTO;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.system.service.impl.SystemOptionService;
 import demo.baseCommon.pojo.constant.SystemConstant;
 import demo.baseCommon.service.CommonService;
-import demo.config.customComponent.BbtDynamicKey;
 import demo.config.customComponent.OptionFilePathConfigurer;
 import demo.tool.service.ComplexToolService;
 import net.sf.json.JSONArray;
@@ -34,11 +33,10 @@ import tool.pojo.constant.CxBbtInteractionUrl;
 import toolPack.httpHandel.HttpUtil;
 import toolPack.ioHandle.FileUtilCustom;
 
+@Scope("singleton")
 @Service
 public class ComplexToolServiceImpl extends CommonService implements ComplexToolService {
 
-	@Autowired
-	private BbtDynamicKey bbtDynamicKey;
 	@Autowired
 	private SystemOptionService systemOptionService;
 	@Autowired
@@ -96,18 +94,21 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		if (systemOptionService.isDev()) {
 			return;
 		}
+
+		String url = "https://" + systemOptionService.getWorker1Hostname() + CxBbtInteractionUrl.ROOT
+				+ CxBbtInteractionUrl.WORKER_PING;
 		HttpUtil h = new HttpUtil();
-		BaseStrDTO dto = new BaseStrDTO();
-		dto.setStr(bbtDynamicKey.createKey());
-		JSONObject json = JSONObject.fromObject(dto);
+		String response = null;
 		try {
-			String responseStr = h.sendPostRestful(systemOptionService.getCthulhuHostname() + CxBbtInteractionUrl.ROOT
-					+ CxBbtInteractionUrl.MAKR_SURE_ALIVE_WITH_CTHULHU, json.toString());
-			CommonResult result = buildObjFromJsonCustomization(responseStr, CommonResult.class);
-			if (result.isSuccess() && StringUtils.isBlank(result.getMessage())) {
+			response = h.sendGet(url);
+			if (response != null && response.contains("pong")) {
 				return;
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
+		try {
 			FileUtilCustom f = new FileUtilCustom();
 			String ipLocalSavePath = OptionFilePathConfigurer.SYSTEM.replaceAll("option.json", "ip.txt");
 			String oldIpStr = f.getStringFromFile(ipLocalSavePath);

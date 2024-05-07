@@ -35,5 +35,4 @@ public class OnStartup extends CommonService implements ApplicationListener<Appl
 			log.error("Had set proxy");
 		}
 	}
-
 }
