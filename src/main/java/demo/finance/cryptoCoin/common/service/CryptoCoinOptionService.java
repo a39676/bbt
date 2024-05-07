@@ -20,6 +20,7 @@ public class CryptoCoinOptionService extends CommonService {
 
 	private String defaultCurrency = CurrencyTypeForCryptoCoin.USDT.getName();
 	private List<String> symbolList = new ArrayList<>();
+	private Integer dailyDataQueryInOneTime = 5;
 
 	public String getDefaultCurrency() {
 		return defaultCurrency;
@@ -37,9 +38,18 @@ public class CryptoCoinOptionService extends CommonService {
 		this.symbolList = symbolList;
 	}
 
+	public Integer getDailyDataQueryInOneTime() {
+		return dailyDataQueryInOneTime;
+	}
+
+	public void setDailyDataQueryInOneTime(Integer dailyDataQueryInOneTime) {
+		this.dailyDataQueryInOneTime = dailyDataQueryInOneTime;
+	}
+
 	@Override
 	public String toString() {
-		return "CryptoCoinOptionService [defaultCurrency=" + defaultCurrency + ", symbolList=" + symbolList + "]";
+		return "CryptoCoinOptionService [defaultCurrency=" + defaultCurrency + ", symbolList=" + symbolList
+				+ ", dailyDataQueryInOneTime=" + dailyDataQueryInOneTime + "]";
 	}
 
 	@PostConstruct

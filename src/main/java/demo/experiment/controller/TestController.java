@@ -58,10 +58,10 @@ public class TestController extends CommonController {
 		return String.valueOf(cryptoCoinCacheDataService.getBinanceKLineCacheMap());
 	}
 
-	@GetMapping(value = "/sendAllDailyDataQuery")
+	@GetMapping(value = "/sendDailyDataQueryInSteps")
 	@ResponseBody
-	public String sendAllDailyDataQuery() {
-		cryptoCoinComplexService.sendAllDailyDataQuery();
+	public String sendDailyDataQueryInSteps() {
+		cryptoCoinComplexService.sendDailyDataQueryInSteps();
 		return "Done";
 	}
 
