@@ -4,7 +4,6 @@ import java.io.File;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import demo.config.customComponent.OptionFilePathConfigurer;
@@ -12,16 +11,16 @@ import jakarta.annotation.PostConstruct;
 import net.sf.json.JSONObject;
 import toolPack.ioHandle.FileUtilCustom;
 
-@Scope("singleton")
 @Service
 public class SystemOptionService {
+
+	private final Logger log = LoggerFactory.getLogger(getClass());
 
 	private String envName = null;
 	private Boolean isDebuging = null;
 	private String shutdownKey = null;
 	private String cthulhuHostname = null;
-
-	private final Logger log = LoggerFactory.getLogger(getClass());
+	private String worker1Hostname = null;
 
 	public String getEnvName() {
 		return envName;
@@ -63,6 +62,14 @@ public class SystemOptionService {
 		this.cthulhuHostname = cthulhuHostname;
 	}
 
+	public String getWorker1Hostname() {
+		return worker1Hostname;
+	}
+
+	public void setWorker1Hostname(String worker1Hostname) {
+		this.worker1Hostname = worker1Hostname;
+	}
+
 	@PostConstruct
 	public void refreshConstant() {
 		File optionFile = new File(OptionFilePathConfigurer.SYSTEM);
@@ -72,11 +79,14 @@ public class SystemOptionService {
 		try {
 			FileUtilCustom fileUtil = new FileUtilCustom();
 			String jsonStr = fileUtil.getStringFromFile(OptionFilePathConfigurer.SYSTEM);
+//			SystemOptionService tmp = new Gson().fromJson(jsonStr, this.getClass());
+//			BeanUtils.copyProperties(tmp, this);
 			JSONObject json = JSONObject.fromObject(jsonStr);
 			this.envName = json.getString("envName");
 			this.isDebuging = json.getBoolean("isDebuging");
 			this.shutdownKey = json.getString("shutdownKey");
 			this.cthulhuHostname = json.getString("cthulhuHostname");
+			this.worker1Hostname = json.getString("worker1Hostname");
 			log.error("system constant loaded");
 		} catch (Exception e) {
 			e.printStackTrace();
