@@ -1,7 +1,11 @@
 package demo.tool.service.impl;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,7 +34,6 @@ import demo.tool.service.ComplexToolService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import tool.pojo.constant.CxBbtInteractionUrl;
-import toolPack.httpHandel.HttpUtil;
 import toolPack.ioHandle.FileUtilCustom;
 
 @Scope("singleton")
@@ -95,13 +98,22 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 			return;
 		}
 
-		String url = "https://" + systemOptionService.getWorker1Hostname() + CxBbtInteractionUrl.ROOT
-				+ CxBbtInteractionUrl.WORKER_PING;
-		HttpUtil h = new HttpUtil();
-		String response = null;
 		try {
-			response = h.sendGet(url);
-			if (response != null && response.contains("pong")) {
+			URL url = new URL("https://" + systemOptionService.getWorker1Hostname() + CxBbtInteractionUrl.ROOT
+					+ CxBbtInteractionUrl.WORKER_PING);
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			con.setRequestMethod("GET");
+			con.setConnectTimeout(5000);
+			con.setReadTimeout(5000);
+
+			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			String inputLine;
+			StringBuffer content = new StringBuffer();
+			while ((inputLine = in.readLine()) != null) {
+				content.append(inputLine);
+			}
+			in.close();
+			if (content != null && content.toString().contains("pong")) {
 				return;
 			}
 		} catch (Exception e) {
