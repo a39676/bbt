@@ -8,7 +8,7 @@ import org.springframework.core.io.FileSystemResource;
 import demo.baseCommon.pojo.constant.SystemConstant;
 
 @Configuration
-public class Config {
+public class ConfigFromOutSourceProperties {
 
 	@Bean
 	public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {

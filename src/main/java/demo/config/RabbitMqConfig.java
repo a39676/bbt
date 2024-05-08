@@ -28,7 +28,7 @@ public class RabbitMqConfig {
 	private RabbitTemplate rabbitTemplate;
 
 	// 从外部properties获取变量运行顺序后于spring boot init rabbitMQ
-	// 因此从此处update Connection 
+	// 因此从此处update Connection
 	@PostConstruct
 	public void rabbitTemplateUpdateConnectionFactory() {
 		rabbitTemplate.setConnectionFactory(createRabbitMqCachingConnectionFactory());
