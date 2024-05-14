@@ -235,7 +235,15 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 			request.setEntity(params);
 			HttpResponse response = httpClient.execute(request);
 			String responseStr = new String(response.getEntity().getContent().readAllBytes(), StandardCharsets.UTF_8);
-			sendingMsg("Update worker DNS response: " + responseStr);
+			JSONObject responseJson = JSONObject.fromObject(responseStr);
+			JSONObject responseResult = responseJson.getJSONObject("result");
+			responseResult.put("zone_id", "");
+			responseResult.put("zone_name", "");
+			String[] hostnameArray = cloudFlareOptionService.getTargetHost().split(".");
+			responseResult.put("name", hostnameArray[0]);
+			responseResult.put("content", "");
+			responseJson.put("result", responseResult);
+			sendingMsg("Update worker DNS response: " + responseJson.toString());
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		} finally {
