@@ -18,7 +18,7 @@ public class BinanceSymbolCollectServiceImpl extends AutomationTestCommonService
 	private int maxSymbolPage = 13;
 	private int defaultSymbolPageSize = 30;
 	private String symbolXpathModule = "/html[1]/body[1]/div[3]/div[1]/div[1]/div[1]/main[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[2]/div[3]/div[1]/div[1]/div[2]/div[%d]/div[1]/a[1]/div[1]/div[1]/div[2]/div[1]";
-	private String symbolPageButtonXpathModule = "//button[@id='page-%d']";
+//	private String symbolPageButtonXpathModule = "#page-%d";
 	private List<String> resultSymbolList = new ArrayList<>();
 
 	@Override
@@ -41,28 +41,35 @@ public class BinanceSymbolCollectServiceImpl extends AutomationTestCommonService
 		resultSymbolList.addAll(symbolListInPage);
 
 		for (int pageNum = 2; pageNum <= maxSymbolPage; pageNum++) {
-			System.out.println("Checking page: " + pageNum);
-			String tmpButtonXpath = String.format(symbolPageButtonXpathModule, pageNum);
 			try {
-				WebElement tmpPageButton = d.findElement(By.xpath(tmpButtonXpath));
-				tmpPageButton.click();
-			} catch (Exception e) {
-				System.out.println("Can NOT find page button of: " + pageNum);
-				continue;
-			}
-
-			try {
-				Thread.sleep(1000L);
+				d.get(mainUrl + "?p=" + pageNum);
+				System.out.println("Checking page: " + pageNum);
+				String tmpSymbolXpath = String.format(symbolXpathModule, 1);
+				if (!loadingCheck(d, tmpSymbolXpath)) {
+					return;
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
+				return;
 			}
-
-			if (!pageHadRefresh(d)) {
-				System.out.println("Page button of: " + pageNum + " NOT refresh yet, waiting.");
-				pageNum--;
-				continue;
-			}
-
+//			String tmpButtonXpath = String.format(symbolPageButtonXpathModule, pageNum);
+//			try {
+//				WebElement tmpPageButton = d.findElement(By.xpath(tmpButtonXpath));
+//				tmpPageButton.click();
+//			} catch (Exception e) {
+//				System.out.println("Can NOT find page button of: " + pageNum);
+//				continue;
+//			}
+//			try {
+//				Thread.sleep(1000L);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//			if (!pageHadRefresh(d)) {
+//				System.out.println("Page button of: " + pageNum + " NOT refresh yet, waiting.");
+//				pageNum--;
+//				continue;
+//			}
 			String tmpSymbolXpath = String.format(symbolXpathModule, 1);
 			WebElement symbolEle = d.findElement(By.xpath(tmpSymbolXpath));
 			if (resultSymbolList.contains(symbolEle.getText())) {
@@ -84,6 +91,7 @@ public class BinanceSymbolCollectServiceImpl extends AutomationTestCommonService
 		}
 
 		tryQuitWebDriver(d);
+		System.out.println("Size: " + resultSymbolList.size());
 		System.out.println(resultSymbolList);
 	}
 
@@ -102,6 +110,7 @@ public class BinanceSymbolCollectServiceImpl extends AutomationTestCommonService
 		return symbolList;
 	}
 
+	@SuppressWarnings("unused")
 	private boolean pageHadRefresh(WebDriver d) {
 		String tmpSymbolXpath = String.format(symbolXpathModule, 1);
 		try {
