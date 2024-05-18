@@ -59,6 +59,11 @@ public class GateIoSymbolCollectServiceImpl extends AutomationTestCommonService 
 
 			for (int waitingCounter = 0; waitingCounter < maxWaitingPageRefresh && !refreshFlag; waitingCounter++) {
 				refreshFlag = pageHadRefresh(d);
+				try {
+					Thread.sleep(500L);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				if (!refreshFlag) {
 					System.out.println("Page button of: " + pageNum + " NOT refresh yet, waiting.");
 				}
@@ -82,6 +87,7 @@ public class GateIoSymbolCollectServiceImpl extends AutomationTestCommonService 
 		}
 
 		tryQuitWebDriver(d);
+		System.out.println("Size: " + resultSymbolList.size());
 		System.out.println(resultSymbolList);
 	}
 
