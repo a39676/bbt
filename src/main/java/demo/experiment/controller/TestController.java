@@ -68,7 +68,7 @@ public class TestController extends CommonController {
 	@GetMapping(value = "/sendDailyDataQuery")
 	@ResponseBody
 	public String sendDailyDataQuery(
-			@RequestParam(value = "symbol", required = false, defaultValue = "") String symbol) {
+			@RequestParam(value = "symbol", required = false, defaultValue = "BTCUSDT") String symbol) {
 		cryptoCoinComplexService.sendDailyDataQuery(symbol);
 		return "Done";
 	}
