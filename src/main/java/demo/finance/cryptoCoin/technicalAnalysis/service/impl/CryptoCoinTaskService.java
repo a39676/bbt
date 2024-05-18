@@ -13,7 +13,7 @@ public class CryptoCoinTaskService {
 	private CryptoCoinComplexService cryptoCoinComplexService;
 
 	@Scheduled(cron = "*/12 0-59 3-4 * * *")
-	public void makeSureWorkerClone1Alive() {
+	public void sendDailyDataQueryInSteps() {
 		cryptoCoinComplexService.sendDailyDataQueryInSteps();
 	}
 }
