@@ -5,15 +5,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.FileSystemResource;
 
-import demo.baseCommon.pojo.constant.SystemConstant;
-
 @Configuration
 public class Config {
 
 	@Bean
 	public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
 		PropertySourcesPlaceholderConfigurer properties = new PropertySourcesPlaceholderConfigurer();
-		properties.setLocation(new FileSystemResource(SystemConstant.ROOT_PATH + "/optionFile/config.properties"));
+		properties.setLocation(new FileSystemResource(OptionFilePathConfigurer.ROOT + "/config.properties"));
 		properties.setIgnoreResourceNotFound(false);
 		return properties;
 	}

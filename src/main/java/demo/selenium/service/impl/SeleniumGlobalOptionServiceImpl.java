@@ -80,5 +80,4 @@ public class SeleniumGlobalOptionServiceImpl extends CommonService implements Se
 		return pathChangeByDetectOS(iePath);
 	}
 
-
 }

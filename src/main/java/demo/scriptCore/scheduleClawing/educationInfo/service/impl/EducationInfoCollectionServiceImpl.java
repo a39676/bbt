@@ -25,6 +25,7 @@ import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
+import demo.config.customComponent.OptionFilePathConfigurer;
 import demo.scriptCore.scheduleClawing.common.pojo.dto.CollectUrlHistoryDTO;
 import demo.scriptCore.scheduleClawing.educationInfo.pojo.dto.EducationInfoOptionDTO;
 import demo.scriptCore.scheduleClawing.educationInfo.pojo.type.EducationInfoSourceType;
@@ -38,8 +39,6 @@ import toolPack.ioHandle.FileUtilCustom;
 @Service
 public class EducationInfoCollectionServiceImpl extends AutomationTestCommonService
 		implements EducationInfoCollectionService {
-
-	private static final String PARAM_PATH_STR = MAIN_FOLDER_PATH + "/optionFile/automationTest/educationInfoOption.json";
 
 	@Override
 	public TestEventBO clawing(TestEventBO tbo) {
@@ -57,7 +56,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 
 		try {
 			FileUtilCustom ioUtil = new FileUtilCustom();
-			String content = ioUtil.getStringFromFile(PARAM_PATH_STR);
+			String content = ioUtil.getStringFromFile(OptionFilePathConfigurer.EDUCATION_INFO);
 
 			log.error("load education info option");
 			EducationInfoOptionDTO dto = buildObjFromJsonCustomization(content, EducationInfoOptionDTO.class);
@@ -129,7 +128,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 
 			Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, localDateTimeAdapter).setPrettyPrinting().create();
 			String jsonString = gson.toJson(dto);
-			ioUtil.byteToFile(jsonString.toString().getBytes(StandardCharsets.UTF_8), PARAM_PATH_STR);
+			ioUtil.byteToFile(jsonString.toString().getBytes(StandardCharsets.UTF_8), OptionFilePathConfigurer.EDUCATION_INFO);
 
 			r.setIsSuccess();
 
@@ -328,7 +327,7 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 		int overloadCounting = 0;
 		
 		try {
-			String content = ioUtil.getStringFromFile(PARAM_PATH_STR);
+			String content = ioUtil.getStringFromFile(OptionFilePathConfigurer.EDUCATION_INFO);
 			dto = buildObjFromJsonCustomization(content, EducationInfoOptionDTO.class);
 		} catch (Exception e) {
 			log.error("Read EducationInfoOptionDTO record error");
@@ -354,6 +353,6 @@ public class EducationInfoCollectionServiceImpl extends AutomationTestCommonServ
 		
 		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, localDateTimeAdapter).setPrettyPrinting().create();
 		String jsonString = gson.toJson(dto);
-		ioUtil.byteToFile(jsonString.toString().getBytes(StandardCharsets.UTF_8), PARAM_PATH_STR);
+		ioUtil.byteToFile(jsonString.toString().getBytes(StandardCharsets.UTF_8), OptionFilePathConfigurer.EDUCATION_INFO);
 	}
 }
