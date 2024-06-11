@@ -16,7 +16,7 @@ import finance.cryptoCoin.pojo.constant.CryptoCoinMQConstant;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDataDTO;
 
 @Component
-@RabbitListener(queues = CryptoCoinMQConstant.CRYPTO_COIN_DAILY_DATA)
+@RabbitListener(queues = CryptoCoinMQConstant.DAILY_DATA)
 public class CryptoCoinDailyDataAckReceiver extends CommonService {
 
 	@Autowired
@@ -28,7 +28,7 @@ public class CryptoCoinDailyDataAckReceiver extends CommonService {
 			CryptoCoinDataDTO dto = buildObjFromJsonCustomization(messageStr, CryptoCoinDataDTO.class);
 			cryptoCoin1DayDataService.receiveDailyData(dto);
 		} catch (Exception e) {
-			log.error("mq error, " + CryptoCoinMQConstant.CRYPTO_COIN_DAILY_DATA + ", e:" + e.getLocalizedMessage());
+			log.error("mq error, " + CryptoCoinMQConstant.DAILY_DATA + ", e:" + e.getLocalizedMessage());
 		}
 	}
 }

@@ -27,7 +27,6 @@ import org.springframework.stereotype.Service;
 
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.system.service.impl.SystemOptionService;
-import demo.baseCommon.pojo.constant.SystemConstant;
 import demo.baseCommon.service.CommonService;
 import demo.config.customComponent.OptionFilePathConfigurer;
 import demo.tool.service.ComplexToolService;
@@ -146,7 +145,7 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		}
 
 		ProcessBuilder processBuilder = new ProcessBuilder();
-		processBuilder.command(SystemConstant.ROOT_USER_PATH + "/toolSH/getIp.sh");
+		processBuilder.command("~/toolSH/getIp.sh");
 		try {
 			Process process = processBuilder.start();
 			process.waitFor();

@@ -29,6 +29,7 @@ import autoTest.report.pojo.dto.JsonReportOfCaseDTO;
 import autoTest.testEvent.scheduleClawing.pojo.type.ScheduleClawingType;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.autoTestBase.testEvent.pojo.bo.TestEventBO;
+import demo.config.customComponent.OptionFilePathConfigurer;
 import demo.scriptCore.scheduleClawing.common.pojo.dto.CollectUrlHistoryDTO;
 import demo.scriptCore.scheduleClawing.jobInfo.pojo.dto.V2exJobInfoOptionDTO;
 import demo.scriptCore.scheduleClawing.jobInfo.service.JobInfoCollectionCommonService;
@@ -39,8 +40,6 @@ import toolPack.ioHandle.FileUtilCustom;
 public class V2exJobInfoCollectionServiceImpl extends JobInfoCollectionCommonService
 		implements V2exJobInfoCollectionService {
 
-	private static final String PARAM_PATH_STR = MAIN_FOLDER_PATH + "/optionFile/automationTest/v2exJobInfoOption.json";
-
 	@Override
 	public TestEventBO clawing(TestEventBO tbo) {
 		sendingMsg("Start v2ex collecting");
@@ -48,14 +47,14 @@ public class V2exJobInfoCollectionServiceImpl extends JobInfoCollectionCommonSer
 		CommonResult r = new CommonResult();
 
 		log.error("Delete v2ex old urls");
-		deleteOldUrls(PARAM_PATH_STR);
+		deleteOldUrls(OptionFilePathConfigurer.V2EX_JOB_INFO);
 
 		ScheduleClawingType caseType = ScheduleClawingType.V2EX_JOB_INFO;
 		JsonReportOfCaseDTO caseReport = initCaseReportDTO(caseType.getFlowName());
 
 		try {
 			FileUtilCustom ioUtil = new FileUtilCustom();
-			String content = ioUtil.getStringFromFile(PARAM_PATH_STR);
+			String content = ioUtil.getStringFromFile(OptionFilePathConfigurer.V2EX_JOB_INFO);
 
 			log.error("Building v2ex job info option DTO");
 			V2exJobInfoOptionDTO dto = buildObjFromJsonCustomization(content, V2exJobInfoOptionDTO.class);
@@ -87,7 +86,8 @@ public class V2exJobInfoCollectionServiceImpl extends JobInfoCollectionCommonSer
 			Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, localDateTimeAdapter)
 					.setPrettyPrinting().create();
 			String jsonString = gson.toJson(dto);
-			ioUtil.byteToFile(jsonString.toString().getBytes(StandardCharsets.UTF_8), PARAM_PATH_STR);
+			ioUtil.byteToFile(jsonString.toString().getBytes(StandardCharsets.UTF_8),
+					OptionFilePathConfigurer.V2EX_JOB_INFO);
 
 			r.setIsSuccess();
 
