@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import demo.autoTestBase.testEvent.mq.producer.HeartBeatProducer;
 import demo.autoTestBase.testEvent.service.TestEventService;
 import demo.base.system.mapper.BaseMapper;
+import demo.baseCommon.pojo.constant.SystemConstant;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.impl.AutomationTestCommonService;
 import demo.task.service.TaskToolService;
@@ -71,7 +72,7 @@ public class TaskToolServiceImpl extends AutomationTestCommonService implements 
 			return;
 		}
 		ProcessBuilder processBuilder = new ProcessBuilder();
-		processBuilder.command("~/toolSH/killChromeDriver.sh");
+		processBuilder.command(SystemConstant.ROOT_PATH + "/toolSH/killChromeDriver.sh");
 		try {
 
 			Process process = processBuilder.start();
