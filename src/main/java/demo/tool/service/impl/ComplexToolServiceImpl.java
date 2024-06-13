@@ -145,7 +145,7 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		}
 
 		ProcessBuilder processBuilder = new ProcessBuilder();
-		processBuilder.command("~/toolSH/getIp.sh");
+		processBuilder.command(System.getProperty("user.home") + "/toolSH/getIp.sh");
 		try {
 			Process process = processBuilder.start();
 			process.waitFor();
