@@ -126,6 +126,7 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 
 			executeShellScriptForGetIp();
 			String newIpStr = f.getStringFromFile(ipLocalSavePath);
+			log.error("IP now: " + newIpStr);
 			if (StringUtils.isEmpty(newIpStr)) {
 				log.error("Can NOT find IP record from local file");
 				return;
