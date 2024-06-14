@@ -226,6 +226,7 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		String url = "https://" + cloudFlareOptionService.getHost() + cloudFlareOptionService.getZonesApiRoot() + "/"
 				+ cloudFlareOptionService.getZoneId() + cloudFlareOptionService.getDnsApiUrl() + "/" + recordID;
 		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+		String responseStr = null;
 		try {
 			HttpPatch request = new HttpPatch(url);
 			StringEntity params = new StringEntity(paramJson.toString());
@@ -233,7 +234,7 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 			request.addHeader("Authorization", "Bearer " + cloudFlareOptionService.getKey());
 			request.setEntity(params);
 			HttpResponse response = httpClient.execute(request);
-			String responseStr = new String(response.getEntity().getContent().readAllBytes(), StandardCharsets.UTF_8);
+			responseStr = new String(response.getEntity().getContent().readAllBytes(), StandardCharsets.UTF_8);
 			JSONObject responseJson = JSONObject.fromObject(responseStr);
 			JSONObject responseResult = responseJson.getJSONObject("result");
 			responseResult.put("zone_id", "");
@@ -245,6 +246,7 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 			sendingMsg("Update worker DNS response: " + responseJson.toString());
 		} catch (Exception ex) {
 			ex.printStackTrace();
+			sendingMsg("Update worker DNS error, response: " + responseStr);
 		} finally {
 			try {
 				httpClient.close();
