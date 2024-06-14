@@ -240,7 +240,7 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 			JSONObject responseResult = responseJson.getJSONObject("result");
 			responseResult.put("zone_id", "");
 			responseResult.put("zone_name", "");
-			String[] hostnameArray = cloudFlareOptionService.getTargetHost().split(".");
+			String[] hostnameArray = cloudFlareOptionService.getTargetHost().split("\\.");
 			responseResult.put("name", hostnameArray[0]);
 			responseResult.put("content", "");
 			responseJson.put("result", responseResult);
