@@ -220,7 +220,7 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		paramJson.put("type", "A");
 		paramJson.put("name", cloudFlareOptionService.getTargetHost());
 		paramJson.put("content", targetIp);
-		paramJson.put("ttl", "120");
+		paramJson.put("ttl", 120);
 		paramJson.put("proxied", false);
 
 		String url = "https://" + cloudFlareOptionService.getHost() + cloudFlareOptionService.getZonesApiRoot() + "/"
