@@ -126,6 +126,7 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 
 			executeShellScriptForGetIp();
 			String newIpStr = f.getStringFromFile(ipLocalSavePath);
+			log.error("IP now: " + newIpStr);
 			if (StringUtils.isEmpty(newIpStr)) {
 				log.error("Can NOT find IP record from local file");
 				return;
@@ -220,12 +221,13 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		paramJson.put("type", "A");
 		paramJson.put("name", cloudFlareOptionService.getTargetHost());
 		paramJson.put("content", targetIp);
-		paramJson.put("ttl", "120");
+		paramJson.put("ttl", 120);
 		paramJson.put("proxied", false);
 
 		String url = "https://" + cloudFlareOptionService.getHost() + cloudFlareOptionService.getZonesApiRoot() + "/"
 				+ cloudFlareOptionService.getZoneId() + cloudFlareOptionService.getDnsApiUrl() + "/" + recordID;
 		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+		String responseStr = null;
 		try {
 			HttpPatch request = new HttpPatch(url);
 			StringEntity params = new StringEntity(paramJson.toString());
@@ -233,18 +235,19 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 			request.addHeader("Authorization", "Bearer " + cloudFlareOptionService.getKey());
 			request.setEntity(params);
 			HttpResponse response = httpClient.execute(request);
-			String responseStr = new String(response.getEntity().getContent().readAllBytes(), StandardCharsets.UTF_8);
+			responseStr = new String(response.getEntity().getContent().readAllBytes(), StandardCharsets.UTF_8);
 			JSONObject responseJson = JSONObject.fromObject(responseStr);
 			JSONObject responseResult = responseJson.getJSONObject("result");
 			responseResult.put("zone_id", "");
 			responseResult.put("zone_name", "");
-			String[] hostnameArray = cloudFlareOptionService.getTargetHost().split(".");
+			String[] hostnameArray = cloudFlareOptionService.getTargetHost().split("\\.");
 			responseResult.put("name", hostnameArray[0]);
 			responseResult.put("content", "");
 			responseJson.put("result", responseResult);
 			sendingMsg("Update worker DNS response: " + responseJson.toString());
 		} catch (Exception ex) {
 			ex.printStackTrace();
+			sendingMsg("Update worker DNS error, response: " + responseStr);
 		} finally {
 			try {
 				httpClient.close();
