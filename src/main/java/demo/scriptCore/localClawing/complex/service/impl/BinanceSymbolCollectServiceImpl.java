@@ -23,6 +23,7 @@ public class BinanceSymbolCollectServiceImpl extends AutomationTestCommonService
 
 	@Override
 	public void collect() {
+		resultSymbolList.clear();
 		WebDriver d = webDriverService.buildChromeWebDriver();
 		String mainUrl = "https://www.binance.com/en/markets/overview";
 
