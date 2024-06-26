@@ -16,6 +16,7 @@ public class HeartBeatProducer extends CommonService {
 
 	public void send() {
 		rabbitTemplate.convertAndSend(ServiceMQConstant.HEART_BEAT, HeartBeatType.BBT.getName());
+		rabbitTemplate.convertAndSend(ServiceMQConstant.HEART_BEAT, HeartBeatType.WORKER1.getName());
 	}
 
 }
