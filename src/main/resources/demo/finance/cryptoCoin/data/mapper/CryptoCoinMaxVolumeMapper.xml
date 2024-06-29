@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.finance.cryptoCoin.data.mapper.CryptoCoinMaxVolumeMapper">
+  <resultMap id="BaseResultMap" type="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinMaxVolume">
+    <id column="coin_type" jdbcType="BIGINT" property="coinType" />
+    <id column="currency_type" jdbcType="INTEGER" property="currencyType" />
+    <result column="max_volume" jdbcType="DECIMAL" property="maxVolume" />
+    <result column="max_volume_time" jdbcType="TIMESTAMP" property="maxVolumeTime" />
+    <result column="max_avg5_volume" jdbcType="DECIMAL" property="maxAvg5Volume" />
+    <result column="max_avg5_volume_time" jdbcType="TIMESTAMP" property="maxAvg5VolumeTime" />
+    <result column="max_avg10_volume" jdbcType="DECIMAL" property="maxAvg10Volume" />
+    <result column="max_avg10_volume_time" jdbcType="TIMESTAMP" property="maxAvg10VolumeTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    coin_type, currency_type, max_volume, max_volume_time, max_avg5_volume, max_avg5_volume_time, 
+    max_avg10_volume, max_avg10_volume_time, create_time, is_delete
+  </sql>
+  <select id="selectByExample" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinMaxVolumeExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from crypto_coin_max_volume
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinMaxVolumeKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from crypto_coin_max_volume
+    where coin_type = #{coinType,jdbcType=BIGINT}
+      and currency_type = #{currencyType,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinMaxVolumeKey">
+    delete from crypto_coin_max_volume
+    where coin_type = #{coinType,jdbcType=BIGINT}
+      and currency_type = #{currencyType,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinMaxVolumeExample">
+    delete from crypto_coin_max_volume
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinMaxVolume">
+    insert into crypto_coin_max_volume (coin_type, currency_type, max_volume, 
+      max_volume_time, max_avg5_volume, max_avg5_volume_time, 
+      max_avg10_volume, max_avg10_volume_time, create_time, 
+      is_delete)
+    values (#{coinType,jdbcType=BIGINT}, #{currencyType,jdbcType=INTEGER}, #{maxVolume,jdbcType=DECIMAL}, 
+      #{maxVolumeTime,jdbcType=TIMESTAMP}, #{maxAvg5Volume,jdbcType=DECIMAL}, #{maxAvg5VolumeTime,jdbcType=TIMESTAMP}, 
+      #{maxAvg10Volume,jdbcType=DECIMAL}, #{maxAvg10VolumeTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{isDelete,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinMaxVolume">
+    insert into crypto_coin_max_volume
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="coinType != null">
+        coin_type,
+      </if>
+      <if test="currencyType != null">
+        currency_type,
+      </if>
+      <if test="maxVolume != null">
+        max_volume,
+      </if>
+      <if test="maxVolumeTime != null">
+        max_volume_time,
+      </if>
+      <if test="maxAvg5Volume != null">
+        max_avg5_volume,
+      </if>
+      <if test="maxAvg5VolumeTime != null">
+        max_avg5_volume_time,
+      </if>
+      <if test="maxAvg10Volume != null">
+        max_avg10_volume,
+      </if>
+      <if test="maxAvg10VolumeTime != null">
+        max_avg10_volume_time,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="coinType != null">
+        #{coinType,jdbcType=BIGINT},
+      </if>
+      <if test="currencyType != null">
+        #{currencyType,jdbcType=INTEGER},
+      </if>
+      <if test="maxVolume != null">
+        #{maxVolume,jdbcType=DECIMAL},
+      </if>
+      <if test="maxVolumeTime != null">
+        #{maxVolumeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="maxAvg5Volume != null">
+        #{maxAvg5Volume,jdbcType=DECIMAL},
+      </if>
+      <if test="maxAvg5VolumeTime != null">
+        #{maxAvg5VolumeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="maxAvg10Volume != null">
+        #{maxAvg10Volume,jdbcType=DECIMAL},
+      </if>
+      <if test="maxAvg10VolumeTime != null">
+        #{maxAvg10VolumeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinMaxVolumeExample" resultType="java.lang.Long">
+    select count(*) from crypto_coin_max_volume
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update crypto_coin_max_volume
+    <set>
+      <if test="row.coinType != null">
+        coin_type = #{row.coinType,jdbcType=BIGINT},
+      </if>
+      <if test="row.currencyType != null">
+        currency_type = #{row.currencyType,jdbcType=INTEGER},
+      </if>
+      <if test="row.maxVolume != null">
+        max_volume = #{row.maxVolume,jdbcType=DECIMAL},
+      </if>
+      <if test="row.maxVolumeTime != null">
+        max_volume_time = #{row.maxVolumeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.maxAvg5Volume != null">
+        max_avg5_volume = #{row.maxAvg5Volume,jdbcType=DECIMAL},
+      </if>
+      <if test="row.maxAvg5VolumeTime != null">
+        max_avg5_volume_time = #{row.maxAvg5VolumeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.maxAvg10Volume != null">
+        max_avg10_volume = #{row.maxAvg10Volume,jdbcType=DECIMAL},
+      </if>
+      <if test="row.maxAvg10VolumeTime != null">
+        max_avg10_volume_time = #{row.maxAvg10VolumeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.createTime != null">
+        create_time = #{row.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.isDelete != null">
+        is_delete = #{row.isDelete,jdbcType=BIT},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update crypto_coin_max_volume
+    set coin_type = #{row.coinType,jdbcType=BIGINT},
+      currency_type = #{row.currencyType,jdbcType=INTEGER},
+      max_volume = #{row.maxVolume,jdbcType=DECIMAL},
+      max_volume_time = #{row.maxVolumeTime,jdbcType=TIMESTAMP},
+      max_avg5_volume = #{row.maxAvg5Volume,jdbcType=DECIMAL},
+      max_avg5_volume_time = #{row.maxAvg5VolumeTime,jdbcType=TIMESTAMP},
+      max_avg10_volume = #{row.maxAvg10Volume,jdbcType=DECIMAL},
+      max_avg10_volume_time = #{row.maxAvg10VolumeTime,jdbcType=TIMESTAMP},
+      create_time = #{row.createTime,jdbcType=TIMESTAMP},
+      is_delete = #{row.isDelete,jdbcType=BIT}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinMaxVolume">
+    update crypto_coin_max_volume
+    <set>
+      <if test="maxVolume != null">
+        max_volume = #{maxVolume,jdbcType=DECIMAL},
+      </if>
+      <if test="maxVolumeTime != null">
+        max_volume_time = #{maxVolumeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="maxAvg5Volume != null">
+        max_avg5_volume = #{maxAvg5Volume,jdbcType=DECIMAL},
+      </if>
+      <if test="maxAvg5VolumeTime != null">
+        max_avg5_volume_time = #{maxAvg5VolumeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="maxAvg10Volume != null">
+        max_avg10_volume = #{maxAvg10Volume,jdbcType=DECIMAL},
+      </if>
+      <if test="maxAvg10VolumeTime != null">
+        max_avg10_volume_time = #{maxAvg10VolumeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
+    </set>
+    where coin_type = #{coinType,jdbcType=BIGINT}
+      and currency_type = #{currencyType,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinMaxVolume">
+    update crypto_coin_max_volume
+    set max_volume = #{maxVolume,jdbcType=DECIMAL},
+      max_volume_time = #{maxVolumeTime,jdbcType=TIMESTAMP},
+      max_avg5_volume = #{maxAvg5Volume,jdbcType=DECIMAL},
+      max_avg5_volume_time = #{maxAvg5VolumeTime,jdbcType=TIMESTAMP},
+      max_avg10_volume = #{maxAvg10Volume,jdbcType=DECIMAL},
+      max_avg10_volume_time = #{maxAvg10VolumeTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      is_delete = #{isDelete,jdbcType=BIT}
+    where coin_type = #{coinType,jdbcType=BIGINT}
+      and currency_type = #{currencyType,jdbcType=INTEGER}
+  </update>
+  <select id="selectByExampleWithRowbounds" parameterType="demo.finance.cryptoCoin.data.pojo.po.CryptoCoinMaxVolumeExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from crypto_coin_max_volume
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>

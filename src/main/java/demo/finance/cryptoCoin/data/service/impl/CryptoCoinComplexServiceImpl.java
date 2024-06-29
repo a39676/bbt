@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import demo.finance.cryptoCoin.common.service.CryptoCoinCommonService;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinCatalogMapper;
+import demo.finance.cryptoCoin.data.mapper.CryptoCoinMaxVolumeMapper;
 import demo.finance.cryptoCoin.data.mapper.CryptoCoinPrice1dayMapper;
 import demo.finance.cryptoCoin.data.mq.producer.CryptoCoinDailyDataQueryAckProducer;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinCatalog;
@@ -30,6 +31,8 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 	private CryptoCoinCatalogMapper cryptoCoinCatalogMapper;
 	@Autowired
 	private CryptoCoinPrice1dayMapper cryptoCoinPrice1dayMapper;
+	@Autowired
+	private CryptoCoinMaxVolumeMapper cryptoCoinMaxVolumeMapper;
 	@Autowired
 	private CryptoCoinDailyDataQueryAckProducer cryptoCoinDailyDataQueryAckProducer;
 
