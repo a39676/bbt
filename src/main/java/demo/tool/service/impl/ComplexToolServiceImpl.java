@@ -322,12 +322,6 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 	private boolean ipValid(String ipStr) {
 		Pattern pattern = Pattern.compile("^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$");
 		Matcher matcher = pattern.matcher(ipStr);
-		boolean matchFound = matcher.find();
-		if (matchFound) {
-			System.out.println("Match found");
-		} else {
-			System.out.println("Match not found");
-		}
-		return matchFound;
+		return matcher.find();
 	}
 }
