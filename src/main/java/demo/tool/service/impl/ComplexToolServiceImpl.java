@@ -12,6 +12,8 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
@@ -301,6 +303,10 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 	}
 
 	private void updateWork1DnsRecord(String targetIp) {
+		if (!ipValid(targetIp)) {
+			log.error("IP invalid, " + targetIp);
+			return;
+		}
 		String recordId = getTargetDnsRecordIdFromDnsList();
 		if (recordId == null) {
 			log.error("Can NOT find exists DNS records, will create new one");
@@ -311,5 +317,17 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		} else {
 			editDNS(recordId, targetIp);
 		}
+	}
+
+	private boolean ipValid(String ipStr) {
+		Pattern pattern = Pattern.compile("^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$");
+		Matcher matcher = pattern.matcher(ipStr);
+		boolean matchFound = matcher.find();
+		if (matchFound) {
+			System.out.println("Match found");
+		} else {
+			System.out.println("Match not found");
+		}
+		return matchFound;
 	}
 }
