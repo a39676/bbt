@@ -315,6 +315,7 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 				sendingMsg("Can NOT create Worker 1 DNS record");
 			}
 		} else {
+			sendingMsg(targetIp);
 			editDNS(recordId, targetIp);
 		}
 	}
