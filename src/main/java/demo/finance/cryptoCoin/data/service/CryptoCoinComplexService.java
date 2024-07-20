@@ -4,7 +4,7 @@ import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinMaxVolume;
 
 public interface CryptoCoinComplexService {
 
-	void sendDailyDataQueryInSteps();
+	void sendDailyDataQuerys();
 
 	void sendDailyDataQuery(String symbol);
 

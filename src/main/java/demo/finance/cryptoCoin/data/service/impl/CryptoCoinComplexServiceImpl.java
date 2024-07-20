@@ -69,7 +69,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 	}
 
 	@Override
-	public void sendDailyDataQueryInSteps() {
+	public void sendDailyDataQuerys() {
 		List<String> symbolList = getSymbolListFromOptionFile();
 		String symbol = null;
 		CryptoCoinCatalogExample catalogExample = null;
@@ -81,22 +81,21 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 
 		Set<String> keys = redisTemplate.keys(DAILY_DATA_QUERY_SYMBOL_KEY_PREFIX + "_*");
 
-		int counting = 0;
+//		int counting = 0;
 		int symbolIndex = 0;
 
 		for (; symbolIndex < symbolList.size()
-				&& counting < optionService.getDailyDataQueryInOneTime(); symbolIndex++, counting++) {
+//				&& counting < optionService.getDailyDataQueryInOneTime()
+		; symbolIndex++) {
 			symbol = symbolList.get(symbolIndex);
 			coinName = symbol.replaceAll(defaultCyrrencyTypeForCryptoCoin.getName(), "");
 			if (keys.contains(DAILY_DATA_QUERY_SYMBOL_KEY_PREFIX + "_" + symbol)) {
-				counting--;
 				continue;
 			}
 			catalogExample = new CryptoCoinCatalogExample();
 			catalogExample.createCriteria().andCoinNameEnShortEqualTo(coinName);
 			catalogList = cryptoCoinCatalogMapper.selectByExample(catalogExample);
 			if (catalogList == null || catalogList.isEmpty()) {
-				counting--;
 				continue;
 			}
 			catalog = catalogList.get(0);
@@ -104,11 +103,11 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 					defaultCyrrencyTypeForCryptoCoin.getCode().longValue());
 
 			if (lastData != null && !lastData.getStartTime().isBefore(todayStart)) {
-				counting--;
 				continue;
 			}
 			sendDailyDataQuery(symbol);
 			setDailyDataQuerySymbolKey(symbol);
+//			counting++;
 		}
 	}
 

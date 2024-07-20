@@ -12,9 +12,10 @@ public class CryptoCoinTaskService {
 	@Autowired
 	private CryptoCoinComplexService cryptoCoinComplexService;
 
-	@Scheduled(cron = "*/12 0-59 03-04 * * *")
+//	@Scheduled(cron = "*/12 0-59 03-04 * * *")
+	@Scheduled(cron = "12 20 2 * * *")
 	public void sendDailyDataQueryInSteps() {
-		cryptoCoinComplexService.sendDailyDataQueryInSteps();
+		cryptoCoinComplexService.sendDailyDataQuerys();
 	}
 
 }
