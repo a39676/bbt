@@ -64,6 +64,13 @@ public class TestController extends CommonController {
 		cryptoCoinComplexService.sendDailyDataQuerys();
 		return "Done";
 	}
+	
+	@GetMapping(value = "/reSendDailyDataQuerys")
+	@ResponseBody
+	public String reSendDailyDataQuerys() {
+		cryptoCoinComplexService.reSendDailyDataQuerys();
+		return "Done";
+	}
 
 	@GetMapping(value = "/sendDailyDataQuery")
 	@ResponseBody

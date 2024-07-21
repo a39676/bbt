@@ -12,4 +12,6 @@ public interface CryptoCoinComplexService {
 
 	CryptoCoinMaxVolume refreshMaxVolumeRecord(Long coinTypeId);
 
+	void reSendDailyDataQuerys();
+
 }

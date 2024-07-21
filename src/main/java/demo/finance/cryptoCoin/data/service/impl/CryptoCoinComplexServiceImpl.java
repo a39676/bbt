@@ -111,6 +111,15 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 		}
 	}
 
+	@Override
+	public void reSendDailyDataQuerys() {
+		Set<String> keys = redisTemplate.keys(DAILY_DATA_QUERY_SYMBOL_KEY_PREFIX + "_*");
+		for (String key : keys) {
+			redisTemplate.delete(key);
+		}
+		sendDailyDataQuerys();
+	}
+
 	private void setDailyDataQuerySymbolKey(String symbol) {
 		long seconds = ChronoUnit.SECONDS.between(LocalDateTime.now(), LocalDateTime.now().with(LocalTime.MAX));
 		redisTemplate.opsForValue().set(DAILY_DATA_QUERY_SYMBOL_KEY_PREFIX + "_" + symbol, "", seconds,
