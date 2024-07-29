@@ -30,12 +30,11 @@ import org.springframework.stereotype.Service;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.system.service.impl.SystemOptionService;
 import demo.baseCommon.service.CommonService;
-import demo.config.customComponent.OptionFilePathConfigurer;
 import demo.tool.service.ComplexToolService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import tool.pojo.constant.CxBbtInteractionUrl;
-import toolPack.ioHandle.FileUtilCustom;
+import toolPack.httpHandel.HttpUtil;
 
 @Scope("singleton")
 @Service
@@ -122,15 +121,18 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		}
 
 		try {
-			FileUtilCustom f = new FileUtilCustom();
-			String ipLocalSavePath = OptionFilePathConfigurer.SYSTEM.replaceAll("option.json", "ip.txt");
-			String oldIpStr = f.getStringFromFile(ipLocalSavePath);
-
-			executeShellScriptForGetIp();
-			String newIpStr = f.getStringFromFile(ipLocalSavePath);
+			String oldIpStr = systemOptionService.getIp();
+			String newIpStr = getIpFromIpIfyOrg();
+			if (newIpStr == null) {
+				newIpStr = getIpFromIpApiCom();
+			}
+//			FileUtilCustom f = new FileUtilCustom();
+//			String ipLocalSavePath = OptionFilePathConfigurer.SYSTEM.replaceAll("option.json", "ip.txt");
+//			executeShellScriptForGetIp();
+//			String newIpStr = f.getStringFromFile(ipLocalSavePath);
 			log.error("IP now: " + newIpStr);
 			if (StringUtils.isEmpty(newIpStr)) {
-				log.error("Can NOT find IP record from local file");
+				log.error("Can NOT find IP record from API");
 				return;
 			} else if (newIpStr.equals(oldIpStr)) {
 				log.error("IP did NOT change, skip DNS update");
@@ -142,26 +144,67 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		}
 	}
 
-	private void executeShellScriptForGetIp() {
-		if (!isLinux()) {
-			return;
-		}
-
-		ProcessBuilder processBuilder = new ProcessBuilder();
-		processBuilder.command(System.getProperty("user.home") + "/toolSH/getIp.sh");
+	private String getIpFromIpIfyOrg() {
+		String url = "https://api.ipify.org/";
+		HttpUtil h = new HttpUtil();
 		try {
-			Process process = processBuilder.start();
-			process.waitFor();
-//				int exitVal = process.waitFor();
-//				if (exitVal != 0) {
-//					sendTelegramMsg("Kill chrome driver error");
-//				}
+			String response = h.sendGet(url);
+			if (!ipValid(response)) {
+				String msg = "IP invalid, from ipify.org: " + response;
+				log.error(msg);
+				sendingMsg(msg);
+				return null;
+			}
+			return response;
 		} catch (Exception e) {
-			e.printStackTrace();
-			sendingMsg("Worker get IP error");
+			String msg = "Get ip from ipify.org error: " + e.getLocalizedMessage();
+			log.error(msg);
+			sendingMsg(msg);
+			return null;
 		}
-
 	}
+
+	private String getIpFromIpApiCom() {
+		String url = "http://ip-api.com/json/";
+		HttpUtil h = new HttpUtil();
+		try {
+			String response = h.sendGet(url);
+			JSONObject json = JSONObject.fromObject(response);
+			String ipStr = json.getString("query");
+			if (!ipValid(ipStr)) {
+				String msg = "IP invalid, from ip-api.com: " + response;
+				log.error(msg);
+				sendingMsg(msg);
+				return null;
+			}
+			return ipStr;
+		} catch (Exception e) {
+			String msg = "Get ip from ip-api.com error: " + e.getLocalizedMessage();
+			log.error(msg);
+			sendingMsg(msg);
+			return null;
+		}
+	}
+
+//	private void executeShellScriptForGetIp() {
+//		if (!isLinux()) {
+//			return;
+//		}
+//
+//		ProcessBuilder processBuilder = new ProcessBuilder();
+//		processBuilder.command(System.getProperty("user.home") + "/toolSH/getIp.sh");
+//		try {
+//			Process process = processBuilder.start();
+//			process.waitFor();
+////				int exitVal = process.waitFor();
+////				if (exitVal != 0) {
+////					sendTelegramMsg("Kill chrome driver error");
+////				}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			sendingMsg("Worker get IP error");
+//		}
+//	}
 
 	private String createDNS(String targetIp) {
 		JSONObject paramJson = new JSONObject();

@@ -21,6 +21,7 @@ public class SystemOptionService {
 	private String shutdownKey = null;
 	private String cthulhuHostname = null;
 	private String worker1Hostname = null;
+	private String ip = null;
 
 	public String getEnvName() {
 		return envName;
@@ -70,6 +71,14 @@ public class SystemOptionService {
 		this.worker1Hostname = worker1Hostname;
 	}
 
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+
 	@PostConstruct
 	public void refreshConstant() {
 		File optionFile = new File(OptionFilePathConfigurer.SYSTEM);
@@ -93,4 +102,12 @@ public class SystemOptionService {
 			log.error("system option loading error: " + e.getLocalizedMessage());
 		}
 	}
+
+	@Override
+	public String toString() {
+		return "SystemOptionService [log=" + log + ", envName=" + envName + ", isDebuging=" + isDebuging
+				+ ", shutdownKey=" + shutdownKey + ", cthulhuHostname=" + cthulhuHostname + ", worker1Hostname="
+				+ worker1Hostname + ", ip=" + ip + "]";
+	}
+
 }
