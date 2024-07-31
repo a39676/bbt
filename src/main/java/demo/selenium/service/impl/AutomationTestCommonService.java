@@ -41,10 +41,14 @@ import demo.baseCommon.service.CommonService;
 import demo.interaction.image.service.ImageInteractionService;
 import demo.selenium.service.SeleniumGlobalOptionService;
 import demo.selenium.service.WebDriverService;
+import demo.tool.mq.producer.TelegramMessageAckProducer;
 import image.pojo.dto.ImageSavingTransDTO;
 import image.pojo.dto.UploadImageToCloudinaryDTO;
 import image.pojo.result.ImageSavingResult;
 import image.pojo.result.UploadImageToCloudinaryResult;
+import telegram.pojo.constant.TelegramStaticChatID;
+import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
+import telegram.pojo.type.TelegramBotType;
 import toolPack.constant.FileSuffixNameConstant;
 import toolPack.dateTimeHandle.DateTimeUtilCommon;
 import toolPack.ioHandle.FileUtilCustom;
@@ -77,7 +81,20 @@ public abstract class AutomationTestCommonService extends CommonService {
 	protected WebDriverATToolService webATToolService;
 	@Autowired
 	protected AutomationTestResultProducer automationTestResultProducer;
-
+	@Autowired
+	private TelegramMessageAckProducer telegramMessageAckProducer;
+	
+	protected void sendingMsg(String msg) {
+		log.error("Sending telegram message: " + msg);
+		TelegramBotNoticeMessageDTO dto = new TelegramBotNoticeMessageDTO();
+		dto.setId(TelegramStaticChatID.MY_ID);
+		dto.setBotName(TelegramBotType.BBT_MESSAGE.getName());
+		dto.setMsg(msg);
+		telegramMessageAckProducer.send(dto);
+//		reminderMessageService.sendReminder(msg);
+	}
+	
+	
 	protected UploadImageToCloudinaryResult uploadImgToCloudinary(String imgFilePath) {
 		UploadImageToCloudinaryDTO uploadImgDTO = new UploadImageToCloudinaryDTO();
 		uploadImgDTO.setFilePath(imgFilePath);

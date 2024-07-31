@@ -16,11 +16,7 @@ import auxiliaryCommon.pojo.type.BaseResultType;
 import demo.baseCommon.pojo.constant.SystemConstant;
 import demo.baseCommon.pojo.param.PageParam;
 import demo.config.customComponent.SnowFlake;
-import demo.tool.mq.producer.TelegramMessageAckProducer;
 import net.sf.json.JSONObject;
-import telegram.pojo.constant.TelegramStaticChatID;
-import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
-import telegram.pojo.type.TelegramBotType;
 import toolPack.dateTimeHandle.DateHandler;
 import toolPack.dateTimeHandle.LocalDateTimeAdapter;
 import toolPack.dateTimeHandle.LocalDateTimeHandler;
@@ -46,8 +42,6 @@ public abstract class CommonService {
 	@Autowired
 	protected FileUtilCustom ioUtil;
 
-	@Autowired
-	private TelegramMessageAckProducer telegramMessageAckProducer;
 //	private ReminderMessageService reminderMessageService;
 
 	private static final int NORMAL_PAGE_SIZE = 10;
@@ -203,13 +197,4 @@ public abstract class CommonService {
 
 	}
 
-	protected void sendingMsg(String msg) {
-		log.error("Sending telegram message: " + msg);
-		TelegramBotNoticeMessageDTO dto = new TelegramBotNoticeMessageDTO();
-		dto.setId(TelegramStaticChatID.MY_ID);
-		dto.setBotName(TelegramBotType.BBT_MESSAGE.getName());
-		dto.setMsg(msg);
-		telegramMessageAckProducer.send(dto);
-//		reminderMessageService.sendReminder(msg);
-	}
 }

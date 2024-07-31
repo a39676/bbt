@@ -30,9 +30,13 @@ import org.springframework.stereotype.Service;
 import auxiliaryCommon.pojo.result.CommonResult;
 import demo.base.system.service.impl.SystemOptionService;
 import demo.baseCommon.service.CommonService;
+import demo.tool.mq.producer.TelegramMessageAckProducer;
 import demo.tool.service.ComplexToolService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import telegram.pojo.constant.TelegramStaticChatID;
+import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
+import telegram.pojo.type.TelegramBotType;
 import tool.pojo.constant.CxBbtInteractionUrl;
 import toolPack.httpHandel.HttpUtil;
 
@@ -44,7 +48,9 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 	private SystemOptionService systemOptionService;
 	@Autowired
 	private CloudFlareOptionService cloudFlareOptionService;
-
+	@Autowired
+	private TelegramMessageAckProducer telegramMessageAckProducer;
+	
 	@Override
 	public CommonResult cleanTmpFiles(String targetFolder, String extensionName, LocalDateTime oldestCreateTime) {
 		CommonResult r = new CommonResult();
@@ -367,5 +373,15 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		Pattern pattern = Pattern.compile("^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$");
 		Matcher matcher = pattern.matcher(ipStr);
 		return matcher.find();
+	}
+	
+	protected void sendingMsg(String msg) {
+		log.error("Sending telegram message: " + msg);
+		TelegramBotNoticeMessageDTO dto = new TelegramBotNoticeMessageDTO();
+		dto.setId(TelegramStaticChatID.MY_ID);
+		dto.setBotName(TelegramBotType.BBT_MESSAGE.getName());
+		dto.setMsg(msg);
+		telegramMessageAckProducer.send(dto);
+//		reminderMessageService.sendReminder(msg);
 	}
 }

@@ -13,9 +13,13 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import auxiliaryCommon.pojo.type.TimeUnitType;
 import demo.finance.common.service.FinanceCommonService;
+import demo.tool.mq.producer.TelegramMessageAckProducer;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.constant.CryptoCoinDataConstant;
 import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
+import telegram.pojo.constant.TelegramStaticChatID;
+import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
+import telegram.pojo.type.TelegramBotType;
 
 public abstract class CryptoCoinCommonService extends FinanceCommonService {
 
@@ -23,7 +27,9 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 	protected RedisTemplate<String, Object> redisTemplate;
 	@Autowired
 	protected CryptoCoinOptionService optionService;
-
+	@Autowired
+	private TelegramMessageAckProducer telegramMessageAckProducer;
+	
 	protected static final int SCALE_FOR_CALCULATE = 12;
 	protected static final CurrencyTypeForCryptoCoin defaultCyrrencyTypeForCryptoCoin = CurrencyTypeForCryptoCoin.USDT;
 
@@ -480,6 +486,15 @@ public abstract class CryptoCoinCommonService extends FinanceCommonService {
 		}
 	}
 
+	protected void sendingMsg(String msg) {
+		log.error("Sending telegram message: " + msg);
+		TelegramBotNoticeMessageDTO dto = new TelegramBotNoticeMessageDTO();
+		dto.setId(TelegramStaticChatID.MY_ID);
+		dto.setBotName(TelegramBotType.BBT_MESSAGE.getName());
+		dto.setMsg(msg);
+		telegramMessageAckProducer.send(dto);
+//		reminderMessageService.sendReminder(msg);
+	}
 //	protected CryptoCoinCatalogVO cryptoCoinCatalogPOToVO(CryptoCoinCatalog po) {
 //		CryptoCoinCatalogVO vo = new CryptoCoinCatalogVO();
 //		vo.setPk(systemOptionService.encryptId(po.getId()));
