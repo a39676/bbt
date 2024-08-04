@@ -16,6 +16,7 @@ import demo.finance.cryptoCoin.data.service.CryptoCoinComplexService;
 import demo.finance.cryptoCoin.data.service.impl.CryptoCoinCacheDataService;
 import demo.finance.cryptoCoin.technicalAnalysis.service.CryptoCoinTechnicalAnalysisService;
 import demo.scriptCore.scheduleClawing.cnStockMarketData.service.CnStockMarketDataService;
+import demo.tool.service.ComplexToolService;
 
 @Controller
 @RequestMapping(value = { TestUrl.testRoot })
@@ -32,6 +33,8 @@ public class TestController extends CommonController {
 	private CryptoCoinComplexService cryptoCoinComplexService;
 	@Autowired
 	private CryptoCoinTechnicalAnalysisService cryptoCoinTechnicalAnalysisService;
+	@Autowired
+	private ComplexToolService complexToolService;
 
 	@GetMapping(value = "/test")
 	@ResponseBody
@@ -64,7 +67,7 @@ public class TestController extends CommonController {
 		cryptoCoinComplexService.sendDailyDataQuerys();
 		return "Done";
 	}
-	
+
 	@GetMapping(value = "/reSendDailyDataQuerys")
 	@ResponseBody
 	public String reSendDailyDataQuerys() {
@@ -84,6 +87,13 @@ public class TestController extends CommonController {
 	@ResponseBody
 	public List<String> filter() {
 		return cryptoCoinTechnicalAnalysisService.filter();
+	}
+
+	@GetMapping(value = "/resetIP")
+	@ResponseBody
+	public String amIAlive() {
+		complexToolService.amIAlive();
+		return "Done";
 	}
 
 }

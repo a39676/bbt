@@ -126,6 +126,8 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 			e.printStackTrace();
 		}
 
+		sendingMsg("Can NOT access worker through public IP");
+		
 		try {
 			String oldIpStr = systemOptionService.getIp();
 			String newIpStr = getIpFromIpIfyOrg();
