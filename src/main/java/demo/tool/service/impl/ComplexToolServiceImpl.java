@@ -50,7 +50,7 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 	private CloudFlareOptionService cloudFlareOptionService;
 	@Autowired
 	private TelegramMessageAckProducer telegramMessageAckProducer;
-	
+
 	@Override
 	public CommonResult cleanTmpFiles(String targetFolder, String extensionName, LocalDateTime oldestCreateTime) {
 		CommonResult r = new CommonResult();
@@ -103,6 +103,14 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		if (systemOptionService.isDev()) {
 			return;
 		}
+		
+		String proxyHost = "127.0.0.1";
+		String proxyPort = "2081";
+
+		System.clearProperty("http.proxyHost");
+		System.clearProperty("http.proxyPort");
+		System.clearProperty("https.proxyHost");
+		System.clearProperty("https.proxyPort");
 
 		try {
 			URL url = new URL("https://" + systemOptionService.getWorker1Hostname() + CxBbtInteractionUrl.ROOT
@@ -120,6 +128,10 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 			}
 			in.close();
 			if (content != null && content.toString().contains("pong")) {
+				System.setProperty("http.proxyHost", proxyHost);
+				System.setProperty("http.proxyPort", proxyPort);
+				System.setProperty("https.proxyHost", proxyHost);
+				System.setProperty("https.proxyPort", proxyPort);
 				return;
 			}
 		} catch (Exception e) {
@@ -127,7 +139,7 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		}
 
 		sendingMsg("Can NOT access worker through public IP");
-		
+
 		try {
 			String oldIpStr = systemOptionService.getIp();
 			String newIpStr = getIpFromIpIfyOrg();
@@ -141,15 +153,28 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 			log.error("IP now: " + newIpStr);
 			if (StringUtils.isEmpty(newIpStr)) {
 				log.error("Can NOT find IP record from API");
+				System.setProperty("http.proxyHost", proxyHost);
+				System.setProperty("http.proxyPort", proxyPort);
+				System.setProperty("https.proxyHost", proxyHost);
+				System.setProperty("https.proxyPort", proxyPort);
 				return;
 			} else if (newIpStr.equals(oldIpStr)) {
 				log.error("IP did NOT change, skip DNS update");
+				System.setProperty("http.proxyHost", proxyHost);
+				System.setProperty("http.proxyPort", proxyPort);
+				System.setProperty("https.proxyHost", proxyHost);
+				System.setProperty("https.proxyPort", proxyPort);
 				return;
 			}
 			updateWork1DnsRecord(newIpStr);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		System.setProperty("http.proxyHost", proxyHost);
+		System.setProperty("http.proxyPort", proxyPort);
+		System.setProperty("https.proxyHost", proxyHost);
+		System.setProperty("https.proxyPort", proxyPort);
 	}
 
 	private String getIpFromIpIfyOrg() {
@@ -376,7 +401,7 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		Matcher matcher = pattern.matcher(ipStr);
 		return matcher.find();
 	}
-	
+
 	protected void sendingMsg(String msg) {
 		log.error("Sending telegram message: " + msg);
 		TelegramBotNoticeMessageDTO dto = new TelegramBotNoticeMessageDTO();
