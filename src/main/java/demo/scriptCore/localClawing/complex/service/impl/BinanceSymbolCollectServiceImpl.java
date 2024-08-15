@@ -17,8 +17,8 @@ public class BinanceSymbolCollectServiceImpl extends AutomationTestCommonService
 
 	private int maxSymbolPage = 13;
 	private int defaultSymbolPageSize = 30;
-	private String symbolXpathModule = "/html[1]/body[1]/div[3]/div[1]/div[1]/div[1]/main[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[2]/div[3]/div[1]/div[1]/div[2]/div[%d]/div[1]/a[1]/div[1]/div[1]/div[2]/div[1]";
-	private String marketCapXpathModule = "/html[1]/body[1]/div[3]/div[1]/div[1]/div[1]/main[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[2]/div[3]/div[1]/div[1]/div[2]/div[%d]/div[1]/div[4]";
+	private String symbolXpathModule =    "/html[1]/body[1]/div[3]/div[1]/div[1]/div[1]/main[1]/div[1]/div/div[2]/div[1]/div[1]/div[2]/div[3]/div[1]/div[1]/div[2]/div[%d]/div[1]/a[1]/div[1]/div[1]/div[2]/div[1]";
+	private String marketCapXpathModule = "/html[1]/body[1]/div[3]/div[1]/div[1]/div[1]/main[1]/div[1]/div/div[2]/div[1]/div[1]/div[2]/div[3]/div[1]/div[1]/div[2]/div[%d]/div[1]/div[4]";
 	private boolean hadFoundTenBillionEnd = false;
 	private boolean hadFoundOneBillionEnd = false;
 	private String tenBillionEndSymbol = null;
