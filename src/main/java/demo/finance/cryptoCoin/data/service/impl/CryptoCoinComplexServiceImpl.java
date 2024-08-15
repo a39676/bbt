@@ -27,10 +27,13 @@ import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinMaxVolumeKey;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1day;
 import demo.finance.cryptoCoin.data.pojo.po.CryptoCoinPrice1dayExample;
 import demo.finance.cryptoCoin.data.service.CryptoCoinComplexService;
+import finance.cryptoCoin.binance.pojo.constant.CcmUrlConstant;
 import finance.cryptoCoin.pojo.constant.CryptoCoinMQConstant;
 import finance.cryptoCoin.pojo.dto.CryptoCoinDailyDataQueryDTO;
 import finance.cryptoCoin.pojo.type.CryptoCoinDataSourceType;
 import finance.cryptoCoin.pojo.type.CurrencyTypeForCryptoCoin;
+import net.sf.json.JSONObject;
+import toolPack.httpHandel.HttpUtil;
 
 @Service
 public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implements CryptoCoinComplexService {
@@ -70,7 +73,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 
 	@Override
 	public void sendDailyDataQuerys() {
-		List<String> symbolList = getSymbolListFromOptionFile();
+		List<String> symbolList = getSpotSymbolList();
 		String symbol = null;
 		CryptoCoinCatalogExample catalogExample = null;
 		List<CryptoCoinCatalog> catalogList = null;
@@ -126,11 +129,6 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 				TimeUnit.SECONDS);
 	}
 
-	private List<String> getSymbolListFromOptionFile() {
-		optionService.refreshOption();
-		return optionService.getSymbolList();
-	}
-
 	private CryptoCoinPrice1day findLastData(String symbol) {
 		String coinName = symbol.replaceAll(optionService.getDefaultCurrency(), "");
 		CryptoCoinCatalogExample catalogExample = new CryptoCoinCatalogExample();
@@ -152,7 +150,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 
 	@Override
 	public void checkMaxVolume() {
-		List<String> symbolList = optionService.getSymbolList();
+		List<String> symbolList = getSpotSymbolList();
 		for (String symbol : symbolList) {
 			checkMaxVolumeOfDay(symbol);
 		}
@@ -294,5 +292,28 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 		}
 
 		return po;
+	}
+
+	private JSONObject getSpotSymbolJson() {
+		HttpUtil h = new HttpUtil();
+		String url = optionService.getCcmHost() + CcmUrlConstant.ROOT + CcmUrlConstant.SPOT_LIST;
+		String response = null;
+		JSONObject json = new JSONObject();
+		try {
+			response = h.sendGet(url);
+			json = JSONObject.fromObject(response);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return json;
+	}
+
+	private List<String> getSpotSymbolList() {
+		JSONObject symbolJson = getSpotSymbolJson();
+		List<String> symbolList = new ArrayList<>();
+		for (Object key : symbolJson.keySet()) {
+			symbolList.add(String.valueOf(key));
+		}
+		return symbolList;
 	}
 }

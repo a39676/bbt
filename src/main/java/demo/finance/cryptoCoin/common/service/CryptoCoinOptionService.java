@@ -1,8 +1,6 @@
 package demo.finance.cryptoCoin.common.service;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Scope;
@@ -19,8 +17,8 @@ import toolPack.ioHandle.FileUtilCustom;
 public class CryptoCoinOptionService extends CommonService {
 
 	private String defaultCurrency = CurrencyTypeForCryptoCoin.USDT.getName();
-	private List<String> symbolList = new ArrayList<>();
 	private Integer dailyDataQueryInOneTime = 5;
+	private String ccmHost;
 
 	public String getDefaultCurrency() {
 		return defaultCurrency;
@@ -28,14 +26,6 @@ public class CryptoCoinOptionService extends CommonService {
 
 	public void setDefaultCurrency(String defaultCurrency) {
 		this.defaultCurrency = defaultCurrency;
-	}
-
-	public List<String> getSymbolList() {
-		return symbolList;
-	}
-
-	public void setSymbolList(List<String> symbolList) {
-		this.symbolList = symbolList;
 	}
 
 	public Integer getDailyDataQueryInOneTime() {
@@ -46,10 +36,18 @@ public class CryptoCoinOptionService extends CommonService {
 		this.dailyDataQueryInOneTime = dailyDataQueryInOneTime;
 	}
 
+	public String getCcmHost() {
+		return ccmHost;
+	}
+
+	public void setCcmHost(String ccmHost) {
+		this.ccmHost = ccmHost;
+	}
+
 	@Override
 	public String toString() {
-		return "CryptoCoinOptionService [defaultCurrency=" + defaultCurrency + ", symbolList=" + symbolList
-				+ ", dailyDataQueryInOneTime=" + dailyDataQueryInOneTime + "]";
+		return "CryptoCoinOptionService [defaultCurrency=" + defaultCurrency + ", dailyDataQueryInOneTime="
+				+ dailyDataQueryInOneTime + ", ccmHost=" + ccmHost + "]";
 	}
 
 	@PostConstruct
