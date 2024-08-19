@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import demo.baseCommon.service.CommonService;
-import finance.cryptoCoin.binance.pojo.dto.CryptoCoinBinanceDepthCompleteDTO;
+import finance.cryptoCoin.binance.spot.pojo.dto.CryptoCoinBinanceSpotDepthCompleteDTO;
 import finance.cryptoCoin.pojo.bo.CryptoCoinPriceCommonDataBO;
 import finance.cryptoCoin.pojo.bo.KLineKeyBO;
 
@@ -17,15 +17,15 @@ import finance.cryptoCoin.pojo.bo.KLineKeyBO;
 @Service
 public class CryptoCoinCacheDataService extends CommonService {
 
-	private Map<String, CryptoCoinBinanceDepthCompleteDTO> binanceDepthMap = Collections.synchronizedMap(new HashMap<>());
+	private Map<String, CryptoCoinBinanceSpotDepthCompleteDTO> binanceDepthMap = Collections.synchronizedMap(new HashMap<>());
 	private Map<KLineKeyBO, List<CryptoCoinPriceCommonDataBO>> binanceKLineCacheMap = Collections
 			.synchronizedMap(new HashMap<>());
 
-	public Map<String, CryptoCoinBinanceDepthCompleteDTO> getBinanceDepthMap() {
+	public Map<String, CryptoCoinBinanceSpotDepthCompleteDTO> getBinanceDepthMap() {
 		return binanceDepthMap;
 	}
 
-	public void setBinanceDepthMap(Map<String, CryptoCoinBinanceDepthCompleteDTO> binanceDepthMap) {
+	public void setBinanceDepthMap(Map<String, CryptoCoinBinanceSpotDepthCompleteDTO> binanceDepthMap) {
 		this.binanceDepthMap = binanceDepthMap;
 	}
 
