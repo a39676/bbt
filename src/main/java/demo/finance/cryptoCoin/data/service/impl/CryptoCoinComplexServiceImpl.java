@@ -187,7 +187,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 		CryptoCoinPrice1day lastData = dataList.get(dataList.size() - 1);
 		if (po.getMaxVolume().compareTo(lastData.getVolume()) < 0) {
 			String msg = catalog.getCoinNameEnShort() + ", reach max volume";
-			cxMsgAckProducer.sendMsgThroughMq(CryptoCoinMQConstant.BIG_MOVE_DATA, msg);
+			cxMsgAckProducer.sendMsgThroughMq(CryptoCoinMQConstant.BIG_MOVE_SPOT_DATA, msg);
 		}
 
 		if (dataList.size() < 5) {
@@ -199,7 +199,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 		}
 		if (po.getMaxAvg5Volume().multiply(new BigDecimal(5)).compareTo(totalVolume) < 0) {
 			String msg = catalog.getCoinNameEnShort() + ", reach max 5 days volume";
-			cxMsgAckProducer.sendMsgThroughMq(CryptoCoinMQConstant.BIG_MOVE_DATA, msg);
+			cxMsgAckProducer.sendMsgThroughMq(CryptoCoinMQConstant.BIG_MOVE_SPOT_DATA, msg);
 		}
 
 		if (dataList.size() < 10) {
@@ -208,7 +208,7 @@ public class CryptoCoinComplexServiceImpl extends CryptoCoinCommonService implem
 		totalVolume = BigDecimal.ZERO;
 		if (po.getMaxAvg5Volume().multiply(new BigDecimal(10)).compareTo(totalVolume) < 0) {
 			String msg = catalog.getCoinNameEnShort() + ", reach max 10 days volume";
-			cxMsgAckProducer.sendMsgThroughMq(CryptoCoinMQConstant.BIG_MOVE_DATA, msg);
+			cxMsgAckProducer.sendMsgThroughMq(CryptoCoinMQConstant.BIG_MOVE_SPOT_DATA, msg);
 		}
 	}
 
