@@ -19,7 +19,7 @@ import demo.selenium.service.impl.AutomationTestCommonService;
 public class StoryBerriesDownloadServiceImpl extends AutomationTestCommonService
 		implements StoryBerriesDownloadService {
 
-	private static String mainSavingFolderPath = "d:/tmp/englishBook";
+	private static String mainSavingFolderPath = System.getProperty("user.home") + "/tmp/englishBook";
 	private static StoryBerriesOptionDTO optionDTO = null;
 
 	@Override
