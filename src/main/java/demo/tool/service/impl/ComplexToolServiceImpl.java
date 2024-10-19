@@ -4,16 +4,24 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
@@ -103,7 +111,7 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		if (systemOptionService.isDev()) {
 			return;
 		}
-		
+
 		String proxyHost = "127.0.0.1";
 		String proxyPort = "2081";
 
@@ -113,9 +121,33 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		System.clearProperty("https.proxyPort");
 
 		try {
+			TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+				public X509Certificate[] getAcceptedIssuers() {
+					X509Certificate[] myTrustedAnchors = new X509Certificate[0];
+					return myTrustedAnchors;
+				}
+
+				@Override
+				public void checkClientTrusted(X509Certificate[] certs, String authType) {
+				}
+
+				@Override
+				public void checkServerTrusted(X509Certificate[] certs, String authType) {
+				}
+			} };
+			SSLContext sc = SSLContext.getInstance("SSL");
+			sc.init(null, trustAllCerts, new SecureRandom());
+
 			URL url = new URL("https://" + systemOptionService.getWorker1Hostname() + CxBbtInteractionUrl.ROOT
 					+ CxBbtInteractionUrl.WORKER_PING);
-			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+			HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+				@Override
+				public boolean verify(String arg0, SSLSession arg1) {
+					return true;
+				}
+			});
 			con.setRequestMethod("GET");
 			con.setConnectTimeout(5000);
 			con.setReadTimeout(5000);
@@ -127,6 +159,8 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 				content.append(inputLine);
 			}
 			in.close();
+			HttpsURLConnection.setDefaultSSLSocketFactory(null);
+			HttpsURLConnection.setDefaultHostnameVerifier(null);
 			if (content != null && content.toString().contains("pong")) {
 				System.setProperty("http.proxyHost", proxyHost);
 				System.setProperty("http.proxyPort", proxyPort);
@@ -170,7 +204,7 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		System.setProperty("http.proxyHost", proxyHost);
 		System.setProperty("http.proxyPort", proxyPort);
 		System.setProperty("https.proxyHost", proxyHost);
