@@ -34,6 +34,7 @@ import net.sf.json.JSONObject;
 import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
 import telegram.pojo.type.TelegramBotType;
+import tool.pojo.constant.CxBbtInteractionUrl;
 import toolPack.httpHandel.HttpUtil;
 
 @Scope("singleton")
@@ -100,6 +101,8 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 			return;
 		}
 
+		String oldIpStr = systemOptionService.getIp();
+
 		String proxyHost = "127.0.0.1";
 		String proxyPort = "2081";
 
@@ -108,9 +111,21 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		System.clearProperty("https.proxyHost");
 		System.clearProperty("https.proxyPort");
 
-		String errorMsg = null;
-		String ipStrByHostname = null;
+		HttpUtil h = new HttpUtil();
 
+		try {
+			String url = systemOptionService.getCthulhuHostname() + CxBbtInteractionUrl.ROOT
+					+ CxBbtInteractionUrl.WORKER_PING;
+			String response = h.sendPost(url);
+			CommonResult r = buildObjFromJsonCustomization(response, CommonResult.class);
+			if (r.isSuccess()) {
+				return;
+			}
+		} catch (Exception e) {
+		}
+		
+		String ipStrByHostname = null;
+		String errorMsg = null;
 		try {
 			String hostnameStr = systemOptionService.getWorker1Hostname();
 			if (hostnameStr.contains(":")) {
@@ -127,24 +142,23 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		}
 
 		try {
-			String oldIpStr = systemOptionService.getIp();
-			String newIpStr = getIpFromIpIfyOrg();
-			if (newIpStr == null) {
-				newIpStr = getIpFromIpApiCom();
+			String ipStrFromAPI = getIpFromIpIfyOrg();
+			if (ipStrFromAPI == null) {
+				ipStrFromAPI = getIpFromIpApiCom();
 			}
-//			FileUtilCustom f = new FileUtilCustom();
-//			String ipLocalSavePath = OptionFilePathConfigurer.SYSTEM.replaceAll("option.json", "ip.txt");
-//			executeShellScriptForGetIp();
-//			String newIpStr = f.getStringFromFile(ipLocalSavePath);
-			log.error("IP now: " + newIpStr);
-			if (StringUtils.isEmpty(newIpStr)) {
+
+			log.error("IP now: " + ipStrFromAPI);
+			if (StringUtils.isEmpty(ipStrFromAPI)) {
 				log.error("Can NOT find IP record from API");
 				System.setProperty("http.proxyHost", proxyHost);
 				System.setProperty("http.proxyPort", proxyPort);
 				System.setProperty("https.proxyHost", proxyHost);
 				System.setProperty("https.proxyPort", proxyPort);
 				return;
-			} else if (newIpStr.equals(oldIpStr)) {
+			} 
+			
+			if (ipStrFromAPI.equals(oldIpStr) || ipStrFromAPI.equals(ipStrByHostname)) {
+				systemOptionService.setIp(ipStrFromAPI);
 				log.error("IP did NOT change, skip DNS update");
 				System.setProperty("http.proxyHost", proxyHost);
 				System.setProperty("http.proxyPort", proxyPort);
@@ -152,23 +166,11 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 				System.setProperty("https.proxyPort", proxyPort);
 				return;
 			}
-			updateWork1DnsRecord(newIpStr);
+			updateWork1DnsRecord(ipStrFromAPI);
+			systemOptionService.setIp(ipStrFromAPI);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		String oldIpStr = systemOptionService.getIp();
-
-		if (ipStrByHostname.equals(oldIpStr)) {
-			log.error("IP did NOT change, skip DNS update");
-			System.setProperty("http.proxyHost", proxyHost);
-			System.setProperty("http.proxyPort", proxyPort);
-			System.setProperty("https.proxyHost", proxyHost);
-			System.setProperty("https.proxyPort", proxyPort);
-			return;
-		}
-
-		updateWork1DnsRecord(ipStrByHostname);
 
 		System.setProperty("http.proxyHost", proxyHost);
 		System.setProperty("http.proxyPort", proxyPort);
@@ -176,7 +178,6 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		System.setProperty("https.proxyPort", proxyPort);
 	}
 
-	@SuppressWarnings("unused")
 	private String getIpFromIpIfyOrg() {
 		String url = "https://api.ipify.org/";
 		HttpUtil h = new HttpUtil();
@@ -197,7 +198,6 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		}
 	}
 
-	@SuppressWarnings("unused")
 	private String getIpFromIpApiCom() {
 		String url = "http://ip-api.com/json/";
 		HttpUtil h = new HttpUtil();
