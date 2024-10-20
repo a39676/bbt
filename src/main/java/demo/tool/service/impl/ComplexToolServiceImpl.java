@@ -109,7 +109,7 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		System.clearProperty("https.proxyPort");
 
 		String errorMsg = null;
-		String ipStrFromHostname = null;
+		String ipStrByHostname = null;
 
 		try {
 			String hostnameStr = systemOptionService.getWorker1Hostname();
@@ -118,47 +118,48 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 				hostnameStr = hostnameStr.substring(0, index);
 			}
 			InetAddress address = InetAddress.getByName(hostnameStr);
-			ipStrFromHostname = address.getHostAddress();
+			ipStrByHostname = address.getHostAddress();
 		} catch (Exception e) {
 			errorMsg = "Can NOT get IP from hostname";
 			e.printStackTrace();
 			sendingMsg(errorMsg + ", " + e.getLocalizedMessage());
+			return;
 		}
 
-//		try {
-//			String oldIpStr = systemOptionService.getIp();
-//			String newIpStr = getIpFromIpIfyOrg();
-//			if (newIpStr == null) {
-//				newIpStr = getIpFromIpApiCom();
-//			}
-////			FileUtilCustom f = new FileUtilCustom();
-////			String ipLocalSavePath = OptionFilePathConfigurer.SYSTEM.replaceAll("option.json", "ip.txt");
-////			executeShellScriptForGetIp();
-////			String newIpStr = f.getStringFromFile(ipLocalSavePath);
-//			log.error("IP now: " + newIpStr);
-//			if (StringUtils.isEmpty(newIpStr)) {
-//				log.error("Can NOT find IP record from API");
-//				System.setProperty("http.proxyHost", proxyHost);
-//				System.setProperty("http.proxyPort", proxyPort);
-//				System.setProperty("https.proxyHost", proxyHost);
-//				System.setProperty("https.proxyPort", proxyPort);
-//				return;
-//			} else if (newIpStr.equals(oldIpStr)) {
-//				log.error("IP did NOT change, skip DNS update");
-//				System.setProperty("http.proxyHost", proxyHost);
-//				System.setProperty("http.proxyPort", proxyPort);
-//				System.setProperty("https.proxyHost", proxyHost);
-//				System.setProperty("https.proxyPort", proxyPort);
-//				return;
-//			}
-//			updateWork1DnsRecord(newIpStr);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		try {
+			String oldIpStr = systemOptionService.getIp();
+			String newIpStr = getIpFromIpIfyOrg();
+			if (newIpStr == null) {
+				newIpStr = getIpFromIpApiCom();
+			}
+//			FileUtilCustom f = new FileUtilCustom();
+//			String ipLocalSavePath = OptionFilePathConfigurer.SYSTEM.replaceAll("option.json", "ip.txt");
+//			executeShellScriptForGetIp();
+//			String newIpStr = f.getStringFromFile(ipLocalSavePath);
+			log.error("IP now: " + newIpStr);
+			if (StringUtils.isEmpty(newIpStr)) {
+				log.error("Can NOT find IP record from API");
+				System.setProperty("http.proxyHost", proxyHost);
+				System.setProperty("http.proxyPort", proxyPort);
+				System.setProperty("https.proxyHost", proxyHost);
+				System.setProperty("https.proxyPort", proxyPort);
+				return;
+			} else if (newIpStr.equals(oldIpStr)) {
+				log.error("IP did NOT change, skip DNS update");
+				System.setProperty("http.proxyHost", proxyHost);
+				System.setProperty("http.proxyPort", proxyPort);
+				System.setProperty("https.proxyHost", proxyHost);
+				System.setProperty("https.proxyPort", proxyPort);
+				return;
+			}
+			updateWork1DnsRecord(newIpStr);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		String oldIpStr = systemOptionService.getIp();
 
-		if (ipStrFromHostname.equals(oldIpStr)) {
+		if (ipStrByHostname.equals(oldIpStr)) {
 			log.error("IP did NOT change, skip DNS update");
 			System.setProperty("http.proxyHost", proxyHost);
 			System.setProperty("http.proxyPort", proxyPort);
@@ -167,7 +168,7 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 			return;
 		}
 
-		updateWork1DnsRecord(ipStrFromHostname);
+		updateWork1DnsRecord(ipStrByHostname);
 
 		System.setProperty("http.proxyHost", proxyHost);
 		System.setProperty("http.proxyPort", proxyPort);
