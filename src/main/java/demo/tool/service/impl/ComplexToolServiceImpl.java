@@ -107,12 +107,17 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		System.clearProperty("http.proxyPort");
 		System.clearProperty("https.proxyHost");
 		System.clearProperty("https.proxyPort");
-		
+
 		String errorMsg = null;
 		String ipStrFromHostname = null;
 
 		try {
-			InetAddress address =InetAddress.getByName(systemOptionService.getWorker1Hostname());
+			String hostnameStr = systemOptionService.getWorker1Hostname();
+			if (hostnameStr.contains(":")) {
+				int index = hostnameStr.indexOf(":");
+				hostnameStr = hostnameStr.substring(0, index);
+			}
+			InetAddress address = InetAddress.getByName(hostnameStr);
 			ipStrFromHostname = address.getHostAddress();
 		} catch (Exception e) {
 			errorMsg = "Can NOT get IP from hostname";
@@ -150,9 +155,9 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //		}
-		
+
 		String oldIpStr = systemOptionService.getIp();
-		
+
 		if (ipStrFromHostname.equals(oldIpStr)) {
 			log.error("IP did NOT change, skip DNS update");
 			System.setProperty("http.proxyHost", proxyHost);
@@ -161,7 +166,7 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 			System.setProperty("https.proxyPort", proxyPort);
 			return;
 		}
-		
+
 		updateWork1DnsRecord(ipStrFromHostname);
 
 		System.setProperty("http.proxyHost", proxyHost);
