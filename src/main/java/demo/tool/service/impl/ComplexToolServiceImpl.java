@@ -168,6 +168,7 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		}
 
 		updateWork1DnsRecord(ipStrFromHostname);
+		systemOptionService.setIp(ipStrFromHostname);
 
 		System.setProperty("http.proxyHost", proxyHost);
 		System.setProperty("http.proxyPort", proxyPort);
