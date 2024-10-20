@@ -1,10 +1,8 @@
 package demo.tool.service.impl;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
+import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,8 +11,6 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
@@ -38,7 +34,6 @@ import net.sf.json.JSONObject;
 import telegram.pojo.constant.TelegramStaticChatID;
 import telegram.pojo.dto.TelegramBotNoticeMessageDTO;
 import telegram.pojo.type.TelegramBotType;
-import tool.pojo.constant.CxBbtInteractionUrl;
 import toolPack.httpHandel.HttpUtil;
 
 @Scope("singleton")
@@ -112,66 +107,62 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		System.clearProperty("http.proxyPort");
 		System.clearProperty("https.proxyHost");
 		System.clearProperty("https.proxyPort");
+		
+		String errorMsg = null;
+		String ipStrFromHostname = null;
 
 		try {
-
-			URL url = new URL("https://" + systemOptionService.getWorker1Hostname() + CxBbtInteractionUrl.ROOT
-					+ CxBbtInteractionUrl.WORKER_PING);
-			HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
-			con.setRequestMethod("GET");
-			con.setConnectTimeout(5000);
-			con.setReadTimeout(5000);
-
-			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-			String inputLine;
-			StringBuffer content = new StringBuffer();
-			while ((inputLine = in.readLine()) != null) {
-				content.append(inputLine);
-			}
-			in.close();
-			if (content != null && content.toString().contains("pong")) {
-				System.setProperty("http.proxyHost", proxyHost);
-				System.setProperty("http.proxyPort", proxyPort);
-				System.setProperty("https.proxyHost", proxyHost);
-				System.setProperty("https.proxyPort", proxyPort);
-				return;
-			}
+			InetAddress address =InetAddress.getByName(systemOptionService.getWorker1Hostname());
+			ipStrFromHostname = address.getHostAddress();
 		} catch (Exception e) {
+			errorMsg = "Can NOT get IP from hostname";
 			e.printStackTrace();
+			sendingMsg(errorMsg + ", " + e.getLocalizedMessage());
 		}
 
-		sendingMsg("Can NOT access worker through public IP");
-
-		try {
-			String oldIpStr = systemOptionService.getIp();
-			String newIpStr = getIpFromIpIfyOrg();
-			if (newIpStr == null) {
-				newIpStr = getIpFromIpApiCom();
-			}
-//			FileUtilCustom f = new FileUtilCustom();
-//			String ipLocalSavePath = OptionFilePathConfigurer.SYSTEM.replaceAll("option.json", "ip.txt");
-//			executeShellScriptForGetIp();
-//			String newIpStr = f.getStringFromFile(ipLocalSavePath);
-			log.error("IP now: " + newIpStr);
-			if (StringUtils.isEmpty(newIpStr)) {
-				log.error("Can NOT find IP record from API");
-				System.setProperty("http.proxyHost", proxyHost);
-				System.setProperty("http.proxyPort", proxyPort);
-				System.setProperty("https.proxyHost", proxyHost);
-				System.setProperty("https.proxyPort", proxyPort);
-				return;
-			} else if (newIpStr.equals(oldIpStr)) {
-				log.error("IP did NOT change, skip DNS update");
-				System.setProperty("http.proxyHost", proxyHost);
-				System.setProperty("http.proxyPort", proxyPort);
-				System.setProperty("https.proxyHost", proxyHost);
-				System.setProperty("https.proxyPort", proxyPort);
-				return;
-			}
-			updateWork1DnsRecord(newIpStr);
-		} catch (Exception e) {
-			e.printStackTrace();
+//		try {
+//			String oldIpStr = systemOptionService.getIp();
+//			String newIpStr = getIpFromIpIfyOrg();
+//			if (newIpStr == null) {
+//				newIpStr = getIpFromIpApiCom();
+//			}
+////			FileUtilCustom f = new FileUtilCustom();
+////			String ipLocalSavePath = OptionFilePathConfigurer.SYSTEM.replaceAll("option.json", "ip.txt");
+////			executeShellScriptForGetIp();
+////			String newIpStr = f.getStringFromFile(ipLocalSavePath);
+//			log.error("IP now: " + newIpStr);
+//			if (StringUtils.isEmpty(newIpStr)) {
+//				log.error("Can NOT find IP record from API");
+//				System.setProperty("http.proxyHost", proxyHost);
+//				System.setProperty("http.proxyPort", proxyPort);
+//				System.setProperty("https.proxyHost", proxyHost);
+//				System.setProperty("https.proxyPort", proxyPort);
+//				return;
+//			} else if (newIpStr.equals(oldIpStr)) {
+//				log.error("IP did NOT change, skip DNS update");
+//				System.setProperty("http.proxyHost", proxyHost);
+//				System.setProperty("http.proxyPort", proxyPort);
+//				System.setProperty("https.proxyHost", proxyHost);
+//				System.setProperty("https.proxyPort", proxyPort);
+//				return;
+//			}
+//			updateWork1DnsRecord(newIpStr);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+		
+		String oldIpStr = systemOptionService.getIp();
+		
+		if (ipStrFromHostname.equals(oldIpStr)) {
+			log.error("IP did NOT change, skip DNS update");
+			System.setProperty("http.proxyHost", proxyHost);
+			System.setProperty("http.proxyPort", proxyPort);
+			System.setProperty("https.proxyHost", proxyHost);
+			System.setProperty("https.proxyPort", proxyPort);
+			return;
 		}
+		
+		updateWork1DnsRecord(ipStrFromHostname);
 
 		System.setProperty("http.proxyHost", proxyHost);
 		System.setProperty("http.proxyPort", proxyPort);
@@ -179,6 +170,7 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		System.setProperty("https.proxyPort", proxyPort);
 	}
 
+	@SuppressWarnings("unused")
 	private String getIpFromIpIfyOrg() {
 		String url = "https://api.ipify.org/";
 		HttpUtil h = new HttpUtil();
@@ -199,6 +191,7 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private String getIpFromIpApiCom() {
 		String url = "http://ip-api.com/json/";
 		HttpUtil h = new HttpUtil();
