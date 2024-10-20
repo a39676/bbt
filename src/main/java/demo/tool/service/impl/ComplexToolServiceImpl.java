@@ -119,11 +119,13 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 			String response = h.sendPost(url);
 			CommonResult r = buildObjFromJsonCustomization(response, CommonResult.class);
 			if (r.isSuccess()) {
+				log.error("Still alive");
 				return;
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		
+
 		String ipStrByHostname = null;
 		String errorMsg = null;
 		try {
@@ -155,8 +157,8 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 				System.setProperty("https.proxyHost", proxyHost);
 				System.setProperty("https.proxyPort", proxyPort);
 				return;
-			} 
-			
+			}
+
 			if (ipStrFromAPI.equals(oldIpStr) || ipStrFromAPI.equals(ipStrByHostname)) {
 				systemOptionService.setIp(ipStrFromAPI);
 				log.error("IP did NOT change, skip DNS update");
@@ -380,6 +382,9 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 	}
 
 	private void updateWork1DnsRecord(String targetIp) {
+		if (systemOptionService.isDev()) {
+			return;
+		}
 		if (!ipValid(targetIp)) {
 			log.error("IP invalid, " + targetIp);
 			return;
