@@ -159,7 +159,7 @@ public class ComplexToolServiceImpl extends CommonService implements ComplexTool
 				return;
 			}
 
-			if (ipStrFromAPI.equals(oldIpStr) || ipStrFromAPI.equals(ipStrByHostname)) {
+			if (ipStrFromAPI.equals(oldIpStr) && ipStrFromAPI.equals(ipStrByHostname)) {
 				systemOptionService.setIp(ipStrFromAPI);
 				log.error("IP did NOT change, skip DNS update");
 				System.setProperty("http.proxyHost", proxyHost);
