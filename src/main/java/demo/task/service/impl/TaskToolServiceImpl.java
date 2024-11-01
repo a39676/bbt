@@ -61,10 +61,10 @@ public class TaskToolServiceImpl extends AutomationTestCommonService implements 
 		testEventService.cleanExpiredFailEventCounting();
 	}
 
-	@Scheduled(fixedDelay = 1000L * 60 * 3)
-	public void amIAlive() {
-		complexToolService.amIAlive();
-	}
+//	@Scheduled(fixedDelay = 1000L * 60 * 3)
+//	public void amIAlive() {
+//		complexToolService.amIAlive();
+//	}
 
 	@Scheduled(fixedRate = 1000L * 30)
 	public void killChromeWebDriverWhenIdle() {
