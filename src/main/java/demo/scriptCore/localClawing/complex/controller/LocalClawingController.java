@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.baseCommon.controller.CommonController;
+import demo.scriptCore.localClawing.complex.service.AlibabaLocalHtmlHandleService;
 import demo.scriptCore.localClawing.complex.service.BinanceSymbolCollectService;
 import demo.scriptCore.localClawing.complex.service.GateIoSymbolCollectService;
 import demo.scriptCore.localClawing.complex.service.LinkedinService;
@@ -37,6 +38,8 @@ public class LocalClawingController extends CommonController {
 	private GateIoSymbolCollectService gateIoSymbolCollectService;
 	@Autowired
 	private SubwayPracticeService subwayPracticeService;
+	@Autowired
+	private AlibabaLocalHtmlHandleService alibabaLocalHtmlHandleService;
 
 	@GetMapping(value = "/l2")
 	@ResponseBody
@@ -72,21 +75,21 @@ public class LocalClawingController extends CommonController {
 		storyBerriesDownloadService.downloading(url);
 		return "done";
 	}
-	
+
 	@GetMapping(value = "/l7")
 	@ResponseBody
 	public String l7() {
 		binanceSymbolCollectService.collect();
 		return "done";
 	}
-	
+
 	@GetMapping(value = "/l8")
 	@ResponseBody
 	public String l8() {
 		gateIoSymbolCollectService.collect();
 		return "done";
 	}
-	
+
 	@GetMapping(value = "/l9")
 	@ResponseBody
 	public String l9() {
@@ -95,4 +98,11 @@ public class LocalClawingController extends CommonController {
 		return "done";
 	}
 	
+	@GetMapping(value = "/l10")
+	@ResponseBody
+	public String l10() {
+		alibabaLocalHtmlHandleService.downloading();
+		return "done";
+	}
+
 }
